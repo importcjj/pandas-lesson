@@ -3,7 +3,7 @@
 import { useRef, useEffect } from "react";
 import { EditorView, basicSetup } from "codemirror";
 import { python } from "@codemirror/lang-python";
-import { EditorState } from "@codemirror/state";
+import { EditorState, Compartment } from "@codemirror/state";
 import { oneDark } from "@codemirror/theme-one-dark";
 
 interface CodeEditorProps {
@@ -11,6 +11,14 @@ interface CodeEditorProps {
   onChange?: (value: string) => void;
   readOnly?: boolean;
   minHeight?: string;
+}
+
+function makeTheme(minHeight: string) {
+  return EditorView.theme({
+    "&": { minHeight, fontSize: "14px" },
+    ".cm-scroller": { overflow: "auto" },
+    ".cm-content": { minHeight },
+  });
 }
 
 export default function CodeEditor({
@@ -22,9 +30,11 @@ export default function CodeEditor({
   const containerRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const onChangeRef = useRef(onChange);
+  const themeCompartment = useRef(new Compartment());
   const isInternalChange = useRef(false);
   onChangeRef.current = onChange;
 
+  // Create editor once (only re-create on readOnly change)
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -32,11 +42,7 @@ export default function CodeEditor({
       basicSetup,
       python(),
       oneDark,
-      EditorView.theme({
-        "&": { minHeight, fontSize: "14px" },
-        ".cm-scroller": { overflow: "auto" },
-        ".cm-content": { minHeight },
-      }),
+      themeCompartment.current.of(makeTheme(minHeight)),
     ];
 
     if (readOnly) {
@@ -69,12 +75,19 @@ export default function CodeEditor({
       view.destroy();
       viewRef.current = null;
     };
-    // Only re-create on readOnly change; value updates handled below
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [readOnly, minHeight]);
+  }, [readOnly]);
+
+  // Update theme dynamically without re-creating the editor
+  useEffect(() => {
+    const view = viewRef.current;
+    if (!view) return;
+    view.dispatch({
+      effects: themeCompartment.current.reconfigure(makeTheme(minHeight)),
+    });
+  }, [minHeight]);
 
   // Sync external value changes without re-creating the editor
-  // Skip if the change originated from the editor itself (avoids cursor/focus loss)
   useEffect(() => {
     if (isInternalChange.current) {
       isInternalChange.current = false;
