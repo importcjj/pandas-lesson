@@ -35,10 +35,10 @@ export default function TrueFalse({ exercise, onResult }: Props) {
               ? "border-green-400 bg-green-50 text-green-800"
               : selected === true
               ? "border-red-400 bg-red-50 text-red-800"
-              : "border-gray-200 text-gray-400"
+              : "border-gray-200 text-gray-500"
             : selected === true
             ? "border-indigo-400 bg-indigo-50 text-indigo-800"
-            : "border-gray-200 hover:border-green-300 hover:bg-green-50"
+            : "border-gray-200 text-gray-700 hover:border-green-300 hover:bg-green-50"
         }`}
       >
         ✅ {trueLabel}
@@ -52,10 +52,10 @@ export default function TrueFalse({ exercise, onResult }: Props) {
               ? "border-green-400 bg-green-50 text-green-800"
               : selected === false
               ? "border-red-400 bg-red-50 text-red-800"
-              : "border-gray-200 text-gray-400"
+              : "border-gray-200 text-gray-500"
             : selected === false
             ? "border-indigo-400 bg-indigo-50 text-indigo-800"
-            : "border-gray-200 hover:border-red-300 hover:bg-red-50"
+            : "border-gray-200 text-gray-700 hover:border-red-300 hover:bg-red-50"
         }`}
       >
         ❌ {falseLabel}

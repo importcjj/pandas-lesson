@@ -44,10 +44,10 @@ export default function OutputMatching({ exercise, onResult }: Props) {
                   ? "border-green-400 bg-green-50"
                   : index === selected
                   ? "border-red-400 bg-red-50"
-                  : "border-gray-200 text-gray-400"
+                  : "border-gray-200 text-gray-500"
                 : selected === index
                 ? "border-indigo-400 bg-indigo-50"
-                : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                : "border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50"
             }`}
           >
             <pre className="text-xs font-mono whitespace-pre-wrap">

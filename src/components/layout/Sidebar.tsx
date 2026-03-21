@@ -60,7 +60,7 @@ export default function Sidebar({ mobile = false }: { mobile?: boolean }) {
 
             return (
               <div key={stage.id}>
-                <h3 className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <h3 className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
                   <span>{stageIcons[stageIndex]}</span>
                   <span>{stage.title[locale as Locale]}</span>
                   {!unlocked && <span className="text-gray-300">🔒</span>}
@@ -77,7 +77,7 @@ export default function Sidebar({ mobile = false }: { mobile?: boolean }) {
                     if (!unlocked) {
                       return (
                         <li key={lesson.id}>
-                          <span className="block cursor-not-allowed rounded-md px-3 py-2 text-sm text-gray-300">
+                          <span className="block cursor-not-allowed rounded-md px-3 py-2 text-sm text-gray-400">
                             {lesson.title[locale as Locale]}
                           </span>
                         </li>

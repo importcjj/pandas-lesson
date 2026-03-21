@@ -38,10 +38,10 @@ export default function MultipleChoice({ exercise, onResult }: Props) {
                   ? "border-green-400 bg-green-50 text-green-800"
                   : index === selected
                   ? "border-red-400 bg-red-50 text-red-800"
-                  : "border-gray-200 text-gray-400"
+                  : "border-gray-200 text-gray-500"
                 : selected === index
                 ? "border-indigo-400 bg-indigo-50 text-indigo-800"
-                : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                : "border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50"
             }`}
           >
             <span className="mr-2 font-medium">
