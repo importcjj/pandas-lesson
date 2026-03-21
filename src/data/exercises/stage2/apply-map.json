@@ -1,0 +1,476 @@
+{
+  "module": "apply-map",
+  "stageId": "stage2",
+  "lessonId": "apply-map",
+  "tags": ["apply", "map", "applymap", "lambda", "transform"],
+  "exercises": [
+    {
+      "id": "s2-applymap-001",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "对单列使用 apply",
+        "en": "Apply a Function to a Column"
+      },
+      "description": {
+        "zh": "使用 apply() 将 'score' 列中的每个值加 10 分，赋值给新列 'adjusted'，然后打印 df。",
+        "en": "Use apply() to add 10 to each value in the 'score' column, assign the result to a new column 'adjusted', then print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'score': [85, 72, 90]})",
+      "starterCode": "# Use apply to add 10 to each score and store in 'adjusted'\n\n# Print df\n",
+      "solutionCode": "df['adjusted'] = df['score'].apply(lambda x: x + 10)\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "      name  score  adjusted\n0    Alice     85        95\n1      Bob     72        82\n2  Charlie     90       100",
+      "hints": {
+        "zh": [
+          "apply() 将函数应用到 Series 的每个元素",
+          "可以用 lambda 定义简单的匿名函数"
+        ],
+        "en": [
+          "apply() applies a function to each element of a Series",
+          "Use lambda to define simple anonymous functions"
+        ]
+      },
+      "explanation": {
+        "zh": "df['score'].apply(lambda x: x + 10) 对 score 列的每个值执行 lambda 函数。虽然此例可以直接用 df['score'] + 10，但 apply 适用于更复杂的自定义函数。",
+        "en": "df['score'].apply(lambda x: x + 10) applies the lambda function to each value in the score column. While this example could use df['score'] + 10 directly, apply is useful for more complex custom functions."
+      }
+    },
+    {
+      "id": "s2-applymap-002",
+      "type": "fill-blank",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 lambda 与 apply",
+        "en": "Using Lambda with Apply"
+      },
+      "description": {
+        "zh": "填写代码，使用 apply 和 lambda 将 'name' 列的每个名字加上 'Mr. ' 前缀。",
+        "en": "Fill in the code to use apply with lambda to add the prefix 'Mr. ' to each name in the 'name' column."
+      },
+      "codeTemplate": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob']})\ndf['name'] = df['name'].___1___(___2___ x: 'Mr. ' + x)",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "apply",
+          "alternatives": ["map"]
+        },
+        {
+          "placeholder": "___2___",
+          "answer": "lambda",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "apply() 配合 lambda 可以实现自定义转换",
+          "lambda 是 Python 的匿名函数语法"
+        ],
+        "en": [
+          "apply() with lambda enables custom transformations",
+          "lambda is Python's anonymous function syntax"
+        ]
+      },
+      "explanation": {
+        "zh": "apply(lambda x: 'Mr. ' + x) 对每个元素执行 lambda 函数，将 'Mr. ' 与原名字拼接。map() 在此场景下效果相同。",
+        "en": "apply(lambda x: 'Mr. ' + x) applies the lambda to each element, concatenating 'Mr. ' with the original name. map() works the same way in this scenario."
+      }
+    },
+    {
+      "id": "s2-applymap-003",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "map() 与字典映射",
+        "en": "map() with Dictionary Mapping"
+      },
+      "description": {
+        "zh": "对于 s = pd.Series(['cat', 'dog', 'cat'])，执行 s.map({'cat': '猫', 'dog': '狗'}) 的结果是什么？",
+        "en": "For s = pd.Series(['cat', 'dog', 'cat']), what is the result of s.map({'cat': '猫', 'dog': '狗'})?"
+      },
+      "options": {
+        "zh": [
+          "一个包含 ['猫', '狗', '猫'] 的 Series",
+          "一个包含 ['cat', 'dog', 'cat'] 的 Series",
+          "一个字典 {'cat': '猫', 'dog': '狗'}",
+          "抛出 KeyError"
+        ],
+        "en": [
+          "A Series containing ['猫', '狗', '猫']",
+          "A Series containing ['cat', 'dog', 'cat']",
+          "A dictionary {'cat': '猫', 'dog': '狗'}",
+          "Raises a KeyError"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["map() 可以接受字典、函数或 Series 作为映射关系"],
+        "en": ["map() accepts a dictionary, function, or Series as the mapping"]
+      },
+      "explanation": {
+        "zh": "map() 将 Series 中的每个值通过字典进行映射替换。'cat' 映射为 '猫'，'dog' 映射为 '狗'。字典中没有的值会被替换为 NaN。",
+        "en": "map() replaces each value in the Series using the dictionary mapping. 'cat' maps to '猫', 'dog' maps to '狗'. Values not in the dictionary are replaced with NaN."
+      }
+    },
+    {
+      "id": "s2-applymap-004",
+      "type": "true-false",
+      "difficulty": 3,
+      "title": {
+        "zh": "apply 的 axis 参数",
+        "en": "The axis Parameter of apply"
+      },
+      "description": {
+        "zh": "在 DataFrame 上使用 df.apply(func, axis=1) 时，func 会逐行应用，每次接收一行数据（一个 Series）。",
+        "en": "When using df.apply(func, axis=1) on a DataFrame, func is applied row-by-row, receiving one row (a Series) at a time."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["axis=0 表示按列，axis=1 表示按行"],
+        "en": ["axis=0 means column-wise, axis=1 means row-wise"]
+      },
+      "explanation": {
+        "zh": "df.apply(func, axis=1) 沿行方向应用函数，每次将一行作为 Series 传给 func。axis=0（默认）则沿列方向，每次传入一列。",
+        "en": "df.apply(func, axis=1) applies the function along rows, passing each row as a Series to func. axis=0 (default) applies along columns, passing each column."
+      }
+    },
+    {
+      "id": "s2-applymap-005",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "使用 applymap 对整个 DataFrame 操作",
+        "en": "Use applymap on an Entire DataFrame"
+      },
+      "description": {
+        "zh": "使用 applymap()（或 map()）将 DataFrame df 中的所有数值保留两位小数，然后打印结果。",
+        "en": "Use applymap() (or map()) to round all values in DataFrame df to 2 decimal places, then print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'A': [1.23456, 2.34567, 3.45678],\n    'B': [4.56789, 5.67890, 6.78901]\n})",
+      "starterCode": "# Round all values to 2 decimal places using applymap or map\n",
+      "solutionCode": "print(df.map(lambda x: round(x, 2)))",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "try:\n    import pandas as pd\n    expected = pd.DataFrame({'A': [1.23, 2.35, 3.46], 'B': [4.57, 5.68, 6.79]})\n    result_df = df.map(lambda x: round(x, 2))\n    result = result_df.equals(expected)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "applymap() 在新版 pandas 中被重命名为 map()",
+          "对每个元素应用 round(x, 2) 函数"
+        ],
+        "en": [
+          "applymap() has been renamed to map() in newer versions of pandas",
+          "Apply round(x, 2) to each element"
+        ]
+      },
+      "explanation": {
+        "zh": "df.map(lambda x: round(x, 2))（旧版本用 df.applymap()）对 DataFrame 中的每个元素逐一应用函数。注意此例也可以用 df.round(2) 更高效地实现。",
+        "en": "df.map(lambda x: round(x, 2)) (or df.applymap() in older versions) applies a function to each element individually. Note that df.round(2) is a more efficient alternative for this example."
+      }
+    },
+    {
+      "id": "s2-applymap-006",
+      "type": "true-false",
+      "difficulty": 2,
+      "title": {
+        "zh": "applymap 已弃用",
+        "en": "applymap is Deprecated"
+      },
+      "description": {
+        "zh": "在 pandas 2.0+ 中，DataFrame.applymap() 已被弃用，应使用 DataFrame.map() 替代。",
+        "en": "In pandas 2.0+, DataFrame.applymap() has been deprecated and should be replaced with DataFrame.map()."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["pandas 2.0 对 API 做了大量清理和统一"],
+        "en": ["pandas 2.0 cleaned up and unified many APIs"]
+      },
+      "explanation": {
+        "zh": "从 pandas 2.1 开始，DataFrame.applymap() 正式弃用，推荐使用 DataFrame.map()。两者功能完全相同，都是对 DataFrame 中的每个元素逐一应用函数。Series.map() 保持不变。",
+        "en": "Starting from pandas 2.1, DataFrame.applymap() is officially deprecated in favor of DataFrame.map(). Both have identical functionality — applying a function element-wise. Series.map() remains unchanged."
+      }
+    },
+    {
+      "id": "s2-applymap-007",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "apply 的 result_type 参数",
+        "en": "apply result_type Parameter"
+      },
+      "description": {
+        "zh": "使用 df.apply(axis=1) 和 result_type='expand' 将每行拆分为多个新列。函数返回包含 'full_name' 和 'is_adult' 的字典。打印结果。",
+        "en": "Use df.apply(axis=1) with result_type='expand' to split each row into multiple new columns. The function returns a dict with 'full_name' and 'is_adult'. Print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'first': ['Alice', 'Bob', 'Charlie'],\n    'last': ['Smith', 'Jones', 'Brown'],\n    'age': [25, 17, 30]\n})",
+      "starterCode": "# Define a function that returns a dict with full_name and is_adult\n# Apply with result_type='expand'\n",
+      "solutionCode": "def process_row(row):\n    return {'full_name': row['first'] + ' ' + row['last'], 'is_adult': row['age'] >= 18}\n\nresult = df.apply(process_row, axis=1, result_type='expand')\nprint(result)",
+      "validationType": "exact-output",
+      "expectedOutput": "      full_name  is_adult\n0   Alice Smith      True\n1     Bob Jones     False\n2  Charlie Brown      True",
+      "hints": {
+        "zh": [
+          "函数返回字典时，字典的键会成为新的列名",
+          "result_type='expand' 将返回值展开为 DataFrame 的列"
+        ],
+        "en": [
+          "When the function returns a dict, dict keys become new column names",
+          "result_type='expand' expands return values into DataFrame columns"
+        ]
+      },
+      "explanation": {
+        "zh": "result_type='expand' 将 apply 函数返回的字典/列表展开为多列。默认 result_type='reduce' 会将结果压缩为一列。'expand' 在需要从每行生成多个结果列时非常有用。",
+        "en": "result_type='expand' expands dicts/lists returned by the apply function into multiple columns. Default result_type='reduce' compresses results into one column. 'expand' is useful when generating multiple result columns from each row."
+      }
+    },
+    {
+      "id": "s2-applymap-008",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "apply 返回 Series vs 标量",
+        "en": "apply Returning Series vs Scalar"
+      },
+      "description": {
+        "zh": "当对 DataFrame 使用 df.apply(func, axis=0)（按列）时，如果 func 返回标量和返回 Series 分别会得到什么？",
+        "en": "When using df.apply(func, axis=0) (column-wise), what happens if func returns a scalar vs a Series?"
+      },
+      "options": {
+        "zh": [
+          "返回标量得到 Series，返回 Series 得到 DataFrame",
+          "返回标量得到 DataFrame，返回 Series 得到 Series",
+          "两种情况都得到 DataFrame",
+          "两种情况都得到 Series"
+        ],
+        "en": [
+          "Returning scalar gives a Series; returning Series gives a DataFrame",
+          "Returning scalar gives a DataFrame; returning Series gives a Series",
+          "Both cases give a DataFrame",
+          "Both cases give a Series"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "标量结果被收集成一个 Series（每列一个值）",
+          "Series 结果被堆叠成一个 DataFrame"
+        ],
+        "en": [
+          "Scalar results are collected into a Series (one value per column)",
+          "Series results are stacked into a DataFrame"
+        ]
+      },
+      "explanation": {
+        "zh": "df.apply 中：如果函数返回标量（如 sum、mean），每列的结果组成一个 Series；如果函数返回 Series，每列的结果堆叠成 DataFrame。这决定了 apply 结果的维度。",
+        "en": "In df.apply: if the function returns a scalar (like sum, mean), results from each column form a Series; if it returns a Series, results are stacked into a DataFrame. This determines the dimensionality of the result."
+      }
+    },
+    {
+      "id": "s2-applymap-009",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "map 的 na_action 参数",
+        "en": "map na_action Parameter"
+      },
+      "description": {
+        "zh": "使用 map() 将 'status' 列映射为中文，通过 na_action='ignore' 跳过 NaN 值。打印结果。",
+        "en": "Use map() to translate the 'status' column to Chinese, using na_action='ignore' to skip NaN values. Print the result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'status': ['active', np.nan, 'inactive']\n})",
+      "starterCode": "# Map status to Chinese with na_action='ignore'\n",
+      "solutionCode": "df['status'] = df['status'].map({'active': '活跃', 'inactive': '不活跃'}, na_action='ignore')\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "      name status\n0    Alice     活跃\n1      Bob    NaN\n2  Charlie    不活跃",
+      "hints": {
+        "zh": [
+          "na_action='ignore' 让 NaN 值保持 NaN 而不传给映射函数",
+          "不设置 na_action 时，NaN 也会被传给映射函数"
+        ],
+        "en": [
+          "na_action='ignore' keeps NaN as NaN instead of passing it to the mapping",
+          "Without na_action, NaN would also be passed to the mapping"
+        ]
+      },
+      "explanation": {
+        "zh": "na_action='ignore' 使 map() 跳过 NaN 值，保持它们为 NaN。如果不设置，字典映射时 NaN 不在字典中也会变成 NaN（效果相同），但对函数映射时会影响结果。",
+        "en": "na_action='ignore' makes map() skip NaN values, keeping them as NaN. Without it, NaN not being in the dict would also become NaN (same effect), but it matters when using function mapping."
+      }
+    },
+    {
+      "id": "s2-applymap-010",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "transform 与 apply 的区别",
+        "en": "transform vs apply Distinction"
+      },
+      "description": {
+        "zh": "使用 transform() 对 'score' 列进行标准化：(x - mean) / std。transform 保证返回与原 Series 相同长度。打印结果（保留2位小数）。",
+        "en": "Use transform() to standardize the 'score' column: (x - mean) / std. transform guarantees the result has the same length as the original Series. Print the result (2 decimal places)."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'David'],\n    'score': [80, 90, 70, 100]\n})",
+      "starterCode": "# Standardize score using transform\n",
+      "solutionCode": "df['z_score'] = df['score'].transform(lambda x: (x - x.mean()) / x.std())\nprint(df['z_score'].round(2))",
+      "validationType": "exact-output",
+      "expectedOutput": "0   -0.45\n1    0.45\n2   -1.34\n3    1.34\nName: z_score, dtype: float64",
+      "hints": {
+        "zh": [
+          "transform 中的 x 是整个 Series",
+          "transform 必须返回与输入相同长度的结果"
+        ],
+        "en": [
+          "In transform, x is the entire Series",
+          "transform must return a result with the same length as the input"
+        ]
+      },
+      "explanation": {
+        "zh": "transform() 与 apply() 的关键区别：transform 必须返回与输入相同形状的结果（不能聚合），适合广播操作。apply 更灵活，可以返回任意形状。在 groupby 场景中，transform 特别有用。",
+        "en": "Key difference between transform() and apply(): transform must return results with the same shape as input (no aggregation), suitable for broadcast operations. apply is more flexible. transform is especially useful in groupby scenarios."
+      }
+    },
+    {
+      "id": "s2-applymap-011",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "pipe() 方法链",
+        "en": "pipe() Method Chaining"
+      },
+      "description": {
+        "zh": "定义两个函数 add_total 和 add_grade，使用 pipe() 链式调用它们。add_total 添加 'total' 列（math+english），add_grade 添加 'grade' 列（total >= 170 为 'A'，否则为 'B'）。打印结果。",
+        "en": "Define two functions add_total and add_grade, then chain them using pipe(). add_total adds a 'total' column (math+english); add_grade adds a 'grade' column (total >= 170 is 'A', else 'B'). Print the result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'math': [90, 80, 70],\n    'english': [85, 95, 75]\n})",
+      "starterCode": "# Define add_total function\n\n# Define add_grade function\n\n# Chain with pipe and print\n",
+      "solutionCode": "def add_total(df):\n    return df.assign(total=df['math'] + df['english'])\n\ndef add_grade(df):\n    return df.assign(grade=np.where(df['total'] >= 170, 'A', 'B'))\n\nresult = df.pipe(add_total).pipe(add_grade)\nprint(result)",
+      "validationType": "exact-output",
+      "expectedOutput": "      name  math  english  total grade\n0    Alice    90       85    175     A\n1      Bob    80       95    175     A\n2  Charlie    70       75    145     B",
+      "hints": {
+        "zh": [
+          "pipe() 将 DataFrame 作为第一个参数传给函数",
+          "函数应返回 DataFrame 以支持链式调用",
+          "df.pipe(f).pipe(g) 等价于 g(f(df))"
+        ],
+        "en": [
+          "pipe() passes the DataFrame as the first argument to the function",
+          "Functions should return a DataFrame to support chaining",
+          "df.pipe(f).pipe(g) is equivalent to g(f(df))"
+        ]
+      },
+      "explanation": {
+        "zh": "pipe() 实现了 DataFrame 的方法链式调用。df.pipe(f).pipe(g) 等价于 g(f(df))，但可读性更好。每个函数接收 DataFrame 并返回 DataFrame，形成数据处理管道。",
+        "en": "pipe() enables method chaining on DataFrames. df.pipe(f).pipe(g) is equivalent to g(f(df)), but more readable. Each function receives and returns a DataFrame, forming a data processing pipeline."
+      }
+    },
+    {
+      "id": "s2-applymap-012",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "向量化 vs apply 的性能",
+        "en": "Vectorization vs apply Performance"
+      },
+      "description": {
+        "zh": "对于简单的数学运算 df['a'] + df['b']，以下哪种说法正确？",
+        "en": "For a simple math operation df['a'] + df['b'], which statement is correct?"
+      },
+      "options": {
+        "zh": [
+          "直接向量化运算 df['a'] + df['b'] 比 apply(lambda x: x['a'] + x['b'], axis=1) 快很多",
+          "apply 版本更快，因为它使用了 Python 原生循环",
+          "两者性能相同",
+          "apply 版本更快，因为它可以并行执行"
+        ],
+        "en": [
+          "Direct vectorized df['a'] + df['b'] is much faster than apply(lambda x: x['a'] + x['b'], axis=1)",
+          "The apply version is faster because it uses native Python loops",
+          "Both have the same performance",
+          "The apply version is faster because it can run in parallel"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "向量化操作使用底层 C/NumPy 实现",
+          "apply 是 Python 层面的逐行循环"
+        ],
+        "en": [
+          "Vectorized operations use underlying C/NumPy implementations",
+          "apply is a Python-level row-by-row loop"
+        ]
+      },
+      "explanation": {
+        "zh": "向量化运算直接调用 NumPy 的 C 实现，比 apply 的 Python 循环快 10-100 倍。apply 应该只在无法向量化时使用（如复杂条件逻辑、外部 API 调用等）。能用向量化的场景一定不要用 apply。",
+        "en": "Vectorized operations call NumPy's C implementation directly, 10-100x faster than apply's Python loop. apply should only be used when vectorization isn't possible (complex conditional logic, external API calls, etc.). Always prefer vectorization when possible."
+      }
+    },
+    {
+      "id": "s2-applymap-013",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[调试] apply 意外修改原始 DataFrame",
+        "en": "[Debug] apply Modifying Original DataFrame Warning"
+      },
+      "description": {
+        "zh": "以下代码使用 apply 修改传入的行，导致原始 DataFrame 被意外修改。请修复 bug，使原始 df 保持不变。",
+        "en": "The following code uses apply to modify the passed row, causing the original DataFrame to be unexpectedly modified. Fix the bug so the original df remains unchanged."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'score': [85, 72, 90]\n})",
+      "starterCode": "# Bug: this function modifies the original row in-place\ndef adjust(row):\n    row['score'] = row['score'] + 10\n    return row['score']\n\nadjusted = df.apply(adjust, axis=1)\nprint(df['score'].tolist())  # Should be [85, 72, 90] but may be [95, 82, 100]",
+      "solutionCode": "def adjust(row):\n    return row['score'] + 10\n\nadjusted = df.apply(adjust, axis=1)\nprint(df['score'].tolist())",
+      "validationType": "exact-output",
+      "expectedOutput": "[85, 72, 90]",
+      "hints": {
+        "zh": [
+          "函数中 row['score'] = ... 修改了原始数据",
+          "应该直接返回计算结果，不要修改输入的 row"
+        ],
+        "en": [
+          "row['score'] = ... in the function modifies the original data",
+          "Return the computed result directly without modifying the input row"
+        ]
+      },
+      "explanation": {
+        "zh": "apply 传入的 row 可能是原 DataFrame 的视图，直接修改 row 会影响原始数据。修复方法是直接返回计算结果而不修改 row。如果需要修改，应先 row = row.copy()。",
+        "en": "The row passed to apply may be a view of the original DataFrame. Modifying row directly can affect the original data. The fix is to return the computed result directly without modifying row. If modification is needed, use row = row.copy() first."
+      }
+    },
+    {
+      "id": "s2-applymap-014",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 复杂数据转换管道",
+        "en": "[Challenge] Complex Data Transformation Pipeline"
+      },
+      "description": {
+        "zh": "构建数据转换管道：1) 用 map() 将 'department' 映射为中文（Engineering->工程部, Marketing->市场部, Sales->销售部）；2) 用 apply(axis=1) 添加 'bonus' 列（salary * 0.2 if performance > 80 else salary * 0.1）；3) 用 assign 添加 'total' 列（salary + bonus）。打印 df。",
+        "en": "Build a data transformation pipeline: 1) Use map() to translate 'department' to Chinese (Engineering->工程部, Marketing->市场部, Sales->销售部); 2) Use apply(axis=1) to add 'bonus' column (salary * 0.2 if performance > 80 else salary * 0.1); 3) Use assign to add 'total' column (salary + bonus). Print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'David'],\n    'department': ['Engineering', 'Marketing', 'Sales', 'Engineering'],\n    'salary': [10000, 8000, 9000, 11000],\n    'performance': [90, 75, 85, 60]\n})",
+      "starterCode": "# Step 1: Map department to Chinese\n\n# Step 2: Add bonus column using apply\n\n# Step 3: Add total column using assign\n\n# Print df\n",
+      "solutionCode": "dept_map = {'Engineering': '工程部', 'Marketing': '市场部', 'Sales': '销售部'}\ndf['department'] = df['department'].map(dept_map)\ndf['bonus'] = df.apply(lambda row: row['salary'] * 0.2 if row['performance'] > 80 else row['salary'] * 0.1, axis=1)\ndf = df.assign(total=df['salary'] + df['bonus'])\nprint(df)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "try:\n    checks = []\n    checks.append(df['department'].iloc[0] == '工程部')\n    checks.append(df['department'].iloc[1] == '市场部')\n    checks.append(df['bonus'].iloc[0] == 2000.0)\n    checks.append(df['bonus'].iloc[1] == 800.0)\n    checks.append(df['total'].iloc[0] == 12000.0)\n    checks.append('bonus' in df.columns and 'total' in df.columns)\n    result = all(checks)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "map() 适合简单的值映射",
+          "apply(axis=1) 适合需要访问多列的逻辑",
+          "assign() 适合简单的列间运算",
+          "选择合适的方法可以让代码更清晰"
+        ],
+        "en": [
+          "map() is good for simple value mapping",
+          "apply(axis=1) is good for logic that needs multiple columns",
+          "assign() is good for simple inter-column operations",
+          "Choosing the right method makes code clearer"
+        ]
+      },
+      "explanation": {
+        "zh": "此综合题展示了如何选择合适的转换方法：map() 用于值映射；apply(axis=1) 用于多列条件逻辑；assign() 用于简单列运算。在实际项目中，合理组合这些方法可以构建清晰的数据处理管道。",
+        "en": "This challenge shows how to choose the right transformation method: map() for value mapping; apply(axis=1) for multi-column conditional logic; assign() for simple column operations. In real projects, combining these methods builds clear data processing pipelines."
+      }
+    }
+  ]
+}

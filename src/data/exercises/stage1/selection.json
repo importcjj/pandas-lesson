@@ -1,0 +1,412 @@
+{
+  "module": "selection",
+  "stageId": "stage1",
+  "lessonId": "selection",
+  "tags": ["dataframe", "selection", "column", "row", "slicing", "condition"],
+  "exercises": [
+    {
+      "id": "s1-select-001",
+      "type": "fill-blank",
+      "difficulty": 1,
+      "title": {
+        "zh": "选择单列",
+        "en": "Select a Single Column"
+      },
+      "description": {
+        "zh": "填写空白处，从 DataFrame 中选择 'name' 列。",
+        "en": "Fill in the blank to select the 'name' column from the DataFrame."
+      },
+      "codeTemplate": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'age': [25, 30]})\nresult = df[___]\nprint(result)",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "'name'",
+          "alternatives": ["\"name\""]
+        }
+      ],
+      "hints": {
+        "zh": [
+          "使用方括号加列名字符串来选择单列",
+          "记得用引号包裹列名"
+        ],
+        "en": [
+          "Use square brackets with a column name string to select a single column",
+          "Remember to wrap the column name in quotes"
+        ]
+      },
+      "explanation": {
+        "zh": "使用 df['column_name'] 可以选择 DataFrame 中的单列，返回的是一个 Series。",
+        "en": "Use df['column_name'] to select a single column from a DataFrame, which returns a Series."
+      }
+    },
+    {
+      "id": "s1-select-002",
+      "type": "coding",
+      "difficulty": 1,
+      "title": {
+        "zh": "选择多列",
+        "en": "Select Multiple Columns"
+      },
+      "description": {
+        "zh": "从 DataFrame 中选择 'name' 和 'city' 两列，并打印结果。",
+        "en": "Select the 'name' and 'city' columns from the DataFrame and print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})\n\n# Select 'name' and 'city' columns and print\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})\n\nprint(df[['name', 'city']])",
+      "setupCode": "",
+      "validationType": "exact-output",
+      "expectedOutput": "      name       city\n0    Alice    Beijing\n1      Bob   Shanghai\n2  Charlie  Guangzhou",
+      "hints": {
+        "zh": [
+          "选择多列需要传入列名的列表",
+          "使用双重方括号 df[['col1', 'col2']]"
+        ],
+        "en": [
+          "Selecting multiple columns requires passing a list of column names",
+          "Use double square brackets df[['col1', 'col2']]"
+        ]
+      }
+    },
+    {
+      "id": "s1-select-003",
+      "type": "output-matching",
+      "difficulty": 2,
+      "title": {
+        "zh": "行切片",
+        "en": "Row Slicing"
+      },
+      "description": {
+        "zh": "以下代码的输出是什么？",
+        "en": "What is the output of the following code?"
+      },
+      "code": "import pandas as pd\n\ndf = pd.DataFrame({'x': [10, 20, 30, 40, 50]})\nprint(df[1:3])",
+      "options": {
+        "zh": [
+          "    x\n1  20\n2  30",
+          "    x\n0  10\n1  20\n2  30",
+          "    x\n1  20\n2  30\n3  40",
+          "    x\n0  10\n1  20"
+        ],
+        "en": [
+          "    x\n1  20\n2  30",
+          "    x\n0  10\n1  20\n2  30",
+          "    x\n1  20\n2  30\n3  40",
+          "    x\n0  10\n1  20"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["DataFrame 的行切片与 Python 列表切片规则相同，左闭右开"],
+        "en": ["DataFrame row slicing follows the same rules as Python list slicing: start inclusive, end exclusive"]
+      },
+      "explanation": {
+        "zh": "df[1:3] 返回索引 1 和 2 的行（左闭右开），即第 2 行和第 3 行。",
+        "en": "df[1:3] returns rows at index 1 and 2 (start inclusive, end exclusive), i.e., the 2nd and 3rd rows."
+      }
+    },
+    {
+      "id": "s1-select-004",
+      "type": "true-false",
+      "difficulty": 2,
+      "title": {
+        "zh": ".values 属性",
+        "en": "The .values Attribute"
+      },
+      "description": {
+        "zh": "df['col'].values 返回的是一个 NumPy 数组。",
+        "en": "df['col'].values returns a NumPy array."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["pandas 底层使用 NumPy 存储数据"],
+        "en": ["pandas uses NumPy internally to store data"]
+      },
+      "explanation": {
+        "zh": ".values 属性将 Series 或 DataFrame 的数据以 NumPy ndarray 的形式返回。",
+        "en": "The .values attribute returns the data of a Series or DataFrame as a NumPy ndarray."
+      }
+    },
+    {
+      "id": "s1-select-005",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "条件选择",
+        "en": "Conditional Selection"
+      },
+      "description": {
+        "zh": "从 DataFrame 中选择 age 大于 28 的所有行，并打印结果。",
+        "en": "Select all rows from the DataFrame where age is greater than 28 and print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'age': [25, 30, 35, 22]\n})\n\n# Select rows where age > 28 and print\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'age': [25, 30, 35, 22]\n})\n\nprint(df[df['age'] > 28])",
+      "setupCode": "",
+      "validationType": "exact-output",
+      "expectedOutput": "      name  age\n1      Bob   30\n2  Charlie   35",
+      "hints": {
+        "zh": [
+          "使用布尔条件 df['age'] > 28 创建布尔掩码",
+          "将布尔掩码放入 df[] 中进行筛选"
+        ],
+        "en": [
+          "Use the boolean condition df['age'] > 28 to create a boolean mask",
+          "Place the boolean mask inside df[] to filter rows"
+        ]
+      }
+    },
+    {
+      "id": "s1-select-006",
+      "type": "output-matching",
+      "difficulty": 2,
+      "title": {
+        "zh": "df[['cols']] 与 df.col 的区别",
+        "en": "df[['cols']] vs df.col Difference"
+      },
+      "description": {
+        "zh": "以下两行代码返回的类型分别是什么？\n\n```python\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'age': [25, 30]})\ntype(df['name'])   # line 1\ntype(df[['name']]) # line 2\n```",
+        "en": "What types do the following two lines return respectively?\n\n```python\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'age': [25, 30]})\ntype(df['name'])   # line 1\ntype(df[['name']]) # line 2\n```"
+      },
+      "options": {
+        "zh": [
+          "line1: Series, line2: DataFrame",
+          "line1: DataFrame, line2: Series",
+          "两个都是 Series",
+          "两个都是 DataFrame"
+        ],
+        "en": [
+          "line1: Series, line2: DataFrame",
+          "line1: DataFrame, line2: Series",
+          "Both are Series",
+          "Both are DataFrame"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["单个列名用字符串，返回 Series；列名列表返回 DataFrame"],
+        "en": ["A single column name string returns Series; a list of column names returns DataFrame"]
+      },
+      "explanation": {
+        "zh": "df['name'] 传入字符串返回 Series，df[['name']] 传入列表返回 DataFrame（即使只有一列）。这是一个重要的区别。",
+        "en": "df['name'] with a string returns a Series, df[['name']] with a list returns a DataFrame (even with a single column). This is an important distinction."
+      }
+    },
+    {
+      "id": "s1-select-007",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 df.filter() 筛选列",
+        "en": "Filter Columns with df.filter()"
+      },
+      "description": {
+        "zh": "使用 df.filter() 的 like 参数选择列名中包含 'score' 的所有列，打印结果。",
+        "en": "Use the like parameter of df.filter() to select all columns containing 'score' in their name, and print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'math_score': [90, 85, 78],\n    'english_score': [88, 92, 80],\n    'age': [25, 30, 35]\n})\n\n# Use filter(like=...) to select columns containing 'score'\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'math_score': [90, 85, 78],\n    'english_score': [88, 92, 80],\n    'age': [25, 30, 35]\n})\n\nprint(df.filter(like='score'))",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'math_score' in _output and 'english_score' in _output and 'age' not in _output and 'name' not in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "df.filter() 有 like 和 regex 两种模式",
+          "like 参数匹配列名中包含指定字符串的列"
+        ],
+        "en": [
+          "df.filter() has like and regex modes",
+          "The like parameter matches columns containing the specified string"
+        ]
+      }
+    },
+    {
+      "id": "s1-select-008",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 df.query() 筛选行",
+        "en": "Filter Rows with df.query()"
+      },
+      "description": {
+        "zh": "使用 df.query() 方法筛选 age > 25 且 score > 80 的行，打印结果。",
+        "en": "Use the df.query() method to filter rows where age > 25 and score > 80, and print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'age': [25, 30, 35, 22],\n    'score': [88, 75, 92, 85]\n})\n\n# Use query() to filter age > 25 and score > 80\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'age': [25, 30, 35, 22],\n    'score': [88, 75, 92, 85]\n})\n\nprint(df.query('age > 25 and score > 80'))",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'Charlie' in _output and '92' in _output and 'Alice' not in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "query() 接受字符串形式的条件表达式",
+          "多个条件可以用 and/or 连接"
+        ],
+        "en": [
+          "query() accepts string-form conditional expressions",
+          "Multiple conditions can be connected with and/or"
+        ]
+      }
+    },
+    {
+      "id": "s1-select-009",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "链式索引的陷阱",
+        "en": "Chained Indexing Pitfall"
+      },
+      "description": {
+        "zh": "以下代码有什么问题？\n\n```python\ndf[df['age'] > 25]['score'] = 100\n```",
+        "en": "What is the problem with the following code?\n\n```python\ndf[df['age'] > 25]['score'] = 100\n```"
+      },
+      "options": {
+        "zh": [
+          "这是链式索引，可能只修改了副本而不是原始 DataFrame，应使用 .loc",
+          "语法完全正确，没有问题",
+          "会导致程序崩溃",
+          "应该使用 iloc 而不是布尔索引"
+        ],
+        "en": [
+          "This is chained indexing that may only modify a copy rather than the original DataFrame; use .loc instead",
+          "The syntax is completely correct with no issues",
+          "It will cause the program to crash",
+          "iloc should be used instead of boolean indexing"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["pandas 中链式索引赋值会产生 SettingWithCopyWarning"],
+        "en": ["Chained indexing assignment in pandas triggers SettingWithCopyWarning"]
+      },
+      "explanation": {
+        "zh": "df[df['age'] > 25]['score'] = 100 是链式索引赋值，中间结果可能是副本而非视图，赋值不会生效。正确写法是 df.loc[df['age'] > 25, 'score'] = 100。",
+        "en": "df[df['age'] > 25]['score'] = 100 is chained indexing assignment. The intermediate result may be a copy rather than a view, so the assignment won't take effect. The correct way is df.loc[df['age'] > 25, 'score'] = 100."
+      }
+    },
+    {
+      "id": "s1-select-010",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 at 和 iat 快速访问",
+        "en": "Fast Access with at and iat"
+      },
+      "description": {
+        "zh": "使用 df.at[] 通过标签获取 'Bob' 的 score，使用 df.iat[] 通过位置获取第 1 行第 2 列的值，分别打印。",
+        "en": "Use df.at[] to get Bob's score by label, and df.iat[] to get the value at row 1, column 2 by position. Print both."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'score': [88, 92, 76]\n}, index=['a', 'b', 'c'])\n\n# Use at[] to get Bob's score (row 'b', column 'score')\n\n# Use iat[] to get value at position [1, 2]\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'score': [88, 92, 76]\n}, index=['a', 'b', 'c'])\n\nprint(df.at['b', 'score'])\nprint(df.iat[1, 2])",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = '92' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "at[] 使用标签索引，类似 loc 但只能访问单个值",
+          "iat[] 使用位置索引，类似 iloc 但只能访问单个值",
+          "at/iat 比 loc/iloc 访问单个值时更快"
+        ],
+        "en": [
+          "at[] uses label indexing, similar to loc but only for single values",
+          "iat[] uses position indexing, similar to iloc but only for single values",
+          "at/iat is faster than loc/iloc for accessing single values"
+        ]
+      }
+    },
+    {
+      "id": "s1-select-011",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "[调试] 多列选择的括号错误",
+        "en": "[Debug] Bracket Error in Multi-column Selection"
+      },
+      "description": {
+        "zh": "以下代码尝试选择两列，但写法有误导致报错。修复代码使其正确选择 'name' 和 'age' 两列。",
+        "en": "The following code tries to select two columns but has incorrect syntax causing an error. Fix it to correctly select the 'name' and 'age' columns."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})\n\n# Bug: incorrect syntax for selecting multiple columns\nresult = df['name', 'age']\nprint(result)",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})\n\nresult = df[['name', 'age']]\nprint(result)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    result = 'Alice' in _output and '25' in _output and 'Guangzhou' not in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "选择多列需要传入一个列名列表",
+          "df['col1', 'col2'] 缺少了内层的方括号",
+          "正确写法是 df[['col1', 'col2']]"
+        ],
+        "en": [
+          "Selecting multiple columns requires passing a list of column names",
+          "df['col1', 'col2'] is missing the inner brackets",
+          "The correct syntax is df[['col1', 'col2']]"
+        ]
+      }
+    },
+    {
+      "id": "s1-select-012",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "[最佳实践] query vs 布尔索引 vs loc",
+        "en": "[Best Practice] query vs Boolean vs loc"
+      },
+      "description": {
+        "zh": "对于复杂的条件筛选，以下哪种方式可读性最好？",
+        "en": "For complex conditional filtering, which approach has the best readability?"
+      },
+      "options": {
+        "zh": [
+          "df.query('age > 25 and score > 80 and city == \"Beijing\"') — 字符串表达式最接近自然语言",
+          "df[(df['age'] > 25) & (df['score'] > 80) & (df['city'] == 'Beijing')] — 布尔索引最直接",
+          "df.loc[(df['age'] > 25) & (df['score'] > 80) & (df['city'] == 'Beijing')] — loc 最安全",
+          "三种方式没有区别"
+        ],
+        "en": [
+          "df.query('age > 25 and score > 80 and city == \"Beijing\"') — string expression closest to natural language",
+          "df[(df['age'] > 25) & (df['score'] > 80) & (df['city'] == 'Beijing')] — boolean indexing most direct",
+          "df.loc[(df['age'] > 25) & (df['score'] > 80) & (df['city'] == 'Beijing')] — loc safest",
+          "No difference between the three approaches"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["比较三种方式的代码长度和可读性"],
+        "en": ["Compare the code length and readability of the three approaches"]
+      },
+      "explanation": {
+        "zh": "对于多条件筛选，query() 的字符串表达式最简洁、可读性最好，尤其是条件多的时候。布尔索引和 loc 在简单条件下也很好用，但条件复杂时括号过多降低可读性。",
+        "en": "For multi-condition filtering, query()'s string expression is the most concise and readable, especially with many conditions. Boolean indexing and loc work well for simple conditions, but excessive parentheses reduce readability for complex ones."
+      }
+    },
+    {
+      "id": "s1-select-013",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 复杂条件筛选",
+        "en": "[Challenge] Complex Conditional Filtering"
+      },
+      "description": {
+        "zh": "完成以下任务：\n1. 筛选出 department 为 'IT' 或 'Finance' 的员工\n2. 在筛选结果中，只选择 salary > 55000 的行\n3. 只保留 'name' 和 'salary' 两列\n4. 打印最终结果",
+        "en": "Complete the following tasks:\n1. Filter employees in 'IT' or 'Finance' departments\n2. From the filtered result, select only rows where salary > 55000\n3. Keep only the 'name' and 'salary' columns\n4. Print the final result"
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'],\n    'department': ['IT', 'HR', 'Finance', 'IT', 'Finance', 'HR'],\n    'salary': [60000, 50000, 58000, 52000, 62000, 48000]\n})\n\n# Step 1-4: Filter, condition, select columns, and print\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'],\n    'department': ['IT', 'HR', 'Finance', 'IT', 'Finance', 'HR'],\n    'salary': [60000, 50000, 58000, 52000, 62000, 48000]\n})\n\nresult = df.loc[(df['department'].isin(['IT', 'Finance'])) & (df['salary'] > 55000), ['name', 'salary']]\nprint(result)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'Alice' in _output and '60000' in _output and 'Eve' in _output and 'Bob' not in _output and 'Diana' not in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "使用 isin() 方法检查是否属于多个值之一",
+          "用 & 组合多个条件",
+          "使用 loc 同时筛选行和列"
+        ],
+        "en": [
+          "Use the isin() method to check membership in multiple values",
+          "Combine multiple conditions with &",
+          "Use loc to filter both rows and columns simultaneously"
+        ]
+      }
+    }
+  ]
+}

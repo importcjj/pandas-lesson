@@ -1,0 +1,357 @@
+{
+  "module": "dtypes",
+  "stageId": "stage1",
+  "lessonId": "dtypes",
+  "tags": ["dataframe", "dtypes", "int64", "float64", "object", "select_dtypes"],
+  "exercises": [
+    {
+      "id": "s1-dtypes-001",
+      "type": "coding",
+      "difficulty": 1,
+      "title": {
+        "zh": "查看所有列的数据类型",
+        "en": "View Data Types of All Columns"
+      },
+      "description": {
+        "zh": "打印 DataFrame 中所有列的数据类型。",
+        "en": "Print the data types of all columns in the DataFrame."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'age': [25, 30], 'score': [88.5, 92.0]})\n\n# Print the data types of all columns\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'age': [25, 30], 'score': [88.5, 92.0]})\n\nprint(df.dtypes)",
+      "setupCode": "",
+      "validationType": "exact-output",
+      "expectedOutput": "name      object\nage        int64\nscore    float64\ndtype: object",
+      "hints": {
+        "zh": [
+          "使用 DataFrame 的 dtypes 属性",
+          "dtypes 是属性不是方法，不需要加括号"
+        ],
+        "en": [
+          "Use the dtypes attribute of the DataFrame",
+          "dtypes is an attribute, not a method, so no parentheses are needed"
+        ]
+      }
+    },
+    {
+      "id": "s1-dtypes-002",
+      "type": "output-matching",
+      "difficulty": 1,
+      "title": {
+        "zh": "检查特定列的数据类型",
+        "en": "Check Data Type of a Specific Column"
+      },
+      "description": {
+        "zh": "以下代码的输出是什么？",
+        "en": "What is the output of the following code?"
+      },
+      "code": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'age': [25, 30]})\nprint(df['age'].dtype)",
+      "options": {
+        "zh": ["int64", "float64", "object", "int32"],
+        "en": ["int64", "float64", "object", "int32"]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["Python 整数列表在 pandas 中默认会被推断为 int64 类型"],
+        "en": ["A Python list of integers is inferred as int64 by default in pandas"]
+      },
+      "explanation": {
+        "zh": "整数数据在 pandas 中默认存储为 int64 类型。可以使用 .dtype 属性查看单列的数据类型。",
+        "en": "Integer data is stored as int64 by default in pandas. Use the .dtype attribute to check a single column's data type."
+      }
+    },
+    {
+      "id": "s1-dtypes-003",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "int64、float64 和 object 的区别",
+        "en": "Difference Between int64, float64, and object"
+      },
+      "description": {
+        "zh": "在 pandas 中，字符串数据的默认 dtype 是什么？",
+        "en": "In pandas, what is the default dtype for string data?"
+      },
+      "options": {
+        "zh": ["object", "string", "str", "text"],
+        "en": ["object", "string", "str", "text"]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["pandas 中字符串的默认类型不是 'string'，而是一个更通用的类型"],
+        "en": ["The default type for strings in pandas is not 'string', but a more general type"]
+      },
+      "explanation": {
+        "zh": "在 pandas 中，字符串默认以 object 类型存储。虽然 pandas 1.0+ 引入了专门的 StringDtype，但默认仍然是 object。",
+        "en": "In pandas, strings are stored as object dtype by default. Although pandas 1.0+ introduced a dedicated StringDtype, the default is still object."
+      }
+    },
+    {
+      "id": "s1-dtypes-004",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "使用 select_dtypes 筛选列",
+        "en": "Filter Columns with select_dtypes"
+      },
+      "description": {
+        "zh": "使用 select_dtypes 方法仅选择数值类型（number）的列，并打印结果。",
+        "en": "Use the select_dtypes method to select only numeric columns and print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'score': [88.5, 92.0, 76.5],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})\n\n# Select only numeric columns and print\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'score': [88.5, 92.0, 76.5],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})\n\nprint(df.select_dtypes(include='number'))",
+      "setupCode": "",
+      "validationType": "exact-output",
+      "expectedOutput": "   age  score\n0   25   88.5\n1   30   92.0\n2   35   76.5",
+      "hints": {
+        "zh": [
+          "select_dtypes 方法有一个 include 参数",
+          "使用 include='number' 来选择所有数值类型的列"
+        ],
+        "en": [
+          "The select_dtypes method has an include parameter",
+          "Use include='number' to select all numeric columns"
+        ]
+      }
+    },
+    {
+      "id": "s1-dtypes-005",
+      "type": "multiple-choice",
+      "difficulty": 1,
+      "title": {
+        "zh": "pandas 常见 dtype 名称",
+        "en": "Common pandas dtype Names"
+      },
+      "description": {
+        "zh": "以下哪个不是 pandas 的有效 dtype？",
+        "en": "Which of the following is NOT a valid pandas dtype?"
+      },
+      "options": {
+        "zh": [
+          "varchar — 这是 SQL 的数据类型，不是 pandas 的",
+          "int64 — 64位整数",
+          "float64 — 64位浮点数",
+          "bool — 布尔类型"
+        ],
+        "en": [
+          "varchar — this is a SQL data type, not pandas",
+          "int64 — 64-bit integer",
+          "float64 — 64-bit float",
+          "bool — boolean type"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["想想哪些是 Python/NumPy 的数据类型"],
+        "en": ["Think about which ones are Python/NumPy data types"]
+      },
+      "explanation": {
+        "zh": "pandas 支持的常见 dtype 包括：int64、float64、bool、object、datetime64、timedelta64、category。varchar 是 SQL 数据库的数据类型，在 pandas 中不存在。",
+        "en": "Common pandas dtypes include: int64, float64, bool, object, datetime64, timedelta64, category. varchar is a SQL database type that doesn't exist in pandas."
+      }
+    },
+    {
+      "id": "s1-dtypes-006",
+      "type": "output-matching",
+      "difficulty": 2,
+      "title": {
+        "zh": "可空类型 Int64 和 string",
+        "en": "Nullable Types Int64 and string"
+      },
+      "description": {
+        "zh": "以下代码的输出是什么？\n\n```python\nimport pandas as pd\nimport numpy as np\ns = pd.array([1, 2, None], dtype='Int64')\nprint(s)\n```",
+        "en": "What is the output of the following code?\n\n```python\nimport pandas as pd\nimport numpy as np\ns = pd.array([1, 2, None], dtype='Int64')\nprint(s)\n```"
+      },
+      "options": {
+        "zh": [
+          "<IntegerArray>\n[1, 2, <NA>]\nLength: 3, dtype: Int64",
+          "[1, 2, NaN]\ndtype: float64",
+          "[1, 2, None]\ndtype: object",
+          "报错：整数不能包含 None"
+        ],
+        "en": [
+          "<IntegerArray>\n[1, 2, <NA>]\nLength: 3, dtype: Int64",
+          "[1, 2, NaN]\ndtype: float64",
+          "[1, 2, None]\ndtype: object",
+          "Error: integers cannot contain None"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["注意大写的 Int64 和小写的 int64 是不同的类型"],
+        "en": ["Note that uppercase Int64 and lowercase int64 are different types"]
+      },
+      "explanation": {
+        "zh": "大写的 Int64 是 pandas 的可空整数类型，可以包含缺失值（显示为 <NA>）。小写的 int64 是 NumPy 类型，不能直接包含缺失值（会自动转为 float64）。",
+        "en": "Uppercase Int64 is pandas' nullable integer type that can hold missing values (shown as <NA>). Lowercase int64 is a NumPy type that cannot directly hold missing values (auto-converts to float64)."
+      }
+    },
+    {
+      "id": "s1-dtypes-007",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "pd.to_numeric 的 errors 参数",
+        "en": "pd.to_numeric errors Parameter"
+      },
+      "description": {
+        "zh": "使用 pd.to_numeric 将包含非数字字符串的 Series 转换为数值类型，设置 errors='coerce' 将无法转换的值变为 NaN，打印结果。",
+        "en": "Use pd.to_numeric to convert a Series containing non-numeric strings to numeric type, setting errors='coerce' to convert unconvertible values to NaN. Print the result."
+      },
+      "starterCode": "import pandas as pd\n\ns = pd.Series(['1', '2', 'three', '4', 'N/A', '6'])\n\n# Convert to numeric with errors='coerce'\n",
+      "solutionCode": "import pandas as pd\n\ns = pd.Series(['1', '2', 'three', '4', 'N/A', '6'])\n\nprint(pd.to_numeric(s, errors='coerce'))",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'NaN' in _output and '1.0' in _output and '6.0' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "pd.to_numeric() 用于将数据转换为数值类型",
+          "errors='coerce' 会将无法转换的值变为 NaN",
+          "其他选项：errors='raise'（报错）、errors='ignore'（保持原样）"
+        ],
+        "en": [
+          "pd.to_numeric() converts data to numeric type",
+          "errors='coerce' converts unconvertible values to NaN",
+          "Other options: errors='raise' (throw error), errors='ignore' (keep as is)"
+        ]
+      }
+    },
+    {
+      "id": "s1-dtypes-008",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "astype 类型转换与错误处理",
+        "en": "astype Type Conversion and Error Handling"
+      },
+      "description": {
+        "zh": "将 DataFrame 的 'age' 列从 float64 转换为 int64，'score' 列从 int64 转换为 float64，打印转换后的 dtypes。",
+        "en": "Convert the 'age' column from float64 to int64, and the 'score' column from int64 to float64. Print the dtypes after conversion."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25.0, 30.0, 35.0],\n    'score': [88, 92, 76]\n})\n\n# Convert age to int64 and score to float64\n\n# Print dtypes\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25.0, 30.0, 35.0],\n    'score': [88, 92, 76]\n})\n\ndf['age'] = df['age'].astype('int64')\ndf['score'] = df['score'].astype('float64')\nprint(df.dtypes)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'int64' in _output and 'float64' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "使用 .astype() 方法进行类型转换",
+          "可以链式调用多个 astype"
+        ],
+        "en": [
+          "Use the .astype() method for type conversion",
+          "Multiple astype calls can be chained"
+        ]
+      }
+    },
+    {
+      "id": "s1-dtypes-009",
+      "type": "true-false",
+      "difficulty": 2,
+      "title": {
+        "zh": "object 类型的性能问题",
+        "en": "Performance Issues with object dtype"
+      },
+      "description": {
+        "zh": "object 类型的列比 category 类型占用更多内存，尤其是在包含大量重复字符串的列中。",
+        "en": "Columns with object dtype use more memory than category dtype, especially for columns with many repeated strings."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["想想 object 类型存储每个字符串的方式"],
+        "en": ["Think about how object type stores each string"]
+      },
+      "explanation": {
+        "zh": "object 类型为每个字符串存储独立的 Python 对象，而 category 类型使用整数编码来引用唯一值表。对于重复值较多的列，转换为 category 可以大幅减少内存使用。",
+        "en": "object dtype stores independent Python objects for each string, while category dtype uses integer encoding to reference a table of unique values. For columns with many repeated values, converting to category can significantly reduce memory usage."
+      }
+    },
+    {
+      "id": "s1-dtypes-010",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 convert_dtypes() 自动优化类型",
+        "en": "Auto-optimize Types with convert_dtypes()"
+      },
+      "description": {
+        "zh": "使用 convert_dtypes() 方法自动将 DataFrame 的列转换为最佳类型，打印转换前后的 dtypes 进行对比。",
+        "en": "Use the convert_dtypes() method to automatically convert DataFrame columns to the best types. Print dtypes before and after for comparison."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'active': [True, False, True]\n})\n\n# Print original dtypes\nprint(df.dtypes)\nprint('---')\n\n# Convert to best types and print new dtypes\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'active': [True, False, True]\n})\n\nprint(df.dtypes)\nprint('---')\ndf2 = df.convert_dtypes()\nprint(df2.dtypes)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'object' in _output and ('string' in _output.lower() or 'String' in _output or 'Int' in _output)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "convert_dtypes() 会返回一个新的 DataFrame",
+          "它会将 object 转换为 StringDtype，int64 转换为 Int64 等"
+        ],
+        "en": [
+          "convert_dtypes() returns a new DataFrame",
+          "It converts object to StringDtype, int64 to Int64, etc."
+        ]
+      }
+    },
+    {
+      "id": "s1-dtypes-011",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[调试] NaN 导致整数列自动转为浮点数",
+        "en": "[Debug] NaN Auto-converts Integer Column to Float"
+      },
+      "description": {
+        "zh": "以下代码中，age 列应该是整数类型，但由于包含 NaN 自动变成了 float64。使用 pandas 的可空整数类型 'Int64' 修复此问题。",
+        "en": "In the following code, the age column should be integer type, but NaN auto-converts it to float64. Fix this using pandas nullable integer type 'Int64'."
+      },
+      "starterCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, np.nan, 35]\n})\n\n# Bug: age is float64 because of NaN\nprint(df.dtypes)\nprint(df)",
+      "solutionCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': pd.array([25, pd.NA, 35], dtype='Int64')\n})\n\nprint(df.dtypes)\nprint(df)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'Int64' in _output and 'float' not in _output.lower().replace('float64', '')\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "标准的 int64 不能存储 NaN，所以 pandas 会自动转为 float64",
+          "大写的 Int64 是 pandas 的可空整数类型",
+          "使用 pd.array([...], dtype='Int64') 或 .astype('Int64')"
+        ],
+        "en": [
+          "Standard int64 cannot store NaN, so pandas auto-converts to float64",
+          "Uppercase Int64 is pandas' nullable integer type",
+          "Use pd.array([...], dtype='Int64') or .astype('Int64')"
+        ]
+      }
+    },
+    {
+      "id": "s1-dtypes-012",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 优化 DataFrame 内存使用",
+        "en": "[Challenge] Optimize DataFrame Memory"
+      },
+      "description": {
+        "zh": "完成以下任务来优化 DataFrame 的内存使用：\n1. 打印优化前的内存使用量（df.memory_usage(deep=True).sum()）\n2. 将 'category' 列转换为 category 类型\n3. 将 'price' 列从 float64 转换为 float32\n4. 打印优化后的内存使用量",
+        "en": "Complete the following tasks to optimize DataFrame memory usage:\n1. Print memory usage before optimization (df.memory_usage(deep=True).sum())\n2. Convert the 'category' column to category type\n3. Convert the 'price' column from float64 to float32\n4. Print memory usage after optimization"
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'product': [f'item_{i}' for i in range(1000)],\n    'category': ['electronics', 'clothing', 'food', 'electronics', 'clothing'] * 200,\n    'price': [float(i) * 1.5 for i in range(1000)]\n})\n\n# Step 1: Print memory before optimization\n\n# Step 2: Convert 'category' column to category type\n\n# Step 3: Convert 'price' to float32\n\n# Step 4: Print memory after optimization\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'product': [f'item_{i}' for i in range(1000)],\n    'category': ['electronics', 'clothing', 'food', 'electronics', 'clothing'] * 200,\n    'price': [float(i) * 1.5 for i in range(1000)]\n})\n\nprint(df.memory_usage(deep=True).sum())\ndf['category'] = df['category'].astype('category')\ndf['price'] = df['price'].astype('float32')\nprint(df.memory_usage(deep=True).sum())",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    lines = _output.strip().split('\\n')\n    before = int(lines[0])\n    after = int(lines[-1])\n    result = after < before\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "memory_usage(deep=True).sum() 计算总内存使用量",
+          "astype('category') 将字符串列转为分类类型",
+          "astype('float32') 将 64 位浮点数降为 32 位"
+        ],
+        "en": [
+          "memory_usage(deep=True).sum() calculates total memory usage",
+          "astype('category') converts string columns to categorical type",
+          "astype('float32') downcasts 64-bit floats to 32-bit"
+        ]
+      }
+    }
+  ]
+}

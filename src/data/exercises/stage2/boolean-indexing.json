@@ -1,0 +1,430 @@
+{
+  "module": "boolean-indexing",
+  "stageId": "stage2",
+  "lessonId": "boolean-indexing",
+  "tags": ["filter", "boolean-indexing", "isin", "between", "conditions"],
+  "exercises": [
+    {
+      "id": "s2-boolidx-001",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "单条件筛选",
+        "en": "Single Condition Filtering"
+      },
+      "description": {
+        "zh": "从 DataFrame df 中筛选出 age 大于 30 的行并打印结果。",
+        "en": "Filter rows from DataFrame df where age is greater than 30 and print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'David'],\n    'age': [25, 30, 35, 40],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen']\n})",
+      "starterCode": "# Filter rows where age > 30 and print\n",
+      "solutionCode": "print(df[df['age'] > 30])",
+      "validationType": "exact-output",
+      "expectedOutput": "      name  age       city\n2  Charlie   35  Guangzhou\n3    David   40   Shenzhen",
+      "hints": {
+        "zh": [
+          "用 df['age'] > 30 生成布尔 Series",
+          "将布尔 Series 放入 df[] 中进行筛选"
+        ],
+        "en": [
+          "Use df['age'] > 30 to generate a boolean Series",
+          "Put the boolean Series inside df[] to filter"
+        ]
+      },
+      "explanation": {
+        "zh": "df[df['age'] > 30] 先创建布尔索引（age 列中大于 30 的为 True），然后用这个布尔索引筛选出对应的行。",
+        "en": "df[df['age'] > 30] first creates a boolean index (True where age > 30), then uses it to filter the corresponding rows."
+      }
+    },
+    {
+      "id": "s2-boolidx-002",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "多条件筛选的运算符",
+        "en": "Operators for Multiple Conditions"
+      },
+      "description": {
+        "zh": "在 pandas 中，使用布尔索引组合多个条件时，应使用哪些运算符？",
+        "en": "In pandas, which operators should be used to combine multiple conditions in boolean indexing?"
+      },
+      "options": {
+        "zh": [
+          "& 表示且，| 表示或",
+          "and 表示且，or 表示或",
+          "&& 表示且，|| 表示或",
+          "AND 表示且，OR 表示或"
+        ],
+        "en": [
+          "& for AND, | for OR",
+          "and for AND, or for OR",
+          "&& for AND, || for OR",
+          "AND for AND, OR for OR"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["pandas 使用位运算符而非 Python 逻辑运算符"],
+        "en": ["pandas uses bitwise operators, not Python logical operators"]
+      },
+      "explanation": {
+        "zh": "pandas 中必须使用 &（与）和 |（或）来组合条件，而不能使用 Python 的 and/or。每个条件还需要用括号括起来。",
+        "en": "In pandas, you must use & (and) and | (or) to combine conditions, not Python's and/or. Each condition must also be enclosed in parentheses."
+      }
+    },
+    {
+      "id": "s2-boolidx-003",
+      "type": "fill-blank",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 ~ 取反",
+        "en": "Negation with ~"
+      },
+      "description": {
+        "zh": "填写代码，筛选出 city 不是 'Beijing' 的行。",
+        "en": "Fill in the code to filter rows where city is not 'Beijing'."
+      },
+      "codeTemplate": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'city': ['Beijing', 'Shanghai']})\nresult = df[___1___(df['city'] == 'Beijing')]",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "~",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": ["~ 运算符用于对布尔 Series 取反"],
+        "en": ["The ~ operator negates a boolean Series"]
+      },
+      "explanation": {
+        "zh": "~ 是布尔取反运算符，~(df['city'] == 'Beijing') 将 True 变为 False，False 变为 True，从而筛选出 city 不是 Beijing 的行。",
+        "en": "~ is the boolean negation operator. ~(df['city'] == 'Beijing') flips True to False and vice versa, filtering rows where city is not Beijing."
+      }
+    },
+    {
+      "id": "s2-boolidx-004",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 isin() 筛选",
+        "en": "Filtering with isin()"
+      },
+      "description": {
+        "zh": "使用 isin() 方法筛选出 city 为 'Beijing' 或 'Shanghai' 的行并打印。",
+        "en": "Use the isin() method to filter rows where city is 'Beijing' or 'Shanghai' and print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'David'],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou', 'Beijing']\n})",
+      "starterCode": "# Filter rows where city is Beijing or Shanghai using isin()\n",
+      "solutionCode": "print(df[df['city'].isin(['Beijing', 'Shanghai'])])",
+      "validationType": "exact-output",
+      "expectedOutput": "    name      city\n0  Alice   Beijing\n1    Bob  Shanghai\n3  David   Beijing",
+      "hints": {
+        "zh": [
+          "isin() 接收一个列表作为参数",
+          "将包含目标值的列表传给 isin()"
+        ],
+        "en": [
+          "isin() takes a list as an argument",
+          "Pass a list of target values to isin()"
+        ]
+      },
+      "explanation": {
+        "zh": "df['city'].isin(['Beijing', 'Shanghai']) 返回布尔 Series，值在列表中的为 True。比用多个 | 条件更简洁。",
+        "en": "df['city'].isin(['Beijing', 'Shanghai']) returns a boolean Series, True where the value is in the list. This is more concise than using multiple | conditions."
+      }
+    },
+    {
+      "id": "s2-boolidx-005",
+      "type": "true-false",
+      "difficulty": 3,
+      "title": {
+        "zh": "between() 方法",
+        "en": "The between() Method"
+      },
+      "description": {
+        "zh": "df['age'].between(20, 30) 等价于 (df['age'] >= 20) & (df['age'] <= 30)。",
+        "en": "df['age'].between(20, 30) is equivalent to (df['age'] >= 20) & (df['age'] <= 30)."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["between() 默认包含两端边界值"],
+        "en": ["between() includes both boundary values by default"]
+      },
+      "explanation": {
+        "zh": "between(left, right) 默认两端都包含（inclusive='both'），所以等价于 >= left 且 <= right。可以通过 inclusive 参数调整。",
+        "en": "between(left, right) includes both endpoints by default (inclusive='both'), so it is equivalent to >= left and <= right. This can be adjusted with the inclusive parameter."
+      }
+    },
+    {
+      "id": "s2-boolidx-006",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "& | ~ 的优先级和括号",
+        "en": "& | ~ Precedence and Parentheses"
+      },
+      "description": {
+        "zh": "从 df 中筛选出 age 大于 25 且（city 为 'Beijing' 或 city 为 'Shanghai'）的行，注意使用括号控制优先级。打印结果。",
+        "en": "Filter rows from df where age > 25 AND (city is 'Beijing' OR city is 'Shanghai'). Use parentheses to control precedence. Print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],\n    'age': [22, 30, 35, 28, 26],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou', 'Beijing', 'Shenzhen']\n})",
+      "starterCode": "# Filter: age > 25 AND (city == 'Beijing' OR city == 'Shanghai')\n",
+      "solutionCode": "print(df[(df['age'] > 25) & ((df['city'] == 'Beijing') | (df['city'] == 'Shanghai'))])",
+      "validationType": "exact-output",
+      "expectedOutput": "    name  age      city\n1    Bob   30  Shanghai\n3  David   28   Beijing",
+      "hints": {
+        "zh": [
+          "每个条件都必须用括号括起来",
+          "& 的优先级高于 |，需要用额外括号"
+        ],
+        "en": [
+          "Each condition must be enclosed in parentheses",
+          "& has higher precedence than |, so extra parentheses are needed"
+        ]
+      },
+      "explanation": {
+        "zh": "在 pandas 中，& 的优先级高于 |，所以 a & b | c 会被解析为 (a & b) | c。如果需要 a & (b | c) 的逻辑，必须手动加括号。每个比较条件也需要括号，因为 & 和 | 的优先级高于 ==、> 等。",
+        "en": "In pandas, & has higher precedence than |, so a & b | c is parsed as (a & b) | c. For a & (b | c) logic, you must add parentheses. Each comparison also needs parentheses because & and | have higher precedence than ==, >, etc."
+      }
+    },
+    {
+      "id": "s2-boolidx-007",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 any() 和 all()",
+        "en": "Using any() and all()"
+      },
+      "description": {
+        "zh": "检查 df 的 'score' 列是否全部大于 60，以及是否存在大于 90 的值。分别将结果赋值给 all_pass 和 has_excellent，然后打印这两个变量。",
+        "en": "Check if all values in df's 'score' column are greater than 60, and if any value is greater than 90. Assign results to all_pass and has_excellent, then print both."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'David'],\n    'score': [85, 55, 92, 78]\n})",
+      "starterCode": "# Check if all scores > 60\n\n# Check if any score > 90\n\n# Print results\n",
+      "solutionCode": "all_pass = (df['score'] > 60).all()\nhas_excellent = (df['score'] > 90).any()\nprint(all_pass)\nprint(has_excellent)",
+      "validationType": "exact-output",
+      "expectedOutput": "False\nTrue",
+      "hints": {
+        "zh": [
+          "all() 检查布尔 Series 是否全部为 True",
+          "any() 检查布尔 Series 是否存在 True"
+        ],
+        "en": [
+          "all() checks if all values in a boolean Series are True",
+          "any() checks if any value in a boolean Series is True"
+        ]
+      },
+      "explanation": {
+        "zh": "(df['score'] > 60).all() 返回 False 因为 Bob 的 55 不满足。(df['score'] > 90).any() 返回 True 因为 Charlie 的 92 满足。这两个方法用于汇总布尔条件。",
+        "en": "(df['score'] > 60).all() returns False because Bob's 55 doesn't satisfy the condition. (df['score'] > 90).any() returns True because Charlie's 92 satisfies it. These methods summarize boolean conditions."
+      }
+    },
+    {
+      "id": "s2-boolidx-008",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "使用 np.where() 条件赋值",
+        "en": "Conditional Assignment with np.where()"
+      },
+      "description": {
+        "zh": "使用 np.where() 创建新列 'level'：score >= 80 时为 'high'，否则为 'low'。然后打印 df。",
+        "en": "Use np.where() to create a new column 'level': 'high' when score >= 80, 'low' otherwise. Then print df."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'score': [85, 60, 92]\n})",
+      "starterCode": "# Create 'level' column using np.where()\n\n# Print df\n",
+      "solutionCode": "df['level'] = np.where(df['score'] >= 80, 'high', 'low')\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "      name  score level\n0    Alice     85  high\n1      Bob     60   low\n2  Charlie     92  high",
+      "hints": {
+        "zh": [
+          "np.where(condition, true_value, false_value)",
+          "condition 是一个布尔 Series"
+        ],
+        "en": [
+          "np.where(condition, true_value, false_value)",
+          "condition is a boolean Series"
+        ]
+      },
+      "explanation": {
+        "zh": "np.where(condition, x, y) 是向量化的条件表达式：条件为 True 时取 x，否则取 y。比 apply + if/else 更高效。",
+        "en": "np.where(condition, x, y) is a vectorized conditional expression: returns x where condition is True, y otherwise. More efficient than apply + if/else."
+      }
+    },
+    {
+      "id": "s2-boolidx-009",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "df.where() 和 df.mask()",
+        "en": "df.where() and df.mask()"
+      },
+      "description": {
+        "zh": "使用 df['score'].where() 将 score 小于 70 的值替换为 70（保底分数），赋值给新列 'adjusted'，然后打印 df。",
+        "en": "Use df['score'].where() to replace scores below 70 with 70 (minimum score), assign to a new column 'adjusted', then print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'David'],\n    'score': [85, 55, 92, 63]\n})",
+      "starterCode": "# Use where() to set a minimum score of 70\n\n# Print df\n",
+      "solutionCode": "df['adjusted'] = df['score'].where(df['score'] >= 70, 70)\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "      name  score  adjusted\n0    Alice     85        85\n1      Bob     55        70\n2  Charlie     92        92\n3    David     63        70",
+      "hints": {
+        "zh": [
+          "where(condition, other) 保留满足条件的值，不满足的替换为 other",
+          "mask() 是 where() 的反操作"
+        ],
+        "en": [
+          "where(condition, other) keeps values where condition is True, replaces others with other",
+          "mask() is the inverse of where()"
+        ]
+      },
+      "explanation": {
+        "zh": "Series.where(cond, other) 当条件为 True 时保留原值，为 False 时替换为 other。mask() 相反：条件为 True 时替换。where 像是\"保留满足条件的\"，mask 像是\"遮盖满足条件的\"。",
+        "en": "Series.where(cond, other) keeps the original value when condition is True, replaces with other when False. mask() does the opposite: replaces when True. Think of where as 'keep where true' and mask as 'hide where true'."
+      }
+    },
+    {
+      "id": "s2-boolidx-010",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "在布尔索引中使用 str.contains",
+        "en": "str.contains in Boolean Indexing"
+      },
+      "description": {
+        "zh": "使用 str.contains() 筛选出 df 中 'email' 列包含 'gmail' 的行并打印。",
+        "en": "Use str.contains() to filter rows in df where the 'email' column contains 'gmail' and print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'David'],\n    'email': ['alice@gmail.com', 'bob@yahoo.com', 'charlie@gmail.com', 'david@outlook.com']\n})",
+      "starterCode": "# Filter rows where email contains 'gmail'\n",
+      "solutionCode": "print(df[df['email'].str.contains('gmail')])",
+      "validationType": "exact-output",
+      "expectedOutput": "      name              email\n0    Alice    alice@gmail.com\n2  Charlie  charlie@gmail.com",
+      "hints": {
+        "zh": [
+          "str.contains() 返回布尔 Series",
+          "可以直接用作布尔索引"
+        ],
+        "en": [
+          "str.contains() returns a boolean Series",
+          "Can be used directly as a boolean index"
+        ]
+      },
+      "explanation": {
+        "zh": "df['email'].str.contains('gmail') 对每个 email 检查是否包含 'gmail' 子串，返回布尔 Series。结合 df[] 实现了基于字符串内容的行筛选。",
+        "en": "df['email'].str.contains('gmail') checks each email for the 'gmail' substring, returning a boolean Series. Combined with df[], this achieves string-content-based row filtering."
+      }
+    },
+    {
+      "id": "s2-boolidx-011",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[调试] 使用 and/or 代替 &/| 的错误",
+        "en": "[Debug] Using and/or Instead of &/| Error"
+      },
+      "description": {
+        "zh": "以下代码试图筛选 age > 25 且 score > 80 的行，但报错了。请找到并修复 bug。",
+        "en": "The following code tries to filter rows where age > 25 and score > 80, but it errors. Find and fix the bug."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'David'],\n    'age': [22, 30, 35, 28],\n    'score': [85, 75, 92, 88]\n})",
+      "starterCode": "# Bug: using Python's 'and' instead of '&'\nresult = df[df['age'] > 25 and df['score'] > 80]\nprint(result)",
+      "solutionCode": "result = df[(df['age'] > 25) & (df['score'] > 80)]\nprint(result)",
+      "validationType": "exact-output",
+      "expectedOutput": "      name  age  score\n2  Charlie   35     92\n3    David   28     88",
+      "hints": {
+        "zh": [
+          "pandas 中不能用 Python 的 and/or 关键字",
+          "必须用 & 和 | 位运算符，并给每个条件加括号"
+        ],
+        "en": [
+          "Python's and/or keywords cannot be used with pandas Series",
+          "Must use & and | bitwise operators, with parentheses around each condition"
+        ]
+      },
+      "explanation": {
+        "zh": "Python 的 and/or 无法对 Series 进行逐元素逻辑运算，会报 ValueError。必须使用 &（与）和 |（或），并用括号包裹每个条件，因为 & 和 | 的优先级高于比较运算符。",
+        "en": "Python's and/or cannot perform element-wise logical operations on Series, raising ValueError. Must use & (and) and | (or), with parentheses around each condition, because & and | have higher precedence than comparison operators."
+      }
+    },
+    {
+      "id": "s2-boolidx-012",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "[最佳实践] 布尔索引 vs query vs loc",
+        "en": "[Best Practice] Boolean Indexing vs query vs loc"
+      },
+      "description": {
+        "zh": "对于复杂的多条件筛选，以下哪种方式可读性最好？",
+        "en": "For complex multi-condition filtering, which approach has the best readability?"
+      },
+      "options": {
+        "zh": [
+          "df.query('age > 25 and city == \"Beijing\"') — 类似 SQL 语法更直观",
+          "df[(df['age'] > 25) & (df['city'] == 'Beijing')] — 括号多但最灵活",
+          "df.loc[(df['age'] > 25) & (df['city'] == 'Beijing')] — 明确使用 loc",
+          "以上三种都可以，应根据场景选择"
+        ],
+        "en": [
+          "df.query('age > 25 and city == \"Beijing\"') — SQL-like syntax is more intuitive",
+          "df[(df['age'] > 25) & (df['city'] == 'Beijing')] — more brackets but most flexible",
+          "df.loc[(df['age'] > 25) & (df['city'] == 'Beijing')] — explicitly uses loc",
+          "All three work; choose based on the scenario"
+        ]
+      },
+      "correctIndex": 3,
+      "hints": {
+        "zh": [
+          "query() 对简单条件更简洁",
+          "布尔索引更灵活，支持自定义函数",
+          "loc 可以同时筛选行和列"
+        ],
+        "en": [
+          "query() is more concise for simple conditions",
+          "Boolean indexing is more flexible, supporting custom functions",
+          "loc can filter both rows and columns simultaneously"
+        ]
+      },
+      "explanation": {
+        "zh": "三种方式各有优势：query() 对简单条件可读性好；布尔索引最灵活，支持复杂函数；loc 可同时选择行和列。实际项目中应根据条件复杂度和团队习惯选择。",
+        "en": "Each approach has strengths: query() is readable for simple conditions; boolean indexing is most flexible with complex functions; loc can select both rows and columns. Choose based on complexity and team conventions."
+      }
+    },
+    {
+      "id": "s2-boolidx-013",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 复杂多条件筛选和统计",
+        "en": "[Challenge] Complex Multi-Condition Filtering and Stats"
+      },
+      "description": {
+        "zh": "对销售数据 df 进行分析：1) 筛选出 region 为 'East' 或 'West'、且 sales > 1000 的行；2) 在筛选结果上计算 sales 的平均值；3) 将平均值赋给变量 avg_sales 并打印（保留 1 位小数）。",
+        "en": "Analyze sales data df: 1) Filter rows where region is 'East' or 'West' AND sales > 1000; 2) Calculate the mean of sales on the filtered result; 3) Assign to avg_sales and print (1 decimal place)."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'region': ['East', 'West', 'North', 'East', 'West', 'South'],\n    'product': ['A', 'B', 'A', 'C', 'A', 'B'],\n    'sales': [1500, 2000, 800, 500, 1800, 1200]\n})",
+      "starterCode": "# Step 1: Filter region in ['East', 'West'] and sales > 1000\n\n# Step 2: Calculate mean of filtered sales\n\n# Step 3: Print avg_sales with 1 decimal place\n",
+      "solutionCode": "filtered = df[(df['region'].isin(['East', 'West'])) & (df['sales'] > 1000)]\navg_sales = filtered['sales'].mean()\nprint(round(avg_sales, 1))",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "try:\n    filtered = df[(df['region'].isin(['East', 'West'])) & (df['sales'] > 1000)]\n    expected_avg = filtered['sales'].mean()\n    result = (round(avg_sales, 1) == round(expected_avg, 1))\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "用 isin() 检查 region 是否在列表中",
+          "用 & 组合多个条件，注意加括号",
+          "在筛选结果上调用 mean()"
+        ],
+        "en": [
+          "Use isin() to check if region is in the list",
+          "Use & to combine conditions with parentheses",
+          "Call mean() on the filtered result"
+        ]
+      },
+      "explanation": {
+        "zh": "此题综合了 isin()、& 组合条件、和聚合统计。首先用 isin 筛选区域，& 组合销售额条件，最后对筛选结果计算均值。这是数据分析中常见的 \"筛选-聚合\" 模式。",
+        "en": "This challenge combines isin(), & condition combination, and aggregate statistics. First filter regions with isin, combine with sales condition using &, then compute mean on the result. This is the common 'filter-aggregate' pattern in data analysis."
+      }
+    }
+  ]
+}

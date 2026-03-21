@@ -1,0 +1,359 @@
+{
+  "module": "project-eda",
+  "stageId": "stage4",
+  "lessonId": "project-eda",
+  "tags": ["eda", "describe", "value_counts", "correlation", "groupby", "patterns"],
+  "exercises": [
+    {
+      "id": "s4-project-eda-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "describe 与 value_counts",
+        "en": "describe and value_counts"
+      },
+      "description": {
+        "zh": "使用 describe() 获取数值列的统计摘要，并使用 value_counts() 查看 'category' 列的频率分布。将 value_counts 结果赋给变量 freq。",
+        "en": "Use describe() to get summary statistics of numeric columns, and use value_counts() to check the frequency distribution of the 'category' column. Assign the value_counts result to variable freq."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'category': ['A', 'B', 'A', 'C', 'B', 'A', 'C', 'C'], 'value': [10, 20, 15, 30, 25, 12, 28, 35], 'score': [85, 90, 78, 92, 88, 82, 95, 91]})",
+      "starterCode": "# Get summary stats\nstats = df.describe()\n\n# Get frequency distribution of category\nfreq = ___",
+      "solutionCode": "stats = df.describe()\nfreq = df['category'].value_counts()",
+      "validationType": "dataframe-equals",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["value_counts() 统计每个唯一值出现的次数", "默认按频率降序排列"],
+        "en": ["value_counts() counts occurrences of each unique value", "Results are sorted by frequency in descending order"]
+      },
+      "explanation": {
+        "zh": "describe() 提供数值列的统计信息（均值、标准差、分位数等），value_counts() 展示分类变量的频率分布。两者是 EDA 的基础工具。",
+        "en": "describe() provides statistics for numeric columns (mean, std, quantiles, etc.), while value_counts() shows frequency distribution of categorical variables. Both are fundamental EDA tools."
+      }
+    },
+    {
+      "id": "s4-project-eda-002",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "相关性矩阵",
+        "en": "Correlation Matrix"
+      },
+      "description": {
+        "zh": "计算 DataFrame 中数值列之间的相关性矩阵。",
+        "en": "Calculate the correlation matrix between numeric columns in the DataFrame."
+      },
+      "codeTemplate": "corr_matrix = df.select_dtypes(include='number').___",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "corr()",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": ["corr() 方法计算列与列之间的皮尔逊相关系数"],
+        "en": ["The corr() method computes Pearson correlation coefficients between columns"]
+      },
+      "explanation": {
+        "zh": "corr() 默认计算皮尔逊相关系数，值域 [-1, 1]。1 表示完全正相关，-1 表示完全负相关，0 表示无线性相关。可配合热力图可视化。",
+        "en": "corr() computes Pearson correlation by default, with values in [-1, 1]. 1 means perfect positive correlation, -1 means perfect negative correlation, 0 means no linear correlation. Often visualized with heatmaps."
+      }
+    },
+    {
+      "id": "s4-project-eda-003",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "分组汇总分析",
+        "en": "Groupby Summary Analysis"
+      },
+      "description": {
+        "zh": "按 'category' 分组，同时计算 value 的均值、中位数和标准差。",
+        "en": "Group by 'category' and calculate the mean, median, and standard deviation of 'value' simultaneously."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'category': ['A', 'B', 'A', 'C', 'B', 'A'], 'value': [10, 20, 15, 30, 25, 12]})",
+      "starterCode": "# Group by category and compute multiple statistics\nresult = ___",
+      "solutionCode": "result = df.groupby('category')['value'].agg(['mean', 'median', 'std'])",
+      "validationType": "dataframe-equals",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["agg() 方法可以接受多个聚合函数的列表"],
+        "en": ["The agg() method can accept a list of multiple aggregation functions"]
+      },
+      "explanation": {
+        "zh": "使用 agg(['mean', 'median', 'std']) 可以一次性计算多个统计量。这在 EDA 中非常有用，可以快速了解各分组的分布特征。",
+        "en": "Using agg(['mean', 'median', 'std']) computes multiple statistics at once. This is very useful in EDA for quickly understanding distribution characteristics across groups."
+      }
+    },
+    {
+      "id": "s4-project-eda-004",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "识别数据模式",
+        "en": "Identifying Data Patterns"
+      },
+      "description": {
+        "zh": "在探索性数据分析中，以下哪种方法最适合快速发现数据中的缺失模式？",
+        "en": "In exploratory data analysis, which method is best for quickly discovering missing data patterns?"
+      },
+      "options": {
+        "zh": [
+          "df.isnull().sum() 查看每列的缺失数量",
+          "df.describe() 查看统计摘要",
+          "df.head() 查看前几行",
+          "df.dtypes 查看数据类型"
+        ],
+        "en": [
+          "df.isnull().sum() to see the count of missing values per column",
+          "df.describe() to view summary statistics",
+          "df.head() to view the first few rows",
+          "df.dtypes to check data types"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["isnull() 返回布尔 DataFrame，sum() 对 True 求和"],
+        "en": ["isnull() returns a boolean DataFrame, sum() counts True values"]
+      },
+      "explanation": {
+        "zh": "df.isnull().sum() 是发现缺失模式的快捷方式。可以进一步用 df.isnull().mean() 查看缺失比例，帮助决定如何处理缺失值。",
+        "en": "df.isnull().sum() is a quick way to discover missing patterns. You can further use df.isnull().mean() to check missing proportions, helping decide how to handle missing values."
+      }
+    },
+    {
+      "id": "s4-project-eda-005",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "describe 分析分类列",
+        "en": "describe for Categorical Columns"
+      },
+      "description": {
+        "zh": "使用 describe(include='object') 获取分类列的统计摘要（计数、唯一值数、最频繁值等）。",
+        "en": "Use describe(include='object') to get summary statistics for categorical columns (count, unique, top, freq)."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Alice', 'Charlie', 'Bob', 'Alice'], 'city': ['NYC', 'LA', 'NYC', 'NYC', 'LA', 'Chicago'], 'score': [85, 90, 78, 92, 88, 82]})",
+      "starterCode": "# Describe categorical columns\ncat_stats = df.describe(include=___)\nprint(cat_stats)",
+      "solutionCode": "cat_stats = df.describe(include='object')\nprint(cat_stats)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'name' in cat_stats.columns and 'top' in cat_stats.index and 'unique' in cat_stats.index\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["include='object' 只分析字符串/对象类型的列", "结果包含 count、unique、top、freq 四个统计量"],
+        "en": ["include='object' analyzes only string/object type columns", "Result includes count, unique, top, freq statistics"]
+      },
+      "explanation": {
+        "zh": "describe() 默认只分析数值列。加上 include='object' 可以分析分类列，返回：count（非空数量）、unique（唯一值数）、top（最频繁值）、freq（最频繁值出现次数）。也可以用 include='all' 同时分析所有类型的列。",
+        "en": "describe() only analyzes numeric columns by default. Adding include='object' analyzes categorical columns, returning: count (non-null), unique (distinct values), top (most frequent), freq (frequency of top value). Use include='all' to analyze all column types simultaneously."
+      }
+    },
+    {
+      "id": "s4-project-eda-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "相关性分析与热力图数据",
+        "en": "Correlation Analysis with Heatmap Data"
+      },
+      "description": {
+        "zh": "计算数值列的相关系数矩阵，并找出与 'target' 列相关性最高的特征（绝对值最大）。",
+        "en": "Compute the correlation matrix of numeric columns and find the feature most correlated with the 'target' column (highest absolute value)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'feature_a': np.random.randn(100), 'feature_b': np.random.randn(100), 'feature_c': np.random.randn(100)})\ndf['target'] = df['feature_a'] * 0.8 + np.random.randn(100) * 0.2",
+      "starterCode": "# Compute correlation matrix\ncorr = df.corr()\n\n# Find feature most correlated with target (exclude target itself)\ntarget_corr = corr['target'].drop('target').abs()\nmost_correlated = target_corr.idxmax()\nprint(f'Most correlated feature: {most_correlated}')",
+      "solutionCode": "corr = df.corr()\ntarget_corr = corr['target'].drop('target').abs()\nmost_correlated = target_corr.idxmax()\nprint(f'Most correlated feature: {most_correlated}')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = most_correlated == 'feature_a'\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["corr() 计算皮尔逊相关系数", "abs() 取绝对值，idxmax() 返回最大值的索引"],
+        "en": ["corr() computes Pearson correlation", "abs() takes absolute values, idxmax() returns the index of the max"]
+      },
+      "explanation": {
+        "zh": "相关性分析流程：1) corr() 计算相关矩阵；2) 选取目标列的相关性；3) drop 自身（相关性为 1）；4) 取绝对值找最强相关；5) idxmax() 找到最相关的特征名。这是特征选择的基础方法。配合 seaborn.heatmap 可视化效果更好。",
+        "en": "Correlation analysis workflow: 1) corr() computes the matrix; 2) Select target column's correlations; 3) Drop self (correlation is 1); 4) Take absolute values for strongest correlation; 5) idxmax() finds the most correlated feature. This is a basic feature selection method. Better visualized with seaborn.heatmap."
+      }
+    },
+    {
+      "id": "s4-project-eda-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "偏度和峰度分析",
+        "en": "Skewness and Kurtosis Analysis"
+      },
+      "description": {
+        "zh": "计算数值列的偏度 (skew) 和峰度 (kurtosis)，找出分布最不对称的列。",
+        "en": "Calculate skewness and kurtosis of numeric columns, and find the most asymmetrically distributed column."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'normal': np.random.randn(1000), 'right_skewed': np.random.exponential(2, 1000), 'uniform': np.random.uniform(0, 10, 1000)})",
+      "starterCode": "# Calculate skewness\nskewness = df.skew()\nprint('Skewness:')\nprint(skewness)\n\n# Calculate kurtosis\nkurt = df.kurtosis()\nprint('\\nKurtosis:')\nprint(kurt)\n\n# Most skewed column\nmost_skewed = skewness.abs().idxmax()",
+      "solutionCode": "skewness = df.skew()\nprint('Skewness:')\nprint(skewness)\nkurt = df.kurtosis()\nprint('\\nKurtosis:')\nprint(kurt)\nmost_skewed = skewness.abs().idxmax()",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = most_skewed == 'right_skewed' and len(skewness) == 3\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["skew() 计算偏度：0 表示对称，正值右偏，负值左偏", "kurtosis() 计算峰度：0 表示正态分布"],
+        "en": ["skew() computes skewness: 0 is symmetric, positive is right-skewed, negative is left-skewed", "kurtosis() computes kurtosis: 0 indicates normal distribution"]
+      },
+      "explanation": {
+        "zh": "偏度衡量分布的对称性（0=对称，>0 右偏，<0 左偏），峰度衡量尾部厚度（0=正态，>0 厚尾，<0 薄尾）。在 EDA 中，高偏度可能意味着需要对数变换，高峰度可能意味着存在异常值。这些指标帮助选择适当的统计方法和变换。",
+        "en": "Skewness measures distribution symmetry (0=symmetric, >0 right-skewed, <0 left-skewed). Kurtosis measures tail thickness (0=normal, >0 heavy-tailed, <0 thin-tailed). In EDA, high skewness may suggest log transformation, high kurtosis may indicate outliers. These metrics help choose appropriate statistical methods and transformations."
+      }
+    },
+    {
+      "id": "s4-project-eda-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "连续变量分箱分析",
+        "en": "Binning Continuous Variables for Analysis"
+      },
+      "description": {
+        "zh": "使用 pd.cut 将 'age' 列分为 4 个等宽区间，然后统计每个区间的人数。",
+        "en": "Use pd.cut to bin the 'age' column into 4 equal-width intervals, then count the number of people in each bin."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'name': [f'person_{i}' for i in range(50)], 'age': np.random.randint(18, 70, 50)})",
+      "starterCode": "# Bin age into 4 groups\ndf['age_group'] = pd.cut(df['age'], bins=___, labels=['Young', 'Middle', 'Senior', 'Elder'])\n\n# Count per group\ngroup_counts = df['age_group'].value_counts().sort_index()",
+      "solutionCode": "df['age_group'] = pd.cut(df['age'], bins=4, labels=['Young', 'Middle', 'Senior', 'Elder'])\ngroup_counts = df['age_group'].value_counts().sort_index()",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = df['age_group'].dtype.name == 'category' and group_counts.sum() == 50 and len(group_counts) == 4\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["bins=4 自动创建 4 个等宽区间", "labels 参数自定义区间标签"],
+        "en": ["bins=4 automatically creates 4 equal-width intervals", "labels parameter customizes interval labels"]
+      },
+      "explanation": {
+        "zh": "pd.cut 将连续变量离散化为区间。bins=4 创建等宽区间，也可以传入自定义边界列表如 [0, 25, 40, 55, 100]。pd.qcut 则按分位数分箱（等频）。分箱后可以用 value_counts 或 groupby 分析每组的特征，这是 EDA 中理解连续变量分布的重要方法。",
+        "en": "pd.cut discretizes continuous variables into intervals. bins=4 creates equal-width bins; you can also pass custom boundaries like [0, 25, 40, 55, 100]. pd.qcut bins by quantiles (equal-frequency). After binning, use value_counts or groupby to analyze group characteristics - an important EDA method for understanding continuous variable distributions."
+      }
+    },
+    {
+      "id": "s4-project-eda-009",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "交叉表分析",
+        "en": "Cross-Tabulation Analysis"
+      },
+      "description": {
+        "zh": "使用 pd.crosstab 分析 'department' 和 'satisfaction' 两个分类变量之间的关系，并添加行合计和列合计。",
+        "en": "Use pd.crosstab to analyze the relationship between 'department' and 'satisfaction', adding row and column totals."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'department': np.random.choice(['Eng', 'HR', 'Sales'], 100), 'satisfaction': np.random.choice(['Low', 'Medium', 'High'], 100)})",
+      "starterCode": "# Cross-tabulation with margins\nresult = pd.crosstab(df['department'], df['satisfaction'], margins=___)\nprint(result)",
+      "solutionCode": "result = pd.crosstab(df['department'], df['satisfaction'], margins=True)\nprint(result)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'All' in result.index and 'All' in result.columns and result.loc['All', 'All'] == 100\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["margins=True 添加行列合计（All 行和列）"],
+        "en": ["margins=True adds row and column totals (All row and column)"]
+      },
+      "explanation": {
+        "zh": "pd.crosstab 是分析两个分类变量关系的利器。margins=True 添加边际合计。还可以用 normalize 参数看比例。交叉表在市场分析、问卷调查分析中广泛使用，可以快速发现分类变量之间的关联模式。",
+        "en": "pd.crosstab is a powerful tool for analyzing relationships between two categorical variables. margins=True adds marginal totals. Use normalize to see proportions. Cross-tabulation is widely used in market analysis and survey analysis to quickly discover association patterns between categorical variables."
+      }
+    },
+    {
+      "id": "s4-project-eda-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "groupby + agg 汇总表",
+        "en": "groupby + agg Summary Tables"
+      },
+      "description": {
+        "zh": "创建一个按 'region' 分组的汇总表，同时显示 revenue 的均值、总和、计数以及 profit 的均值。使用命名聚合。",
+        "en": "Create a summary table grouped by 'region', showing mean, sum, count of revenue and mean of profit. Use named aggregation."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'region': np.random.choice(['East', 'West', 'North', 'South'], 80), 'revenue': np.random.uniform(1000, 10000, 80).round(2), 'profit': np.random.uniform(100, 3000, 80).round(2)})",
+      "starterCode": "# Named aggregation summary\nsummary = df.groupby('region').agg(\n    avg_revenue=('revenue', 'mean'),\n    total_revenue=('revenue', 'sum'),\n    num_transactions=('revenue', 'count'),\n    avg_profit=('profit', ___)\n).round(2)",
+      "solutionCode": "summary = df.groupby('region').agg(\n    avg_revenue=('revenue', 'mean'),\n    total_revenue=('revenue', 'sum'),\n    num_transactions=('revenue', 'count'),\n    avg_profit=('profit', 'mean')\n).round(2)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = len(summary) == 4 and 'avg_revenue' in summary.columns and 'total_revenue' in summary.columns and 'avg_profit' in summary.columns\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["命名聚合格式：新列名=('原列名', '聚合函数')"],
+        "en": ["Named aggregation format: new_name=('original_col', 'agg_func')"]
+      },
+      "explanation": {
+        "zh": "命名聚合是 EDA 中创建汇总表的最佳方式：df.groupby(...).agg(name=(col, func))。优点：1) 结果列名清晰；2) 不同列可以用不同的聚合函数；3) 同一列可以应用多个函数。配合 .round() 控制精度，产出整洁的分析报告。",
+        "en": "Named aggregation is the best way to create summary tables in EDA: df.groupby(...).agg(name=(col, func)). Advantages: 1) Clear result column names; 2) Different columns can use different aggregation functions; 3) Multiple functions can be applied to the same column. Combined with .round() for precision control, it produces clean analysis reports."
+      }
+    },
+    {
+      "id": "s4-project-eda-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "使用 pivot_table 发现模式",
+        "en": "Identifying Patterns with pivot_table"
+      },
+      "description": {
+        "zh": "使用 pivot_table 分析不同产品在不同季度的平均销售额，寻找季节性模式。",
+        "en": "Use pivot_table to analyze average sales of different products across quarters, looking for seasonal patterns."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'quarter': ['Q1', 'Q2', 'Q3', 'Q4'] * 12, 'product': np.repeat(['Widget', 'Gadget', 'Doohickey'], 16), 'sales': np.random.uniform(100, 1000, 48).round(2)})",
+      "starterCode": "# Pivot table: products vs quarters\npattern = df.pivot_table(\n    values='sales', \n    index='product', \n    columns='quarter', \n    aggfunc=___\n).round(2)\nprint(pattern)",
+      "solutionCode": "pattern = df.pivot_table(\n    values='sales', \n    index='product', \n    columns='quarter', \n    aggfunc='mean'\n).round(2)\nprint(pattern)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = pattern.shape == (3, 4) and list(pattern.columns) == ['Q1', 'Q2', 'Q3', 'Q4']\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["pivot_table 将长格式数据转为宽格式汇总", "aggfunc='mean' 计算每个单元格的平均值"],
+        "en": ["pivot_table converts long-format data to wide-format summaries", "aggfunc='mean' computes the average for each cell"]
+      },
+      "explanation": {
+        "zh": "pivot_table 是 EDA 中发现模式的强大工具。通过将分类变量放在行和列上，可以直观地看到数据在不同维度上的分布。比如按产品和季度的销售矩阵可以揭示季节性趋势。aggfunc 还支持 'sum'、'count'、'median' 等。",
+        "en": "pivot_table is a powerful EDA tool for pattern discovery. By placing categorical variables on rows and columns, you can visually see data distribution across dimensions. For example, a product-by-quarter sales matrix can reveal seasonal trends. aggfunc also supports 'sum', 'count', 'median', etc."
+      }
+    },
+    {
+      "id": "s4-project-eda-012",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 在非数值列上计算相关性",
+        "en": "[Debug] Correlation on Non-Numeric Columns"
+      },
+      "description": {
+        "zh": "以下代码直接对包含非数值列的 DataFrame 调用 corr()，会产生警告或忽略列。请修复：先选择数值列再计算相关性。",
+        "en": "The code below calls corr() on a DataFrame with non-numeric columns, which produces warnings or ignores columns. Fix: select numeric columns first, then compute correlation."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'age': [25, 30, 35, 28, 32], 'salary': [50000, 60000, 75000, 55000, 70000], 'department': ['Eng', 'HR', 'Eng', 'Sales', 'HR']})",
+      "starterCode": "# Bug: corr() on DataFrame with non-numeric columns\n# Fix: select numeric columns first\ncorr_matrix = df.select_dtypes(include='number').corr()\nprint(corr_matrix)",
+      "solutionCode": "corr_matrix = df.select_dtypes(include='number').corr()\nprint(corr_matrix)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = corr_matrix.shape == (2, 2) and 'age' in corr_matrix.columns and 'salary' in corr_matrix.columns and 'name' not in corr_matrix.columns\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["select_dtypes(include='number') 只选择数值列", "corr() 只能对数值数据计算相关系数"],
+        "en": ["select_dtypes(include='number') selects only numeric columns", "corr() can only compute correlation on numeric data"]
+      },
+      "explanation": {
+        "zh": "corr() 只能计算数值列之间的相关性。如果 DataFrame 包含字符串、日期等非数值列，应先用 select_dtypes(include='number') 筛选。新版 pandas 会自动忽略非数值列并发出 FutureWarning，但显式筛选是更好的做法。对分类变量的关联分析应使用交叉表或卡方检验。",
+        "en": "corr() only computes correlations between numeric columns. If the DataFrame contains strings, dates, or other non-numeric columns, filter first with select_dtypes(include='number'). Newer pandas auto-ignores non-numeric columns with a FutureWarning, but explicit filtering is better practice. For categorical variable association, use cross-tabulation or chi-square tests."
+      }
+    },
+    {
+      "id": "s4-project-eda-013",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 完整 EDA 报告",
+        "en": "[Challenge] Full EDA Report"
+      },
+      "description": {
+        "zh": "完成一个 6 步 EDA 分析：1) 数据形状和类型概览，2) 缺失值分析，3) 数值列统计描述，4) 分类列频率分布，5) 相关性分析，6) 按类别的分组汇总。将各步结果赋给对应变量。",
+        "en": "Complete a 6-step EDA analysis: 1) Data shape and types overview, 2) Missing value analysis, 3) Numeric descriptive statistics, 4) Categorical frequency distribution, 5) Correlation analysis, 6) Groupby summary by category. Assign results to corresponding variables."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nn = 200\ndf = pd.DataFrame({\n    'product': np.random.choice(['Laptop', 'Phone', 'Tablet', 'Watch'], n),\n    'region': np.random.choice(['North', 'South', 'East', 'West'], n),\n    'price': np.random.uniform(100, 2000, n).round(2),\n    'quantity': np.random.randint(1, 50, n),\n    'rating': np.random.choice([1, 2, 3, 4, 5], n, p=[0.05, 0.1, 0.2, 0.35, 0.3]),\n    'discount': np.where(np.random.random(n) > 0.7, np.nan, np.random.uniform(0.05, 0.3, n).round(2))\n})",
+      "starterCode": "# Step 1: Shape and types\nshape_info = df.shape\ntypes_info = df.dtypes\nprint(f'Shape: {shape_info}')\n\n# Step 2: Missing values\nmissing = df.isnull().sum()\nmissing_pct = (df.isnull().mean() * 100).round(1)\nprint(f'\\nMissing values:\\n{missing[missing > 0]}')\n\n# Step 3: Numeric statistics\nnum_stats = df.describe()\n\n# Step 4: Categorical frequency\ncat_stats = df.describe(include='object')\nproduct_freq = df['product'].value_counts()\n\n# Step 5: Correlation\ncorr_matrix = df.select_dtypes(include='number').corr().round(3)\n\n# Step 6: Groupby summary\nsummary = df.groupby('product').agg(\n    avg_price=('price', 'mean'),\n    total_qty=('quantity', 'sum'),\n    avg_rating=('rating', 'mean')\n).round(2)",
+      "solutionCode": "shape_info = df.shape\ntypes_info = df.dtypes\nprint(f'Shape: {shape_info}')\nmissing = df.isnull().sum()\nmissing_pct = (df.isnull().mean() * 100).round(1)\nprint(f'\\nMissing values:\\n{missing[missing > 0]}')\nnum_stats = df.describe()\ncat_stats = df.describe(include='object')\nproduct_freq = df['product'].value_counts()\ncorr_matrix = df.select_dtypes(include='number').corr().round(3)\nsummary = df.groupby('product').agg(\n    avg_price=('price', 'mean'),\n    total_qty=('quantity', 'sum'),\n    avg_rating=('rating', 'mean')\n).round(2)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = (\n        shape_info == (200, 6) and\n        len(missing) == 6 and\n        num_stats.shape[1] >= 3 and\n        len(product_freq) == 4 and\n        corr_matrix.shape[0] >= 3 and\n        len(summary) == 4 and\n        'avg_price' in summary.columns\n    )\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["按 6 个步骤逐一完成", "每步解决一个分析维度", "命名聚合使汇总表更清晰"],
+        "en": ["Complete each of the 6 steps", "Each step addresses one analysis dimension", "Named aggregation makes summary tables clearer"]
+      },
+      "explanation": {
+        "zh": "完整的 EDA 报告通常包含：1) 数据基本信息（行列数、类型）；2) 缺失值模式（数量和比例）；3) 数值列分布特征（均值、标准差、分位数）；4) 分类列频率分布（唯一值、最常见值）；5) 变量间关系（相关性矩阵）；6) 分组分析（按关键维度汇总）。这 6 步覆盖了 EDA 的核心要素，为后续的深入分析和建模奠定基础。",
+        "en": "A complete EDA report typically includes: 1) Basic data info (rows, columns, types); 2) Missing value patterns (counts and proportions); 3) Numeric distribution characteristics (mean, std, quartiles); 4) Categorical frequency distributions (unique values, most common); 5) Variable relationships (correlation matrix); 6) Grouped analysis (summary by key dimensions). These 6 steps cover EDA essentials, laying the foundation for deeper analysis and modeling."
+      }
+    }
+  ]
+}

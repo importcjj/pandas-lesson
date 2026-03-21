@@ -1,0 +1,430 @@
+{
+  "module": "visualization",
+  "stageId": "stage3",
+  "lessonId": "visualization",
+  "tags": ["plot", "visualization", "bar", "line", "matplotlib"],
+  "exercises": [
+    {
+      "id": "s3-visualization-001",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "df.plot() 默认图表类型",
+        "en": "Default Plot Type of df.plot()"
+      },
+      "description": {
+        "zh": "调用 df.plot() 时，默认绘制的图表类型是什么？",
+        "en": "What is the default chart type when calling df.plot()?"
+      },
+      "options": {
+        "zh": ["折线图 (line)", "柱状图 (bar)", "散点图 (scatter)", "饼图 (pie)"],
+        "en": ["Line chart", "Bar chart", "Scatter plot", "Pie chart"]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["想想最基本的时间序列数据用什么图最合适"],
+        "en": ["Think about what chart type is most appropriate for basic time series data"]
+      },
+      "explanation": {
+        "zh": "df.plot() 默认绘制折线图 (kind='line')。这对于展示趋势和时间序列数据非常合适。",
+        "en": "df.plot() draws a line chart by default (kind='line'). This is well-suited for showing trends and time series data."
+      }
+    },
+    {
+      "id": "s3-visualization-002",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "使用 kind 参数指定图表类型",
+        "en": "Using the kind Parameter"
+      },
+      "description": {
+        "zh": "绘制一个柱状图来展示每个城市的人口。",
+        "en": "Draw a bar chart to show the population of each city."
+      },
+      "codeTemplate": "df.plot(x='city', y='population', kind=___)",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "'bar'",
+          "alternatives": ["\"bar\""]
+        }
+      ],
+      "hints": {
+        "zh": ["柱状图的 kind 值是 'bar'"],
+        "en": ["The kind value for a bar chart is 'bar'"]
+      },
+      "explanation": {
+        "zh": "kind 参数支持多种图表类型：'line'（折线）、'bar'（柱状）、'barh'（水平柱状）、'hist'（直方图）、'box'（箱线图）、'scatter'（散点图）、'pie'（饼图）等。",
+        "en": "The kind parameter supports various chart types: 'line', 'bar', 'barh' (horizontal bar), 'hist' (histogram), 'box' (box plot), 'scatter', 'pie', etc."
+      }
+    },
+    {
+      "id": "s3-visualization-003",
+      "type": "true-false",
+      "difficulty": 3,
+      "title": {
+        "zh": "plot.bar 与 kind='bar' 的关系",
+        "en": "plot.bar vs kind='bar'"
+      },
+      "description": {
+        "zh": "df.plot.bar() 与 df.plot(kind='bar') 效果相同。",
+        "en": "df.plot.bar() produces the same result as df.plot(kind='bar')."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["pandas 提供了两种等价的 API 来指定图表类型"],
+        "en": ["pandas provides two equivalent APIs for specifying chart types"]
+      },
+      "explanation": {
+        "zh": "df.plot.bar() 是 df.plot(kind='bar') 的便捷方式。两种写法功能完全相同，plot 访问器还支持 .line()、.hist()、.scatter() 等方法。",
+        "en": "df.plot.bar() is a convenient shorthand for df.plot(kind='bar'). Both are functionally identical. The plot accessor also supports .line(), .hist(), .scatter(), and other methods."
+      }
+    },
+    {
+      "id": "s3-visualization-004",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "图表基本定制",
+        "en": "Basic Plot Customization"
+      },
+      "description": {
+        "zh": "以下哪种方式可以在 pandas plot 中设置图表标题和坐标轴标签？",
+        "en": "Which approach can set the chart title and axis labels in a pandas plot?"
+      },
+      "options": {
+        "zh": [
+          "df.plot(title='Sales', xlabel='Month', ylabel='Revenue')",
+          "df.plot().title('Sales').xlabel('Month')",
+          "df.plot(header='Sales', x_label='Month')",
+          "df.plot(name='Sales', axis_x='Month')"
+        ],
+        "en": [
+          "df.plot(title='Sales', xlabel='Month', ylabel='Revenue')",
+          "df.plot().title('Sales').xlabel('Month')",
+          "df.plot(header='Sales', x_label='Month')",
+          "df.plot(name='Sales', axis_x='Month')"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["pandas plot 使用 title、xlabel、ylabel 参数"],
+        "en": ["pandas plot uses title, xlabel, ylabel parameters"]
+      },
+      "explanation": {
+        "zh": "df.plot() 支持 title、xlabel、ylabel 等参数来定制图表。也可以通过返回的 matplotlib Axes 对象进一步定制。",
+        "en": "df.plot() supports parameters like title, xlabel, ylabel for customization. You can also further customize through the returned matplotlib Axes object."
+      }
+    },
+    {
+      "id": "s3-visualization-005",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "直方图与散点图",
+        "en": "Histogram and Scatter Plot"
+      },
+      "description": {
+        "zh": "要绘制 DataFrame 中某列的频率分布直方图，应该使用哪个方法？",
+        "en": "Which method should be used to plot a frequency distribution histogram of a column in a DataFrame?"
+      },
+      "options": {
+        "zh": [
+          "df['col'].plot.hist() 或 df['col'].plot(kind='hist')",
+          "df['col'].plot.bar()",
+          "df['col'].plot.scatter()",
+          "df['col'].plot.box()"
+        ],
+        "en": [
+          "df['col'].plot.hist() or df['col'].plot(kind='hist')",
+          "df['col'].plot.bar()",
+          "df['col'].plot.scatter()",
+          "df['col'].plot.box()"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["直方图显示的是数据的频率分布，不是分类计数"],
+        "en": ["A histogram shows frequency distribution, not category counts"]
+      },
+      "explanation": {
+        "zh": "plot.hist() 将连续数据分箱并显示频率分布。plot.bar() 用于分类数据的柱状图。plot.scatter(x, y) 用于两变量的散点图。plot.box() 用于箱线图。可通过 bins 参数控制分箱数量。",
+        "en": "plot.hist() bins continuous data and shows frequency distribution. plot.bar() creates bar charts for categorical data. plot.scatter(x, y) creates scatter plots for two variables. plot.box() creates box plots. Use the bins parameter to control the number of bins."
+      }
+    },
+    {
+      "id": "s3-visualization-006",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "subplots 子图参数",
+        "en": "subplots Parameter"
+      },
+      "description": {
+        "zh": "使用 subplots=True 让 DataFrame 的每一列绘制在单独的子图中。",
+        "en": "Use subplots=True to plot each column of the DataFrame in a separate subplot."
+      },
+      "setupCode": "import pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\ndf = pd.DataFrame({'revenue': [100, 120, 110, 130], 'cost': [80, 85, 90, 95], 'profit': [20, 35, 20, 35]}, index=['Q1', 'Q2', 'Q3', 'Q4'])",
+      "starterCode": "# Plot each column as a separate subplot\naxes = df.plot(subplots=___, figsize=(10, 8))",
+      "solutionCode": "axes = df.plot(subplots=True, figsize=(10, 8))",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = len(axes) == 3\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["subplots=True 为每列创建独立的子图", "返回的是一个 Axes 数组"],
+        "en": ["subplots=True creates an independent subplot for each column", "Returns an array of Axes"]
+      },
+      "explanation": {
+        "zh": "subplots=True 让每列在单独的子图中显示，便于比较不同量级的数据。返回值是 Axes 数组而非单个 Axes。配合 figsize 控制整体图表大小，layout 参数可指定子图布局（如 layout=(2,2)）。",
+        "en": "subplots=True displays each column in a separate subplot, useful for comparing data with different scales. Returns an Axes array instead of a single Axes. Use figsize to control overall chart size and layout parameter to specify subplot arrangement (e.g., layout=(2,2))."
+      }
+    },
+    {
+      "id": "s3-visualization-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "secondary_y 双轴图",
+        "en": "secondary_y for Dual Axis"
+      },
+      "description": {
+        "zh": "绘制折线图，将 'revenue' 和 'growth_rate' 显示在同一图中，但 'growth_rate' 使用右侧 Y 轴（secondary_y）。",
+        "en": "Create a line plot with 'revenue' and 'growth_rate' in the same chart, but 'growth_rate' uses the right Y axis (secondary_y)."
+      },
+      "setupCode": "import pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\ndf = pd.DataFrame({'revenue': [100, 120, 150, 180], 'growth_rate': [0.0, 0.2, 0.25, 0.2]}, index=['Q1', 'Q2', 'Q3', 'Q4'])",
+      "starterCode": "# Plot with secondary_y for growth_rate\nax = df.plot(secondary_y=___)",
+      "solutionCode": "ax = df.plot(secondary_y='growth_rate')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    fig = ax.get_figure()\n    result_check = len(fig.axes) == 2\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["secondary_y 参数指定哪些列使用右侧 Y 轴", "可以传入列名字符串或列名列表"],
+        "en": ["The secondary_y parameter specifies which columns use the right Y axis", "Can pass a column name string or list of column names"]
+      },
+      "explanation": {
+        "zh": "secondary_y 参数在图表右侧添加第二个 Y 轴，适合同时展示量级差异大的数据（如绝对值和比率）。传入列名或列名列表指定使用右轴的列。",
+        "en": "The secondary_y parameter adds a second Y axis on the right side, ideal for displaying data with very different scales (e.g., absolute values and ratios). Pass a column name or list of names for columns to use the right axis."
+      }
+    },
+    {
+      "id": "s3-visualization-008",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "plot 的 style 和 color 参数",
+        "en": "plot style and color Parameters"
+      },
+      "description": {
+        "zh": "使用 style 参数为折线图设置线型为虚线带圆点标记 ('o--')。",
+        "en": "Use the style parameter to set the line style to dashed with circle markers ('o--')."
+      },
+      "codeTemplate": "df['revenue'].plot(___='o--', color='red')",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "style",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": ["style 参数接受 matplotlib 格式字符串", "格式字符串组合了标记符号和线型"],
+        "en": ["The style parameter accepts matplotlib format strings", "Format strings combine marker symbols and line styles"]
+      },
+      "explanation": {
+        "zh": "style 参数使用 matplotlib 格式字符串：'o' 是圆点标记，'--' 是虚线，'-.' 是点划线。可以组合使用如 'o--'（虚线带圆点）、's-'（实线带方块）。color 参数设置颜色。",
+        "en": "The style parameter uses matplotlib format strings: 'o' is circle marker, '--' is dashed line, '-.' is dash-dot. Combine like 'o--' (dashed with circles), 's-' (solid with squares). The color parameter sets the color."
+      }
+    },
+    {
+      "id": "s3-visualization-009",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "直方图的 bins 参数",
+        "en": "Histogram with bins Parameter"
+      },
+      "description": {
+        "zh": "绘制 'score' 列的直方图，设置 20 个分箱。",
+        "en": "Plot a histogram of the 'score' column with 20 bins."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nnp.random.seed(42)\ndf = pd.DataFrame({'score': np.random.normal(75, 10, 200)})",
+      "starterCode": "# Histogram with 20 bins\nax = df['score'].plot.hist(bins=___)",
+      "solutionCode": "ax = df['score'].plot.hist(bins=20)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    patches = ax.patches\n    result_check = len(patches) == 20\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["bins 参数控制分箱数量", "更多的 bins 显示更细的分布细节"],
+        "en": ["The bins parameter controls the number of bins", "More bins show finer distribution details"]
+      },
+      "explanation": {
+        "zh": "bins 参数控制直方图的分箱数量。bins 越多，分布细节越丰富但可能噪声也越多。默认值通常是 10。也可以传入边界列表自定义分箱：bins=[0, 60, 70, 80, 90, 100]。",
+        "en": "The bins parameter controls the number of histogram bins. More bins show finer detail but may introduce noise. Default is usually 10. You can also pass a list of edges for custom bins: bins=[0, 60, 70, 80, 90, 100]."
+      }
+    },
+    {
+      "id": "s3-visualization-010",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "散点图",
+        "en": "Scatter Plot"
+      },
+      "description": {
+        "zh": "绘制 'height' 与 'weight' 的散点图。",
+        "en": "Create a scatter plot of 'height' vs 'weight'."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nnp.random.seed(42)\ndf = pd.DataFrame({'height': np.random.normal(170, 10, 50), 'weight': np.random.normal(65, 8, 50)})",
+      "starterCode": "# Create scatter plot\nax = df.plot.scatter(x=___, y=___)",
+      "solutionCode": "ax = df.plot.scatter(x='height', y='weight')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = ax.get_xlabel() == 'height' and ax.get_ylabel() == 'weight'\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["scatter 需要指定 x 和 y 参数", "x 和 y 是列名字符串"],
+        "en": ["scatter requires x and y parameters", "x and y are column name strings"]
+      },
+      "explanation": {
+        "zh": "plot.scatter(x, y) 创建散点图，用于观察两个变量之间的关系。可以添加 c 参数指定颜色映射列，s 参数指定点大小列，alpha 控制透明度，从而在一个图中展示更多维度。",
+        "en": "plot.scatter(x, y) creates a scatter plot to observe the relationship between two variables. Add c parameter for color mapping column, s for point size column, alpha for transparency, showing more dimensions in one chart."
+      }
+    },
+    {
+      "id": "s3-visualization-011",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "箱线图 (Box Plot)",
+        "en": "Box Plot"
+      },
+      "description": {
+        "zh": "绘制 DataFrame 中所有数值列的箱线图。",
+        "en": "Create a box plot for all numeric columns in the DataFrame."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nnp.random.seed(42)\ndf = pd.DataFrame({'math': np.random.normal(75, 10, 50), 'english': np.random.normal(80, 8, 50), 'science': np.random.normal(70, 12, 50)})",
+      "starterCode": "# Create box plot\nax = df.plot(kind=___)",
+      "solutionCode": "ax = df.plot(kind='box')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = len(ax.get_xticklabels()) == 3\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["箱线图的 kind 值是 'box'", "箱线图展示中位数、四分位数和异常值"],
+        "en": ["The kind value for box plot is 'box'", "Box plots show median, quartiles, and outliers"]
+      },
+      "explanation": {
+        "zh": "箱线图 (kind='box') 展示数据的五数概括：最小值、Q1（25%）、中位数（50%）、Q3（75%）、最大值，以及异常值。非常适合比较多个变量的分布和识别异常值。",
+        "en": "Box plot (kind='box') shows the five-number summary: min, Q1 (25%), median (50%), Q3 (75%), max, and outliers. Excellent for comparing distributions across multiple variables and identifying outliers."
+      }
+    },
+    {
+      "id": "s3-visualization-012",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "保存图表到文件",
+        "en": "Saving Figure to File"
+      },
+      "description": {
+        "zh": "绘制柱状图并将图表保存为 PNG 文件 '/tmp/sales_chart.png'，设置 dpi=150。",
+        "en": "Create a bar chart and save the figure as a PNG file '/tmp/sales_chart.png' with dpi=150."
+      },
+      "setupCode": "import pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\ndf = pd.DataFrame({'product': ['A', 'B', 'C'], 'sales': [300, 450, 200]})",
+      "starterCode": "# Plot and save to file\nax = df.plot.bar(x='product', y='sales')\nfig = ax.get_figure()\n___",
+      "solutionCode": "ax = df.plot.bar(x='product', y='sales')\nfig = ax.get_figure()\nfig.savefig('/tmp/sales_chart.png', dpi=150)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    import os\n    result_check = os.path.exists('/tmp/sales_chart.png')\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["先获取 figure 对象：fig = ax.get_figure()", "用 fig.savefig(path, dpi=150) 保存"],
+        "en": ["First get the figure object: fig = ax.get_figure()", "Use fig.savefig(path, dpi=150) to save"]
+      },
+      "explanation": {
+        "zh": "fig.savefig() 将图表保存为文件。支持 PNG、PDF、SVG 等格式（由文件扩展名决定）。dpi 控制分辨率（dots per inch），150-300 适合打印。还可以用 bbox_inches='tight' 避免裁剪。",
+        "en": "fig.savefig() saves the chart to a file. Supports PNG, PDF, SVG formats (determined by file extension). dpi controls resolution (dots per inch), 150-300 is suitable for printing. Use bbox_inches='tight' to avoid clipping."
+      }
+    },
+    {
+      "id": "s3-visualization-013",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 图表不显示 (缺少 plt.show)",
+        "en": "[Debug] Plot Not Showing (Missing plt.show)"
+      },
+      "description": {
+        "zh": "以下代码在脚本模式下绘制图表但没有显示窗口。请添加必要的代码使图表显示。（在本练习中，使用 Agg 后端，验证 fig 对象已正确创建即可。）",
+        "en": "The following code plots a chart in script mode but the window doesn't appear. Add the necessary code to display the chart. (In this exercise, with Agg backend, verify the fig object is correctly created.)"
+      },
+      "setupCode": "import pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\ndf = pd.DataFrame({'month': ['Jan', 'Feb', 'Mar'], 'sales': [100, 120, 90]})",
+      "starterCode": "# Bug: plot created but not shown\nax = df.plot.bar(x='month', y='sales', title='Monthly Sales')\n# Fix: add the missing call\n___",
+      "solutionCode": "ax = df.plot.bar(x='month', y='sales', title='Monthly Sales')\nplt.show()",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = ax is not None and ax.get_title() == 'Monthly Sales'\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["在脚本模式下，绘图后需要调用一个函数来显示图表", "这个函数来自 matplotlib.pyplot 模块"],
+        "en": ["In script mode, a function call is needed after plotting to display the chart", "This function is from the matplotlib.pyplot module"]
+      },
+      "explanation": {
+        "zh": "在 Python 脚本中（非 Jupyter），绘图后需要调用 plt.show() 显示图表窗口。Jupyter notebook 中使用 %matplotlib inline 魔术命令可以自动显示。plt.show() 是阻塞调用，直到关闭窗口才继续执行。",
+        "en": "In Python scripts (not Jupyter), plt.show() must be called after plotting to display the chart window. In Jupyter, %matplotlib inline magic command enables auto-display. plt.show() is a blocking call that waits until the window is closed."
+      }
+    },
+    {
+      "id": "s3-visualization-014",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "[最佳实践] pandas plot vs matplotlib",
+        "en": "[Best Practice] pandas plot vs matplotlib for Production"
+      },
+      "description": {
+        "zh": "以下哪种关于 pandas 内置绑图和 matplotlib 的使用建议最合理？",
+        "en": "Which recommendation about pandas built-in plotting vs matplotlib is most reasonable?"
+      },
+      "options": {
+        "zh": [
+          "pandas plot 适合快速探索性分析；需要精细定制（注释、多面板布局、样式）时使用 matplotlib/seaborn",
+          "pandas plot 在所有场景下都优于 matplotlib",
+          "matplotlib 太底层，不应该直接使用",
+          "pandas plot 不能与 matplotlib 配合使用"
+        ],
+        "en": [
+          "pandas plot is ideal for quick exploratory analysis; use matplotlib/seaborn when fine customization (annotations, multi-panel layout, styling) is needed",
+          "pandas plot is superior to matplotlib in all scenarios",
+          "matplotlib is too low-level and should never be used directly",
+          "pandas plot cannot be used together with matplotlib"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["pandas plot 底层就是使用 matplotlib 实现的"],
+        "en": ["pandas plot is built on top of matplotlib"]
+      },
+      "explanation": {
+        "zh": "pandas plot 是 matplotlib 的高层封装，一行代码即可生成图表，适合快速 EDA。但需要复杂定制时（多面板、自定义注释、出版质量图表），直接使用 matplotlib 或 seaborn 更灵活。两者可以混用：pandas plot 返回 matplotlib Axes 对象。",
+        "en": "pandas plot is a high-level wrapper around matplotlib, generating charts in one line for quick EDA. For complex customization (multi-panel, annotations, publication-quality), use matplotlib or seaborn directly. They can be mixed: pandas plot returns matplotlib Axes objects."
+      }
+    },
+    {
+      "id": "s3-visualization-015",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[综合] 创建多面板仪表板视图",
+        "en": "[Challenge] Create Multi-Panel Dashboard View"
+      },
+      "description": {
+        "zh": "创建一个 2x2 的多面板图表：1) 左上：revenue 折线图；2) 右上：cost 柱状图；3) 左下：profit 面积图；4) 右下：所有列的箱线图。使用 matplotlib 创建子图，然后用 pandas plot 绑定到各个 ax。将 fig 存入 result。",
+        "en": "Create a 2x2 multi-panel chart: 1) Top-left: revenue line chart; 2) Top-right: cost bar chart; 3) Bottom-left: profit area chart; 4) Bottom-right: box plot of all columns. Use matplotlib to create subplots, then use pandas plot on each ax. Store fig in result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\ndf = pd.DataFrame({'revenue': [100, 120, 115, 130, 145], 'cost': [80, 85, 90, 88, 95], 'profit': [20, 35, 25, 42, 50]}, index=['Q1', 'Q2', 'Q3', 'Q4', 'Q5'])",
+      "starterCode": "# Create 2x2 subplot dashboard\nfig, axes = plt.subplots(2, 2, figsize=(12, 8))\n# Top-left: revenue line\ndf['revenue'].plot(ax=axes[0, 0], title='Revenue')\n# Top-right: cost bar\ndf['cost'].plot.bar(ax=axes[0, 1], title='Cost')\n# Bottom-left: profit area\ndf['profit'].plot.area(ax=axes[1, 0], title='Profit')\n# Bottom-right: box plot\ndf.plot.box(ax=axes[1, 1], title='Distribution')\nfig.tight_layout()\nresult = ___",
+      "solutionCode": "fig, axes = plt.subplots(2, 2, figsize=(12, 8))\ndf['revenue'].plot(ax=axes[0, 0], title='Revenue')\ndf['cost'].plot.bar(ax=axes[0, 1], title='Cost')\ndf['profit'].plot.area(ax=axes[1, 0], title='Profit')\ndf.plot.box(ax=axes[1, 1], title='Distribution')\nfig.tight_layout()\nresult = fig",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = len(result.axes) == 4 and result.axes[0].get_title() == 'Revenue'\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["plt.subplots(2, 2) 创建 2x2 子图网格", "pandas plot 的 ax 参数指定绑定到哪个子图", "fig.tight_layout() 自动调整间距"],
+        "en": ["plt.subplots(2, 2) creates a 2x2 subplot grid", "The ax parameter in pandas plot specifies which subplot to draw on", "fig.tight_layout() auto-adjusts spacing"]
+      },
+      "explanation": {
+        "zh": "这个综合练习展示了 pandas plot 和 matplotlib 的结合使用：用 plt.subplots 创建子图布局，用 pandas plot 的 ax 参数指定每个图绑定的位置。tight_layout() 避免子图重叠。这是创建数据仪表板的基本模式。",
+        "en": "This challenge demonstrates combining pandas plot with matplotlib: use plt.subplots to create the subplot layout, and pandas plot's ax parameter to specify where each chart goes. tight_layout() prevents subplot overlap. This is the basic pattern for creating data dashboards."
+      }
+    }
+  ]
+}

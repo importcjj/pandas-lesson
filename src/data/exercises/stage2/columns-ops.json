@@ -1,0 +1,418 @@
+{
+  "module": "columns-ops",
+  "stageId": "stage2",
+  "lessonId": "columns-ops",
+  "tags": ["add-column", "drop", "assign", "rename", "columns"],
+  "exercises": [
+    {
+      "id": "s2-colops-001",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "添加新列",
+        "en": "Add a New Column"
+      },
+      "description": {
+        "zh": "给 DataFrame df 添加一个名为 'total' 的新列，值为 math 和 english 列之和，然后打印 df。",
+        "en": "Add a new column named 'total' to DataFrame df, with values equal to the sum of the math and english columns, then print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'math': [90, 80, 70],\n    'english': [85, 95, 75]\n})",
+      "starterCode": "# Add a 'total' column = math + english\n\n# Print df\n",
+      "solutionCode": "df['total'] = df['math'] + df['english']\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "      name  math  english  total\n0    Alice    90       85    175\n1      Bob    80       95    175\n2  Charlie    70       75    145",
+      "hints": {
+        "zh": [
+          "直接用 df['新列名'] = 值 来添加新列",
+          "列之间可以直接做算术运算"
+        ],
+        "en": [
+          "Use df['new_column'] = value to add a new column directly",
+          "Columns can be used directly in arithmetic operations"
+        ]
+      },
+      "explanation": {
+        "zh": "通过 df['total'] = df['math'] + df['english'] 可以直接创建新列。pandas 会自动对齐索引进行逐元素相加。",
+        "en": "Using df['total'] = df['math'] + df['english'] creates a new column directly. pandas automatically aligns indices for element-wise addition."
+      }
+    },
+    {
+      "id": "s2-colops-002",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "删除列的方法",
+        "en": "Method to Drop Columns"
+      },
+      "description": {
+        "zh": "以下哪种方式可以删除 DataFrame 中的列？",
+        "en": "Which of the following can be used to drop columns from a DataFrame?"
+      },
+      "options": {
+        "zh": [
+          "df.drop(columns=['col1'])",
+          "df.remove('col1')",
+          "df.delete('col1')",
+          "df.discard('col1')"
+        ],
+        "en": [
+          "df.drop(columns=['col1'])",
+          "df.remove('col1')",
+          "df.delete('col1')",
+          "df.discard('col1')"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["drop() 方法可以通过 columns 参数指定要删除的列"],
+        "en": ["The drop() method uses the columns parameter to specify columns to remove"]
+      },
+      "explanation": {
+        "zh": "df.drop(columns=['col1']) 是删除列的标准方式。也可以用 df.drop('col1', axis=1) 达到同样效果。",
+        "en": "df.drop(columns=['col1']) is the standard way to drop columns. df.drop('col1', axis=1) achieves the same result."
+      }
+    },
+    {
+      "id": "s2-colops-003",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "使用 assign() 添加列",
+        "en": "Add Columns with assign()"
+      },
+      "description": {
+        "zh": "填写代码，使用 assign() 方法创建一个包含新列 'doubled' 的 DataFrame，该列的值是 'value' 列的两倍。",
+        "en": "Fill in the code to use assign() to create a DataFrame with a new column 'doubled' that is twice the 'value' column."
+      },
+      "codeTemplate": "import pandas as pd\ndf = pd.DataFrame({'value': [10, 20, 30]})\ndf_new = df.___1___(doubled=___2___)",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "assign",
+          "alternatives": []
+        },
+        {
+          "placeholder": "___2___",
+          "answer": "df['value'] * 2",
+          "alternatives": ["df.value * 2", "df[\"value\"] * 2"]
+        }
+      ],
+      "hints": {
+        "zh": [
+          "assign() 方法返回一个新的 DataFrame",
+          "用关键字参数指定新列名和值"
+        ],
+        "en": [
+          "The assign() method returns a new DataFrame",
+          "Use keyword arguments to specify the new column name and value"
+        ]
+      },
+      "explanation": {
+        "zh": "df.assign(doubled=df['value'] * 2) 返回一个包含原始列和新列 'doubled' 的新 DataFrame，不会修改原始 df。",
+        "en": "df.assign(doubled=df['value'] * 2) returns a new DataFrame with the original columns plus the new 'doubled' column, without modifying the original df."
+      }
+    },
+    {
+      "id": "s2-colops-004",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "重命名列",
+        "en": "Rename Columns"
+      },
+      "description": {
+        "zh": "使用 rename() 方法将列名 'A' 改为 'alpha'，'B' 改为 'beta'，然后打印结果。",
+        "en": "Use the rename() method to rename column 'A' to 'alpha' and 'B' to 'beta', then print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'A': [1, 2, 3], 'B': [4, 5, 6]})",
+      "starterCode": "# Rename columns A -> alpha, B -> beta and print\n",
+      "solutionCode": "print(df.rename(columns={'A': 'alpha', 'B': 'beta'}))",
+      "validationType": "exact-output",
+      "expectedOutput": "   alpha  beta\n0      1     4\n1      2     5\n2      3     6",
+      "hints": {
+        "zh": [
+          "rename() 的 columns 参数接收一个字典",
+          "字典的键是旧列名，值是新列名"
+        ],
+        "en": [
+          "The columns parameter of rename() takes a dictionary",
+          "Dictionary keys are old names, values are new names"
+        ]
+      },
+      "explanation": {
+        "zh": "df.rename(columns={'A': 'alpha', 'B': 'beta'}) 通过字典映射将指定列名替换为新名称，返回新的 DataFrame。",
+        "en": "df.rename(columns={'A': 'alpha', 'B': 'beta'}) renames specified columns using a dictionary mapping, returning a new DataFrame."
+      }
+    },
+    {
+      "id": "s2-colops-005",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "assign() 链式添加多列",
+        "en": "assign() Chained Multi-Column Addition"
+      },
+      "description": {
+        "zh": "使用一次 assign() 调用同时添加两个新列：'total'（math + english）和 'average'（total / 2）。打印结果。",
+        "en": "Use a single assign() call to add two new columns: 'total' (math + english) and 'average' (total / 2). Print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'math': [90, 80, 70],\n    'english': [85, 95, 75]\n})",
+      "starterCode": "# Use assign() to add total and average columns\n\n# Print result\n",
+      "solutionCode": "result = df.assign(\n    total=df['math'] + df['english'],\n    average=lambda x: x['total'] / 2\n)\nprint(result)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "try:\n    checks = []\n    checks.append('total' in result.columns)\n    checks.append('average' in result.columns)\n    checks.append(result['total'].tolist() == [175, 175, 145])\n    checks.append(result['average'].tolist() == [87.5, 87.5, 72.5])\n    result_val = all(checks)\nexcept:\n    result_val = False\nresult_val",
+      "hints": {
+        "zh": [
+          "assign() 中可以用 lambda 引用在同一次调用中创建的列",
+          "lambda x: x['total'] 可以引用刚刚创建的 total 列"
+        ],
+        "en": [
+          "In assign(), lambda can reference columns created in the same call",
+          "lambda x: x['total'] can reference the just-created total column"
+        ]
+      },
+      "explanation": {
+        "zh": "assign() 中后面的参数可以通过 lambda 引用前面创建的列。average=lambda x: x['total'] / 2 中的 x 是包含了 total 列的中间 DataFrame。这使得链式计算更简洁。",
+        "en": "In assign(), later parameters can reference earlier columns via lambda. In average=lambda x: x['total'] / 2, x is the intermediate DataFrame that includes the total column. This makes chained calculations more concise."
+      }
+    },
+    {
+      "id": "s2-colops-006",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 insert() 在指定位置添加列",
+        "en": "Insert Column at Specific Position with insert()"
+      },
+      "description": {
+        "zh": "使用 insert() 方法在第 1 列的位置（索引 1）插入一个名为 'id' 的新列，值为 [101, 102, 103]。然后打印 df。",
+        "en": "Use insert() to add a new column named 'id' at position 1 (index 1) with values [101, 102, 103]. Then print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'score': [85, 72, 90]\n})",
+      "starterCode": "# Insert 'id' column at position 1\n\n# Print df\n",
+      "solutionCode": "df.insert(1, 'id', [101, 102, 103])\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "      name   id  score\n0    Alice  101     85\n1      Bob  102     72\n2  Charlie  103     90",
+      "hints": {
+        "zh": [
+          "insert(loc, column, value) 三个参数分别是位置、列名、值",
+          "insert() 是原地修改操作，不返回新 DataFrame"
+        ],
+        "en": [
+          "insert(loc, column, value) takes position, column name, and value",
+          "insert() modifies in-place and doesn't return a new DataFrame"
+        ]
+      },
+      "explanation": {
+        "zh": "df.insert(1, 'id', [101, 102, 103]) 在第 1 列位置插入新列。与 df['id'] = ... 不同，insert 可以控制列的位置。注意 insert 是原地操作。",
+        "en": "df.insert(1, 'id', [101, 102, 103]) inserts a new column at position 1. Unlike df['id'] = ..., insert lets you control column position. Note that insert modifies in-place."
+      }
+    },
+    {
+      "id": "s2-colops-007",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 pop() 提取并移除列",
+        "en": "Extract and Remove Column with pop()"
+      },
+      "description": {
+        "zh": "使用 pop() 从 df 中提取 'temp' 列并赋值给变量 temp_col，然后分别打印 temp_col 和 df。",
+        "en": "Use pop() to extract the 'temp' column from df and assign it to variable temp_col, then print both temp_col and df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'city': ['Beijing', 'Shanghai', 'Guangzhou'],\n    'temp': [25, 30, 28],\n    'humidity': [40, 55, 65]\n})",
+      "starterCode": "# Pop 'temp' column and print\n",
+      "solutionCode": "temp_col = df.pop('temp')\nprint(temp_col)\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "0    25\n1    30\n2    28\nName: temp, dtype: int64\n       city  humidity\n0   Beijing        40\n1  Shanghai        55\n2  Guangzhou        65",
+      "hints": {
+        "zh": [
+          "pop() 类似字典的 pop 操作，提取并移除",
+          "返回被移除的列作为 Series"
+        ],
+        "en": [
+          "pop() works like dictionary pop — extract and remove",
+          "Returns the removed column as a Series"
+        ]
+      },
+      "explanation": {
+        "zh": "df.pop('temp') 从 DataFrame 中移除 'temp' 列并返回该列的 Series。原 DataFrame 不再包含该列。这在需要同时获取列值并从 DataFrame 中移除它时很有用。",
+        "en": "df.pop('temp') removes the 'temp' column from the DataFrame and returns it as a Series. The original DataFrame no longer contains that column. Useful when you need the column values while removing it."
+      }
+    },
+    {
+      "id": "s2-colops-008",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "drop 的 axis 和 columns 参数",
+        "en": "drop axis and columns Parameters"
+      },
+      "description": {
+        "zh": "使用 drop() 方法同时删除 'temp' 和 'wind' 两列，打印结果。",
+        "en": "Use drop() to remove both 'temp' and 'wind' columns, and print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'city': ['Beijing', 'Shanghai'],\n    'temp': [25, 30],\n    'humidity': [40, 55],\n    'wind': [3, 5]\n})",
+      "starterCode": "# Drop 'temp' and 'wind' columns and print\n",
+      "solutionCode": "print(df.drop(columns=['temp', 'wind']))",
+      "validationType": "exact-output",
+      "expectedOutput": "       city  humidity\n0   Beijing        40\n1  Shanghai        55",
+      "hints": {
+        "zh": [
+          "columns 参数接收一个列名列表",
+          "也可以用 df.drop(['temp', 'wind'], axis=1)"
+        ],
+        "en": [
+          "The columns parameter takes a list of column names",
+          "Alternatively, use df.drop(['temp', 'wind'], axis=1)"
+        ]
+      },
+      "explanation": {
+        "zh": "df.drop(columns=['temp', 'wind']) 一次删除多列。等价写法是 df.drop(['temp', 'wind'], axis=1)，其中 axis=1 表示操作列。推荐使用 columns 参数，更明确。",
+        "en": "df.drop(columns=['temp', 'wind']) drops multiple columns at once. Equivalent to df.drop(['temp', 'wind'], axis=1), where axis=1 means column-wise. The columns parameter is preferred for clarity."
+      }
+    },
+    {
+      "id": "s2-colops-009",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "使用 reindex 重新排列列顺序",
+        "en": "Reorder Columns with reindex"
+      },
+      "description": {
+        "zh": "使用 reindex(columns=...) 将 df 的列重新排列为 ['city', 'score', 'name', 'age'] 的顺序。打印结果。",
+        "en": "Use reindex(columns=...) to reorder df's columns to ['city', 'score', 'name', 'age']. Print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob'],\n    'age': [25, 30],\n    'city': ['Beijing', 'Shanghai'],\n    'score': [90, 85]\n})",
+      "starterCode": "# Reorder columns to: city, score, name, age\n",
+      "solutionCode": "print(df.reindex(columns=['city', 'score', 'name', 'age']))",
+      "validationType": "exact-output",
+      "expectedOutput": "       city  score   name  age\n0   Beijing     90  Alice   25\n1  Shanghai     85    Bob   30",
+      "hints": {
+        "zh": [
+          "reindex(columns=...) 可以按指定顺序重排列",
+          "也可以用 df[['city', 'score', 'name', 'age']] 达到同样效果"
+        ],
+        "en": [
+          "reindex(columns=...) reorders columns as specified",
+          "df[['city', 'score', 'name', 'age']] achieves the same result"
+        ]
+      },
+      "explanation": {
+        "zh": "reindex(columns=[...]) 按指定顺序重排列。也可以简单地用 df[new_order] 选取。reindex 的优势是当指定了不存在的列时，会用 NaN 填充而不是报错。",
+        "en": "reindex(columns=[...]) reorders columns as specified. You can also simply use df[new_order]. reindex's advantage is that it fills non-existent columns with NaN instead of raising an error."
+      }
+    },
+    {
+      "id": "s2-colops-010",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[调试] SettingWithCopyWarning 切片修改警告",
+        "en": "[Debug] SettingWithCopyWarning on Slice Modification"
+      },
+      "description": {
+        "zh": "以下代码在筛选后的子集上添加新列，可能触发 SettingWithCopyWarning。请使用 .copy() 修复此问题。",
+        "en": "The following code adds a new column to a filtered subset, which may trigger SettingWithCopyWarning. Fix it using .copy()."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'David'],\n    'age': [25, 30, 35, 40],\n    'score': [85, 72, 90, 68]\n})",
+      "starterCode": "# Bug: modifying a slice without .copy() may trigger SettingWithCopyWarning\ndf_young = df[df['age'] < 35]\ndf_young['level'] = df_young['score'].apply(lambda x: 'pass' if x >= 80 else 'fail')\nprint(df_young)",
+      "solutionCode": "df_young = df[df['age'] < 35].copy()\ndf_young['level'] = df_young['score'].apply(lambda x: 'pass' if x >= 80 else 'fail')\nprint(df_young)",
+      "validationType": "exact-output",
+      "expectedOutput": "    name  age  score level\n0  Alice   25     85  pass\n1    Bob   30     72  fail",
+      "hints": {
+        "zh": [
+          "筛选返回的可能是视图而非副本",
+          "在修改子集前加 .copy() 创建独立副本"
+        ],
+        "en": [
+          "Filtering may return a view rather than a copy",
+          "Add .copy() before modifying the subset to create an independent copy"
+        ]
+      },
+      "explanation": {
+        "zh": "df[condition] 返回的可能是原 DataFrame 的视图。对视图进行修改会触发 SettingWithCopyWarning。解决方法是 .copy() 创建独立副本。这是 pandas 中最常见的陷阱之一。",
+        "en": "df[condition] may return a view of the original DataFrame. Modifying a view triggers SettingWithCopyWarning. The fix is .copy() to create an independent copy. This is one of the most common pandas pitfalls."
+      }
+    },
+    {
+      "id": "s2-colops-011",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "[最佳实践] assign 链式 vs 逐步操作",
+        "en": "[Best Practice] assign Chain vs Step-by-Step"
+      },
+      "description": {
+        "zh": "需要给 DataFrame 添加 3 个计算列，以下哪种方式最佳？",
+        "en": "You need to add 3 computed columns to a DataFrame. Which approach is best?"
+      },
+      "options": {
+        "zh": [
+          "使用 assign() 链式调用，不修改原 DataFrame，代码更函数式",
+          "逐行 df['col'] = ... 添加，因为更直观",
+          "使用 for 循环遍历行来添加，因为更灵活",
+          "使用 apply(axis=1) 一次性返回多列"
+        ],
+        "en": [
+          "Use chained assign() calls — doesn't modify original, more functional style",
+          "Add line by line with df['col'] = ... — more intuitive",
+          "Use a for loop over rows — more flexible",
+          "Use apply(axis=1) to return multiple columns at once"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "考虑代码可读性、是否修改原数据、是否可以链式调用",
+          "for 循环遍历行在 pandas 中通常性能很差"
+        ],
+        "en": [
+          "Consider readability, whether original data is modified, and chainability",
+          "For loops over rows typically perform poorly in pandas"
+        ]
+      },
+      "explanation": {
+        "zh": "assign() 链式调用是最佳实践：1) 不修改原 DataFrame（不可变操作）；2) 支持链式调用（method chaining）；3) 后面的列可以 lambda 引用前面的列。逐行赋值虽然直观但修改了原数据。for 循环性能差。",
+        "en": "Chained assign() is best practice: 1) Doesn't modify original DataFrame (immutable operation); 2) Supports method chaining; 3) Later columns can reference earlier ones via lambda. Line-by-line assignment modifies original data. For loops perform poorly."
+      }
+    },
+    {
+      "id": "s2-colops-012",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 清洗：删除无用列 + 重命名 + 添加计算列",
+        "en": "[Challenge] Clean: Drop Useless + Rename + Add Computed Columns"
+      },
+      "description": {
+        "zh": "对 df 进行列操作清洗：1) 删除 'temp_id' 和 'notes' 列；2) 将 'qty' 重命名为 'quantity'，'amt' 重命名为 'amount'；3) 添加新列 'unit_price'（amount / quantity）。打印最终的 df。",
+        "en": "Clean df with column operations: 1) Drop 'temp_id' and 'notes' columns; 2) Rename 'qty' to 'quantity' and 'amt' to 'amount'; 3) Add new column 'unit_price' (amount / quantity). Print the final df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'product': ['Apple', 'Banana', 'Cherry'],\n    'temp_id': ['t1', 't2', 't3'],\n    'qty': [10, 20, 15],\n    'amt': [50.0, 40.0, 75.0],\n    'notes': ['', '', '']\n})",
+      "starterCode": "# Step 1: Drop 'temp_id' and 'notes' columns\n\n# Step 2: Rename 'qty' -> 'quantity', 'amt' -> 'amount'\n\n# Step 3: Add 'unit_price' = amount / quantity\n\n# Print df\n",
+      "solutionCode": "df = df.drop(columns=['temp_id', 'notes'])\ndf = df.rename(columns={'qty': 'quantity', 'amt': 'amount'})\ndf['unit_price'] = df['amount'] / df['quantity']\nprint(df)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "try:\n    checks = []\n    checks.append('temp_id' not in df.columns)\n    checks.append('notes' not in df.columns)\n    checks.append('quantity' in df.columns)\n    checks.append('amount' in df.columns)\n    checks.append('unit_price' in df.columns)\n    checks.append(df['unit_price'].iloc[0] == 5.0)\n    checks.append(df['unit_price'].iloc[1] == 2.0)\n    result = all(checks)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "先删除无用列，再重命名，最后添加计算列",
+          "drop(columns=[...]) 删除多列",
+          "rename(columns={...}) 批量重命名"
+        ],
+        "en": [
+          "First drop useless columns, then rename, finally add computed columns",
+          "drop(columns=[...]) removes multiple columns",
+          "rename(columns={...}) renames in batch"
+        ]
+      },
+      "explanation": {
+        "zh": "此综合练习展示了完整的列操作清洗流程：drop 删除冗余列、rename 统一命名规范、添加计算列。这三步操作在实际数据清洗中非常常见。也可以用 assign() 链式写法一次完成。",
+        "en": "This challenge demonstrates a complete column cleaning workflow: drop removes redundant columns, rename standardizes naming, and adding computed columns. These three steps are extremely common in real data cleaning. Can also be done in one chain with assign()."
+      }
+    }
+  ]
+}

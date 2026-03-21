@@ -1,0 +1,401 @@
+{
+  "module": "performance",
+  "stageId": "stage4",
+  "lessonId": "performance",
+  "tags": ["performance", "vectorization", "eval", "query", "memory"],
+  "exercises": [
+    {
+      "id": "s4-performance-001",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "向量化 vs apply",
+        "en": "Vectorization vs apply"
+      },
+      "description": {
+        "zh": "为什么向量化操作通常比 apply() 快得多？",
+        "en": "Why are vectorized operations usually much faster than apply()?"
+      },
+      "options": {
+        "zh": [
+          "向量化操作在底层使用 C/NumPy 实现，避免了 Python 层面的逐行循环",
+          "apply() 无法使用多线程",
+          "向量化操作使用了更多内存来加速",
+          "apply() 每次都会创建 DataFrame 的副本"
+        ],
+        "en": [
+          "Vectorized operations are implemented in C/NumPy under the hood, avoiding Python-level row-by-row loops",
+          "apply() cannot use multithreading",
+          "Vectorized operations use more memory to speed up",
+          "apply() creates a copy of the DataFrame each time"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["考虑 Python 循环与 C 循环的性能差异"],
+        "en": ["Consider the performance difference between Python loops and C loops"]
+      },
+      "explanation": {
+        "zh": "向量化操作（如 df['a'] + df['b']）在 NumPy/C 层面批量处理数据，避免了 Python 解释器的逐元素开销。apply() 本质上是一个 Python 循环，速度慢得多。",
+        "en": "Vectorized operations (e.g., df['a'] + df['b']) process data in bulk at the NumPy/C level, avoiding the per-element overhead of the Python interpreter. apply() is essentially a Python loop and is much slower."
+      }
+    },
+    {
+      "id": "s4-performance-002",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "使用 eval() 加速计算",
+        "en": "Using eval() for Faster Computation"
+      },
+      "description": {
+        "zh": "使用 df.eval() 计算新列 'total'，等于 price 乘以 quantity。",
+        "en": "Use df.eval() to compute a new column 'total' equal to price times quantity."
+      },
+      "codeTemplate": "df.eval('total = ___')",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "price * quantity",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": ["eval 内使用字符串表达式，可以直接引用列名"],
+        "en": ["eval uses string expressions where column names can be referenced directly"]
+      },
+      "explanation": {
+        "zh": "df.eval() 使用 numexpr 引擎在 C 层面计算表达式，对于大数据集比常规 Python 操作更快，且使用更少的中间内存。",
+        "en": "df.eval() uses the numexpr engine to evaluate expressions at the C level. For large datasets, it is faster than regular Python operations and uses less intermediate memory."
+      }
+    },
+    {
+      "id": "s4-performance-003",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "使用 query() 高效筛选",
+        "en": "Efficient Filtering with query()"
+      },
+      "description": {
+        "zh": "使用 df.query() 筛选出 salary 大于 60000 且 department 为 'Engineering' 的行。",
+        "en": "Use df.query() to filter rows where salary is greater than 60000 and department is 'Engineering'."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David'], 'department': ['HR', 'Engineering', 'Engineering', 'HR'], 'salary': [50000, 80000, 75000, 55000]})",
+      "starterCode": "# Use query to filter\nresult = ___",
+      "solutionCode": "result = df.query(\"salary > 60000 and department == 'Engineering'\")",
+      "validationType": "dataframe-equals",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["query 接受字符串表达式", "字符串比较时注意内外引号的嵌套"],
+        "en": ["query accepts a string expression", "Pay attention to nested quotes when comparing strings"]
+      },
+      "explanation": {
+        "zh": "df.query() 使用字符串表达式进行筛选，代码更简洁可读。对于大数据集，query 的性能也优于传统布尔索引。",
+        "en": "df.query() uses string expressions for filtering, making code more concise and readable. For large datasets, query also performs better than traditional boolean indexing."
+      }
+    },
+    {
+      "id": "s4-performance-004",
+      "type": "true-false",
+      "difficulty": 3,
+      "title": {
+        "zh": "使用 info() 查看内存使用",
+        "en": "Using info() to Check Memory Usage"
+      },
+      "description": {
+        "zh": "df.info(memory_usage='deep') 可以显示 DataFrame 每列的精确内存占用。",
+        "en": "df.info(memory_usage='deep') shows the exact memory usage of each column in a DataFrame."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["'deep' 选项会内省实际的 Python 对象大小"],
+        "en": ["The 'deep' option introspects actual Python object sizes"]
+      },
+      "explanation": {
+        "zh": "memory_usage='deep' 会深入计算每列的实际内存占用，包括 object 类型列中的字符串。默认的 info() 对 object 列只显示估算值。",
+        "en": "memory_usage='deep' calculates the actual memory usage of each column, including strings in object-type columns. The default info() only shows estimates for object columns."
+      }
+    },
+    {
+      "id": "s4-performance-005",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "eval 多表达式计算",
+        "en": "eval with Multiple Expressions"
+      },
+      "description": {
+        "zh": "使用 df.eval() 一次性计算两个新列：'total' = price * quantity，'discounted' = total * 0.9。",
+        "en": "Use df.eval() to compute two new columns at once: 'total' = price * quantity, and 'discounted' = total * 0.9."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'price': [10.0, 20.0, 30.0, 40.0], 'quantity': [5, 3, 7, 2]})",
+      "starterCode": "# Use eval to compute both columns in one call\ndf = df.eval(___)",
+      "solutionCode": "df = df.eval(\"\"\"\ntotal = price * quantity\ndiscounted = total * 0.9\n\"\"\")",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'total' in df.columns and 'discounted' in df.columns and abs(df['discounted'].iloc[0] - 45.0) < 0.01\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["eval 支持多行字符串表达式，用换行分隔多个赋值", "后面的表达式可以引用前面刚创建的列"],
+        "en": ["eval supports multi-line string expressions separated by newlines", "Later expressions can reference columns created earlier"]
+      },
+      "explanation": {
+        "zh": "df.eval() 支持多行表达式，可以一次性计算多个列。后面的表达式可以引用前面刚定义的列（如 discounted 引用了 total）。这比多次赋值更高效，因为只需解析一次表达式。",
+        "en": "df.eval() supports multi-line expressions, computing multiple columns at once. Later expressions can reference columns defined earlier (e.g., discounted references total). This is more efficient than multiple assignments as the expression is parsed only once."
+      }
+    },
+    {
+      "id": "s4-performance-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "query 中使用 @var 引用变量",
+        "en": "Using @var in query() to Reference Variables"
+      },
+      "description": {
+        "zh": "使用 df.query() 筛选 salary 大于变量 threshold 的行。threshold 已在 Python 中定义。",
+        "en": "Use df.query() to filter rows where salary is greater than the variable threshold. threshold is already defined in Python."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David'], 'salary': [50000, 80000, 75000, 55000]})\nthreshold = 60000",
+      "starterCode": "# Use @ to reference the threshold variable in query\nresult = df.query(___)",
+      "solutionCode": "result = df.query('salary > @threshold')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = len(result) == 2 and set(result['name']) == {'Bob', 'Charlie'}\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["在 query 字符串中使用 @变量名 引用外部 Python 变量"],
+        "en": ["Use @variable_name in the query string to reference external Python variables"]
+      },
+      "explanation": {
+        "zh": "query() 中使用 @ 前缀可以引用 Python 作用域中的变量。例如 df.query('col > @my_var')。这避免了使用 f-string 拼接查询字符串，更安全且可读。",
+        "en": "The @ prefix in query() references variables from the Python scope. For example, df.query('col > @my_var'). This avoids f-string concatenation, making queries safer and more readable."
+      }
+    },
+    {
+      "id": "s4-performance-007",
+      "type": "multiple-choice",
+      "difficulty": 5,
+      "title": {
+        "zh": "numba 引擎在 apply 中的使用",
+        "en": "Numba Engine in apply()"
+      },
+      "description": {
+        "zh": "关于在 apply 中使用 engine='numba'，以下哪个说法是正确的？",
+        "en": "Which statement is correct about using engine='numba' with apply()?"
+      },
+      "options": {
+        "zh": [
+          "numba 引擎可以 JIT 编译纯数值函数，对大数据集显著提速，但不支持字符串操作",
+          "numba 引擎可以加速所有类型的 apply 函数",
+          "numba 引擎只能在 GPU 上运行",
+          "numba 引擎会自动将 Python 函数转为 SQL 查询"
+        ],
+        "en": [
+          "The numba engine can JIT-compile pure numeric functions for significant speedup on large datasets, but does not support string operations",
+          "The numba engine can speed up all types of apply functions",
+          "The numba engine can only run on GPUs",
+          "The numba engine automatically converts Python functions to SQL queries"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["numba 是一个 JIT 编译器，主要针对数值计算"],
+        "en": ["numba is a JIT compiler primarily designed for numerical computation"]
+      },
+      "explanation": {
+        "zh": "engine='numba' 使用 Numba JIT 编译器将 Python 函数编译为机器码。它只支持数值操作（不支持字符串、对象等），首次调用有编译开销，但后续调用会非常快。适合在大数据集上重复使用的数值计算。",
+        "en": "engine='numba' uses the Numba JIT compiler to compile Python functions to machine code. It only supports numeric operations (not strings, objects, etc.), has compilation overhead on the first call, but subsequent calls are very fast. Ideal for repeated numeric computations on large datasets."
+      }
+    },
+    {
+      "id": "s4-performance-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "使用 np.vectorize 加速自定义函数",
+        "en": "Speeding Up Custom Functions with np.vectorize"
+      },
+      "description": {
+        "zh": "使用 np.vectorize 将自定义函数 categorize 向量化，然后应用到 'score' 列，创建新列 'level'。",
+        "en": "Use np.vectorize to vectorize the custom function categorize, then apply it to the 'score' column to create a new 'level' column."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David'], 'score': [85, 92, 67, 78]})\ndef categorize(score):\n    if score >= 90:\n        return 'A'\n    elif score >= 80:\n        return 'B'\n    elif score >= 70:\n        return 'C'\n    else:\n        return 'D'",
+      "starterCode": "# Vectorize the function and apply it\nvec_categorize = np.vectorize(categorize)\ndf['level'] = ___",
+      "solutionCode": "vec_categorize = np.vectorize(categorize)\ndf['level'] = vec_categorize(df['score'])",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = list(df['level']) == ['B', 'A', 'D', 'C']\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["np.vectorize 将普通函数包装为可以接受数组输入的函数", "直接传入 Series 或 .values 即可"],
+        "en": ["np.vectorize wraps a regular function to accept array inputs", "Pass the Series or .values directly"]
+      },
+      "explanation": {
+        "zh": "np.vectorize 将标量函数包装为可以接受数组输入的函数。虽然内部仍然是 Python 循环（不是真正的向量化），但比 apply 更快，因为减少了 pandas 的开销。对于真正的性能提升，应考虑用 np.select 或 pd.cut 实现。",
+        "en": "np.vectorize wraps a scalar function to accept array inputs. While internally it's still a Python loop (not truly vectorized), it's faster than apply due to less pandas overhead. For true performance gains, consider using np.select or pd.cut instead."
+      }
+    },
+    {
+      "id": "s4-performance-009",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "使用 .values 获取 NumPy 数组",
+        "en": "Using .values for NumPy Array Access"
+      },
+      "description": {
+        "zh": "使用 .values 将 Series 转为 NumPy 数组后进行计算。计算 'a' 列和 'b' 列的点积（内积）。",
+        "en": "Convert Series to NumPy arrays using .values for computation. Calculate the dot product of columns 'a' and 'b'."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'a': [1, 2, 3, 4], 'b': [5, 6, 7, 8]})",
+      "starterCode": "# Calculate dot product using .values\ndot_product = np.dot(df['a'].___, df['b'].___)",
+      "solutionCode": "dot_product = np.dot(df['a'].values, df['b'].values)",
+      "validationType": "custom-check",
+      "checkCode": "result = dot_product == 70",
+      "hints": {
+        "zh": [".values 返回底层的 NumPy 数组", "np.dot 计算两个数组的点积"],
+        "en": [".values returns the underlying NumPy array", "np.dot computes the dot product of two arrays"]
+      },
+      "explanation": {
+        "zh": "使用 .values 获取底层 NumPy 数组可以绕过 pandas 的索引对齐等开销，在某些纯数值计算场景下更快。也可以使用 .to_numpy() 方法，它提供了 dtype 和 copy 参数。",
+        "en": "Using .values to access the underlying NumPy array bypasses pandas index alignment overhead, making it faster for certain pure numeric computations. You can also use .to_numpy(), which offers dtype and copy parameters."
+      }
+    },
+    {
+      "id": "s4-performance-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "使用 %timeit 比较性能",
+        "en": "Comparing Performance with %timeit"
+      },
+      "description": {
+        "zh": "编写两种方式计算 'a' + 'b' 列的和：1) 向量化方式赋给 result1，2) apply 方式赋给 result2。",
+        "en": "Write two approaches to compute the sum of columns 'a' and 'b': 1) vectorized approach assigned to result1, 2) apply approach assigned to result2."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'a': range(1000), 'b': range(1000)})",
+      "starterCode": "# Approach 1: Vectorized\nresult1 = ___\n\n# Approach 2: Using apply (slower)\nresult2 = ___",
+      "solutionCode": "result1 = df['a'] + df['b']\nresult2 = df.apply(lambda row: row['a'] + row['b'], axis=1)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = result1.equals(result2) and len(result1) == 1000\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["向量化：直接用 + 操作符", "apply 需要 axis=1 按行操作"],
+        "en": ["Vectorized: use the + operator directly", "apply needs axis=1 for row-wise operation"]
+      },
+      "explanation": {
+        "zh": "向量化操作 df['a'] + df['b'] 在 C 层面执行，比 apply(lambda, axis=1) 快 10-100 倍。在 Jupyter 中可以使用 %timeit 来精确比较两种方法的耗时：%timeit df['a'] + df['b'] vs %timeit df.apply(...)。",
+        "en": "The vectorized operation df['a'] + df['b'] executes at the C level, 10-100x faster than apply(lambda, axis=1). In Jupyter, you can use %timeit for precise comparison: %timeit df['a'] + df['b'] vs %timeit df.apply(...)."
+      }
+    },
+    {
+      "id": "s4-performance-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "memory_usage(deep=True) 分析内存",
+        "en": "Analyzing Memory with memory_usage(deep=True)"
+      },
+      "description": {
+        "zh": "使用 memory_usage(deep=True) 获取 DataFrame 每列的精确内存占用（含字符串列），并计算总内存（字节）。",
+        "en": "Use memory_usage(deep=True) to get exact memory usage of each column (including string columns), and calculate the total memory in bytes."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'id': range(1000), 'name': ['user_' + str(i) for i in range(1000)], 'score': [float(i) for i in range(1000)]})",
+      "starterCode": "# Get detailed memory usage\nmem = df.memory_usage(deep=True)\n\n# Calculate total memory in bytes\ntotal_bytes = ___",
+      "solutionCode": "mem = df.memory_usage(deep=True)\ntotal_bytes = mem.sum()",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = total_bytes > 0 and isinstance(total_bytes, (int, float))\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["memory_usage 返回一个 Series，包含每列的字节数", "使用 .sum() 计算总内存"],
+        "en": ["memory_usage returns a Series with bytes per column", "Use .sum() to calculate total memory"]
+      },
+      "explanation": {
+        "zh": "memory_usage(deep=True) 会精确计算每列的内存占用，包括 object 类型中字符串的实际大小。不加 deep=True 时，object 列只报告指针大小（8 字节/元素），严重低估实际内存。这对优化大数据集的内存使用至关重要。",
+        "en": "memory_usage(deep=True) precisely calculates memory per column, including actual string sizes in object columns. Without deep=True, object columns only report pointer sizes (8 bytes/element), greatly underestimating actual memory. This is critical for optimizing memory usage of large datasets."
+      }
+    },
+    {
+      "id": "s4-performance-012",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] eval 表达式语法错误",
+        "en": "[Debug] eval String Expression Syntax Error"
+      },
+      "description": {
+        "zh": "以下代码使用 eval 计算新列，但有一个 bug。请找到并修复它。",
+        "en": "The following code uses eval to compute a new column but has a bug. Find and fix it."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'price': [10.0, 20.0, 30.0], 'tax_rate': [0.1, 0.08, 0.12]})",
+      "starterCode": "# Bug: fix the eval expression\ndf = df.eval('total_price = price * (1 + tax rate)')",
+      "solutionCode": "df = df.eval('total_price = price * (1 + tax_rate)')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'total_price' in df.columns and abs(df['total_price'].iloc[0] - 11.0) < 0.01\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["检查 eval 表达式中的列名是否与 DataFrame 中的列名完全一致", "列名中有下划线，不是空格"],
+        "en": ["Check if the column name in the eval expression exactly matches the DataFrame column name", "The column name uses an underscore, not a space"]
+      },
+      "explanation": {
+        "zh": "bug 在于 eval 表达式中写了 'tax rate'（有空格），但实际列名是 'tax_rate'（下划线）。eval 中的列名必须与 DataFrame 的列名完全匹配。含有空格的列名需要用反引号包裹：`tax rate`。",
+        "en": "The bug is that the eval expression uses 'tax rate' (with space) but the actual column name is 'tax_rate' (underscore). Column names in eval must exactly match DataFrame column names. Column names with spaces require backticks: `tax rate`."
+      }
+    },
+    {
+      "id": "s4-performance-013",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "[最佳实践] 向量化 vs apply vs iterrows",
+        "en": "[Best Practice] Vectorization vs apply vs iterrows"
+      },
+      "description": {
+        "zh": "对于一个 100 万行的 DataFrame，需要根据两列的值计算新列。以下哪种方法的性能最好？",
+        "en": "For a DataFrame with 1 million rows, you need to compute a new column based on two existing columns. Which approach offers the best performance?"
+      },
+      "options": {
+        "zh": [
+          "向量化操作：df['c'] = df['a'] * 2 + df['b']",
+          "apply 函数：df['c'] = df.apply(lambda row: row['a'] * 2 + row['b'], axis=1)",
+          "iterrows 循环：for idx, row in df.iterrows(): df.loc[idx, 'c'] = row['a'] * 2 + row['b']",
+          "列表推导：df['c'] = [a * 2 + b for a, b in zip(df['a'], df['b'])]"
+        ],
+        "en": [
+          "Vectorized: df['c'] = df['a'] * 2 + df['b']",
+          "apply: df['c'] = df.apply(lambda row: row['a'] * 2 + row['b'], axis=1)",
+          "iterrows loop: for idx, row in df.iterrows(): df.loc[idx, 'c'] = row['a'] * 2 + row['b']",
+          "List comprehension: df['c'] = [a * 2 + b for a, b in zip(df['a'], df['b'])]"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["考虑哪种方法避免了 Python 层面的循环"],
+        "en": ["Consider which method avoids Python-level loops"]
+      },
+      "explanation": {
+        "zh": "性能排序：向量化 >> 列表推导 > apply > iterrows。向量化操作在 C/NumPy 层面批量处理，速度最快。iterrows 是最慢的，因为每行都要创建 Series 对象。对于简单的数值运算，始终优先选择向量化。",
+        "en": "Performance ranking: Vectorized >> list comprehension > apply > iterrows. Vectorized operations process data in bulk at the C/NumPy level, making them fastest. iterrows is slowest because it creates a Series object per row. For simple numeric operations, always prefer vectorization."
+      }
+    },
+    {
+      "id": "s4-performance-014",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 优化慢速分析管道",
+        "en": "[Challenge] Optimize a Slow Analysis Pipeline"
+      },
+      "description": {
+        "zh": "下面的分析管道使用了 iterrows 和 apply，性能很差。请用向量化操作和 query/eval 重写，实现相同的结果但性能更好。步骤：1) 用向量化计算 total = price * quantity，2) 用 eval 计算 profit = total - cost，3) 用 query 筛选 profit > 100 的行，4) 将结果赋给 result。",
+        "en": "The analysis pipeline below uses iterrows and apply with poor performance. Rewrite it using vectorized operations and query/eval for the same result but better performance. Steps: 1) Vectorize total = price * quantity, 2) Use eval to calculate profit = total - cost, 3) Use query to filter rows where profit > 100, 4) Assign the result to result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nn = 1000\ndf = pd.DataFrame({'price': np.random.uniform(10, 100, n), 'quantity': np.random.randint(1, 20, n), 'cost': np.random.uniform(50, 500, n)})",
+      "starterCode": "# Step 1: Vectorize total calculation\ndf['total'] = ___\n\n# Step 2: Use eval to calculate profit\ndf = df.eval(___)\n\n# Step 3: Use query to filter profitable items\nresult = df.query(___)",
+      "solutionCode": "df['total'] = df['price'] * df['quantity']\ndf = df.eval('profit = total - cost')\nresult = df.query('profit > 100')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = 'profit' in result.columns and 'total' in result.columns and (result['profit'] > 100).all() and len(result) > 0\nexcept:\n    result_check = False\nresult = result_check",
+      "hints": {
+        "zh": ["第 1 步：直接用 * 运算符", "第 2 步：eval 中写 'profit = total - cost'", "第 3 步：query 中写 'profit > 100'"],
+        "en": ["Step 1: Use the * operator directly", "Step 2: In eval write 'profit = total - cost'", "Step 3: In query write 'profit > 100'"]
+      },
+      "explanation": {
+        "zh": "此综合练习展示了如何将低效代码（iterrows/apply）重写为高效的向量化管道。向量化计算、eval 和 query 三者结合，可以处理大部分数据分析场景，同时保持代码简洁且性能优异。在百万行数据上，性能提升可达 100 倍以上。",
+        "en": "This challenge demonstrates rewriting inefficient code (iterrows/apply) into an efficient vectorized pipeline. Combining vectorized computation, eval, and query covers most data analysis scenarios while keeping code clean and performant. On million-row data, performance improvement can exceed 100x."
+      }
+    }
+  ]
+}

@@ -1,0 +1,399 @@
+{
+  "module": "advanced-groupby",
+  "stageId": "stage4",
+  "lessonId": "advanced-groupby",
+  "tags": ["pipe", "agg", "filter", "apply", "advanced-groupby"],
+  "exercises": [
+    {
+      "id": "s4-advanced-groupby-001",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "pipe() 方法链",
+        "en": "pipe() Method Chaining"
+      },
+      "description": {
+        "zh": "使用 pipe() 将一个自定义函数应用到 groupby 结果上。函数 top_n 返回每组中 score 最高的 n 行。",
+        "en": "Use pipe() to apply a custom function to a groupby result. The function top_n returns the top n rows by score in each group."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'group': ['A', 'A', 'A', 'B', 'B', 'B'], 'score': [85, 92, 78, 90, 88, 95]})\ndef top_n(grouped, n=2):\n    return grouped.apply(lambda x: x.nlargest(n, 'score')).reset_index(drop=True)",
+      "starterCode": "# Use pipe to get top 2 scores per group\nresult = df.groupby('group').pipe(___)",
+      "solutionCode": "result = df.groupby('group').pipe(top_n, n=2)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "try:\n    result = len(result) == 4 and set(result['group']) == {'A', 'B'}\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["pipe() 将整个 groupby 对象传给函数", "可以通过额外参数传递 n：pipe(top_n, n=2)"],
+        "en": ["pipe() passes the entire groupby object to the function", "Pass additional arguments like n: pipe(top_n, n=2)"]
+      },
+      "explanation": {
+        "zh": "pipe() 允许在方法链中使用自定义函数，提高代码可读性。它将 groupby 对象作为第一个参数传给函数。",
+        "en": "pipe() allows using custom functions in method chains, improving code readability. It passes the groupby object as the first argument to the function."
+      }
+    },
+    {
+      "id": "s4-advanced-groupby-002",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "自定义聚合函数",
+        "en": "Custom Aggregation Functions"
+      },
+      "description": {
+        "zh": "使用自定义函数计算每组 score 的极差（最大值减最小值）。",
+        "en": "Use a custom function to calculate the range (max minus min) of score in each group."
+      },
+      "codeTemplate": "result = df.groupby('group')['score'].agg(___)",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "lambda x: x.max() - x.min()",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": ["agg() 可以接受一个 lambda 函数", "极差 = 最大值 - 最小值"],
+        "en": ["agg() can accept a lambda function", "Range = max - min"]
+      },
+      "explanation": {
+        "zh": "agg() 可以接受自定义函数（包括 lambda），函数接收每组的 Series 并返回一个标量值。",
+        "en": "agg() can accept custom functions (including lambdas). The function receives each group's Series and should return a scalar value."
+      }
+    },
+    {
+      "id": "s4-advanced-groupby-003",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "filter() 过滤分组",
+        "en": "filter() to Filter Groups"
+      },
+      "description": {
+        "zh": "使用 groupby 的 filter() 方法，只保留组内平均 score 大于 85 的所有组。",
+        "en": "Use the groupby filter() method to keep only groups where the group mean score is greater than 85."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'group': ['A', 'A', 'B', 'B', 'C', 'C'], 'score': [90, 92, 70, 75, 88, 95]})",
+      "starterCode": "# Keep only groups with mean score > 85\nresult = ___",
+      "solutionCode": "result = df.groupby('group').filter(lambda x: x['score'].mean() > 85)",
+      "validationType": "dataframe-equals",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["filter() 接受一个返回布尔值的函数", "函数对每个组返回 True（保留）或 False（丢弃）"],
+        "en": ["filter() accepts a function that returns a boolean", "The function returns True (keep) or False (discard) for each group"]
+      },
+      "explanation": {
+        "zh": "filter() 对每个组应用函数，函数返回 True 的组的所有行都保留在结果中。与 agg 不同，filter 保持原始行不变。",
+        "en": "filter() applies a function to each group. All rows from groups where the function returns True are kept in the result. Unlike agg, filter preserves the original rows."
+      }
+    },
+    {
+      "id": "s4-advanced-groupby-004",
+      "type": "multiple-choice",
+      "difficulty": 5,
+      "title": {
+        "zh": "apply 返回 DataFrame",
+        "en": "apply Returning a DataFrame"
+      },
+      "description": {
+        "zh": "当 groupby.apply() 的函数返回一个 DataFrame 时，结果会怎样？",
+        "en": "What happens when the function in groupby.apply() returns a DataFrame?"
+      },
+      "options": {
+        "zh": [
+          "结果是一个 DataFrame，各组的结果沿 axis=0 拼接在一起",
+          "会抛出 TypeError 异常",
+          "只保留每组最后一行的结果",
+          "返回一个字典，键是组名，值是 DataFrame"
+        ],
+        "en": [
+          "The result is a DataFrame with results from all groups concatenated along axis=0",
+          "A TypeError is raised",
+          "Only the last row from each group is kept",
+          "Returns a dictionary with group names as keys and DataFrames as values"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["apply 是最灵活的 groupby 方法，可以返回标量、Series 或 DataFrame"],
+        "en": ["apply is the most flexible groupby method and can return scalars, Series, or DataFrames"]
+      },
+      "explanation": {
+        "zh": "apply() 的函数可以返回 DataFrame，pandas 会将各组的结果沿 axis=0 拼接。这使得 apply 非常灵活，可以实现复杂的分组变换。",
+        "en": "The function in apply() can return a DataFrame, and pandas will concatenate results from all groups along axis=0. This makes apply very flexible for complex group-wise transformations."
+      }
+    },
+    {
+      "id": "s4-advanced-groupby-005",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "resample 作为特殊 groupby",
+        "en": "resample as a Special groupby"
+      },
+      "description": {
+        "zh": "使用 resample 对时间序列数据按月聚合，计算每月 'value' 的平均值。",
+        "en": "Use resample to aggregate time series data monthly, computing the mean of 'value' per month."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2024-01-01', periods=90, freq='D')\ndf = pd.DataFrame({'date': dates, 'value': np.random.randn(90) * 10 + 50})\ndf = df.set_index('date')",
+      "starterCode": "# Resample by month and compute mean\nmonthly_avg = df.resample(___).mean()",
+      "solutionCode": "monthly_avg = df.resample('ME').mean()",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = len(monthly_avg) == 3 and 'value' in monthly_avg.columns\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["resample 类似 groupby，但专门用于时间序列", "'ME' 代表月末频率（Month End）"],
+        "en": ["resample is like groupby but specifically for time series", "'ME' stands for Month End frequency"]
+      },
+      "explanation": {
+        "zh": "resample() 是时间序列版的 groupby，可以按任意时间频率聚合数据。常用频率：'D'（天）、'W'（周）、'ME'（月末）、'QE'（季度末）、'YE'（年末）。需要 DatetimeIndex。",
+        "en": "resample() is the time series version of groupby, aggregating data at any time frequency. Common frequencies: 'D' (day), 'W' (week), 'ME' (month end), 'QE' (quarter end), 'YE' (year end). Requires a DatetimeIndex."
+      }
+    },
+    {
+      "id": "s4-advanced-groupby-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "transform 返回对齐索引",
+        "en": "transform Returns Aligned Index"
+      },
+      "description": {
+        "zh": "使用 groupby + transform 计算每个员工的薪资与其部门平均薪资的差值，创建新列 'salary_diff'。",
+        "en": "Use groupby + transform to compute the difference between each employee's salary and their department average, creating a new column 'salary_diff'."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'dept': ['Eng', 'Eng', 'HR', 'HR', 'Eng'], 'salary': [80000, 90000, 60000, 65000, 85000]})",
+      "starterCode": "# Compute salary difference from department mean\ndf['salary_diff'] = df['salary'] - df.groupby('dept')['salary'].transform(___)",
+      "solutionCode": "df['salary_diff'] = df['salary'] - df.groupby('dept')['salary'].transform('mean')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    eng_mean = (80000 + 90000 + 85000) / 3\n    result = abs(df.loc[df['name'] == 'Alice', 'salary_diff'].iloc[0] - (80000 - eng_mean)) < 0.01\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["transform 返回与原 DataFrame 相同长度的 Series", "transform('mean') 将每行替换为其所属组的均值"],
+        "en": ["transform returns a Series with the same length as the original DataFrame", "transform('mean') replaces each row with its group's mean"]
+      },
+      "explanation": {
+        "zh": "transform 的关键特性是返回与原始数据相同长度的结果，索引完全对齐。这使得它非常适合 \"广播\" 组级别的统计量回到每一行，例如计算每行与组均值的偏差。与 agg（返回每组一个值）不同。",
+        "en": "The key feature of transform is returning results with the same length as the original data, with fully aligned indices. This makes it perfect for 'broadcasting' group-level statistics back to each row, like computing each row's deviation from the group mean. Unlike agg (which returns one value per group)."
+      }
+    },
+    {
+      "id": "s4-advanced-groupby-007",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "groupby + rolling 滚动窗口",
+        "en": "groupby + rolling Window"
+      },
+      "description": {
+        "zh": "对每个产品组 ('product') 计算 'sales' 的 3 天滚动平均值。",
+        "en": "Compute a 3-day rolling average of 'sales' for each product group."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'date': pd.date_range('2024-01-01', periods=6).tolist() * 2, 'product': ['A'] * 6 + ['B'] * 6, 'sales': [10, 20, 30, 25, 35, 40, 5, 15, 10, 20, 25, 30]})\ndf = df.sort_values(['product', 'date']).reset_index(drop=True)",
+      "starterCode": "# Rolling 3-day average per product\ndf['rolling_avg'] = df.groupby('product')['sales'].transform(\n    lambda x: x.rolling(window=___, min_periods=1).mean()\n)",
+      "solutionCode": "df['rolling_avg'] = df.groupby('product')['sales'].transform(\n    lambda x: x.rolling(window=3, min_periods=1).mean()\n)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'rolling_avg' in df.columns and abs(df.loc[df['product'] == 'A'].iloc[2]['rolling_avg'] - 20.0) < 0.01\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["window=3 指定窗口大小", "min_periods=1 允许前几个值窗口不满时也计算"],
+        "en": ["window=3 specifies the window size", "min_periods=1 allows calculation when the window is not full for early values"]
+      },
+      "explanation": {
+        "zh": "groupby + transform + rolling 是时间序列分析中的常见组合。transform 确保结果与原 DataFrame 索引对齐，rolling 在每个组内独立计算滑动窗口统计量。min_periods=1 确保前几个数据点也能得到结果。",
+        "en": "groupby + transform + rolling is a common combination in time series analysis. transform ensures results align with the original DataFrame index, and rolling computes window statistics independently within each group. min_periods=1 ensures early data points also get results."
+      }
+    },
+    {
+      "id": "s4-advanced-groupby-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "nth() 和 first()/last()",
+        "en": "nth() and first()/last()"
+      },
+      "description": {
+        "zh": "使用 groupby 的 nth() 方法获取每个组的第二行（索引为 1）。",
+        "en": "Use groupby's nth() method to get the second row (index 1) of each group."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'group': ['A', 'A', 'A', 'B', 'B', 'B'], 'value': [10, 20, 30, 40, 50, 60], 'name': ['a1', 'a2', 'a3', 'b1', 'b2', 'b3']})",
+      "starterCode": "# Get the second row of each group\nresult = df.groupby('group').nth(___)",
+      "solutionCode": "result = df.groupby('group').nth(1)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = len(result) == 2 and set(result['name']) == {'a2', 'b2'}\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["nth 使用 0 基索引，第二行索引为 1", "nth 与 first/last 类似但更灵活"],
+        "en": ["nth uses 0-based indexing, second row has index 1", "nth is similar to first/last but more flexible"]
+      },
+      "explanation": {
+        "zh": "nth(n) 返回每组的第 n 行（0 基索引）。first() 等价于 nth(0)，last() 等价于 nth(-1)。nth 还支持列表参数：nth([0, -1]) 返回每组的第一行和最后一行。这些方法比 head()/tail() 更高效。",
+        "en": "nth(n) returns the nth row of each group (0-based). first() is equivalent to nth(0), last() to nth(-1). nth also supports list arguments: nth([0, -1]) returns first and last rows of each group. These methods are more efficient than head()/tail()."
+      }
+    },
+    {
+      "id": "s4-advanced-groupby-009",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "按索引层级分组",
+        "en": "Groupby on Index Level"
+      },
+      "description": {
+        "zh": "对 MultiIndex DataFrame 按第一层索引（level=0）进行分组，计算 'score' 的均值。",
+        "en": "Group a MultiIndex DataFrame by the first index level (level=0) and calculate the mean of 'score'."
+      },
+      "codeTemplate": "result = df.groupby(level=___)[['score']].mean()",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "0",
+          "alternatives": ["'dept'"]
+        }
+      ],
+      "hints": {
+        "zh": ["level=0 表示按第一层索引分组", "也可以用索引层级的名称"],
+        "en": ["level=0 groups by the first index level", "You can also use the level name"]
+      },
+      "explanation": {
+        "zh": "对于 MultiIndex DataFrame，可以直接用 groupby(level=0) 或 groupby(level='name') 按索引层级分组。这避免了先 reset_index 再 groupby 的额外步骤，更简洁高效。",
+        "en": "For MultiIndex DataFrames, you can use groupby(level=0) or groupby(level='name') to group by index levels directly. This avoids the extra reset_index step before groupby, making it more concise and efficient."
+      }
+    },
+    {
+      "id": "s4-advanced-groupby-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "cumcount 和 cumsum 组内累计",
+        "en": "cumcount and cumsum Within Groups"
+      },
+      "description": {
+        "zh": "使用 groupby 的 cumcount 为每个组内的行编号（从 0 开始），并使用 cumsum 计算 'value' 的组内累计和。",
+        "en": "Use groupby's cumcount to number rows within each group (starting from 0), and cumsum to compute the cumulative sum of 'value' within groups."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'group': ['A', 'A', 'A', 'B', 'B', 'B'], 'value': [10, 20, 30, 5, 15, 25]})",
+      "starterCode": "# Add row number within each group\ndf['row_num'] = df.groupby('group').cumcount()\n\n# Add cumulative sum within each group\ndf['cum_value'] = df.groupby('group')['value'].___",
+      "solutionCode": "df['row_num'] = df.groupby('group').cumcount()\ndf['cum_value'] = df.groupby('group')['value'].cumsum()",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = list(df['row_num']) == [0, 1, 2, 0, 1, 2] and list(df['cum_value']) == [10, 30, 60, 5, 20, 45]\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["cumcount 返回组内行号（0, 1, 2, ...）", "cumsum 返回组内累计和"],
+        "en": ["cumcount returns row numbers within groups (0, 1, 2, ...)", "cumsum returns cumulative sums within groups"]
+      },
+      "explanation": {
+        "zh": "cumcount() 为每个组内的行从 0 开始编号，适合创建组内序号。cumsum() 计算组内的累计和。类似的还有 cumprod()（累计乘积）、cummax()、cummin()。这些方法返回与原数据对齐的 Series。",
+        "en": "cumcount() numbers rows within each group starting from 0, useful for creating within-group sequence numbers. cumsum() computes cumulative sums within groups. Similar methods include cumprod(), cummax(), cummin(). These return Series aligned with the original data."
+      }
+    },
+    {
+      "id": "s4-advanced-groupby-011",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "Grouper 按时间分组",
+        "en": "Grouper for Time-based Grouping"
+      },
+      "description": {
+        "zh": "使用 pd.Grouper 按周对 'date' 列分组，计算每周 'amount' 的总和。",
+        "en": "Use pd.Grouper to group by week on the 'date' column, computing the total 'amount' per week."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'date': pd.date_range('2024-01-01', periods=21, freq='D'), 'amount': np.random.randint(10, 100, 21)})",
+      "starterCode": "# Group by week using pd.Grouper\nweekly = df.groupby(pd.Grouper(key='date', freq=___))['amount'].sum()",
+      "solutionCode": "weekly = df.groupby(pd.Grouper(key='date', freq='W'))['amount'].sum()",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = len(weekly) >= 3 and weekly.sum() == df['amount'].sum()\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["freq='W' 表示按周分组", "pd.Grouper 可以用 key 参数指定日期列"],
+        "en": ["freq='W' groups by week", "pd.Grouper can use the key parameter to specify the date column"]
+      },
+      "explanation": {
+        "zh": "pd.Grouper(key='date', freq='W') 可以在非索引的日期列上进行时间分组，无需先 set_index。常用频率：'D'（天）、'W'（周）、'ME'（月末）、'QE'（季度末）。还可以与其他列组合：groupby(['category', pd.Grouper(...)])。",
+        "en": "pd.Grouper(key='date', freq='W') enables time-based grouping on non-index date columns without set_index. Common frequencies: 'D' (day), 'W' (week), 'ME' (month end), 'QE' (quarter end). Can be combined with other columns: groupby(['category', pd.Grouper(...)])."
+      }
+    },
+    {
+      "id": "s4-advanced-groupby-012",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] transform 形状不匹配",
+        "en": "[Debug] transform Shape Mismatch"
+      },
+      "description": {
+        "zh": "以下代码使用 transform 尝试获取每组的前 2 行，但 transform 要求返回与输入相同形状的结果。请修复 bug，使用正确的方法实现需求。",
+        "en": "The code below uses transform to try to get the top 2 rows per group, but transform requires results with the same shape as input. Fix the bug by using the correct method."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'group': ['A', 'A', 'A', 'B', 'B', 'B'], 'score': [85, 92, 78, 90, 88, 95]})",
+      "starterCode": "# Bug: transform cannot change the number of rows\n# Fix: use the correct method to get top 2 per group\nresult = df.groupby('group').apply(\n    lambda x: x.nlargest(2, 'score')\n).reset_index(drop=True)",
+      "solutionCode": "result = df.groupby('group').apply(\n    lambda x: x.nlargest(2, 'score')\n).reset_index(drop=True)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = len(result) == 4 and 78 not in result['score'].values and 88 not in result['score'].values\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["transform 必须返回与输入相同长度的结果", "需要改变行数时应使用 apply 或 filter"],
+        "en": ["transform must return results with the same length as input", "Use apply or filter when you need to change the number of rows"]
+      },
+      "explanation": {
+        "zh": "transform 要求函数返回与输入相同形状（长度）的结果，适合「广播」操作。如果需要改变行数（如取每组前 N 行），应使用 apply + nlargest/nsmallest。filter 则用于整组保留或删除。选择方法的关键：transform（同形状）、apply（灵活）、filter（整组布尔）、agg（聚合为一个值）。",
+        "en": "transform requires the function to return results with the same shape (length) as input, suited for 'broadcasting'. To change the number of rows (like top N per group), use apply + nlargest/nsmallest. filter is for keeping/discarding entire groups. Key for method selection: transform (same shape), apply (flexible), filter (group-level boolean), agg (aggregate to one value)."
+      }
+    },
+    {
+      "id": "s4-advanced-groupby-013",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "[最佳实践] agg 命名列 vs 字典方式",
+        "en": "[Best Practice] agg Named Columns vs Dict"
+      },
+      "description": {
+        "zh": "在 groupby 后需要对不同列应用不同的聚合函数并自定义列名时，以下哪种方式是推荐的？",
+        "en": "When you need to apply different aggregation functions to different columns with custom names after groupby, which approach is recommended?"
+      },
+      "options": {
+        "zh": [
+          "使用命名聚合：df.groupby('g').agg(avg_score=('score', 'mean'), max_val=('value', 'max'))",
+          "使用嵌套字典：df.groupby('g').agg({'score': 'mean', 'value': 'max'})",
+          "使用多次 groupby 分别计算再合并",
+          "使用 apply + 自定义函数返回 Series"
+        ],
+        "en": [
+          "Named aggregation: df.groupby('g').agg(avg_score=('score', 'mean'), max_val=('value', 'max'))",
+          "Nested dict: df.groupby('g').agg({'score': 'mean', 'value': 'max'})",
+          "Use multiple groupby calls and merge results",
+          "Use apply + custom function returning a Series"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["考虑哪种方式能直接自定义结果列名且最简洁"],
+        "en": ["Consider which approach can directly customize result column names and is most concise"]
+      },
+      "explanation": {
+        "zh": "命名聚合（Named Aggregation）是 pandas 0.25+ 推荐的方式：df.groupby('g').agg(new_name=('column', 'func'))。优点：1) 可以直接命名结果列；2) 语法清晰；3) 一个列可以应用多个函数。字典方式虽然也能用，但无法自定义列名，需要额外的 rename 操作。",
+        "en": "Named Aggregation is the recommended approach since pandas 0.25+: df.groupby('g').agg(new_name=('column', 'func')). Advantages: 1) Directly name result columns; 2) Clear syntax; 3) Apply multiple functions to one column. The dict approach works but cannot customize column names, requiring an extra rename step."
+      }
+    },
+    {
+      "id": "s4-advanced-groupby-014",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 时间序列 groupby 分析",
+        "en": "[Challenge] Time Series groupby Analysis"
+      },
+      "description": {
+        "zh": "完成一个完整的时间序列分组分析：1) 按 'category' 和月份分组（使用 pd.Grouper），2) 计算每组的总销售额和平均销售额（命名聚合），3) 使用 transform 计算每笔交易占其类别月度总额的百分比，4) 将结果赋给相应变量。",
+        "en": "Complete a full time series groupby analysis: 1) Group by 'category' and month (using pd.Grouper), 2) Calculate total and mean sales per group (named aggregation), 3) Use transform to compute each transaction's percentage of its category's monthly total, 4) Assign results to respective variables."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nn = 60\ndf = pd.DataFrame({'date': pd.date_range('2024-01-01', periods=n, freq='D'), 'category': np.random.choice(['Electronics', 'Books', 'Clothing'], n), 'sales': np.random.uniform(10, 200, n).round(2)})",
+      "starterCode": "# Step 1 & 2: Group by category + month, compute named aggregations\nmonthly_summary = df.groupby(\n    ['category', pd.Grouper(key='date', freq='ME')]\n).agg(\n    total_sales=('sales', ___),\n    avg_sales=('sales', ___)\n)\n\n# Step 3: Compute each transaction's % of its category-month total\ndf['pct_of_monthly'] = (\n    df['sales'] / df.groupby(\n        ['category', pd.Grouper(key='date', freq='ME')]\n    )['sales'].transform('sum') * 100\n).round(2)",
+      "solutionCode": "monthly_summary = df.groupby(\n    ['category', pd.Grouper(key='date', freq='ME')]\n).agg(\n    total_sales=('sales', 'sum'),\n    avg_sales=('sales', 'mean')\n)\ndf['pct_of_monthly'] = (\n    df['sales'] / df.groupby(\n        ['category', pd.Grouper(key='date', freq='ME')]\n    )['sales'].transform('sum') * 100\n).round(2)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'total_sales' in monthly_summary.columns and 'avg_sales' in monthly_summary.columns and 'pct_of_monthly' in df.columns and df['pct_of_monthly'].max() <= 100\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["命名聚合中 'sum' 和 'mean' 是字符串", "transform('sum') 返回组内总和，广播到每行"],
+        "en": ["'sum' and 'mean' are strings in named aggregation", "transform('sum') returns group totals broadcast to each row"]
+      },
+      "explanation": {
+        "zh": "此综合练习结合了 pd.Grouper（时间分组）、命名聚合（清晰的结果列名）和 transform（广播组统计量）三个高级技巧。这种模式在业务分析中极为常见：按时间和类别汇总，同时计算每笔交易的相对占比。",
+        "en": "This challenge combines pd.Grouper (time-based grouping), named aggregation (clear result column names), and transform (broadcasting group statistics). This pattern is extremely common in business analysis: summarizing by time and category while computing each transaction's relative proportion."
+      }
+    }
+  ]
+}

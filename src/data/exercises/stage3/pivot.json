@@ -1,0 +1,378 @@
+{
+  "module": "pivot",
+  "stageId": "stage3",
+  "lessonId": "pivot",
+  "tags": ["pivot_table", "crosstab", "pivot", "reshaping"],
+  "exercises": [
+    {
+      "id": "s3-pivot-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "pivot_table 基础",
+        "en": "pivot_table Basics"
+      },
+      "description": {
+        "zh": "使用 pivot_table 创建一个透视表，以 'department' 为行索引，计算 'salary' 的平均值。",
+        "en": "Use pivot_table to create a pivot table with 'department' as the index and calculate the mean of 'salary'."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'department': ['HR', 'Engineering', 'HR', 'Engineering', 'Marketing'], 'quarter': ['Q1', 'Q1', 'Q2', 'Q2', 'Q1'], 'salary': [50000, 80000, 55000, 75000, 60000]})",
+      "starterCode": "# Create a pivot table with department as index, salary as values\nresult = ___",
+      "solutionCode": "result = df.pivot_table(index='department', values='salary', aggfunc='mean')",
+      "validationType": "dataframe-equals",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["pivot_table 的 index 参数指定行索引", "values 参数指定要聚合的列"],
+        "en": ["The index parameter specifies row labels", "The values parameter specifies which column to aggregate"]
+      },
+      "explanation": {
+        "zh": "pivot_table 默认使用 mean 作为聚合函数。通过 index 和 values 参数可以快速创建汇总表。",
+        "en": "pivot_table uses mean as the default aggregation function. You can quickly create summary tables using the index and values parameters."
+      }
+    },
+    {
+      "id": "s3-pivot-002",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "pivot_table 的 aggfunc 参数",
+        "en": "pivot_table aggfunc Parameter"
+      },
+      "description": {
+        "zh": "创建透视表，以 department 为行索引，quarter 为列，计算 salary 的总和。",
+        "en": "Create a pivot table with department as rows, quarter as columns, and calculate the sum of salary."
+      },
+      "codeTemplate": "result = df.pivot_table(index='department', columns='quarter', values='salary', aggfunc=___)",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "'sum'",
+          "alternatives": ["\"sum\""]
+        }
+      ],
+      "hints": {
+        "zh": ["aggfunc 参数指定聚合函数，如 'sum', 'mean', 'count' 等"],
+        "en": ["The aggfunc parameter specifies the aggregation function, such as 'sum', 'mean', 'count', etc."]
+      },
+      "explanation": {
+        "zh": "aggfunc='sum' 将对每个分组计算总和。pivot_table 的 columns 参数决定透视后的列。",
+        "en": "aggfunc='sum' computes the sum for each group. The columns parameter of pivot_table determines the columns in the resulting table."
+      }
+    },
+    {
+      "id": "s3-pivot-003",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "crosstab 的用途",
+        "en": "crosstab Usage"
+      },
+      "description": {
+        "zh": "关于 pd.crosstab()，以下哪个描述是正确的？",
+        "en": "Which statement about pd.crosstab() is correct?"
+      },
+      "options": {
+        "zh": [
+          "crosstab 默认计算频率（计数），是 pivot_table 的简便方式",
+          "crosstab 只能处理数值型数据",
+          "crosstab 与 pivot_table 完全相同，没有区别",
+          "crosstab 不支持 aggfunc 参数"
+        ],
+        "en": [
+          "crosstab computes frequency (counts) by default and is a convenience wrapper around pivot_table",
+          "crosstab can only handle numeric data",
+          "crosstab is identical to pivot_table with no differences",
+          "crosstab does not support the aggfunc parameter"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["crosstab 最常用于计算两个分类变量的交叉频次"],
+        "en": ["crosstab is most commonly used to compute cross-tabulation of two categorical variables"]
+      },
+      "explanation": {
+        "zh": "pd.crosstab() 默认使用 aggfunc='count'（或更准确地说是 size），非常适合计算交叉频次。它也支持 aggfunc 参数来做其他聚合。",
+        "en": "pd.crosstab() defaults to counting frequencies (size). It is also capable of other aggregations via the aggfunc parameter."
+      }
+    },
+    {
+      "id": "s3-pivot-004",
+      "type": "true-false",
+      "difficulty": 3,
+      "title": {
+        "zh": "pivot 与 pivot_table 的区别",
+        "en": "pivot vs pivot_table"
+      },
+      "description": {
+        "zh": "df.pivot() 可以处理重复的索引/列组合，会自动聚合重复值。",
+        "en": "df.pivot() can handle duplicate index/column combinations and automatically aggregates duplicate values."
+      },
+      "correctAnswer": false,
+      "hints": {
+        "zh": ["当有重复的 index/columns 组合时，pivot 会怎样？"],
+        "en": ["What happens when there are duplicate index/column combinations with pivot?"]
+      },
+      "explanation": {
+        "zh": "df.pivot() 不能处理重复值，遇到重复会报 ValueError。需要使用 df.pivot_table() 并指定 aggfunc 来聚合重复值。",
+        "en": "df.pivot() cannot handle duplicates and raises ValueError when it encounters them. Use df.pivot_table() with an aggfunc to aggregate duplicate values."
+      }
+    },
+    {
+      "id": "s3-pivot-005",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "pivot 与 pivot_table 的区别",
+        "en": "pivot vs pivot_table Distinction"
+      },
+      "description": {
+        "zh": "以下哪个选项最准确地描述了 df.pivot() 和 df.pivot_table() 的主要区别？",
+        "en": "Which option most accurately describes the main difference between df.pivot() and df.pivot_table()?"
+      },
+      "options": {
+        "zh": [
+          "pivot 仅做重塑不聚合，遇到重复值报错；pivot_table 可以通过 aggfunc 聚合重复值",
+          "pivot 比 pivot_table 性能更好，功能相同",
+          "pivot_table 只能用于数值列，pivot 可以用于任何类型",
+          "pivot 是 pivot_table 的别名，两者完全相同"
+        ],
+        "en": [
+          "pivot only reshapes without aggregation and raises error on duplicates; pivot_table can aggregate duplicates via aggfunc",
+          "pivot has better performance than pivot_table with identical functionality",
+          "pivot_table can only be used with numeric columns, pivot works with any type",
+          "pivot is an alias for pivot_table, they are identical"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["当 index 和 columns 的组合有重复值时，两者行为不同"],
+        "en": ["They behave differently when the index and columns combination has duplicates"]
+      },
+      "explanation": {
+        "zh": "pivot 是简单的重塑操作，要求 index/columns 组合唯一，否则报 ValueError。pivot_table 通过 aggfunc 参数（默认 mean）处理重复值，功能更强大。",
+        "en": "pivot is a simple reshape that requires unique index/columns combinations, raising ValueError otherwise. pivot_table handles duplicates via the aggfunc parameter (default mean) and is more powerful."
+      }
+    },
+    {
+      "id": "s3-pivot-006",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "pivot_table 的 margins 参数",
+        "en": "pivot_table margins Parameter"
+      },
+      "description": {
+        "zh": "创建一个透视表，以 'department' 为行、'quarter' 为列、'salary' 为值，使用 sum 聚合，并添加行列合计（margins=True）。",
+        "en": "Create a pivot table with 'department' as rows, 'quarter' as columns, 'salary' as values, using sum aggregation, and add row/column totals (margins=True)."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'department': ['HR', 'Engineering', 'HR', 'Engineering', 'Marketing'], 'quarter': ['Q1', 'Q1', 'Q2', 'Q2', 'Q1'], 'salary': [50000, 80000, 55000, 75000, 60000]})",
+      "starterCode": "# Create pivot table with margins\nresult = ___",
+      "solutionCode": "result = df.pivot_table(index='department', columns='quarter', values='salary', aggfunc='sum', margins=True)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = 'All' in result.index and 'All' in result.columns\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["margins=True 在透视表底部和右侧添加合计行/列", "合计行/列的标签默认为 'All'"],
+        "en": ["margins=True adds total row/column at the bottom and right", "The total row/column label defaults to 'All'"]
+      },
+      "explanation": {
+        "zh": "margins=True 添加 'All' 行和列，分别显示每行的合计和每列的合计，右下角是总计。类似 Excel 透视表的总计功能。",
+        "en": "margins=True adds an 'All' row and column showing row totals and column totals respectively, with the grand total in the bottom-right corner. Similar to Excel pivot table totals."
+      }
+    },
+    {
+      "id": "s3-pivot-007",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "pivot_table 的 fill_value 参数",
+        "en": "pivot_table fill_value Parameter"
+      },
+      "description": {
+        "zh": "创建透视表时，用 0 填充缺失值。",
+        "en": "Fill missing values with 0 when creating a pivot table."
+      },
+      "codeTemplate": "result = df.pivot_table(index='department', columns='quarter', values='salary', aggfunc='sum', ___=0)",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "fill_value",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": ["透视表中某些 index/columns 组合可能没有数据，默认显示 NaN"],
+        "en": ["Some index/column combinations may have no data, showing NaN by default"]
+      },
+      "explanation": {
+        "zh": "fill_value=0 将透视表中因为没有对应数据而产生的 NaN 替换为 0。这对于后续计算（如求和）很有用，避免 NaN 传播。",
+        "en": "fill_value=0 replaces NaN values (from missing data combinations) in the pivot table with 0. This is useful for subsequent calculations (like summation) to avoid NaN propagation."
+      }
+    },
+    {
+      "id": "s3-pivot-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "pivot_table 多聚合函数",
+        "en": "pivot_table with Multiple aggfuncs"
+      },
+      "description": {
+        "zh": "创建透视表，以 'department' 为行，同时计算 'salary' 的均值和总和。",
+        "en": "Create a pivot table with 'department' as rows, computing both the mean and sum of 'salary'."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'department': ['HR', 'Engineering', 'HR', 'Engineering', 'Marketing'], 'salary': [50000, 80000, 55000, 75000, 60000]})",
+      "starterCode": "# Pivot table with multiple aggfuncs\nresult = ___",
+      "solutionCode": "result = df.pivot_table(index='department', values='salary', aggfunc=['mean', 'sum'])",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = len(result.columns) == 2 and result.columns.nlevels == 2\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["aggfunc 可以接受一个函数列表", "结果会有多层列索引"],
+        "en": ["aggfunc can accept a list of functions", "The result will have multi-level column index"]
+      },
+      "explanation": {
+        "zh": "aggfunc 传入列表时，结果的列会变成 MultiIndex，第一层是函数名，第二层是值列名。可以通过 result['mean'] 或 result['sum'] 选择特定聚合结果。",
+        "en": "When aggfunc receives a list, the result columns become a MultiIndex with function names at the first level and value column names at the second. Access specific results via result['mean'] or result['sum']."
+      }
+    },
+    {
+      "id": "s3-pivot-009",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "unstack 替代方案",
+        "en": "unstack as Alternative"
+      },
+      "description": {
+        "zh": "先按 'department' 和 'quarter' 分组求 'salary' 之和，然后用 unstack 将 'quarter' 层级从行索引转为列。",
+        "en": "Group by 'department' and 'quarter', sum 'salary', then use unstack to convert the 'quarter' level from row index to columns."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'department': ['HR', 'Engineering', 'HR', 'Engineering', 'Marketing'], 'quarter': ['Q1', 'Q1', 'Q2', 'Q2', 'Q1'], 'salary': [50000, 80000, 55000, 75000, 60000]})",
+      "starterCode": "# groupby then unstack\nresult = ___",
+      "solutionCode": "result = df.groupby(['department', 'quarter'])['salary'].sum().unstack()",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = result.shape == (3, 2) and 'Q1' in result.columns and 'Q2' in result.columns\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["先用 groupby 创建 MultiIndex，再用 unstack 将内层索引转为列", "unstack 默认将最内层索引转为列"],
+        "en": ["First create a MultiIndex with groupby, then use unstack to pivot the inner level to columns", "unstack converts the innermost level to columns by default"]
+      },
+      "explanation": {
+        "zh": "groupby + unstack 是 pivot_table 的替代方案。groupby 创建 MultiIndex Series，unstack 将指定层级从行转为列。效果类似 pivot_table，但分两步操作更灵活。",
+        "en": "groupby + unstack is an alternative to pivot_table. groupby creates a MultiIndex Series, and unstack converts a specified level from rows to columns. Similar to pivot_table but more flexible as a two-step process."
+      }
+    },
+    {
+      "id": "s3-pivot-010",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "melt 逆透视操作",
+        "en": "melt as Inverse of Pivot"
+      },
+      "description": {
+        "zh": "使用 pd.melt 将宽格式 DataFrame 转为长格式，保留 'name' 列，将 'Q1' 和 'Q2' 列熔化为 'quarter'（变量名）和 'sales'（值）。",
+        "en": "Use pd.melt to convert a wide-format DataFrame to long format, keeping 'name' as identifier, melting 'Q1' and 'Q2' columns into 'quarter' (variable name) and 'sales' (value)."
+      },
+      "setupCode": "import pandas as pd\ndf_wide = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'Q1': [100, 200, 150], 'Q2': [120, 180, 160]})",
+      "starterCode": "# Melt wide to long format\nresult = ___",
+      "solutionCode": "result = pd.melt(df_wide, id_vars='name', value_vars=['Q1', 'Q2'], var_name='quarter', value_name='sales')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = len(result) == 6 and 'quarter' in result.columns and 'sales' in result.columns and 'name' in result.columns\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["id_vars 指定要保留的标识列", "var_name 和 value_name 分别指定新的变量列名和值列名"],
+        "en": ["id_vars specifies the identifier columns to keep", "var_name and value_name specify the new variable column name and value column name"]
+      },
+      "explanation": {
+        "zh": "melt 是 pivot 的逆操作，将宽格式转为长格式。id_vars 保留的列不变，value_vars 的列被'熔化'为两列：变量名列和值列。这在数据清洗中非常常见。",
+        "en": "melt is the inverse of pivot, converting wide format to long format. id_vars columns are kept, while value_vars columns are 'melted' into two columns: variable name and value. Very common in data cleaning."
+      }
+    },
+    {
+      "id": "s3-pivot-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] pivot 重复条目错误",
+        "en": "[Debug] pivot Duplicate Entries Error"
+      },
+      "description": {
+        "zh": "以下代码使用 pivot 重塑数据，但因为有重复的 (department, quarter) 组合而报错。请修复代码使其正常工作（提示：改用合适的函数来聚合重复值）。",
+        "en": "The following code uses pivot to reshape data, but fails because of duplicate (department, quarter) combinations. Fix the code to work correctly (hint: use the appropriate function to aggregate duplicates)."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'department': ['HR', 'HR', 'Engineering', 'Engineering', 'HR'], 'quarter': ['Q1', 'Q1', 'Q1', 'Q2', 'Q2'], 'salary': [50000, 55000, 80000, 75000, 60000]})",
+      "starterCode": "# Bug: ValueError due to duplicate entries\nresult = df.pivot(index='department', columns='quarter', values='salary')",
+      "solutionCode": "result = df.pivot_table(index='department', columns='quarter', values='salary', aggfunc='mean')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = result.shape == (2, 2) and not result.isnull().all().any()\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["df.pivot() 不能处理重复的 index/columns 组合", "需要一个能聚合重复值的函数"],
+        "en": ["df.pivot() cannot handle duplicate index/columns combinations", "You need a function that can aggregate duplicates"]
+      },
+      "explanation": {
+        "zh": "pivot 要求每个 (index, columns) 组合唯一。当有重复时（如 HR-Q1 出现两次），需要用 pivot_table 并指定 aggfunc 来聚合。pivot_table 默认使用 mean 聚合。",
+        "en": "pivot requires unique (index, columns) combinations. When duplicates exist (e.g., HR-Q1 appears twice), use pivot_table with an aggfunc to aggregate. pivot_table defaults to mean aggregation."
+      }
+    },
+    {
+      "id": "s3-pivot-012",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "[最佳实践] pivot_table vs groupby+unstack",
+        "en": "[Best Practice] pivot_table vs groupby+unstack"
+      },
+      "description": {
+        "zh": "以下两种方式都能得到类似的结果。哪种说法最准确？\nA: df.pivot_table(index='dept', columns='qtr', values='sal', aggfunc='sum')\nB: df.groupby(['dept','qtr'])['sal'].sum().unstack()",
+        "en": "Both approaches produce similar results. Which statement is most accurate?\nA: df.pivot_table(index='dept', columns='qtr', values='sal', aggfunc='sum')\nB: df.groupby(['dept','qtr'])['sal'].sum().unstack()"
+      },
+      "options": {
+        "zh": [
+          "两者效果相似，但 pivot_table 更适合快速原型；groupby+unstack 更灵活，可以在 groupby 后做更多中间处理",
+          "pivot_table 性能远优于 groupby+unstack",
+          "groupby+unstack 不支持 fill_value",
+          "两者永远产生完全相同的结果，没有任何区别"
+        ],
+        "en": [
+          "Both produce similar results, but pivot_table is better for quick prototyping; groupby+unstack is more flexible, allowing intermediate processing after groupby",
+          "pivot_table has far better performance than groupby+unstack",
+          "groupby+unstack does not support fill_value",
+          "They always produce exactly the same result with no differences"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["考虑在聚合和重塑之间是否需要额外操作"],
+        "en": ["Consider whether you need extra operations between aggregation and reshaping"]
+      },
+      "explanation": {
+        "zh": "pivot_table 一步完成分组+聚合+重塑，代码简洁适合快速分析。groupby+unstack 分两步，中间可以插入筛选、排序等操作，更灵活。unstack 也支持 fill_value 参数。",
+        "en": "pivot_table completes grouping+aggregation+reshaping in one step, making it concise for quick analysis. groupby+unstack works in two steps, allowing intermediate filtering, sorting, etc., offering more flexibility. unstack also supports fill_value."
+      }
+    },
+    {
+      "id": "s3-pivot-013",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[综合] 重塑销售数据进行季度对比",
+        "en": "[Challenge] Reshape Sales Data for Quarterly Comparison"
+      },
+      "description": {
+        "zh": "完成以下分析：1) 用 pivot_table 创建透视表，行为 'product'，列为 'quarter'，值为 'revenue' 的总和；2) 用 0 填充缺失值；3) 添加一列 'growth' 计算 Q2 相对于 Q1 的增长率 ((Q2-Q1)/Q1)；4) 按 growth 降序排列。",
+        "en": "Complete the following analysis: 1) Create a pivot table with 'product' as rows, 'quarter' as columns, sum of 'revenue' as values; 2) Fill missing values with 0; 3) Add a 'growth' column computing Q2 growth rate over Q1 ((Q2-Q1)/Q1); 4) Sort by growth descending."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'product': ['Widget', 'Widget', 'Gadget', 'Gadget', 'Widget', 'Gadget', 'Doohickey', 'Doohickey'], 'quarter': ['Q1', 'Q2', 'Q1', 'Q2', 'Q1', 'Q2', 'Q1', 'Q2'], 'revenue': [100, 150, 200, 220, 120, 180, 80, 60]})",
+      "starterCode": "# Step 1-4: pivot, fill, compute growth, sort\nresult = ___",
+      "solutionCode": "result = df.pivot_table(index='product', columns='quarter', values='revenue', aggfunc='sum', fill_value=0)\nresult['growth'] = (result['Q2'] - result['Q1']) / result['Q1']\nresult = result.sort_values('growth', ascending=False)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = 'growth' in result.columns and result.index[0] == 'Gadget' and len(result) == 3 and result.iloc[0]['growth'] >= result.iloc[1]['growth']\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["先用 pivot_table + fill_value=0 创建宽格式表", "增长率公式: (Q2 - Q1) / Q1", "最后用 sort_values('growth', ascending=False) 排序"],
+        "en": ["First create wide-format table with pivot_table + fill_value=0", "Growth formula: (Q2 - Q1) / Q1", "Finally sort with sort_values('growth', ascending=False)"]
+      },
+      "explanation": {
+        "zh": "此综合练习展示了数据重塑的典型应用：先用 pivot_table 将长格式转为宽格式便于对比，再基于宽格式列进行计算。Gadget 增长 10%，Widget 增长约 50%（(330-220)/220），Doohickey 下降 25%。",
+        "en": "This challenge demonstrates a typical data reshaping workflow: pivot long format to wide format for comparison, then perform calculations on the wide columns. The growth rates allow direct product comparison across quarters."
+      }
+    }
+  ]
+}

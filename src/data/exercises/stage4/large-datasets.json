@@ -1,0 +1,433 @@
+{
+  "module": "large-datasets",
+  "stageId": "stage4",
+  "lessonId": "large-datasets",
+  "tags": ["chunksize", "category", "downcast", "sparse", "memory-optimization"],
+  "exercises": [
+    {
+      "id": "s4-large-datasets-001",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "使用 chunksize 读取大文件",
+        "en": "Reading Large Files with chunksize"
+      },
+      "description": {
+        "zh": "pd.read_csv('large.csv', chunksize=10000) 返回的是什么类型的对象？",
+        "en": "What type of object does pd.read_csv('large.csv', chunksize=10000) return?"
+      },
+      "options": {
+        "zh": [
+          "TextFileReader 迭代器，每次迭代返回 10000 行的 DataFrame",
+          "一个完整的 DataFrame，包含前 10000 行",
+          "一个包含 10000 个 DataFrame 的列表",
+          "一个内存映射的 DataFrame"
+        ],
+        "en": [
+          "A TextFileReader iterator, yielding a DataFrame of 10000 rows per iteration",
+          "A complete DataFrame containing the first 10000 rows",
+          "A list of 10000 DataFrames",
+          "A memory-mapped DataFrame"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["chunksize 让你可以分批处理大文件"],
+        "en": ["chunksize lets you process large files in batches"]
+      },
+      "explanation": {
+        "zh": "指定 chunksize 后，read_csv 返回一个迭代器。可以用 for chunk in reader 逐块处理，避免一次性将整个文件加载到内存。",
+        "en": "When chunksize is specified, read_csv returns an iterator. You can use 'for chunk in reader' to process each chunk, avoiding loading the entire file into memory at once."
+      }
+    },
+    {
+      "id": "s4-large-datasets-002",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "使用 category 类型节省内存",
+        "en": "Saving Memory with category dtype"
+      },
+      "description": {
+        "zh": "将 df 的 'status' 列转换为 category 类型以节省内存。",
+        "en": "Convert the 'status' column of df to category dtype to save memory."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'id': range(1000), 'status': ['active', 'inactive', 'pending'] * 333 + ['active']})",
+      "starterCode": "# Convert status to category type\ndf['status'] = ___",
+      "solutionCode": "df['status'] = df['status'].astype('category')",
+      "validationType": "custom-check",
+      "checkCode": "result = df['status'].dtype.name == 'category'",
+      "hints": {
+        "zh": ["使用 .astype('category') 进行类型转换"],
+        "en": ["Use .astype('category') for type conversion"]
+      },
+      "explanation": {
+        "zh": "将重复率高的字符串列转为 category 类型可以大幅减少内存占用。内部使用整数编码代替字符串存储。",
+        "en": "Converting high-repetition string columns to category type can significantly reduce memory usage. Internally, integer codes are used instead of string storage."
+      }
+    },
+    {
+      "id": "s4-large-datasets-003",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "数值降精度 (downcast)",
+        "en": "Numeric Downcasting"
+      },
+      "description": {
+        "zh": "使用 pd.to_numeric 的 downcast 参数将列转换为占用更少内存的整数类型。",
+        "en": "Use the downcast parameter of pd.to_numeric to convert a column to a smaller integer type."
+      },
+      "codeTemplate": "df['value'] = pd.to_numeric(df['value'], downcast=___)",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "'integer'",
+          "alternatives": ["\"integer\""]
+        }
+      ],
+      "hints": {
+        "zh": ["downcast 可以是 'integer'、'signed'、'unsigned' 或 'float'"],
+        "en": ["downcast can be 'integer', 'signed', 'unsigned', or 'float'"]
+      },
+      "explanation": {
+        "zh": "downcast='integer' 会自动选择最小的整数类型（如 int8、int16）来存储数据。对大数据集可以显著减少内存占用。",
+        "en": "downcast='integer' automatically selects the smallest integer type (e.g., int8, int16) to store the data. This can significantly reduce memory usage for large datasets."
+      }
+    },
+    {
+      "id": "s4-large-datasets-004",
+      "type": "true-false",
+      "difficulty": 5,
+      "title": {
+        "zh": "稀疏数组 (Sparse Arrays)",
+        "en": "Sparse Arrays"
+      },
+      "description": {
+        "zh": "当 DataFrame 中有大量 0 或 NaN 值时，使用 pd.arrays.SparseArray 可以节省内存，因为它只存储非零/非 NaN 值。",
+        "en": "When a DataFrame contains many 0 or NaN values, using pd.arrays.SparseArray can save memory because it only stores non-zero/non-NaN values."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["稀疏数据结构只存储非默认值及其位置"],
+        "en": ["Sparse data structures store only non-default values and their positions"]
+      },
+      "explanation": {
+        "zh": "SparseArray 只存储非填充值（默认为 NaN 或 0）及其位置索引。当数据的稀疏率高时（大量相同的填充值），内存节省非常可观。",
+        "en": "SparseArray only stores non-fill values (default NaN or 0) and their position indices. When data has high sparsity (many identical fill values), memory savings can be substantial."
+      }
+    },
+    {
+      "id": "s4-large-datasets-005",
+      "type": "true-false",
+      "difficulty": 3,
+      "title": {
+        "zh": "Parquet 格式优势",
+        "en": "Advantages of Parquet Format"
+      },
+      "description": {
+        "zh": "Parquet 文件格式比 CSV 读写更快、占用空间更小，并且能保留列的数据类型信息。",
+        "en": "Parquet file format is faster to read/write, smaller in size than CSV, and preserves column data type information."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["Parquet 是列式存储格式，原生支持数据类型"],
+        "en": ["Parquet is a columnar storage format with native type support"]
+      },
+      "explanation": {
+        "zh": "Parquet 是列式存储格式，支持高效压缩和编码。与 CSV 相比：1) 保留 dtypes（不需要每次读取时推断）；2) 列式存储支持只读取需要的列；3) 内置压缩，文件更小；4) 读写速度通常快 5-10 倍。使用 df.to_parquet('file.parquet') 和 pd.read_parquet('file.parquet')。",
+        "en": "Parquet is a columnar storage format with efficient compression. Compared to CSV: 1) Preserves dtypes (no inference needed); 2) Columnar storage allows reading only needed columns; 3) Built-in compression for smaller files; 4) Read/write is typically 5-10x faster. Use df.to_parquet('file.parquet') and pd.read_parquet('file.parquet')."
+      }
+    },
+    {
+      "id": "s4-large-datasets-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "chunksize 迭代模式",
+        "en": "chunksize Iteration Pattern"
+      },
+      "description": {
+        "zh": "使用 chunksize 分批读取 CSV 数据，对每个块计算 'value' 列的总和，最终得到所有块的总和。（模拟场景：使用提供的 chunks 列表代替文件读取）",
+        "en": "Use chunksize to read CSV data in batches, compute the sum of the 'value' column for each chunk, then get the grand total. (Simulated: use the provided chunks list instead of file reading)"
+      },
+      "setupCode": "import pandas as pd\n# Simulate chunks from read_csv with chunksize\nchunk1 = pd.DataFrame({'id': [1, 2, 3], 'value': [10, 20, 30]})\nchunk2 = pd.DataFrame({'id': [4, 5, 6], 'value': [40, 50, 60]})\nchunk3 = pd.DataFrame({'id': [7, 8, 9], 'value': [70, 80, 90]})\nchunks = [chunk1, chunk2, chunk3]",
+      "starterCode": "# Iterate through chunks and compute total sum\ntotal = 0\nfor chunk in chunks:\n    total += ___\nprint(total)",
+      "solutionCode": "total = 0\nfor chunk in chunks:\n    total += chunk['value'].sum()\nprint(total)",
+      "validationType": "exact-output",
+      "expectedOutput": "450",
+      "hints": {
+        "zh": ["每个 chunk 是一个 DataFrame", "使用 .sum() 对每个 chunk 的列求和"],
+        "en": ["Each chunk is a DataFrame", "Use .sum() to sum a column of each chunk"]
+      },
+      "explanation": {
+        "zh": "chunksize 模式的关键是在循环中逐块处理数据：for chunk in pd.read_csv('file.csv', chunksize=N)。每个 chunk 是一个 DataFrame，可以独立处理后汇总结果。这样即使文件很大也不会耗尽内存。",
+        "en": "The key to the chunksize pattern is processing data chunk by chunk in a loop: for chunk in pd.read_csv('file.csv', chunksize=N). Each chunk is a DataFrame that can be processed independently and results aggregated. This prevents memory exhaustion even with very large files."
+      }
+    },
+    {
+      "id": "s4-large-datasets-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "Parquet 引擎和压缩参数",
+        "en": "Parquet Engine and Compression Parameters"
+      },
+      "description": {
+        "zh": "将 DataFrame 保存为 Parquet 格式，使用 'pyarrow' 引擎和 'snappy' 压缩。然后读取回来验证。",
+        "en": "Save a DataFrame to Parquet format using the 'pyarrow' engine and 'snappy' compression. Then read it back to verify."
+      },
+      "setupCode": "import pandas as pd\nimport os\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'score': [85, 92, 78]})\noutput_path = '/tmp/test_output.parquet'",
+      "starterCode": "# Save to parquet with engine and compression\ndf.to_parquet(output_path, engine=___, compression=___)\n\n# Read back\ndf_loaded = pd.read_parquet(output_path)",
+      "solutionCode": "df.to_parquet(output_path, engine='pyarrow', compression='snappy')\ndf_loaded = pd.read_parquet(output_path)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = df_loaded.equals(df) and os.path.exists(output_path)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["engine 参数可选 'pyarrow' 或 'fastparquet'", "compression 常用 'snappy'（快速）或 'gzip'（高压缩率）"],
+        "en": ["engine can be 'pyarrow' or 'fastparquet'", "compression commonly uses 'snappy' (fast) or 'gzip' (high ratio)"]
+      },
+      "explanation": {
+        "zh": "Parquet 的 engine 参数选择底层库：pyarrow（推荐，功能全面）或 fastparquet。compression 参数选择压缩算法：snappy（速度优先）、gzip（压缩率优先）、brotli、zstd 等。snappy 是默认值，适合大多数场景。",
+        "en": "Parquet's engine parameter selects the backend: pyarrow (recommended, full-featured) or fastparquet. The compression parameter selects the algorithm: snappy (speed-first), gzip (compression-first), brotli, zstd, etc. snappy is the default and suitable for most use cases."
+      }
+    },
+    {
+      "id": "s4-large-datasets-008",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "使用 read_sql 与 SQLAlchemy",
+        "en": "Using read_sql with SQLAlchemy"
+      },
+      "description": {
+        "zh": "关于 pd.read_sql() 读取数据库数据，以下哪个说法是正确的？",
+        "en": "Which statement about pd.read_sql() for reading database data is correct?"
+      },
+      "options": {
+        "zh": [
+          "read_sql 需要 SQLAlchemy 连接对象或连接字符串，支持 SQL 查询和表名两种方式",
+          "read_sql 只能读取 SQLite 数据库",
+          "read_sql 会将整个数据库加载到内存",
+          "read_sql 不支持参数化查询"
+        ],
+        "en": [
+          "read_sql requires a SQLAlchemy connection or connection string, supporting both SQL queries and table names",
+          "read_sql can only read SQLite databases",
+          "read_sql loads the entire database into memory",
+          "read_sql does not support parameterized queries"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["read_sql 是 read_sql_query 和 read_sql_table 的统一接口"],
+        "en": ["read_sql is a unified interface for read_sql_query and read_sql_table"]
+      },
+      "explanation": {
+        "zh": "pd.read_sql(sql, con) 接受 SQL 查询字符串或表名，con 参数为 SQLAlchemy 引擎或连接。它是 read_sql_query 和 read_sql_table 的便捷接口，支持 MySQL、PostgreSQL、SQLite 等多种数据库。还可以通过 chunksize 参数分批读取。",
+        "en": "pd.read_sql(sql, con) accepts a SQL query string or table name, with con as a SQLAlchemy engine or connection. It's a convenience wrapper for read_sql_query and read_sql_table, supporting MySQL, PostgreSQL, SQLite, and more. It also supports chunksize for batch reading."
+      }
+    },
+    {
+      "id": "s4-large-datasets-009",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "Modin 和 Dask 扩展 pandas",
+        "en": "Scaling pandas with Modin and Dask"
+      },
+      "description": {
+        "zh": "当 pandas 的单机内存和计算能力不足以处理超大数据集时，以下哪个描述是正确的？",
+        "en": "When pandas' single-machine memory and compute are insufficient for very large datasets, which description is correct?"
+      },
+      "options": {
+        "zh": [
+          "Modin 提供与 pandas 几乎相同的 API 但利用多核并行加速；Dask 支持分布式计算和大于内存的数据集",
+          "Modin 和 Dask 都需要完全重写 pandas 代码",
+          "只有 Dask 可以处理超过内存的数据",
+          "Modin 需要 GPU 才能运行"
+        ],
+        "en": [
+          "Modin provides a near-identical pandas API with multi-core parallelism; Dask supports distributed computing and datasets larger than memory",
+          "Both Modin and Dask require completely rewriting pandas code",
+          "Only Dask can handle data that exceeds memory",
+          "Modin requires a GPU to run"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["Modin 的目标是 'import modin.pandas as pd' 就能加速现有代码"],
+        "en": ["Modin aims for 'import modin.pandas as pd' to speed up existing code"]
+      },
+      "explanation": {
+        "zh": "Modin：只需 import modin.pandas as pd 即可替换，利用多核并行加速 pandas 操作，API 兼容度约 90%。Dask：提供 dask.dataframe，支持惰性计算和分布式计算，适合超大数据集（TB 级），但 API 与 pandas 有一定差异。",
+        "en": "Modin: Simply import modin.pandas as pd as a drop-in replacement, leveraging multi-core parallelism with ~90% API compatibility. Dask: Provides dask.dataframe with lazy and distributed computing for very large datasets (TB-scale), but with some API differences from pandas."
+      }
+    },
+    {
+      "id": "s4-large-datasets-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "内存分析与 sys.getsizeof",
+        "en": "Memory Profiling with sys.getsizeof"
+      },
+      "description": {
+        "zh": "比较同一列使用 object 类型和 category 类型的内存占用。将 object 类型的内存赋给 mem_obj，category 类型的内存赋给 mem_cat。",
+        "en": "Compare memory usage of the same column as object type vs category type. Assign object type memory to mem_obj and category type memory to mem_cat."
+      },
+      "setupCode": "import pandas as pd\nimport sys\ndf = pd.DataFrame({'status': ['active', 'inactive', 'pending'] * 1000})",
+      "starterCode": "# Get memory of object type column\nmem_obj = df['status'].memory_usage(deep=True)\n\n# Convert to category and get memory\ndf['status'] = df['status'].astype('category')\nmem_cat = df['status'].memory_usage(deep=True)\n\n# Print comparison\nprint(f'Object: {mem_obj} bytes')\nprint(f'Category: {mem_cat} bytes')\nprint(f'Savings: {round((1 - mem_cat/mem_obj) * 100)}%')",
+      "solutionCode": "mem_obj = df['status'].memory_usage(deep=True)\ndf['status'] = df['status'].astype('category')\nmem_cat = df['status'].memory_usage(deep=True)\nprint(f'Object: {mem_obj} bytes')\nprint(f'Category: {mem_cat} bytes')\nprint(f'Savings: {round((1 - mem_cat/mem_obj) * 100)}%')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = mem_obj > mem_cat and mem_cat > 0\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["memory_usage(deep=True) 返回包含字符串实际大小的精确字节数"],
+        "en": ["memory_usage(deep=True) returns exact bytes including actual string sizes"]
+      },
+      "explanation": {
+        "zh": "对于重复率高的字符串列，转换为 category 类型通常可以节省 90%+ 的内存。memory_usage(deep=True) 是分析列内存占用的最准确方式。sys.getsizeof 也可用于分析 Python 对象大小。",
+        "en": "For high-repetition string columns, converting to category type typically saves 90%+ memory. memory_usage(deep=True) is the most accurate way to analyze column memory usage. sys.getsizeof can also analyze Python object sizes."
+      }
+    },
+    {
+      "id": "s4-large-datasets-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "dtype 优化策略",
+        "en": "dtype Optimization Strategy"
+      },
+      "description": {
+        "zh": "对 DataFrame 进行 dtype 优化：将整数列降级为最小类型，将字符串列转为 category。返回优化后的 DataFrame。",
+        "en": "Optimize DataFrame dtypes: downcast integer columns to the smallest type, convert string columns to category. Return the optimized DataFrame."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'age': [25, 30, 22, 45, 38], 'city': ['NYC', 'LA', 'NYC', 'LA', 'NYC'], 'score': [100, 200, 150, 300, 250]})",
+      "starterCode": "# Downcast integer columns\nfor col in df.select_dtypes(include=['int64']).columns:\n    df[col] = pd.to_numeric(df[col], downcast='integer')\n\n# Convert object columns to category\nfor col in df.select_dtypes(include=['object']).columns:\n    df[col] = df[col].astype(___)\n\nprint(df.dtypes)",
+      "solutionCode": "for col in df.select_dtypes(include=['int64']).columns:\n    df[col] = pd.to_numeric(df[col], downcast='integer')\nfor col in df.select_dtypes(include=['object']).columns:\n    df[col] = df[col].astype('category')\nprint(df.dtypes)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = df['city'].dtype.name == 'category' and df['age'].dtype != 'int64'\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["select_dtypes 可以按类型筛选列", "object 类型通常是字符串，可转为 category"],
+        "en": ["select_dtypes filters columns by type", "object type is usually strings that can be converted to category"]
+      },
+      "explanation": {
+        "zh": "dtype 优化策略：1) 整数列用 pd.to_numeric(downcast='integer') 降级（int64->int8/16/32）；2) 浮点列用 downcast='float'；3) 重复率高的字符串列转 category；4) 布尔列用 bool 类型。这套策略可以将内存减少 50-80%。",
+        "en": "dtype optimization strategy: 1) Downcast integer columns with pd.to_numeric(downcast='integer') (int64->int8/16/32); 2) Float columns with downcast='float'; 3) High-repetition string columns to category; 4) Boolean columns to bool dtype. This strategy can reduce memory by 50-80%."
+      }
+    },
+    {
+      "id": "s4-large-datasets-012",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "to_pickle / read_pickle 序列化",
+        "en": "to_pickle / read_pickle Serialization"
+      },
+      "description": {
+        "zh": "使用 pickle 格式保存 DataFrame（保留所有 dtype 信息），然后读取回来验证。",
+        "en": "Save a DataFrame using pickle format (preserving all dtype info), then read it back to verify."
+      },
+      "setupCode": "import pandas as pd\nimport os\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'score': [85.5, 92.3], 'grade': pd.Categorical(['A', 'A+'])})\npickle_path = '/tmp/test_data.pkl'",
+      "starterCode": "# Save to pickle\ndf.to_pickle(pickle_path)\n\n# Read back\ndf_loaded = ___\n\n# Verify dtypes are preserved\nprint(df_loaded.dtypes)",
+      "solutionCode": "df.to_pickle(pickle_path)\ndf_loaded = pd.read_pickle(pickle_path)\nprint(df_loaded.dtypes)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = df_loaded.equals(df) and df_loaded['grade'].dtype.name == 'category'\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["pd.read_pickle() 读取 pickle 文件", "pickle 格式会保留 category 等特殊 dtype"],
+        "en": ["pd.read_pickle() reads pickle files", "pickle format preserves special dtypes like category"]
+      },
+      "explanation": {
+        "zh": "pickle 序列化的优势：1) 完整保留 dtypes（包括 category、datetime 等）；2) 读写速度通常最快。缺点：1) 不能跨 pandas 版本保证兼容性；2) 不安全（不要加载不信任的 pickle 文件）；3) 文件不可人类阅读。适合临时缓存中间结果。",
+        "en": "Pickle advantages: 1) Fully preserves dtypes (including category, datetime, etc.); 2) Typically fastest read/write speed. Drawbacks: 1) Not guaranteed compatible across pandas versions; 2) Insecure (never load untrusted pickle files); 3) Not human-readable. Best for caching intermediate results."
+      }
+    },
+    {
+      "id": "s4-large-datasets-013",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] chunksize 循环未合并结果",
+        "en": "[Debug] chunksize Loop Not Concatenating Results"
+      },
+      "description": {
+        "zh": "以下代码尝试分块读取数据并筛选 value > 50 的行，但最终结果只包含最后一个 chunk 的数据。请找到并修复 bug。",
+        "en": "The following code tries to read data in chunks and filter rows where value > 50, but the final result only contains data from the last chunk. Find and fix the bug."
+      },
+      "setupCode": "import pandas as pd\nchunk1 = pd.DataFrame({'id': [1, 2, 3], 'value': [10, 60, 30]})\nchunk2 = pd.DataFrame({'id': [4, 5, 6], 'value': [70, 50, 80]})\nchunk3 = pd.DataFrame({'id': [7, 8, 9], 'value': [90, 20, 55]})\nchunks = [chunk1, chunk2, chunk3]",
+      "starterCode": "# Bug: fix the chunk processing loop\nresults = []\nfor chunk in chunks:\n    filtered = chunk[chunk['value'] > 50]\n    results = filtered  # <-- Bug is here\n\nfinal = pd.concat(results).reset_index(drop=True)",
+      "solutionCode": "results = []\nfor chunk in chunks:\n    filtered = chunk[chunk['value'] > 50]\n    results.append(filtered)\n\nfinal = pd.concat(results).reset_index(drop=True)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = len(final) == 5 and (final['value'] > 50).all()\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["注意 results = filtered 和 results.append(filtered) 的区别", "每次循环应该是追加而不是覆盖"],
+        "en": ["Notice the difference between results = filtered and results.append(filtered)", "Each iteration should append, not overwrite"]
+      },
+      "explanation": {
+        "zh": "bug 在于 results = filtered 每次循环都覆盖了之前的结果，应该用 results.append(filtered) 将每个 chunk 的结果追加到列表中。这是 chunksize 处理中最常见的错误之一。正确模式：初始化空列表 -> 循环中 append -> 最后 pd.concat。",
+        "en": "The bug is that results = filtered overwrites previous results each iteration. It should be results.append(filtered) to add each chunk's results to the list. This is one of the most common mistakes in chunksize processing. Correct pattern: initialize empty list -> append in loop -> pd.concat at the end."
+      }
+    },
+    {
+      "id": "s4-large-datasets-014",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "[最佳实践] CSV vs Parquet vs Feather 存储格式",
+        "en": "[Best Practice] CSV vs Parquet vs Feather for Storage"
+      },
+      "description": {
+        "zh": "在以下场景中，哪种存储格式是最佳选择：数据需要频繁读写、保留数据类型、文件大小要尽可能小？",
+        "en": "In the following scenario, which storage format is the best choice: data needs frequent read/write, preserve data types, and file size should be as small as possible?"
+      },
+      "options": {
+        "zh": [
+          "Parquet：列式存储 + 高效压缩 + 保留 dtype，适合分析型工作负载",
+          "CSV：通用性最好，所有工具都能读取",
+          "Feather：读写最快，但不支持压缩",
+          "JSON：支持嵌套结构，灵活性最高"
+        ],
+        "en": [
+          "Parquet: columnar storage + efficient compression + dtype preservation, ideal for analytical workloads",
+          "CSV: most universal, readable by all tools",
+          "Feather: fastest read/write but no compression support",
+          "JSON: supports nested structures, most flexible"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["考虑哪种格式同时满足保留类型、压缩和性能三个需求"],
+        "en": ["Consider which format simultaneously meets type preservation, compression, and performance needs"]
+      },
+      "explanation": {
+        "zh": "格式对比：CSV 通用但不保留 dtype，无压缩，读写慢。Feather（Arrow IPC）读写最快但文件较大。Parquet 列式存储 + 内置压缩，文件最小，保留 dtype，读取时可只加载需要的列。JSON 适合嵌套数据但效率低。对于分析场景，Parquet 是最佳选择。",
+        "en": "Format comparison: CSV is universal but doesn't preserve dtypes, no compression, slow I/O. Feather (Arrow IPC) has fastest I/O but larger files. Parquet has columnar storage + built-in compression, smallest files, preserves dtypes, and supports column pruning. JSON suits nested data but is inefficient. For analytics, Parquet is the best choice."
+      }
+    },
+    {
+      "id": "s4-large-datasets-015",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 处理大数据集的内存优化",
+        "en": "[Challenge] Processing Large Dataset with Memory Constraints"
+      },
+      "description": {
+        "zh": "你有一个 10 万行的数据集需要处理，但内存有限。请完成以下步骤：1) 对 'city' 列转换为 category 类型，2) 对 'amount' 列降级为 float32，3) 计算优化前后的内存占用比较，4) 按 city 分组计算 amount 的总和，5) 将分组结果赋给 summary。",
+        "en": "You have a 100K row dataset to process with limited memory. Complete these steps: 1) Convert 'city' column to category type, 2) Downcast 'amount' column to float32, 3) Calculate memory before and after optimization, 4) Group by city and calculate total amount, 5) Assign grouped result to summary."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nn = 100000\ndf = pd.DataFrame({'id': range(n), 'city': np.random.choice(['NYC', 'LA', 'Chicago', 'Houston', 'Phoenix'], n), 'amount': np.random.uniform(10, 1000, n), 'status': np.random.choice(['active', 'inactive'], n)})",
+      "starterCode": "# Step 1: Record original memory\nmem_before = df.memory_usage(deep=True).sum()\n\n# Step 2: Convert string columns to category\ndf['city'] = df['city'].astype(___)\ndf['status'] = df['status'].astype(___)\n\n# Step 3: Downcast float column\ndf['amount'] = df['amount'].astype(___)\n\n# Step 4: Record optimized memory\nmem_after = df.memory_usage(deep=True).sum()\nprint(f'Memory reduced: {round((1 - mem_after/mem_before) * 100)}%')\n\n# Step 5: Group by city and sum amount\nsummary = df.groupby('city')['amount'].___",
+      "solutionCode": "mem_before = df.memory_usage(deep=True).sum()\ndf['city'] = df['city'].astype('category')\ndf['status'] = df['status'].astype('category')\ndf['amount'] = df['amount'].astype('float32')\nmem_after = df.memory_usage(deep=True).sum()\nprint(f'Memory reduced: {round((1 - mem_after/mem_before) * 100)}%')\nsummary = df.groupby('city')['amount'].sum()",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = df['city'].dtype.name == 'category' and df['amount'].dtype == 'float32' and len(summary) == 5 and mem_after < mem_before\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["astype('category') 转换字符串列", "astype('float32') 降级浮点数", "groupby 后用 .sum() 聚合"],
+        "en": ["astype('category') converts string columns", "astype('float32') downcasts floats", "Use .sum() after groupby to aggregate"]
+      },
+      "explanation": {
+        "zh": "这个综合练习展示了完整的大数据集内存优化流程：1) 先测量基线内存；2) 高重复率字符串列转 category（节省约 90%）；3) 浮点列降精度（float64->float32 节省 50%）；4) 优化后再进行分析。在实际项目中，这种优化可以让原本无法放入内存的数据集变得可处理。",
+        "en": "This challenge demonstrates a complete memory optimization workflow for large datasets: 1) Measure baseline memory; 2) Convert high-repetition string columns to category (~90% savings); 3) Downcast float precision (float64->float32 saves 50%); 4) Perform analysis after optimization. In real projects, this optimization can make previously unprocessable datasets fit in memory."
+      }
+    }
+  ]
+}

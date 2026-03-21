@@ -1,0 +1,392 @@
+{
+  "module": "sorting",
+  "stageId": "stage1",
+  "lessonId": "sorting",
+  "tags": ["dataframe", "sort_values", "sort_index", "ascending", "descending"],
+  "exercises": [
+    {
+      "id": "s1-sorting-001",
+      "type": "coding",
+      "difficulty": 1,
+      "title": {
+        "zh": "按单列排序",
+        "en": "Sort by a Single Column"
+      },
+      "description": {
+        "zh": "使用 sort_values 按 'age' 列升序排序 DataFrame，并打印结果。",
+        "en": "Use sort_values to sort the DataFrame by the 'age' column in ascending order and print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Alice', 'Bob'],\n    'age': [35, 25, 30]\n})\n\n# Sort by 'age' in ascending order and print\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Alice', 'Bob'],\n    'age': [35, 25, 30]\n})\n\nprint(df.sort_values('age'))",
+      "setupCode": "",
+      "validationType": "exact-output",
+      "expectedOutput": "      name  age\n1    Alice   25\n2      Bob   30\n0  Charlie   35",
+      "hints": {
+        "zh": [
+          "sort_values 默认是升序排序",
+          "传入列名字符串即可按该列排序"
+        ],
+        "en": [
+          "sort_values sorts in ascending order by default",
+          "Pass a column name string to sort by that column"
+        ]
+      }
+    },
+    {
+      "id": "s1-sorting-002",
+      "type": "fill-blank",
+      "difficulty": 2,
+      "title": {
+        "zh": "降序排序",
+        "en": "Sort in Descending Order"
+      },
+      "description": {
+        "zh": "填写空白处，按 'score' 列降序排序。",
+        "en": "Fill in the blank to sort by the 'score' column in descending order."
+      },
+      "codeTemplate": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'score': [85, 92, 78]})\nprint(df.sort_values('score', ascending=___))",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "False",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "ascending 参数控制排序方向",
+          "ascending=False 表示降序"
+        ],
+        "en": [
+          "The ascending parameter controls the sort direction",
+          "ascending=False means descending order"
+        ]
+      },
+      "explanation": {
+        "zh": "sort_values 的 ascending 参数默认为 True（升序）。设置为 False 可以进行降序排序。",
+        "en": "The ascending parameter of sort_values defaults to True (ascending). Set it to False for descending order."
+      }
+    },
+    {
+      "id": "s1-sorting-003",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "多列排序",
+        "en": "Sort by Multiple Columns"
+      },
+      "description": {
+        "zh": "以下代码的作用是什么？\n\n```python\ndf.sort_values(['department', 'salary'], ascending=[True, False])\n```",
+        "en": "What does the following code do?\n\n```python\ndf.sort_values(['department', 'salary'], ascending=[True, False])\n```"
+      },
+      "options": {
+        "zh": [
+          "先按 department 升序排序，再按 salary 降序排序",
+          "先按 department 降序排序，再按 salary 升序排序",
+          "同时按两列升序排序",
+          "同时按两列降序排序"
+        ],
+        "en": [
+          "Sort by department ascending first, then by salary descending",
+          "Sort by department descending first, then by salary ascending",
+          "Sort both columns in ascending order",
+          "Sort both columns in descending order"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["ascending 列表中的值与列名列表一一对应"],
+        "en": ["The values in the ascending list correspond to the column names list one-to-one"]
+      },
+      "explanation": {
+        "zh": "当 sort_values 传入列名列表时，ascending 也可以传入布尔值列表，分别控制每列的排序方向。True 表示升序，False 表示降序。",
+        "en": "When sort_values receives a list of column names, ascending can also receive a list of booleans to control each column's sort direction independently. True means ascending, False means descending."
+      }
+    },
+    {
+      "id": "s1-sorting-004",
+      "type": "output-matching",
+      "difficulty": 3,
+      "title": {
+        "zh": "sort_index 排序",
+        "en": "Sorting with sort_index"
+      },
+      "description": {
+        "zh": "以下代码的输出是什么？",
+        "en": "What is the output of the following code?"
+      },
+      "code": "import pandas as pd\n\ndf = pd.DataFrame({'val': [10, 20, 30]}, index=['c', 'a', 'b'])\nprint(df.sort_index())",
+      "options": {
+        "zh": [
+          "   val\na   20\nb   30\nc   10",
+          "   val\nc   10\na   20\nb   30",
+          "   val\nb   30\na   20\nc   10",
+          "   val\nc   10\nb   30\na   20"
+        ],
+        "en": [
+          "   val\na   20\nb   30\nc   10",
+          "   val\nc   10\na   20\nb   30",
+          "   val\nb   30\na   20\nc   10",
+          "   val\nc   10\nb   30\na   20"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["sort_index 按索引标签排序，默认升序"],
+        "en": ["sort_index sorts by index labels, ascending by default"]
+      },
+      "explanation": {
+        "zh": "sort_index() 按索引标签排序。原始索引为 ['c', 'a', 'b']，按字母升序排列后为 ['a', 'b', 'c']，对应值为 20, 30, 10。",
+        "en": "sort_index() sorts by index labels. The original index ['c', 'a', 'b'] sorted alphabetically becomes ['a', 'b', 'c'], with corresponding values 20, 30, 10."
+      }
+    },
+    {
+      "id": "s1-sorting-005",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "sort_values 的 na_position 参数",
+        "en": "sort_values na_position Parameter"
+      },
+      "description": {
+        "zh": "使用 sort_values 按 'score' 列排序，并设置 na_position='first' 将缺失值放在最前面，打印结果。",
+        "en": "Use sort_values to sort by the 'score' column, setting na_position='first' to place missing values at the top. Print the result."
+      },
+      "starterCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'score': [88, np.nan, 76, np.nan]\n})\n\n# Sort by score with NaN values first\n",
+      "solutionCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'score': [88, np.nan, 76, np.nan]\n})\n\nprint(df.sort_values('score', na_position='first'))",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    lines = _output.strip().split('\\n')\n    result = 'NaN' in lines[1] and 'NaN' in lines[2]\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "sort_values 有 na_position 参数",
+          "na_position='first' 将 NaN 放在最前面",
+          "默认 na_position='last'"
+        ],
+        "en": [
+          "sort_values has a na_position parameter",
+          "na_position='first' places NaN at the top",
+          "Default is na_position='last'"
+        ]
+      }
+    },
+    {
+      "id": "s1-sorting-006",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "sort_values 的 key 参数自定义排序",
+        "en": "Custom Sort with sort_values key Parameter"
+      },
+      "description": {
+        "zh": "使用 sort_values 的 key 参数，按 'name' 列的字符串长度排序（从短到长），打印结果。",
+        "en": "Use the key parameter of sort_values to sort by the string length of the 'name' column (shortest to longest). Print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Bob', 'Alice', 'Ed'],\n    'age': [35, 30, 25, 28]\n})\n\n# Sort by name length using key parameter\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Bob', 'Alice', 'Ed'],\n    'age': [35, 30, 25, 28]\n})\n\nprint(df.sort_values('name', key=lambda x: x.str.len()))",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    lines = [l.strip() for l in _output.strip().split('\\n') if l.strip() and 'name' not in l]\n    result = 'Ed' in lines[0] and 'Charlie' in lines[-1]\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "key 参数接受一个函数，应用到排序列上",
+          "使用 lambda x: x.str.len() 计算字符串长度",
+          "key 函数接收的是 Series，返回的也应该是 Series"
+        ],
+        "en": [
+          "The key parameter accepts a function applied to the sort column",
+          "Use lambda x: x.str.len() to compute string lengths",
+          "The key function receives a Series and should return a Series"
+        ]
+      }
+    },
+    {
+      "id": "s1-sorting-007",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "nlargest vs sort_values+head 性能",
+        "en": "nlargest vs sort_values+head Performance"
+      },
+      "description": {
+        "zh": "以下两种方式都能获取 score 最高的 3 行，哪种更高效？\n\n方式A: `df.nlargest(3, 'score')`\n方式B: `df.sort_values('score', ascending=False).head(3)`",
+        "en": "Both approaches get the top 3 rows by score. Which is more efficient?\n\nApproach A: `df.nlargest(3, 'score')`\nApproach B: `df.sort_values('score', ascending=False).head(3)`"
+      },
+      "options": {
+        "zh": [
+          "方式A 更高效 — nlargest 使用部分排序算法，不需要排序整个 DataFrame",
+          "方式B 更高效 — sort_values 经过高度优化",
+          "两者性能完全相同",
+          "取决于数据大小，没有固定答案"
+        ],
+        "en": [
+          "Approach A is more efficient — nlargest uses partial sorting, no need to sort the entire DataFrame",
+          "Approach B is more efficient — sort_values is highly optimized",
+          "Both have exactly the same performance",
+          "Depends on data size, no fixed answer"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["想想获取前 N 个最大值是否需要对所有数据排序"],
+        "en": ["Think about whether getting the top N values requires sorting all data"]
+      },
+      "explanation": {
+        "zh": "nlargest 使用部分排序（类似堆排序），时间复杂度为 O(n + k*log(n))，而 sort_values 需要完整排序 O(n*log(n))。当 k 远小于 n 时，nlargest 明显更快。",
+        "en": "nlargest uses partial sorting (similar to heapsort) with O(n + k*log(n)) complexity, while sort_values requires full sorting O(n*log(n)). When k is much smaller than n, nlargest is significantly faster."
+      }
+    },
+    {
+      "id": "s1-sorting-008",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "多列排序使用不同升降序",
+        "en": "Multi-column Sort with Mixed Ascending"
+      },
+      "description": {
+        "zh": "按 'department' 列升序、'salary' 列降序排序 DataFrame，打印结果。",
+        "en": "Sort the DataFrame by 'department' ascending and 'salary' descending. Print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'department': ['IT', 'HR', 'IT', 'HR', 'IT'],\n    'salary': [60000, 50000, 55000, 52000, 65000]\n})\n\n# Sort by department ascending, then salary descending\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'department': ['IT', 'HR', 'IT', 'HR', 'IT'],\n    'salary': [60000, 50000, 55000, 52000, 65000]\n})\n\nprint(df.sort_values(['department', 'salary'], ascending=[True, False]))",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    lines = [l.strip() for l in _output.strip().split('\\n') if l.strip() and 'name' not in l]\n    result = 'HR' in lines[0] and 'IT' in lines[-1]\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "ascending 参数可以是一个布尔值列表",
+          "列表中的值与列名列表一一对应",
+          "True=升序, False=降序"
+        ],
+        "en": [
+          "The ascending parameter can be a list of booleans",
+          "The values correspond one-to-one with the column names list",
+          "True=ascending, False=descending"
+        ]
+      }
+    },
+    {
+      "id": "s1-sorting-009",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "sort_index 的 level 参数",
+        "en": "sort_index level Parameter"
+      },
+      "description": {
+        "zh": "对具有 MultiIndex 的 DataFrame 按第一层级（level=0）排序，打印结果。",
+        "en": "Sort a DataFrame with MultiIndex by the first level (level=0), and print the result."
+      },
+      "starterCode": "import pandas as pd\n\narrays = [['B', 'A', 'B', 'A'], ['two', 'one', 'one', 'two']]\nindex = pd.MultiIndex.from_arrays(arrays, names=['first', 'second'])\ndf = pd.DataFrame({'value': [10, 20, 30, 40]}, index=index)\n\n# Sort by first level of MultiIndex\n",
+      "solutionCode": "import pandas as pd\n\narrays = [['B', 'A', 'B', 'A'], ['two', 'one', 'one', 'two']]\nindex = pd.MultiIndex.from_arrays(arrays, names=['first', 'second'])\ndf = pd.DataFrame({'value': [10, 20, 30, 40]}, index=index)\n\nprint(df.sort_index(level=0))",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    lines = [l.strip() for l in _output.strip().split('\\n') if l.strip() and 'value' not in l and 'first' not in l]\n    result = lines[0].startswith('A') and lines[-1].startswith('B')\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "sort_index() 的 level 参数指定排序的层级",
+          "level=0 是第一层级",
+          "MultiIndex 可以有多个层级"
+        ],
+        "en": [
+          "The level parameter of sort_index() specifies which level to sort",
+          "level=0 is the first level",
+          "MultiIndex can have multiple levels"
+        ]
+      }
+    },
+    {
+      "id": "s1-sorting-010",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "rank() 的 method 参数",
+        "en": "rank() with method Parameter"
+      },
+      "description": {
+        "zh": "使用 rank() 方法对 'score' 列进行排名，使用 method='min' 处理并列排名（并列使用最小排名），打印结果。",
+        "en": "Use the rank() method to rank the 'score' column, using method='min' for tie-breaking (ties get the minimum rank). Print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'score': [90, 85, 90, 78, 85]\n})\n\n# Rank scores with method='min'\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'score': [90, 85, 90, 78, 85]\n})\n\ndf['rank'] = df['score'].rank(method='min', ascending=False)\nprint(df)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'rank' in _output and '1' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "rank() 的 method 参数控制并列排名的处理方式",
+          "method='min'：并列使用最小排名（如两个第1名，下一个是第3名）",
+          "method='average'：并列使用平均排名（默认）"
+        ],
+        "en": [
+          "The method parameter of rank() controls tie-breaking",
+          "method='min': ties use the minimum rank (e.g., two 1st, next is 3rd)",
+          "method='average': ties use average rank (default)"
+        ]
+      }
+    },
+    {
+      "id": "s1-sorting-011",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "[调试] inplace 后链式调用错误",
+        "en": "[Debug] inplace Then Chain Call Error"
+      },
+      "description": {
+        "zh": "以下代码使用了 inplace=True 排序后又链式调用 .head()，但 inplace 返回 None 导致报错。修复代码使其正确输出排序后的前 3 行。",
+        "en": "The following code uses inplace=True for sorting then chains .head(), but inplace returns None causing an error. Fix the code to correctly output the first 3 sorted rows."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Alice', 'Eve', 'Bob', 'Diana'],\n    'score': [78, 90, 83, 85, 95]\n})\n\n# Bug: inplace=True returns None, cannot chain .head()\nresult = df.sort_values('score', ascending=False, inplace=True).head(3)\nprint(result)",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Alice', 'Eve', 'Bob', 'Diana'],\n    'score': [78, 90, 83, 85, 95]\n})\n\nresult = df.sort_values('score', ascending=False).head(3)\nprint(result)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'Diana' in _output and '95' in _output and 'Charlie' not in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "inplace=True 会修改原始 DataFrame 并返回 None",
+          "返回 None 后无法链式调用 .head()",
+          "移除 inplace=True 即可解决问题"
+        ],
+        "en": [
+          "inplace=True modifies the original DataFrame and returns None",
+          "Returning None makes chaining .head() impossible",
+          "Remove inplace=True to fix the issue"
+        ]
+      }
+    },
+    {
+      "id": "s1-sorting-012",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 销售数据多排序+排名+Top N",
+        "en": "[Challenge] Sales Data Multi-sort+Rank+Top N"
+      },
+      "description": {
+        "zh": "完成以下任务：\n1. 按 'region' 升序、'sales' 降序排序\n2. 添加一个 'rank' 列，按 sales 降序排名（method='dense'）\n3. 筛选出每个 region 中 sales 排名前 2 的记录\n4. 打印结果",
+        "en": "Complete the following tasks:\n1. Sort by 'region' ascending, 'sales' descending\n2. Add a 'rank' column, ranking by sales descending (method='dense')\n3. Filter the top 2 sales records per region\n4. Print the result"
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'],\n    'region': ['East', 'West', 'East', 'West', 'East', 'West'],\n    'sales': [250, 300, 180, 220, 310, 280]\n})\n\n# Step 1: Sort by region ascending, sales descending\n\n# Step 2: Add rank column (dense ranking by sales, descending)\n\n# Step 3: Filter top 2 per region\n\n# Step 4: Print result\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'],\n    'region': ['East', 'West', 'East', 'West', 'East', 'West'],\n    'sales': [250, 300, 180, 220, 310, 280]\n})\n\ndf = df.sort_values(['region', 'sales'], ascending=[True, False])\ndf['rank'] = df.groupby('region')['sales'].rank(method='dense', ascending=False)\nresult = df[df['rank'] <= 2]\nprint(result)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'rank' in _output and 'Eve' in _output and 'Alice' in _output and 'Bob' in _output and 'Charlie' not in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "使用 sort_values 传入列名列表和 ascending 列表",
+          "使用 groupby('region')['sales'].rank() 进行分组排名",
+          "method='dense' 表示密集排名（1,2,3...无跳跃）",
+          "筛选 rank <= 2 获取每组前 2 名"
+        ],
+        "en": [
+          "Use sort_values with a list of column names and ascending list",
+          "Use groupby('region')['sales'].rank() for group ranking",
+          "method='dense' means dense ranking (1,2,3... no gaps)",
+          "Filter rank <= 2 to get top 2 per group"
+        ]
+      }
+    }
+  ]
+}

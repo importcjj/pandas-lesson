@@ -1,0 +1,454 @@
+{
+  "module": "best-practices",
+  "stageId": "stage4",
+  "lessonId": "best-practices",
+  "tags": ["SettingWithCopyWarning", "copy", "chained-indexing", "loc", "inplace"],
+  "exercises": [
+    {
+      "id": "s4-best-practices-001",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "SettingWithCopyWarning",
+        "en": "SettingWithCopyWarning"
+      },
+      "description": {
+        "zh": "以下哪种操作可能触发 SettingWithCopyWarning？",
+        "en": "Which of the following operations might trigger a SettingWithCopyWarning?"
+      },
+      "options": {
+        "zh": [
+          "df[df['a'] > 0]['b'] = 1",
+          "df.loc[df['a'] > 0, 'b'] = 1",
+          "df['b'] = df['a'] + 1",
+          "df = df.copy()"
+        ],
+        "en": [
+          "df[df['a'] > 0]['b'] = 1",
+          "df.loc[df['a'] > 0, 'b'] = 1",
+          "df['b'] = df['a'] + 1",
+          "df = df.copy()"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["链式索引（先 [] 再 []）可能在副本上操作"],
+        "en": ["Chained indexing ([] followed by []) might operate on a copy"]
+      },
+      "explanation": {
+        "zh": "df[df['a'] > 0]['b'] = 1 使用了链式索引，pandas 无法确定是在原始 DataFrame 还是副本上赋值，因此发出警告。应使用 df.loc[df['a'] > 0, 'b'] = 1。",
+        "en": "df[df['a'] > 0]['b'] = 1 uses chained indexing, and pandas cannot determine whether the assignment is on the original DataFrame or a copy, hence the warning. Use df.loc[df['a'] > 0, 'b'] = 1 instead."
+      }
+    },
+    {
+      "id": "s4-best-practices-002",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "使用 .copy() 创建副本",
+        "en": "Using .copy() to Create Copies"
+      },
+      "description": {
+        "zh": "从 df 中筛选 age > 25 的行，创建一个独立副本并添加新列 'senior'。",
+        "en": "Filter rows where age > 25 from df, create an independent copy, and add a new column 'senior'."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David'], 'age': [22, 30, 28, 35]})",
+      "starterCode": "# Create an independent copy of filtered data\nsubset = df[df['age'] > 25].copy()\nsubset['senior'] = ___",
+      "solutionCode": "subset = df[df['age'] > 25].copy()\nsubset['senior'] = True",
+      "validationType": "custom-check",
+      "checkCode": "result = 'senior' in subset.columns and subset['senior'].all() and len(subset) == 3",
+      "hints": {
+        "zh": [".copy() 创建独立副本，修改不影响原始 DataFrame", "在副本上添加新列不会产生警告"],
+        "en": [".copy() creates an independent copy, modifications won't affect the original DataFrame", "Adding a new column to a copy won't produce warnings"]
+      },
+      "explanation": {
+        "zh": "切片操作可能返回视图（view），在视图上修改可能影响原始数据或触发警告。使用 .copy() 确保获得独立副本，可以安全地修改。",
+        "en": "Slicing operations may return a view. Modifying a view might affect the original data or trigger warnings. Use .copy() to ensure an independent copy that can be safely modified."
+      }
+    },
+    {
+      "id": "s4-best-practices-003",
+      "type": "true-false",
+      "difficulty": 4,
+      "title": {
+        "zh": "链式索引 vs loc",
+        "en": "Chained Indexing vs loc"
+      },
+      "description": {
+        "zh": "df.loc[row_condition, 'column_name'] = value 比 df[row_condition]['column_name'] = value 更安全可靠。",
+        "en": "df.loc[row_condition, 'column_name'] = value is safer and more reliable than df[row_condition]['column_name'] = value."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["loc 使用单次索引操作，保证在原始 DataFrame 上赋值"],
+        "en": ["loc uses a single indexing operation, guaranteeing assignment on the original DataFrame"]
+      },
+      "explanation": {
+        "zh": "df.loc[] 是单次索引操作，确保直接在原始 DataFrame 上赋值。链式索引 df[][]= 可能操作在临时副本上，导致赋值无效且触发警告。",
+        "en": "df.loc[] is a single indexing operation that ensures assignment directly on the original DataFrame. Chained indexing df[][]= may operate on a temporary copy, causing the assignment to have no effect and triggering a warning."
+      }
+    },
+    {
+      "id": "s4-best-practices-004",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "inplace 参数的最佳实践",
+        "en": "Best Practices for the inplace Parameter"
+      },
+      "description": {
+        "zh": "关于 pandas 中的 inplace 参数，以下哪个说法是正确的？",
+        "en": "Which statement about the inplace parameter in pandas is correct?"
+      },
+      "options": {
+        "zh": [
+          "现代 pandas 推荐避免使用 inplace=True，因为它不能与方法链配合使用",
+          "inplace=True 总是比赋值方式更快",
+          "inplace=True 不会修改原始 DataFrame",
+          "所有 pandas 方法都支持 inplace 参数"
+        ],
+        "en": [
+          "Modern pandas recommends avoiding inplace=True because it cannot be used with method chaining",
+          "inplace=True is always faster than assignment",
+          "inplace=True does not modify the original DataFrame",
+          "All pandas methods support the inplace parameter"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["inplace=True 返回 None，无法继续链式调用"],
+        "en": ["inplace=True returns None, making further method chaining impossible"]
+      },
+      "explanation": {
+        "zh": "inplace=True 直接修改原 DataFrame 并返回 None，破坏了方法链。现代 pandas 推荐使用赋值方式（df = df.dropna()），代码更清晰且支持链式操作。",
+        "en": "inplace=True modifies the original DataFrame and returns None, breaking method chains. Modern pandas recommends using assignment (df = df.dropna()) for clearer code that supports chaining."
+      }
+    },
+    {
+      "id": "s4-best-practices-005",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": ".copy() 深拷贝与浅引用",
+        "en": ".copy() Deep Copy vs Shallow Reference"
+      },
+      "description": {
+        "zh": "创建 df 的一个独立副本 df_copy，修改 df_copy 不会影响原始 df。然后将 df_copy 的 'age' 列所有值设为 0，最后打印 df['age'] 的值列表证明原 df 未被修改。",
+        "en": "Create an independent copy df_copy of df. Changes to df_copy should not affect the original df. Set all values in df_copy's 'age' column to 0, then print df['age'] values as a list to prove the original df is unchanged."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'age': [25, 30]})",
+      "starterCode": "# Create an independent copy\ndf_copy = ___\n\n# Modify the copy\ndf_copy['age'] = 0\n\n# Print original df's age to prove it's unchanged\nprint(df['age'].tolist())",
+      "solutionCode": "df_copy = df.copy()\ndf_copy['age'] = 0\nprint(df['age'].tolist())",
+      "validationType": "exact-output",
+      "expectedOutput": "[25, 30]",
+      "hints": {
+        "zh": ["直接赋值 df_copy = df 只是创建引用，不是副本", "使用 .copy() 方法创建深拷贝"],
+        "en": ["Simple assignment df_copy = df only creates a reference, not a copy", "Use the .copy() method to create a deep copy"]
+      },
+      "explanation": {
+        "zh": "df.copy() 创建深拷贝，修改副本不影响原 DataFrame。直接赋值 df_copy = df 只是创建引用，两者共享同一数据。切片操作（如 df[df['age'] > 20]）也可能返回视图而非副本，修改时会触发 SettingWithCopyWarning。",
+        "en": "df.copy() creates a deep copy — modifying it won't affect the original. Simple assignment df_copy = df creates a reference sharing the same data. Slicing (e.g., df[df['age'] > 20]) may also return a view, and modifying it can trigger SettingWithCopyWarning."
+      }
+    },
+    {
+      "id": "s4-best-practices-006",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "copy() 深拷贝 vs 浅拷贝与嵌套数据",
+        "en": "copy() Deep vs Shallow with Nested Data"
+      },
+      "description": {
+        "zh": "关于 df.copy(deep=True) 和 df.copy(deep=False)，以下哪个说法是正确的？",
+        "en": "Regarding df.copy(deep=True) and df.copy(deep=False), which statement is correct?"
+      },
+      "options": {
+        "zh": [
+          "deep=True（默认）复制数据和索引；deep=False 只复制元数据，数据仍共享底层 NumPy 数组",
+          "deep=True 和 deep=False 效果完全相同",
+          "deep=False 不复制任何内容，与直接赋值 = 相同",
+          "deep=True 会递归复制 DataFrame 中所有 Python 对象"
+        ],
+        "en": [
+          "deep=True (default) copies data and index; deep=False only copies metadata, data still shares underlying NumPy arrays",
+          "deep=True and deep=False have identical effects",
+          "deep=False copies nothing, same as direct assignment =",
+          "deep=True recursively copies all Python objects in the DataFrame"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["deep=False 创建的是浅拷贝，数据仍然共享"],
+        "en": ["deep=False creates a shallow copy, data is still shared"]
+      },
+      "explanation": {
+        "zh": "deep=True（默认）创建数据和索引的完整副本，修改副本不影响原始数据。deep=False 只创建新的 DataFrame 对象但共享底层数据，对数值列的修改可能影响原始数据。注意：即使 deep=True，object 列中的可变对象（如列表）也只是浅拷贝。",
+        "en": "deep=True (default) creates a complete copy of data and index; modifying the copy doesn't affect the original. deep=False creates a new DataFrame object but shares underlying data; modifications to numeric columns may affect the original. Note: even with deep=True, mutable objects in object columns (like lists) are only shallow-copied."
+      }
+    },
+    {
+      "id": "s4-best-practices-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "pd.options 显示和计算设置",
+        "en": "pd.options Display and Compute Settings"
+      },
+      "description": {
+        "zh": "设置 pandas 选项：显示最多 100 行、浮点数保留 2 位小数、列宽不截断。",
+        "en": "Configure pandas options: display up to 100 rows, float precision of 2 decimal places, no column width truncation."
+      },
+      "setupCode": "import pandas as pd",
+      "starterCode": "# Set display options\npd.set_option('display.max_rows', ___)\npd.set_option('display.float_format', '{:.2f}'.format)\npd.set_option('display.max_colwidth', ___)\n\n# Verify settings\nprint(pd.get_option('display.max_rows'))\nprint(pd.get_option('display.max_colwidth'))",
+      "solutionCode": "pd.set_option('display.max_rows', 100)\npd.set_option('display.float_format', '{:.2f}'.format)\npd.set_option('display.max_colwidth', None)\nprint(pd.get_option('display.max_rows'))\nprint(pd.get_option('display.max_colwidth'))",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = pd.get_option('display.max_rows') == 100 and pd.get_option('display.max_colwidth') is None\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["max_rows 控制显示的最大行数", "max_colwidth=None 表示不截断列宽"],
+        "en": ["max_rows controls the maximum rows displayed", "max_colwidth=None means no column width truncation"]
+      },
+      "explanation": {
+        "zh": "pd.set_option / pd.get_option 控制 pandas 的全局行为。常用选项：display.max_rows（最大显示行数）、display.max_columns（最大显示列数）、display.float_format（浮点格式）、display.max_colwidth（列宽限制）、mode.chained_assignment（链式赋值警告级别）。也可以用 pd.option_context 作为临时设置的上下文管理器。",
+        "en": "pd.set_option / pd.get_option control pandas' global behavior. Common options: display.max_rows, display.max_columns, display.float_format, display.max_colwidth, mode.chained_assignment. You can also use pd.option_context as a context manager for temporary settings."
+      }
+    },
+    {
+      "id": "s4-best-practices-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "方法链风格指南",
+        "en": "Method Chaining Style Guide"
+      },
+      "description": {
+        "zh": "将以下分步操作重构为一个优雅的方法链（使用括号换行）。",
+        "en": "Refactor the step-by-step operations below into an elegant method chain (using parentheses for line breaks)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'category': ['A', 'B', 'A', 'C', 'B', 'A', 'C', 'B'], 'value': [10, np.nan, 20, 30, 15, np.nan, 25, 35], 'weight': [1.0, 2.0, 1.5, 2.5, 1.0, 2.0, 1.5, 2.5]})",
+      "starterCode": "# Refactor to method chain\nresult = (\n    df\n    .dropna(subset=['value'])\n    .assign(weighted=lambda x: x['value'] * x['weight'])\n    .groupby('category')\n    .agg(total_weighted=('weighted', 'sum'))\n    .sort_values('total_weighted', ascending=False)\n)",
+      "solutionCode": "result = (\n    df\n    .dropna(subset=['value'])\n    .assign(weighted=lambda x: x['value'] * x['weight'])\n    .groupby('category')\n    .agg(total_weighted=('weighted', 'sum'))\n    .sort_values('total_weighted', ascending=False)\n)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'total_weighted' in result.columns and len(result) == 3 and result.index[0] == 'B'\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["assign 创建新列可以在链中使用 lambda", "括号换行让每一步一行，清晰可读"],
+        "en": ["assign creates new columns and can use lambda in chains", "Parentheses for line breaks keep each step on one line for clarity"]
+      },
+      "explanation": {
+        "zh": "方法链风格指南：1) 用括号包裹整个链式调用；2) 每个方法调用独占一行；3) 用 assign 代替 df['new'] = 在链中创建列；4) 用 lambda 在 assign 中引用前面步骤的结果；5) 避免 inplace=True。这种风格使数据处理流程一目了然。",
+        "en": "Method chaining style guide: 1) Wrap the entire chain in parentheses; 2) Each method call on its own line; 3) Use assign instead of df['new'] = for column creation in chains; 4) Use lambda in assign to reference results from earlier steps; 5) Avoid inplace=True. This style makes data processing pipelines clear at a glance."
+      }
+    },
+    {
+      "id": "s4-best-practices-009",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "避免 iterrows：使用向量化",
+        "en": "Avoiding iterrows: Use Vectorization"
+      },
+      "description": {
+        "zh": "以下哪种方式是替代 iterrows 的最佳实践？",
+        "en": "Which is the best practice alternative to iterrows?"
+      },
+      "options": {
+        "zh": [
+          "根据场景选择：简单运算用向量化操作，条件赋值用 np.where/np.select，复杂逻辑用 apply",
+          "始终使用 itertuples 代替 iterrows",
+          "将 DataFrame 转为字典后循环",
+          "使用 swifter 库自动优化 iterrows"
+        ],
+        "en": [
+          "Choose by scenario: vectorized operations for simple math, np.where/np.select for conditional assignment, apply for complex logic",
+          "Always use itertuples instead of iterrows",
+          "Convert DataFrame to dict and loop",
+          "Use swifter library to auto-optimize iterrows"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["不同场景有不同的最优解"],
+        "en": ["Different scenarios have different optimal solutions"]
+      },
+      "explanation": {
+        "zh": "替代 iterrows 的最佳实践取决于场景：1) 简单数值运算 -> 向量化（df['a'] + df['b']）；2) 条件赋值 -> np.where 或 np.select；3) 分组操作 -> groupby + transform/agg；4) 复杂逻辑 -> apply（axis=1）；5) 如果必须逐行且只读 -> itertuples（比 iterrows 快 100 倍）。几乎没有理由使用 iterrows。",
+        "en": "Best iterrows alternatives depend on the scenario: 1) Simple math -> vectorized (df['a'] + df['b']); 2) Conditional assignment -> np.where or np.select; 3) Group operations -> groupby + transform/agg; 4) Complex logic -> apply (axis=1); 5) If must iterate read-only -> itertuples (100x faster than iterrows). There is almost never a reason to use iterrows."
+      }
+    },
+    {
+      "id": "s4-best-practices-010",
+      "type": "multiple-choice",
+      "difficulty": 5,
+      "title": {
+        "zh": "Copy-on-Write (CoW) 在 pandas 2.0+",
+        "en": "Copy-on-Write (CoW) in pandas 2.0+"
+      },
+      "description": {
+        "zh": "关于 pandas 2.0+ 引入的 Copy-on-Write (CoW) 模式，以下哪个说法是正确的？",
+        "en": "Regarding Copy-on-Write (CoW) mode introduced in pandas 2.0+, which statement is correct?"
+      },
+      "options": {
+        "zh": [
+          "CoW 模式下，任何源自另一个 DataFrame 的对象在修改时会自动触发拷贝，消除了 SettingWithCopyWarning",
+          "CoW 模式使所有操作都在原地修改",
+          "CoW 模式只影响字符串列",
+          "CoW 模式会显著增加内存使用"
+        ],
+        "en": [
+          "In CoW mode, any object derived from another DataFrame automatically triggers a copy on modification, eliminating SettingWithCopyWarning",
+          "CoW mode makes all operations modify in-place",
+          "CoW mode only affects string columns",
+          "CoW mode significantly increases memory usage"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["Copy-on-Write 意为「写时复制」"],
+        "en": ["Copy-on-Write means 'copy when writing'"]
+      },
+      "explanation": {
+        "zh": "Copy-on-Write (CoW) 是 pandas 2.0 引入、3.0 将默认启用的机制。启用后（pd.options.mode.copy_on_write = True），任何从 DataFrame 派生的对象（切片、视图等）在被修改时会自动触发拷贝，确保修改不影响原始数据。这消除了 SettingWithCopyWarning 和相关的混淆。实际上 CoW 通过延迟拷贝反而可能减少内存使用。",
+        "en": "Copy-on-Write (CoW) was introduced in pandas 2.0 and will be default in 3.0. When enabled (pd.options.mode.copy_on_write = True), any object derived from a DataFrame (slices, views, etc.) automatically triggers a copy on modification, ensuring changes don't affect original data. This eliminates SettingWithCopyWarning and related confusion. CoW may actually reduce memory by deferring copies."
+      }
+    },
+    {
+      "id": "s4-best-practices-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "常见 SettingWithCopyWarning 触发场景",
+        "en": "Common SettingWithCopyWarning Triggers"
+      },
+      "description": {
+        "zh": "修复以下代码中会触发 SettingWithCopyWarning 的操作。将链式索引改为使用 .loc 的正确方式。",
+        "en": "Fix the operations that trigger SettingWithCopyWarning in the code below. Replace chained indexing with the correct .loc approach."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David'], 'age': [22, 30, 28, 35], 'dept': ['Eng', 'HR', 'Eng', 'Sales']})",
+      "starterCode": "# Fixed: Use .loc instead of chained indexing\n# Bad:  df[df['age'] > 25]['dept'] = 'Senior'\n# Good:\ndf.loc[df['age'] > 25, 'dept'] = 'Senior'\n\nprint(df)",
+      "solutionCode": "df.loc[df['age'] > 25, 'dept'] = 'Senior'\nprint(df)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = df.loc[1, 'dept'] == 'Senior' and df.loc[0, 'dept'] == 'Eng'\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["df.loc[条件, 列名] = 值 是单次索引操作", "避免 df[条件][列名] = 值 的链式索引"],
+        "en": ["df.loc[condition, column] = value is a single indexing operation", "Avoid df[condition][column] = value chained indexing"]
+      },
+      "explanation": {
+        "zh": "SettingWithCopyWarning 的常见触发场景：1) df[mask]['col'] = value（链式索引赋值）；2) 在从切片得到的子集上赋值而没有 .copy()；3) df.iloc[n]['col'] = value。解决方案：始终用 df.loc[mask, 'col'] = value 进行单次索引赋值，或先 .copy() 创建副本再操作。",
+        "en": "Common SettingWithCopyWarning triggers: 1) df[mask]['col'] = value (chained index assignment); 2) Assigning to a subset from slicing without .copy(); 3) df.iloc[n]['col'] = value. Solution: always use df.loc[mask, 'col'] = value for single-index assignment, or .copy() first to create an independent copy."
+      }
+    },
+    {
+      "id": "s4-best-practices-012",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "使用 .pipe() 提高代码可读性",
+        "en": "Using .pipe() for Readable Code"
+      },
+      "description": {
+        "zh": "使用 .pipe() 将自定义函数插入方法链中。定义一个添加标签列的函数并在链中使用。",
+        "en": "Use .pipe() to insert a custom function into a method chain. Define a function that adds a label column and use it in the chain."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\ndef add_label(df, column, thresholds, labels):\n    \"\"\"Add a label column based on thresholds.\"\"\"\n    df = df.copy()\n    df['label'] = pd.cut(df[column], bins=[-np.inf] + thresholds + [np.inf], labels=labels)\n    return df\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'score': [45, 72, 88, 95, 60]})",
+      "starterCode": "# Use pipe to integrate custom function in method chain\nresult = (\n    df\n    .pipe(add_label, column='score', thresholds=[60, 80], labels=['Fail', 'Pass', 'Excellent'])\n    .sort_values('score', ascending=False)\n)",
+      "solutionCode": "result = (\n    df\n    .pipe(add_label, column='score', thresholds=[60, 80], labels=['Fail', 'Pass', 'Excellent'])\n    .sort_values('score', ascending=False)\n)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'label' in result.columns and result.iloc[0]['label'] == 'Excellent' and len(result) == 5\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["pipe 将 DataFrame 作为第一个参数传给函数", "额外参数通过关键字参数传递"],
+        "en": ["pipe passes the DataFrame as the first argument to the function", "Additional arguments are passed as keyword arguments"]
+      },
+      "explanation": {
+        "zh": "pipe() 允许在方法链中无缝使用自定义函数：df.pipe(func, **kwargs) 等价于 func(df, **kwargs)。优点：1) 保持方法链的流畅性；2) 函数可以复用；3) 代码更模块化。特别适合将常用的数据处理逻辑封装为可复用函数。",
+        "en": "pipe() allows seamless use of custom functions in method chains: df.pipe(func, **kwargs) is equivalent to func(df, **kwargs). Advantages: 1) Maintains method chain fluency; 2) Functions are reusable; 3) Code is more modular. Especially suitable for encapsulating common data processing logic into reusable functions."
+      }
+    },
+    {
+      "id": "s4-best-practices-013",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] CoW 行为引起的意外",
+        "en": "[Debug] CoW Behavior Surprise"
+      },
+      "description": {
+        "zh": "以下代码在 CoW 模式下期望通过修改 subset 来影响原始 df，但 CoW 会阻止这种行为。请修复：直接在 df 上使用 .loc 修改。",
+        "en": "The code below expects modifying subset to affect the original df, but CoW prevents this. Fix: modify df directly using .loc."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'score': [85, 72, 90]})",
+      "starterCode": "# Bug: In CoW mode, modifying subset doesn't affect df\n# subset = df[df['score'] < 80]\n# subset['score'] = 0  # This won't modify df in CoW mode!\n\n# Fix: modify df directly\ndf.loc[df['score'] < 80, 'score'] = 0\nprint(df)",
+      "solutionCode": "df.loc[df['score'] < 80, 'score'] = 0\nprint(df)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = df.loc[1, 'score'] == 0 and df.loc[0, 'score'] == 85\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["CoW 模式下切片返回的是延迟拷贝", "要修改原 DataFrame 必须直接用 .loc"],
+        "en": ["In CoW mode, slices return lazy copies", "To modify the original DataFrame, use .loc directly"]
+      },
+      "explanation": {
+        "zh": "在 CoW 模式下，df[mask] 返回的子集与原 df 不再共享数据。对子集的修改不会影响原 df（也不会警告，直接静默失效）。要修改原 df 必须使用 df.loc[mask, col] = value 直接操作。这其实是更安全的行为，避免了意外修改原数据的风险。",
+        "en": "In CoW mode, df[mask] returns a subset that no longer shares data with the original df. Modifications to the subset don't affect the original df (and won't warn - they silently fail). To modify the original df, use df.loc[mask, col] = value directly. This is actually safer behavior, preventing accidental modification of original data."
+      }
+    },
+    {
+      "id": "s4-best-practices-014",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "[最佳实践] 地道的 pandas 风格清单",
+        "en": "[Best Practice] Idiomatic Pandas Style Checklist"
+      },
+      "description": {
+        "zh": "以下哪组做法全部符合 pandas 最佳实践？",
+        "en": "Which set of practices all conform to pandas best practices?"
+      },
+      "options": {
+        "zh": [
+          "使用向量化操作、方法链、.loc 赋值、避免 inplace=True、使用 .copy() 创建副本",
+          "使用 iterrows 逐行处理、inplace=True 节省内存、链式索引赋值",
+          "总是使用 apply + lambda、从不使用 groupby、手动循环最灵活",
+          "避免使用 pandas 内置函数、自己实现所有操作更可控"
+        ],
+        "en": [
+          "Use vectorized operations, method chaining, .loc assignment, avoid inplace=True, use .copy() for copies",
+          "Use iterrows for row processing, inplace=True to save memory, chained index assignment",
+          "Always use apply + lambda, never use groupby, manual loops are most flexible",
+          "Avoid pandas built-in functions, implement everything yourself for more control"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["pandas 的设计理念是向量化和声明式操作"],
+        "en": ["pandas is designed for vectorized and declarative operations"]
+      },
+      "explanation": {
+        "zh": "地道的 pandas 风格清单：1) 优先向量化操作（避免循环）；2) 使用方法链组织代码流程；3) 用 .loc/.iloc 进行赋值（避免链式索引）；4) 避免 inplace=True（破坏链式调用）；5) 需要独立副本时用 .copy()；6) 用 assign 在链中创建列；7) 用 pipe 集成自定义函数；8) 合理使用 category 类型优化内存。",
+        "en": "Idiomatic pandas checklist: 1) Prefer vectorized operations (avoid loops); 2) Use method chaining for code flow; 3) Use .loc/.iloc for assignment (avoid chained indexing); 4) Avoid inplace=True (breaks chaining); 5) Use .copy() when independent copies are needed; 6) Use assign to create columns in chains; 7) Use pipe to integrate custom functions; 8) Use category type for memory optimization where appropriate."
+      }
+    },
+    {
+      "id": "s4-best-practices-015",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 将命令式代码重构为地道的 pandas 风格",
+        "en": "[Challenge] Refactor Imperative Code to Idiomatic Pandas"
+      },
+      "description": {
+        "zh": "将以下使用循环和逐行操作的命令式代码重构为地道的 pandas 方法链。目标：1) 向量化计算 total，2) 用 np.where 替代循环条件判断，3) 用 query 筛选，4) 用 groupby + agg 汇总，5) 最终排序。将结果赋给 result。",
+        "en": "Refactor the imperative code with loops and row-by-row operations into idiomatic pandas method chains. Goals: 1) Vectorize total calculation, 2) Replace loop conditionals with np.where, 3) Filter with query, 4) Summarize with groupby + agg, 5) Sort result. Assign to result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'product': np.random.choice(['Widget', 'Gadget', 'Doohickey'], 100), 'price': np.random.uniform(10, 100, 100).round(2), 'quantity': np.random.randint(1, 20, 100), 'discount': np.random.choice([0, 0.1, 0.2], 100)})",
+      "starterCode": "# Idiomatic pandas: method chain\nresult = (\n    df\n    .assign(\n        total=lambda x: x['price'] * x['quantity'] * (1 - x['discount']),\n        tier=lambda x: np.where(x['price'] > 50, 'Premium', 'Standard')\n    )\n    .query('total > 100')\n    .groupby(['product', 'tier'])\n    .agg(\n        avg_total=('total', 'mean'),\n        count=('total', 'count')\n    )\n    .sort_values('avg_total', ascending=False)\n)",
+      "solutionCode": "result = (\n    df\n    .assign(\n        total=lambda x: x['price'] * x['quantity'] * (1 - x['discount']),\n        tier=lambda x: np.where(x['price'] > 50, 'Premium', 'Standard')\n    )\n    .query('total > 100')\n    .groupby(['product', 'tier'])\n    .agg(\n        avg_total=('total', 'mean'),\n        count=('total', 'count')\n    )\n    .sort_values('avg_total', ascending=False)\n)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = (\n        'avg_total' in result.columns and\n        'count' in result.columns and\n        result.index.names == ['product', 'tier'] and\n        len(result) > 0 and\n        result['avg_total'].is_monotonic_decreasing\n    )\nexcept:\n    result_check = False\nresult = result_check",
+      "hints": {
+        "zh": ["assign 在链中创建新列", "np.where 替代 if-else 循环", "query 替代布尔索引筛选", "命名聚合替代字典 agg"],
+        "en": ["assign creates new columns in chains", "np.where replaces if-else loops", "query replaces boolean index filtering", "Named aggregation replaces dict agg"]
+      },
+      "explanation": {
+        "zh": "此综合练习展示了将命令式代码重构为地道 pandas 的完整过程：循环 -> 向量化，if-else -> np.where，布尔索引 -> query，手动聚合 -> groupby+agg。重构后的代码：1) 更短（约 1/3 行数）；2) 更快（向量化 vs 循环）；3) 更易读（声明式意图清晰）；4) 更易维护（每步独立可测试）。这是 pandas 编程的核心技能。",
+        "en": "This challenge demonstrates the complete process of refactoring imperative code to idiomatic pandas: loops -> vectorized, if-else -> np.where, boolean indexing -> query, manual aggregation -> groupby+agg. Refactored code is: 1) Shorter (~1/3 lines); 2) Faster (vectorized vs loops); 3) More readable (declarative intent is clear); 4) More maintainable (each step independently testable). This is a core pandas programming skill."
+      }
+    }
+  ]
+}

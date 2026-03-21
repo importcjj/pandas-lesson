@@ -1,0 +1,427 @@
+{
+  "module": "reshaping",
+  "stageId": "stage4",
+  "lessonId": "reshaping",
+  "tags": ["melt", "stack", "unstack", "explode", "wide_to_long", "reshaping"],
+  "exercises": [
+    {
+      "id": "s4-reshaping-001",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "melt 宽转长",
+        "en": "melt: Wide to Long"
+      },
+      "description": {
+        "zh": "使用 pd.melt 将宽格式 DataFrame 转换为长格式。保留 'name' 列，将 'math' 和 'english' 列融化。",
+        "en": "Use pd.melt to convert a wide-format DataFrame to long format. Keep 'name' as the id column and melt 'math' and 'english' columns."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'math': [90, 85], 'english': [88, 92]})",
+      "starterCode": "# Melt the DataFrame\nresult = ___",
+      "solutionCode": "result = pd.melt(df, id_vars='name', value_vars=['math', 'english'])",
+      "validationType": "dataframe-equals",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["id_vars 指定不融化的列", "value_vars 指定要融化的列"],
+        "en": ["id_vars specifies columns to keep", "value_vars specifies columns to melt"]
+      },
+      "explanation": {
+        "zh": "melt 将列名变成行的值，是 pivot 的逆操作。id_vars 保持不动，value_vars 指定的列被融化成 variable 和 value 两列。",
+        "en": "melt turns column names into row values, the inverse of pivot. id_vars stay fixed, and columns specified in value_vars are melted into 'variable' and 'value' columns."
+      }
+    },
+    {
+      "id": "s4-reshaping-002",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "stack 操作",
+        "en": "stack Operation"
+      },
+      "description": {
+        "zh": "对 DataFrame 调用 .stack() 后，结果的形状会发生什么变化？",
+        "en": "How does the shape change after calling .stack() on a DataFrame?"
+      },
+      "options": {
+        "zh": [
+          "列被转换为行（内层索引），结果变为 Series 或具有 MultiIndex 的 DataFrame",
+          "行被转换为列，结果变得更宽",
+          "形状不变，只改变数据类型",
+          "数据被转置（行列互换）"
+        ],
+        "en": [
+          "Columns are pivoted to rows (inner index level), result becomes a Series or MultiIndex DataFrame",
+          "Rows are converted to columns, result becomes wider",
+          "Shape stays the same, only data types change",
+          "Data is transposed (rows and columns swap)"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["stack 是 \"堆叠\" 的意思，将列堆叠到行中"],
+        "en": ["stack means to 'stack' columns into rows"]
+      },
+      "explanation": {
+        "zh": "stack() 将列的最内层转换为行的最内层索引。相当于把宽表变窄变长。与之相反的操作是 unstack()。",
+        "en": "stack() pivots the innermost column level to become the innermost row index level, making the table narrower and longer. The inverse operation is unstack()."
+      }
+    },
+    {
+      "id": "s4-reshaping-003",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "unstack 逆堆叠",
+        "en": "unstack: Unstacking"
+      },
+      "description": {
+        "zh": "将一个 MultiIndex Series 的内层索引展开为列。",
+        "en": "Unstack the inner index level of a MultiIndex Series into columns."
+      },
+      "codeTemplate": "result = s_multi.___()",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "unstack",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": ["unstack 是 stack 的逆操作"],
+        "en": ["unstack is the inverse of stack"]
+      },
+      "explanation": {
+        "zh": "unstack() 将行索引的最内层转换为列，是 stack() 的逆操作。可以通过 level 参数指定要展开的层级。",
+        "en": "unstack() converts the innermost row index level into columns, the inverse of stack(). The level parameter can specify which level to unstack."
+      }
+    },
+    {
+      "id": "s4-reshaping-004",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "explode 展开列表列",
+        "en": "explode: Expanding List Columns"
+      },
+      "description": {
+        "zh": "使用 explode 将 'tags' 列中的列表展开为多行。",
+        "en": "Use explode to expand the lists in the 'tags' column into separate rows."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'tags': [['python', 'pandas'], ['sql', 'python', 'spark']]})",
+      "starterCode": "# Explode the tags column\nresult = ___",
+      "solutionCode": "result = df.explode('tags')",
+      "validationType": "dataframe-equals",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["explode 方法接受要展开的列名"],
+        "en": ["The explode method takes the column name to expand"]
+      },
+      "explanation": {
+        "zh": "explode() 将列表类型的列展开为多行，每个元素一行。其他列的值会被复制。这对处理 JSON 数据或多值字段非常有用。",
+        "en": "explode() expands list-like columns into multiple rows, one row per element. Values in other columns are duplicated. This is very useful for processing JSON data or multi-value fields."
+      }
+    },
+    {
+      "id": "s4-reshaping-005",
+      "type": "true-false",
+      "difficulty": 5,
+      "title": {
+        "zh": "wide_to_long 的用途",
+        "en": "wide_to_long Usage"
+      },
+      "description": {
+        "zh": "pd.wide_to_long() 可以将带有数字后缀的列（如 score_2023, score_2024）转换为长格式，其中年份成为新的行。",
+        "en": "pd.wide_to_long() can convert columns with numeric suffixes (e.g., score_2023, score_2024) to long format, where the year becomes a new row."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["wide_to_long 适合处理有规律命名后缀的列"],
+        "en": ["wide_to_long is designed for columns with patterned numeric suffixes"]
+      },
+      "explanation": {
+        "zh": "pd.wide_to_long(df, stubnames='score', i='name', j='year', sep='_') 可以识别 score_2023、score_2024 等列名模式，将后缀部分作为新的行索引。",
+        "en": "pd.wide_to_long(df, stubnames='score', i='name', j='year', sep='_') recognizes column name patterns like score_2023, score_2024, and uses the suffix as a new row index."
+      }
+    },
+    {
+      "id": "s4-reshaping-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "stack 的 dropna 参数",
+        "en": "stack with dropna Parameter"
+      },
+      "description": {
+        "zh": "对 DataFrame 调用 stack()，但保留 NaN 值（设置 dropna=False）。",
+        "en": "Call stack() on a DataFrame but keep NaN values (set dropna=False)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'math': [90, np.nan], 'english': [88, 92]}, index=['Alice', 'Bob'])",
+      "starterCode": "# Stack without dropping NaN\nresult = df.stack(___)",
+      "solutionCode": "result = df.stack(dropna=False)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = len(result) == 4 and result.isna().sum() == 1\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["默认情况下 stack 会丢弃 NaN 值", "设置 dropna=False 保留 NaN"],
+        "en": ["By default stack drops NaN values", "Set dropna=False to keep NaN"]
+      },
+      "explanation": {
+        "zh": "stack() 默认会移除 NaN 值（dropna=True），这可能导致丢失信息。设置 dropna=False 可以保留所有值，包括 NaN，这在需要保持数据完整性时非常重要。",
+        "en": "stack() removes NaN values by default (dropna=True), which may cause information loss. Setting dropna=False keeps all values including NaN, important when data integrity must be preserved."
+      }
+    },
+    {
+      "id": "s4-reshaping-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "unstack 使用 fill_value",
+        "en": "unstack with fill_value"
+      },
+      "description": {
+        "zh": "对 MultiIndex Series 进行 unstack 操作，用 0 填充缺失值。",
+        "en": "Unstack a MultiIndex Series, filling missing values with 0."
+      },
+      "setupCode": "import pandas as pd\nindex = pd.MultiIndex.from_tuples([('A', 'x'), ('A', 'y'), ('B', 'x')], names=['group', 'sub'])\ns = pd.Series([10, 20, 30], index=index)",
+      "starterCode": "# Unstack with fill_value=0\nresult = s.unstack(fill_value=___)",
+      "solutionCode": "result = s.unstack(fill_value=0)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = result.loc['B', 'y'] == 0 and result.loc['A', 'x'] == 10\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["unstack 后缺失的组合会产生 NaN", "fill_value 参数可以指定填充值"],
+        "en": ["Missing combinations after unstack produce NaN", "fill_value parameter specifies the fill value"]
+      },
+      "explanation": {
+        "zh": "当 MultiIndex 的组合不完整时，unstack 会产生 NaN。fill_value 参数可以指定替代值（如 0），避免后续计算中的 NaN 问题。这比先 unstack 再 fillna 更高效。",
+        "en": "When MultiIndex combinations are incomplete, unstack produces NaN. The fill_value parameter specifies a replacement value (e.g., 0), avoiding NaN issues in subsequent computations. This is more efficient than unstack followed by fillna."
+      }
+    },
+    {
+      "id": "s4-reshaping-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "crosstab 的 normalize 参数",
+        "en": "crosstab with normalize Parameter"
+      },
+      "description": {
+        "zh": "使用 pd.crosstab 计算 'dept' 和 'level' 的交叉频率表，并用 normalize='index' 计算每行的比例。",
+        "en": "Use pd.crosstab to compute the cross-tabulation of 'dept' and 'level', with normalize='index' for row proportions."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'dept': ['Eng', 'Eng', 'Eng', 'HR', 'HR', 'HR', 'HR', 'Eng'], 'level': ['Junior', 'Senior', 'Senior', 'Junior', 'Junior', 'Senior', 'Junior', 'Junior']})",
+      "starterCode": "# Crosstab with row normalization\nresult = pd.crosstab(df['dept'], df['level'], normalize=___)",
+      "solutionCode": "result = pd.crosstab(df['dept'], df['level'], normalize='index')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    row_sums = result.sum(axis=1)\n    result = all(abs(s - 1.0) < 0.01 for s in row_sums)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["normalize='index' 按行归一化（每行求和为 1）", "也可以用 'columns' 按列归一化，或 'all' 按总数归一化"],
+        "en": ["normalize='index' normalizes by row (each row sums to 1)", "Can also use 'columns' for column normalization, or 'all' for overall"]
+      },
+      "explanation": {
+        "zh": "pd.crosstab 的 normalize 参数支持三种模式：'index'（每行和为 1）、'columns'（每列和为 1）、'all'（全表和为 1）。这在分析分类变量之间的关系时非常有用，可以直接看到每个组的分布比例。",
+        "en": "pd.crosstab's normalize parameter supports three modes: 'index' (rows sum to 1), 'columns' (columns sum to 1), 'all' (total sums to 1). Very useful for analyzing relationships between categorical variables, directly showing distribution proportions per group."
+      }
+    },
+    {
+      "id": "s4-reshaping-009",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "get_dummies 的 prefix 和 drop_first",
+        "en": "get_dummies with prefix and drop_first"
+      },
+      "description": {
+        "zh": "使用 pd.get_dummies 对 'color' 列进行独热编码，设置 prefix='c' 并 drop_first=True（避免多重共线性）。",
+        "en": "Use pd.get_dummies to one-hot encode the 'color' column, with prefix='c' and drop_first=True (to avoid multicollinearity)."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'item': ['hat', 'shoe', 'bag', 'hat'], 'color': ['red', 'blue', 'red', 'green']})",
+      "starterCode": "# One-hot encode with prefix and drop_first\nresult = pd.get_dummies(df, columns=['color'], prefix=___, drop_first=___)",
+      "solutionCode": "result = pd.get_dummies(df, columns=['color'], prefix='c', drop_first=True)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    color_cols = [c for c in result.columns if c.startswith('c_')]\n    result = len(color_cols) == 2 and 'item' in result.columns\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["prefix 设置列名前缀", "drop_first=True 去掉第一个类别避免共线性"],
+        "en": ["prefix sets the column name prefix", "drop_first=True drops the first category to avoid collinearity"]
+      },
+      "explanation": {
+        "zh": "get_dummies 的 prefix 参数自定义列名前缀（默认用原列名），drop_first=True 去掉一个类别（K 个类别只需 K-1 个虚拟变量）。这在机器学习中很重要，因为完整的独热编码会导致多重共线性。",
+        "en": "get_dummies' prefix customizes column name prefixes (default uses original column name), and drop_first=True drops one category (K categories need only K-1 dummy variables). This is important in machine learning to avoid multicollinearity from complete one-hot encoding."
+      }
+    },
+    {
+      "id": "s4-reshaping-010",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "from_dummies() 逆转独热编码",
+        "en": "from_dummies() Inverse One-Hot Encoding"
+      },
+      "description": {
+        "zh": "关于 pd.from_dummies()（pandas 1.5+），以下哪个说法是正确的？",
+        "en": "Regarding pd.from_dummies() (pandas 1.5+), which statement is correct?"
+      },
+      "options": {
+        "zh": [
+          "from_dummies 将独热编码的列还原为单个分类列，是 get_dummies 的逆操作",
+          "from_dummies 将分类列转换为独热编码",
+          "from_dummies 只能处理布尔值列",
+          "from_dummies 是 factorize 的别名"
+        ],
+        "en": [
+          "from_dummies converts one-hot encoded columns back to a single categorical column, the inverse of get_dummies",
+          "from_dummies converts categorical columns to one-hot encoding",
+          "from_dummies can only handle boolean columns",
+          "from_dummies is an alias for factorize"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["from 表示从 dummies（虚拟变量）转换回来"],
+        "en": ["'from' indicates converting from dummies (dummy variables) back"]
+      },
+      "explanation": {
+        "zh": "pd.from_dummies() 是 pandas 1.5 新增的函数，将独热编码的 DataFrame 还原为原始分类列。例如将 color_red、color_blue 等列合并回 color 列。可以通过 sep 参数指定列名中的分隔符。",
+        "en": "pd.from_dummies() was added in pandas 1.5, converting a one-hot encoded DataFrame back to the original categorical column. For example, merging color_red, color_blue columns back into a color column. The sep parameter specifies the delimiter in column names."
+      }
+    },
+    {
+      "id": "s4-reshaping-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "factorize() 编码分类变量",
+        "en": "factorize() for Encoding Categorical Variables"
+      },
+      "description": {
+        "zh": "使用 pd.factorize() 将 'city' 列编码为整数代码，同时获取唯一值映射。",
+        "en": "Use pd.factorize() to encode the 'city' column as integer codes and get the unique value mapping."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'city': ['NYC', 'LA', 'NYC', 'Chicago', 'LA', 'NYC']})",
+      "starterCode": "# Factorize the city column\ncodes, uniques = pd.factorize(df['city'])\ndf['city_code'] = codes\nprint('Codes:', codes)\nprint('Uniques:', uniques)",
+      "solutionCode": "codes, uniques = pd.factorize(df['city'])\ndf['city_code'] = codes\nprint('Codes:', codes)\nprint('Uniques:', uniques)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = len(uniques) == 3 and len(codes) == 6 and df.loc[df['city'] == 'NYC', 'city_code'].nunique() == 1\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["factorize 返回 (codes, uniques) 元组", "相同的值会得到相同的整数编码"],
+        "en": ["factorize returns a (codes, uniques) tuple", "Same values get the same integer code"]
+      },
+      "explanation": {
+        "zh": "pd.factorize() 将分类变量编码为整数，返回编码数组和唯一值数组。与 astype('category').cat.codes 类似，但 factorize 按出现顺序编码（而非字母顺序）。适合简单的标签编码场景。",
+        "en": "pd.factorize() encodes categorical variables as integers, returning the codes array and uniques array. Similar to astype('category').cat.codes, but factorize encodes by order of appearance (not alphabetical). Suitable for simple label encoding scenarios."
+      }
+    },
+    {
+      "id": "s4-reshaping-012",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "pivot 后处理 MultiIndex",
+        "en": "Handling MultiIndex After Pivot"
+      },
+      "description": {
+        "zh": "对 pivot_table 的结果进行后处理：展平 MultiIndex 列名并重置索引。",
+        "en": "Post-process a pivot_table result: flatten MultiIndex column names and reset the index."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'date': ['2024-01', '2024-01', '2024-02', '2024-02'], 'product': ['A', 'B', 'A', 'B'], 'sales': [100, 200, 150, 250], 'quantity': [10, 20, 15, 25]})\npivoted = df.pivot_table(index='date', columns='product', values=['sales', 'quantity'], aggfunc='sum')",
+      "starterCode": "# Flatten MultiIndex columns\npivoted.columns = ['_'.join(col).strip() for col in pivoted.columns.values]\n\n# Reset index\nresult = pivoted.reset_index()\nprint(result.columns.tolist())",
+      "solutionCode": "pivoted.columns = ['_'.join(col).strip() for col in pivoted.columns.values]\nresult = pivoted.reset_index()\nprint(result.columns.tolist())",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'date' in result.columns and any('sales' in c for c in result.columns) and result.columns.nlevels == 1\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["pivot_table 多值聚合会产生 MultiIndex 列", "'_'.join(col) 将多层列名拼接为单层"],
+        "en": ["pivot_table with multiple values creates MultiIndex columns", "'_'.join(col) joins multi-level column names into a single level"]
+      },
+      "explanation": {
+        "zh": "pivot_table 同时聚合多列时会产生 MultiIndex 列（如 ('sales', 'A')）。用列表推导 '_'.join(col) 可以将其展平为 'sales_A'。这使得后续操作（如导出 CSV 或机器学习）更方便。",
+        "en": "pivot_table with multiple aggregated columns produces MultiIndex columns (e.g., ('sales', 'A')). List comprehension with '_'.join(col) flattens them to 'sales_A'. This makes subsequent operations (like CSV export or ML) easier."
+      }
+    },
+    {
+      "id": "s4-reshaping-013",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] unstack 时索引重复",
+        "en": "[Debug] unstack with Duplicate Index"
+      },
+      "description": {
+        "zh": "以下代码尝试 unstack，但由于索引有重复值导致错误。请在 unstack 之前先聚合重复值来修复。",
+        "en": "The code below tries to unstack but fails due to duplicate index values. Fix it by aggregating duplicates before unstacking."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'city': ['NYC', 'NYC', 'LA', 'LA', 'NYC'], 'quarter': ['Q1', 'Q1', 'Q1', 'Q2', 'Q2'], 'revenue': [100, 150, 200, 300, 250]})",
+      "starterCode": "# Bug: duplicate (city, quarter) pairs cause unstack to fail\n# Fix: aggregate first, then unstack\nresult = df.groupby(['city', 'quarter'])['revenue'].sum().unstack(fill_value=0)",
+      "solutionCode": "result = df.groupby(['city', 'quarter'])['revenue'].sum().unstack(fill_value=0)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = result.loc['NYC', 'Q1'] == 250 and result.loc['LA', 'Q2'] == 300\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["先 groupby 聚合消除重复索引", "然后才能安全地 unstack"],
+        "en": ["First groupby to aggregate and eliminate duplicate indices", "Then unstack can be safely performed"]
+      },
+      "explanation": {
+        "zh": "unstack 要求索引组合是唯一的，否则会抛出 ValueError。解决方法是先用 groupby + 聚合函数（如 sum、mean）消除重复，再 unstack。另一个方法是使用 pivot_table，它内置了聚合功能。",
+        "en": "unstack requires unique index combinations, otherwise it raises ValueError. The fix is to first use groupby + aggregation (e.g., sum, mean) to eliminate duplicates, then unstack. Alternatively, pivot_table has built-in aggregation."
+      }
+    },
+    {
+      "id": "s4-reshaping-014",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "[最佳实践] melt+pivot vs stack+unstack",
+        "en": "[Best Practice] melt+pivot vs stack+unstack"
+      },
+      "description": {
+        "zh": "在选择数据重塑方法时，以下哪个建议是正确的？",
+        "en": "When choosing data reshaping methods, which recommendation is correct?"
+      },
+      "options": {
+        "zh": [
+          "melt/pivot 更直观适合大多数场景；stack/unstack 适合已有 MultiIndex 的数据",
+          "stack/unstack 总是比 melt/pivot 快",
+          "melt 和 stack 完全等价，可以随意替换",
+          "pivot 只能用于数值数据"
+        ],
+        "en": [
+          "melt/pivot are more intuitive for most scenarios; stack/unstack work best with existing MultiIndex data",
+          "stack/unstack are always faster than melt/pivot",
+          "melt and stack are fully equivalent and interchangeable",
+          "pivot can only handle numeric data"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["考虑实际使用场景和数据结构"],
+        "en": ["Consider practical use cases and data structures"]
+      },
+      "explanation": {
+        "zh": "melt/pivot 更适合「列名有业务含义」的场景（如将月份列转为行），语法直观。stack/unstack 更适合已有 MultiIndex 的数据结构转换，操作更底层。选择建议：日常分析用 melt/pivot，处理 MultiIndex 用 stack/unstack，透视汇总用 pivot_table。",
+        "en": "melt/pivot are better for scenarios where 'column names have business meaning' (e.g., converting month columns to rows), with intuitive syntax. stack/unstack are better for transforming existing MultiIndex structures, operating at a lower level. Guidance: use melt/pivot for daily analysis, stack/unstack for MultiIndex handling, pivot_table for summary tables."
+      }
+    },
+    {
+      "id": "s4-reshaping-015",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 重塑调查数据进行分析",
+        "en": "[Challenge] Reshape Survey Data for Analysis"
+      },
+      "description": {
+        "zh": "完成调查数据的重塑分析：1) 用 melt 将宽格式问卷数据转为长格式，2) 用 crosstab 分析性别与评分的交叉分布，3) 用 pivot_table 计算每个问题按性别的平均评分，4) 将结果赋给对应变量。",
+        "en": "Complete survey data reshaping analysis: 1) Use melt to convert wide-format survey data to long format, 2) Use crosstab to analyze the cross-distribution of gender and ratings, 3) Use pivot_table to compute average rating per question by gender, 4) Assign results to corresponding variables."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'respondent': ['R1', 'R2', 'R3', 'R4', 'R5', 'R6'], 'gender': ['M', 'F', 'M', 'F', 'M', 'F'], 'q1_score': [4, 5, 3, 4, 5, 3], 'q2_score': [3, 4, 4, 5, 3, 4], 'q3_score': [5, 3, 4, 4, 5, 5]})",
+      "starterCode": "# Step 1: Melt wide to long format\ndf_long = pd.melt(df, id_vars=['respondent', 'gender'], \n                  value_vars=['q1_score', 'q2_score', 'q3_score'],\n                  var_name='question', value_name='score')\n\n# Step 2: Crosstab of gender vs score\ncross = pd.crosstab(df_long['gender'], df_long['score'])\n\n# Step 3: Pivot table - average score per question by gender\navg_by_gender = df_long.pivot_table(\n    values='score', index='question', columns='gender', aggfunc=___\n)",
+      "solutionCode": "df_long = pd.melt(df, id_vars=['respondent', 'gender'], \n                  value_vars=['q1_score', 'q2_score', 'q3_score'],\n                  var_name='question', value_name='score')\ncross = pd.crosstab(df_long['gender'], df_long['score'])\navg_by_gender = df_long.pivot_table(\n    values='score', index='question', columns='gender', aggfunc='mean'\n)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = len(df_long) == 18 and cross.shape[0] == 2 and avg_by_gender.shape == (3, 2)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["melt 需要指定 id_vars 和 value_vars", "pivot_table 的 aggfunc='mean' 计算平均值"],
+        "en": ["melt requires id_vars and value_vars", "pivot_table aggfunc='mean' computes averages"]
+      },
+      "explanation": {
+        "zh": "此综合练习展示了完整的调查数据分析流程：1) melt 将宽格式转为适合分析的长格式；2) crosstab 快速了解分类变量的交叉分布；3) pivot_table 按维度汇总统计。这三个工具组合可以应对大多数数据重塑需求。",
+        "en": "This challenge demonstrates a complete survey data analysis workflow: 1) melt converts wide format to analysis-friendly long format; 2) crosstab quickly reveals cross-distributions of categorical variables; 3) pivot_table summarizes statistics by dimensions. These three tools combined handle most data reshaping needs."
+      }
+    }
+  ]
+}

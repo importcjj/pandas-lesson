@@ -1,0 +1,365 @@
+{
+  "module": "intro",
+  "stageId": "stage1",
+  "lessonId": "intro",
+  "tags": ["pandas", "import", "basics"],
+  "exercises": [
+    {
+      "id": "s1-intro-001",
+      "type": "multiple-choice",
+      "difficulty": 1,
+      "title": {
+        "zh": "pandas 的导入方式",
+        "en": "Importing pandas"
+      },
+      "description": {
+        "zh": "以下哪种是 pandas 最常用的导入方式？",
+        "en": "Which is the most common way to import pandas?"
+      },
+      "options": {
+        "zh": [
+          "import pandas as pd",
+          "import pandas",
+          "from pandas import *",
+          "import pd"
+        ],
+        "en": [
+          "import pandas as pd",
+          "import pandas",
+          "from pandas import *",
+          "import pd"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["pandas 社区有一个广泛认可的缩写约定"],
+        "en": ["The pandas community has a widely accepted abbreviation convention"]
+      },
+      "explanation": {
+        "zh": "import pandas as pd 是 pandas 社区的标准约定，pd 是最常用的别名。",
+        "en": "import pandas as pd is the standard convention in the pandas community. pd is the most commonly used alias."
+      }
+    },
+    {
+      "id": "s1-intro-002",
+      "type": "true-false",
+      "difficulty": 1,
+      "title": {
+        "zh": "pandas 与 NumPy 的关系",
+        "en": "pandas and NumPy Relationship"
+      },
+      "description": {
+        "zh": "pandas 是基于 NumPy 构建的。",
+        "en": "pandas is built on top of NumPy."
+      },
+      "correctAnswer": true,
+      "explanation": {
+        "zh": "pandas 底层使用 NumPy 数组来存储数据，并在此基础上提供了更高层次的数据结构和分析工具。",
+        "en": "pandas uses NumPy arrays internally to store data and provides higher-level data structures and analysis tools on top of it."
+      }
+    },
+    {
+      "id": "s1-intro-003",
+      "type": "multiple-choice",
+      "difficulty": 1,
+      "title": {
+        "zh": "pandas 的核心数据结构",
+        "en": "Core Data Structures"
+      },
+      "description": {
+        "zh": "pandas 的两个核心数据结构是什么？",
+        "en": "What are the two core data structures in pandas?"
+      },
+      "options": {
+        "zh": [
+          "Series 和 DataFrame",
+          "Array 和 Matrix",
+          "List 和 Dict",
+          "Table 和 Column"
+        ],
+        "en": [
+          "Series and DataFrame",
+          "Array and Matrix",
+          "List and Dict",
+          "Table and Column"
+        ]
+      },
+      "correctIndex": 0,
+      "explanation": {
+        "zh": "Series 是一维标签数组，DataFrame 是二维标签数据结构（类似表格）。",
+        "en": "Series is a one-dimensional labeled array, and DataFrame is a two-dimensional labeled data structure (like a table)."
+      }
+    },
+    {
+      "id": "s1-intro-004",
+      "type": "coding",
+      "difficulty": 1,
+      "title": {
+        "zh": "导入 pandas 并检查版本",
+        "en": "Import pandas and Check Version"
+      },
+      "description": {
+        "zh": "导入 pandas 库（使用别名 pd），然后打印 pandas 的版本号。",
+        "en": "Import the pandas library (using alias pd), then print the pandas version."
+      },
+      "starterCode": "# Import pandas with the alias pd\n\n# Print the pandas version\n",
+      "solutionCode": "import pandas as pd\nprint(pd.__version__)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    result = pd.__version__ in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "使用 import pandas as pd 导入",
+          "版本号存储在 pd.__version__ 属性中"
+        ],
+        "en": [
+          "Use import pandas as pd to import",
+          "The version is stored in the pd.__version__ attribute"
+        ]
+      }
+    },
+    {
+      "id": "s1-intro-005",
+      "type": "output-matching",
+      "difficulty": 1,
+      "title": {
+        "zh": "pandas 的用途",
+        "en": "pandas Use Cases"
+      },
+      "description": {
+        "zh": "以下代码的输出是什么？",
+        "en": "What is the output of the following code?"
+      },
+      "code": "import pandas as pd\nprint(type(pd.Series([1, 2, 3])))",
+      "options": {
+        "zh": [
+          "<class 'pandas.core.series.Series'>",
+          "<class 'list'>",
+          "<class 'numpy.ndarray'>",
+          "<class 'pandas.Series'>"
+        ],
+        "en": [
+          "<class 'pandas.core.series.Series'>",
+          "<class 'list'>",
+          "<class 'numpy.ndarray'>",
+          "<class 'pandas.Series'>"
+        ]
+      },
+      "correctIndex": 0,
+      "explanation": {
+        "zh": "pd.Series() 创建的是 pandas.core.series.Series 类型的对象。",
+        "en": "pd.Series() creates an object of type pandas.core.series.Series."
+      }
+    },
+    {
+      "id": "s1-intro-006",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "pandas 与 NumPy 的区别",
+        "en": "pandas vs NumPy Distinction"
+      },
+      "description": {
+        "zh": "以下哪项最准确地描述了 pandas 与 NumPy 的主要区别？",
+        "en": "Which of the following most accurately describes the main difference between pandas and NumPy?"
+      },
+      "options": {
+        "zh": [
+          "pandas 提供带标签的数据结构，NumPy 主要处理同质数值数组",
+          "pandas 比 NumPy 运行速度更快",
+          "NumPy 可以处理字符串，pandas 不能",
+          "pandas 和 NumPy 完全独立，没有关系"
+        ],
+        "en": [
+          "pandas provides labeled data structures, NumPy mainly handles homogeneous numerical arrays",
+          "pandas runs faster than NumPy",
+          "NumPy can handle strings but pandas cannot",
+          "pandas and NumPy are completely independent with no relationship"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["想想 pandas 的 Index 和列名标签功能"],
+        "en": ["Think about pandas' Index and column name labeling features"]
+      },
+      "explanation": {
+        "zh": "pandas 在 NumPy 之上增加了行/列标签（Index）、异构数据类型支持和丰富的数据操作方法，而 NumPy 更适合纯数值的高性能计算。",
+        "en": "pandas adds row/column labels (Index), heterogeneous data type support, and rich data manipulation methods on top of NumPy, while NumPy is better suited for high-performance pure numerical computation."
+      }
+    },
+    {
+      "id": "s1-intro-007",
+      "type": "true-false",
+      "difficulty": 2,
+      "title": {
+        "zh": "Series 与 DataFrame 的关系",
+        "en": "Series vs DataFrame Relationship"
+      },
+      "description": {
+        "zh": "一个 DataFrame 可以被看作是由多个共享同一索引的 Series 组成的。",
+        "en": "A DataFrame can be seen as a collection of Series that share the same index."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["从 DataFrame 中选择单列会得到什么类型？"],
+        "en": ["What type do you get when selecting a single column from a DataFrame?"]
+      },
+      "explanation": {
+        "zh": "DataFrame 的每一列都是一个 Series，它们共享 DataFrame 的行索引。使用 df['col'] 选择单列就会返回一个 Series。",
+        "en": "Each column of a DataFrame is a Series, and they share the DataFrame's row index. Selecting a single column with df['col'] returns a Series."
+      }
+    },
+    {
+      "id": "s1-intro-008",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 pd.set_option 设置显示选项",
+        "en": "Display Settings with pd.set_option"
+      },
+      "description": {
+        "zh": "使用 pd.set_option 将 DataFrame 最大显示行数设置为 20，然后打印当前的最大显示行数设置。",
+        "en": "Use pd.set_option to set the maximum display rows to 20, then print the current max display rows setting."
+      },
+      "starterCode": "import pandas as pd\n\n# Set max display rows to 20\n\n# Print the current max rows setting\n",
+      "solutionCode": "import pandas as pd\n\npd.set_option('display.max_rows', 20)\nprint(pd.get_option('display.max_rows'))",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    result = '20' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "pd.set_option() 用于设置选项",
+          "显示行数的选项名称是 'display.max_rows'",
+          "使用 pd.get_option() 读取当前设置"
+        ],
+        "en": [
+          "pd.set_option() is used to set options",
+          "The option name for display rows is 'display.max_rows'",
+          "Use pd.get_option() to read the current setting"
+        ]
+      }
+    },
+    {
+      "id": "s1-intro-009",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "[调试] 导入错误排查",
+        "en": "[Debug] Import Troubleshooting"
+      },
+      "description": {
+        "zh": "以下代码有一个导入错误，请找到并修复它，使代码能正确运行并打印出 Series。",
+        "en": "The following code has an import error. Find and fix it so the code runs correctly and prints the Series."
+      },
+      "starterCode": "import panda as pd\n\ns = pd.Series([1, 2, 3])\nprint(s)",
+      "solutionCode": "import pandas as pd\n\ns = pd.Series([1, 2, 3])\nprint(s)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    result = '0    1' in _output and 'dtype' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "仔细检查导入语句中的模块名拼写",
+          "正确的模块名是 pandas，不是 panda"
+        ],
+        "en": [
+          "Carefully check the module name spelling in the import statement",
+          "The correct module name is pandas, not panda"
+        ]
+      }
+    },
+    {
+      "id": "s1-intro-010",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 导入、创建与检查",
+        "en": "[Challenge] Import, Create, and Inspect"
+      },
+      "description": {
+        "zh": "完成以下三个步骤：\n1. 导入 pandas\n2. 创建一个包含 'name' 和 'value' 两列的 DataFrame\n3. 打印 DataFrame 的形状（shape）和数据类型（dtypes）",
+        "en": "Complete the following three steps:\n1. Import pandas\n2. Create a DataFrame with 'name' and 'value' columns\n3. Print the DataFrame's shape and dtypes"
+      },
+      "starterCode": "# Step 1: Import pandas\n\n# Step 2: Create a DataFrame with columns 'name' (any 3 names) and 'value' (any 3 numbers)\n\n# Step 3: Print shape and dtypes\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'value': [10, 20, 30]})\nprint(df.shape)\nprint(df.dtypes)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    result = '(3, 2)' in _output and 'object' in _output and ('int64' in _output or 'float64' in _output)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "使用 import pandas as pd",
+          "使用字典创建 DataFrame：pd.DataFrame({'name': [...], 'value': [...]})",
+          "df.shape 返回 (行数, 列数)，df.dtypes 返回每列的数据类型"
+        ],
+        "en": [
+          "Use import pandas as pd",
+          "Create DataFrame from dict: pd.DataFrame({'name': [...], 'value': [...]})",
+          "df.shape returns (rows, cols), df.dtypes returns each column's data type"
+        ]
+      }
+    },
+    {
+      "id": "s1-intro-011",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 pd.show_versions() 查看环境信息",
+        "en": "View Environment Info with pd.show_versions()"
+      },
+      "description": {
+        "zh": "使用 pd.show_versions() 打印 pandas 及其依赖库的版本信息。观察输出中包含了哪些信息。",
+        "en": "Use pd.show_versions() to print version information for pandas and its dependencies. Observe what information is included in the output."
+      },
+      "starterCode": "import pandas as pd\n\n# Print pandas and dependency version info\n",
+      "solutionCode": "import pandas as pd\n\npd.show_versions()",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'pandas' in _output.lower()\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "直接调用 pd.show_versions() 即可",
+          "这个函数会打印 Python、pandas、NumPy 等库的版本"
+        ],
+        "en": [
+          "Simply call pd.show_versions()",
+          "This function prints versions of Python, pandas, NumPy, and other libraries"
+        ]
+      }
+    },
+    {
+      "id": "s1-intro-012",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "[最佳实践] 版本兼容性",
+        "en": "[Best Practice] Version Compatibility"
+      },
+      "description": {
+        "zh": "在团队项目中，以下哪种方式是确保 pandas 版本兼容性的最佳实践？",
+        "en": "In a team project, which is the best practice for ensuring pandas version compatibility?"
+      },
+      "options": {
+        "zh": [
+          "在 requirements.txt 中使用 pandas>=1.5,<3.0 指定版本范围",
+          "总是使用 pip install pandas 安装最新版本",
+          "把 pandas 源代码复制到项目中",
+          "不需要管版本，任何版本都一样"
+        ],
+        "en": [
+          "Use pandas>=1.5,<3.0 in requirements.txt to specify a version range",
+          "Always use pip install pandas to install the latest version",
+          "Copy pandas source code into the project",
+          "No need to manage versions, any version works the same"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["想想 API 在不同大版本之间可能会有什么变化"],
+        "en": ["Think about what might change in the API between major versions"]
+      },
+      "explanation": {
+        "zh": "指定版本范围（如 pandas>=1.5,<3.0）既保证了兼容性，又允许安全的小版本更新。不同大版本之间可能有 API 变更，直接用最新版可能导致代码不兼容。",
+        "en": "Specifying a version range (e.g., pandas>=1.5,<3.0) ensures compatibility while allowing safe minor version updates. Major versions may have API changes, and always using the latest version could cause incompatibilities."
+      }
+    }
+  ]
+}

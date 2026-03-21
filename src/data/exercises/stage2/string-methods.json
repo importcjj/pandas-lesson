@@ -1,0 +1,465 @@
+{
+  "module": "string-methods",
+  "stageId": "stage2",
+  "lessonId": "string-methods",
+  "tags": ["str", "lower", "upper", "contains", "split", "replace", "len"],
+  "exercises": [
+    {
+      "id": "s2-strmethod-001",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "字符串转小写和大写",
+        "en": "Convert Strings to Lower/Upper Case"
+      },
+      "description": {
+        "zh": "将 df 的 'name' 列全部转为小写，赋值给新列 'name_lower'，然后打印 df。",
+        "en": "Convert the 'name' column of df to lowercase, assign it to a new column 'name_lower', then print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'BOB', 'Charlie']})",
+      "starterCode": "# Convert name to lowercase and store in name_lower\n\n# Print df\n",
+      "solutionCode": "df['name_lower'] = df['name'].str.lower()\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "      name name_lower\n0    Alice      alice\n1      BOB        bob\n2  Charlie    charlie",
+      "hints": {
+        "zh": [
+          "使用 .str 访问器来调用字符串方法",
+          "str.lower() 将字符串转为小写"
+        ],
+        "en": [
+          "Use the .str accessor to call string methods",
+          "str.lower() converts strings to lowercase"
+        ]
+      },
+      "explanation": {
+        "zh": "pandas Series 的 .str 访问器提供了向量化的字符串操作。str.lower() 将每个元素转为小写，对应的 str.upper() 转为大写。",
+        "en": "The .str accessor on a pandas Series provides vectorized string operations. str.lower() converts each element to lowercase; str.upper() converts to uppercase."
+      }
+    },
+    {
+      "id": "s2-strmethod-002",
+      "type": "true-false",
+      "difficulty": 2,
+      "title": {
+        "zh": "str.contains() 的用途",
+        "en": "Purpose of str.contains()"
+      },
+      "description": {
+        "zh": "df['col'].str.contains('abc') 返回一个布尔 Series，表示每个元素是否包含子字符串 'abc'。",
+        "en": "df['col'].str.contains('abc') returns a boolean Series indicating whether each element contains the substring 'abc'."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["str.contains() 默认支持正则表达式匹配"],
+        "en": ["str.contains() supports regex matching by default"]
+      },
+      "explanation": {
+        "zh": "str.contains() 对 Series 中的每个字符串检查是否包含指定的子串或正则表达式模式，返回布尔 Series。可结合布尔索引进行筛选。",
+        "en": "str.contains() checks each string in the Series for the specified substring or regex pattern, returning a boolean Series. It can be combined with boolean indexing for filtering."
+      }
+    },
+    {
+      "id": "s2-strmethod-003",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "使用 str.split() 拆分字符串",
+        "en": "Split Strings with str.split()"
+      },
+      "description": {
+        "zh": "填写代码，使用 str.split() 将 'full_name' 列按空格拆分，并通过 expand=True 展开为多列。",
+        "en": "Fill in the code to use str.split() to split the 'full_name' column by space, expanding into multiple columns with expand=True."
+      },
+      "codeTemplate": "import pandas as pd\ndf = pd.DataFrame({'full_name': ['Alice Smith', 'Bob Jones']})\ndf[['first', 'last']] = df['full_name'].str.___1___(' ', ___2___=True)",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "split",
+          "alternatives": []
+        },
+        {
+          "placeholder": "___2___",
+          "answer": "expand",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "split() 按指定分隔符拆分字符串",
+          "expand=True 将拆分结果展开为 DataFrame 的多列"
+        ],
+        "en": [
+          "split() splits strings by the specified delimiter",
+          "expand=True expands the split result into multiple DataFrame columns"
+        ]
+      },
+      "explanation": {
+        "zh": "str.split(' ', expand=True) 按空格拆分每个字符串，expand=True 使结果成为 DataFrame 而非列表的 Series，方便直接赋值给多个新列。",
+        "en": "str.split(' ', expand=True) splits each string by space. expand=True makes the result a DataFrame instead of a Series of lists, allowing direct assignment to multiple new columns."
+      }
+    },
+    {
+      "id": "s2-strmethod-004",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 str.replace() 替换字符串",
+        "en": "Replace Strings with str.replace()"
+      },
+      "description": {
+        "zh": "将 df 的 'phone' 列中的短横线 '-' 替换为空字符串，然后打印 df。",
+        "en": "Replace dashes '-' with empty strings in the 'phone' column of df, then print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'phone': ['123-456-7890', '098-765-4321', '555-123-4567']})",
+      "starterCode": "# Replace '-' with '' in the phone column\n\n# Print df\n",
+      "solutionCode": "df['phone'] = df['phone'].str.replace('-', '', regex=False)\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "         phone\n0  1234567890\n1  0987654321\n2  5551234567",
+      "hints": {
+        "zh": [
+          "使用 str.replace(old, new) 替换字符",
+          "设置 regex=False 进行纯字符串替换"
+        ],
+        "en": [
+          "Use str.replace(old, new) to replace characters",
+          "Set regex=False for plain string replacement"
+        ]
+      },
+      "explanation": {
+        "zh": "str.replace('-', '', regex=False) 将每个字符串中的短横线替换为空字符串。regex=False 表示按字面值匹配而非正则表达式。",
+        "en": "str.replace('-', '', regex=False) replaces all dashes with empty strings. regex=False means literal matching rather than regex."
+      }
+    },
+    {
+      "id": "s2-strmethod-005",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "str.len() 的返回值",
+        "en": "Return Value of str.len()"
+      },
+      "description": {
+        "zh": "对于 Series s = pd.Series(['hello', 'hi', 'hey'])，s.str.len() 返回什么？",
+        "en": "For Series s = pd.Series(['hello', 'hi', 'hey']), what does s.str.len() return?"
+      },
+      "options": {
+        "zh": [
+          "一个包含 [5, 2, 3] 的 Series",
+          "整数 10",
+          "一个包含 [5, 2, 3] 的列表",
+          "整数 3"
+        ],
+        "en": [
+          "A Series containing [5, 2, 3]",
+          "The integer 10",
+          "A list containing [5, 2, 3]",
+          "The integer 3"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["str.len() 对每个元素单独计算长度"],
+        "en": ["str.len() calculates the length of each element individually"]
+      },
+      "explanation": {
+        "zh": "str.len() 返回一个 Series，其中每个元素是对应字符串的长度。'hello' 长度 5，'hi' 长度 2，'hey' 长度 3。",
+        "en": "str.len() returns a Series where each element is the length of the corresponding string. 'hello' has length 5, 'hi' has length 2, 'hey' has length 3."
+      }
+    },
+    {
+      "id": "s2-strmethod-006",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "str.strip/lstrip/rstrip 去除空白",
+        "en": "str.strip/lstrip/rstrip Remove Whitespace"
+      },
+      "description": {
+        "zh": "使用 str.strip() 去除 df 的 'name' 列中每个值前后的空白字符，然后打印 df。",
+        "en": "Use str.strip() to remove leading and trailing whitespace from each value in df's 'name' column, then print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['  Alice  ', 'Bob   ', '   Charlie'], 'age': [25, 30, 35]})",
+      "starterCode": "# Strip whitespace from 'name' column\n\n# Print df\n",
+      "solutionCode": "df['name'] = df['name'].str.strip()\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "      name  age\n0    Alice   25\n1      Bob   30\n2  Charlie   35",
+      "hints": {
+        "zh": [
+          "str.strip() 去除两端空白",
+          "str.lstrip() 只去除左边，str.rstrip() 只去除右边"
+        ],
+        "en": [
+          "str.strip() removes whitespace from both ends",
+          "str.lstrip() removes only left side, str.rstrip() only right side"
+        ]
+      },
+      "explanation": {
+        "zh": "str.strip() 去除字符串两端的空白字符（空格、制表符等）。对应的 lstrip() 只去左边、rstrip() 只去右边。这是数据清洗中非常常用的操作。",
+        "en": "str.strip() removes whitespace (spaces, tabs, etc.) from both ends. lstrip() removes only from the left, rstrip() only from the right. This is extremely common in data cleaning."
+      }
+    },
+    {
+      "id": "s2-strmethod-007",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "str.startswith 和 str.endswith",
+        "en": "str.startswith and str.endswith"
+      },
+      "description": {
+        "zh": "筛选出 df 中 'email' 列以 'admin' 开头的行并打印。",
+        "en": "Filter rows where the 'email' column starts with 'admin' and print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'David'],\n    'email': ['admin@company.com', 'bob@company.com', 'admin_charlie@company.com', 'david@company.com']\n})",
+      "starterCode": "# Filter rows where email starts with 'admin'\n",
+      "solutionCode": "print(df[df['email'].str.startswith('admin')])",
+      "validationType": "exact-output",
+      "expectedOutput": "      name                      email\n0    Alice          admin@company.com\n2  Charlie  admin_charlie@company.com",
+      "hints": {
+        "zh": [
+          "str.startswith() 返回布尔 Series",
+          "可以直接用于布尔索引筛选"
+        ],
+        "en": [
+          "str.startswith() returns a boolean Series",
+          "Can be used directly for boolean indexing"
+        ]
+      },
+      "explanation": {
+        "zh": "str.startswith('admin') 检查每个字符串是否以 'admin' 开头，返回布尔 Series。类似地，str.endswith() 检查是否以指定字符串结尾。这比 str.contains() 更精确。",
+        "en": "str.startswith('admin') checks if each string starts with 'admin', returning a boolean Series. Similarly, str.endswith() checks for a suffix. More precise than str.contains()."
+      }
+    },
+    {
+      "id": "s2-strmethod-008",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "str.zfill 和 str.pad 补齐",
+        "en": "str.zfill and str.pad Padding"
+      },
+      "description": {
+        "zh": "使用 str.zfill() 将 df 的 'code' 列补齐为 5 位数字（前面补零），然后打印 df。",
+        "en": "Use str.zfill() to pad the 'code' column to 5 digits (zero-padded from the left), then print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'code': ['1', '23', '456', '7890']})",
+      "starterCode": "# Pad 'code' column to 5 digits with leading zeros\n\n# Print df\n",
+      "solutionCode": "df['code'] = df['code'].str.zfill(5)\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "    code\n0  00001\n1  00023\n2  00456\n3  07890",
+      "hints": {
+        "zh": [
+          "zfill(width) 在字符串左边补零直到达到指定宽度",
+          "确保列是字符串类型"
+        ],
+        "en": [
+          "zfill(width) pads with zeros on the left until reaching the specified width",
+          "Make sure the column is string type"
+        ]
+      },
+      "explanation": {
+        "zh": "str.zfill(5) 将字符串补齐到 5 位，不足的前面补 '0'。这在处理编号、邮编等固定宽度数据时非常有用。类似的 str.pad() 可以指定填充字符和方向。",
+        "en": "str.zfill(5) pads strings to 5 characters with leading '0's. Very useful for fixed-width data like codes and zip codes. The similar str.pad() allows specifying fill character and side."
+      }
+    },
+    {
+      "id": "s2-strmethod-009",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "str.extract 正则提取",
+        "en": "str.extract Regex Extraction"
+      },
+      "description": {
+        "zh": "使用 str.extract() 从 'text' 列中提取括号内的数字。使用正则 r'\\((\\d+)\\)' 提取，将结果赋给新列 'number'。打印 df。",
+        "en": "Use str.extract() to extract the number inside parentheses from the 'text' column. Use regex r'\\((\\d+)\\)' and assign the result to a new column 'number'. Print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'text': ['Product(100)', 'Item(250)', 'Widget(75)', 'No number here']})",
+      "starterCode": "# Extract number from parentheses using str.extract\n\n# Print df\n",
+      "solutionCode": "df['number'] = df['text'].str.extract(r'\\((\\d+)\\)')\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "              text number\n0     Product(100)    100\n1        Item(250)    250\n2       Widget(75)     75\n3  No number here    NaN",
+      "hints": {
+        "zh": [
+          "str.extract() 需要正则表达式中有捕获组 ()",
+          "\\d+ 匹配一个或多个数字",
+          "无匹配的行会返回 NaN"
+        ],
+        "en": [
+          "str.extract() requires a capture group () in the regex",
+          "\\d+ matches one or more digits",
+          "Rows without a match return NaN"
+        ]
+      },
+      "explanation": {
+        "zh": "str.extract(r'\\((\\d+)\\)') 使用正则表达式提取括号中的数字。\\( 和 \\) 匹配字面括号，(\\d+) 是捕获组。没有匹配的行返回 NaN。extract 只返回第一个匹配。",
+        "en": "str.extract(r'\\((\\d+)\\)') extracts numbers inside parentheses using regex. \\( and \\) match literal parentheses, (\\d+) is the capture group. Non-matching rows return NaN. extract returns only the first match."
+      }
+    },
+    {
+      "id": "s2-strmethod-010",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "str.slice 切片",
+        "en": "str.slice Slicing"
+      },
+      "description": {
+        "zh": "使用 str.slice() 或 str[] 从 'date' 列中提取年份（前4个字符），赋给新列 'year'，然后打印 df。",
+        "en": "Use str.slice() or str[] to extract the year (first 4 characters) from the 'date' column, assign to a new column 'year', then print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'date': ['2024-01-15', '2024-02-20', '2024-03-25']})",
+      "starterCode": "# Extract year from date column\n\n# Print df\n",
+      "solutionCode": "df['year'] = df['date'].str.slice(0, 4)\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "         date  year\n0  2024-01-15  2024\n1  2024-02-20  2024\n2  2024-03-25  2024",
+      "hints": {
+        "zh": [
+          "str.slice(start, stop) 类似 Python 的切片语法",
+          "也可以用 str[0:4] 的写法"
+        ],
+        "en": [
+          "str.slice(start, stop) works like Python slicing",
+          "Can also use str[0:4] syntax"
+        ]
+      },
+      "explanation": {
+        "zh": "str.slice(0, 4) 提取每个字符串的前 4 个字符。等价于 str[0:4]。这是从固定格式字符串中提取部分内容的简单方法。对于日期，更推荐用 pd.to_datetime() 后提取 .dt.year。",
+        "en": "str.slice(0, 4) extracts the first 4 characters of each string. Equivalent to str[0:4]. A simple way to extract parts from fixed-format strings. For dates, pd.to_datetime() followed by .dt.year is preferred."
+      }
+    },
+    {
+      "id": "s2-strmethod-011",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "str.cat 字符串拼接",
+        "en": "str.cat String Concatenation"
+      },
+      "description": {
+        "zh": "使用 str.cat() 将 'first_name' 和 'last_name' 列拼接（用空格分隔），赋给新列 'full_name'，然后打印 df。",
+        "en": "Use str.cat() to concatenate 'first_name' and 'last_name' columns (separated by a space), assign to a new column 'full_name', then print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'first_name': ['Alice', 'Bob', 'Charlie'], 'last_name': ['Smith', 'Jones', 'Brown']})",
+      "starterCode": "# Concatenate first_name and last_name with space separator\n\n# Print df\n",
+      "solutionCode": "df['full_name'] = df['first_name'].str.cat(df['last_name'], sep=' ')\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "  first_name last_name      full_name\n0      Alice     Smith    Alice Smith\n1        Bob     Jones      Bob Jones\n2    Charlie     Brown  Charlie Brown",
+      "hints": {
+        "zh": [
+          "str.cat(other, sep=...) 将两个 Series 逐元素拼接",
+          "sep 参数指定拼接时的分隔符"
+        ],
+        "en": [
+          "str.cat(other, sep=...) concatenates two Series element-wise",
+          "The sep parameter specifies the separator"
+        ]
+      },
+      "explanation": {
+        "zh": "str.cat(other, sep=' ') 将两个 Series 按元素拼接，用指定分隔符连接。也可以用 df['first_name'] + ' ' + df['last_name'] 达到同样效果，但 str.cat 对 NaN 处理更灵活。",
+        "en": "str.cat(other, sep=' ') concatenates two Series element-wise with the specified separator. You can also use df['first_name'] + ' ' + df['last_name'], but str.cat handles NaN more flexibly."
+      }
+    },
+    {
+      "id": "s2-strmethod-012",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "str.contains 的 case/na/regex 参数",
+        "en": "str.contains case/na/regex Parameters"
+      },
+      "description": {
+        "zh": "使用 str.contains() 筛选 'product' 列中包含 'pro' 的行（不区分大小写），NaN 值视为 False。打印结果。",
+        "en": "Use str.contains() to filter rows where 'product' contains 'pro' (case-insensitive), treating NaN as False. Print the result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'product': ['MacBook Pro', 'iPad', 'AirPods Pro', np.nan, 'iPhone'],\n    'price': [9999, 3299, 1999, 0, 6999]\n})",
+      "starterCode": "# Filter rows where product contains 'pro' (case-insensitive, na=False)\n",
+      "solutionCode": "print(df[df['product'].str.contains('pro', case=False, na=False)])",
+      "validationType": "exact-output",
+      "expectedOutput": "       product  price\n0  MacBook Pro   9999\n2  AirPods Pro   1999",
+      "hints": {
+        "zh": [
+          "case=False 表示不区分大小写",
+          "na=False 表示 NaN 值返回 False 而不是 NaN"
+        ],
+        "en": [
+          "case=False makes the search case-insensitive",
+          "na=False means NaN values return False instead of NaN"
+        ]
+      },
+      "explanation": {
+        "zh": "str.contains('pro', case=False, na=False) 中：case=False 不区分大小写匹配；na=False 让 NaN 行返回 False（否则会返回 NaN 导致筛选出错）。regex=False 可以禁用正则表达式匹配。",
+        "en": "In str.contains('pro', case=False, na=False): case=False enables case-insensitive matching; na=False makes NaN rows return False (otherwise they'd return NaN, causing filtering issues). regex=False disables regex matching."
+      }
+    },
+    {
+      "id": "s2-strmethod-013",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[调试] 非字符串列调用 str 方法报错",
+        "en": "[Debug] str Method Error on Non-String Column"
+      },
+      "description": {
+        "zh": "以下代码试图对 'code' 列使用 str 方法，但报错了，因为列的类型是整数。请找到并修复 bug。",
+        "en": "The following code tries to use a str method on the 'code' column but fails because the column type is integer. Find and fix the bug."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'code': [1, 23, 456], 'name': ['Alice', 'Bob', 'Charlie']})",
+      "starterCode": "# Bug: code is int type, str.zfill doesn't work on it\ndf['code'] = df['code'].str.zfill(5)\nprint(df)",
+      "solutionCode": "df['code'] = df['code'].astype(str).str.zfill(5)\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "    code     name\n0  00001    Alice\n1  00023      Bob\n2  00456  Charlie",
+      "hints": {
+        "zh": [
+          "整数列没有 .str 访问器",
+          "先用 astype(str) 将列转为字符串类型"
+        ],
+        "en": [
+          "Integer columns don't have the .str accessor",
+          "First convert the column to string with astype(str)"
+        ]
+      },
+      "explanation": {
+        "zh": ".str 访问器只能用于字符串类型的 Series。整数列需要先用 astype(str) 转为字符串，然后才能使用 str.zfill() 等方法。这是常见的类型错误。",
+        "en": "The .str accessor only works on string-type Series. Integer columns must first be converted with astype(str) before using str.zfill() and similar methods. This is a common type error."
+      }
+    },
+    {
+      "id": "s2-strmethod-014",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 清洗脏地址数据（提取省市区）",
+        "en": "[Challenge] Clean Dirty Address Data (Extract Province/City/District)"
+      },
+      "description": {
+        "zh": "对地址数据进行清洗：1) 去除前后空白；2) 使用 str.extract 提取省份（以'省'结尾的部分）和城市（以'市'结尾的部分）；3) 将提取结果添加为 'province' 和 'city' 新列。打印 df。",
+        "en": "Clean address data: 1) Strip leading/trailing whitespace; 2) Use str.extract to extract province (ending with '省') and city (ending with '市'); 3) Add results as 'province' and 'city' columns. Print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'address': [\n        '  广东省深圳市南山区科技园  ',\n        ' 北京市海淀区中关村',\n        '  浙江省杭州市西湖区  ',\n        '上海市浦东新区'\n    ]\n})",
+      "starterCode": "# Step 1: Strip whitespace from address\n\n# Step 2: Extract province (ending with 省)\n\n# Step 3: Extract city (ending with 市)\n\n# Print df\n",
+      "solutionCode": "df['address'] = df['address'].str.strip()\ndf['province'] = df['address'].str.extract(r'(\\S+省)')\ndf['city'] = df['address'].str.extract(r'(\\S+市)')\nprint(df)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "try:\n    checks = []\n    checks.append('province' in df.columns)\n    checks.append('city' in df.columns)\n    checks.append(df['province'].iloc[0] == '广东省')\n    checks.append(df['city'].iloc[0] == '深圳市')\n    checks.append(df['city'].iloc[1] == '北京市')\n    checks.append(df['city'].iloc[2] == '杭州市')\n    checks.append(df['address'].iloc[0] == '广东省深圳市南山区科技园')\n    result = all(checks)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "先 strip() 去除空白",
+          "使用正则 r'(\\S+省)' 提取省份",
+          "使用正则 r'(\\S+市)' 提取城市",
+          "没有省份的地址提取结果为 NaN"
+        ],
+        "en": [
+          "First strip() to remove whitespace",
+          "Use regex r'(\\S+省)' to extract province",
+          "Use regex r'(\\S+市)' to extract city",
+          "Addresses without a province will extract as NaN"
+        ]
+      },
+      "explanation": {
+        "zh": "此综合题结合了 strip() 清洗空白、str.extract() 正则提取等多个字符串操作。\\S+ 匹配非空白字符，(\\S+省) 捕获以'省'结尾的词。北京市没有省份，province 列为 NaN，这是合理的。",
+        "en": "This challenge combines strip() for whitespace cleaning and str.extract() for regex extraction. \\S+ matches non-whitespace characters, (\\S+省) captures words ending with '省'. Beijing has no province, so province is NaN — this is expected."
+      }
+    }
+  ]
+}

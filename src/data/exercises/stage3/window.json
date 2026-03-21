@@ -1,0 +1,405 @@
+{
+  "module": "window",
+  "stageId": "stage3",
+  "lessonId": "window",
+  "tags": ["rolling", "expanding", "shift", "window", "moving-average"],
+  "exercises": [
+    {
+      "id": "s3-window-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "滚动平均值 (rolling mean)",
+        "en": "Rolling Mean"
+      },
+      "description": {
+        "zh": "计算 'price' 列的 3 日滚动平均值。",
+        "en": "Calculate the 3-day rolling mean of the 'price' column."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'date': pd.date_range('2024-01-01', periods=7), 'price': [100, 102, 101, 105, 107, 106, 110]})",
+      "starterCode": "# Calculate 3-day rolling mean of price\nresult = ___",
+      "solutionCode": "result = df['price'].rolling(3).mean()",
+      "validationType": "dataframe-equals",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["使用 .rolling(window) 指定窗口大小", "链式调用 .mean() 计算窗口内的平均值"],
+        "en": ["Use .rolling(window) to specify window size", "Chain .mean() to calculate the mean within the window"]
+      },
+      "explanation": {
+        "zh": "rolling(3).mean() 计算每个位置向前看 3 个元素的平均值。前两个位置因为窗口不满而为 NaN。",
+        "en": "rolling(3).mean() computes the mean of the 3 elements up to and including each position. The first two positions are NaN because the window is not full."
+      }
+    },
+    {
+      "id": "s3-window-002",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "min_periods 参数",
+        "en": "min_periods Parameter"
+      },
+      "description": {
+        "zh": "在 rolling(3, min_periods=1).mean() 中，min_periods=1 的作用是什么？",
+        "en": "In rolling(3, min_periods=1).mean(), what is the effect of min_periods=1?"
+      },
+      "options": {
+        "zh": [
+          "即使窗口内不足 3 个值，只要有 1 个值就计算结果（不产生 NaN）",
+          "将窗口大小改为 1",
+          "只在第 1 个周期计算滚动值",
+          "设置最小值为 1"
+        ],
+        "en": [
+          "Compute results even when the window has fewer than 3 values, as long as there is at least 1 value (no NaN produced)",
+          "Change the window size to 1",
+          "Only calculate rolling value in the first period",
+          "Set the minimum value to 1"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["min_periods 控制窗口中需要多少个非 NaN 值才能产生结果"],
+        "en": ["min_periods controls how many non-NaN values are needed in the window to produce a result"]
+      },
+      "explanation": {
+        "zh": "min_periods 指定窗口中产生结果所需的最少非 NaN 观测值数量。设为 1 意味着只要有一个值就不会输出 NaN。",
+        "en": "min_periods specifies the minimum number of non-NaN observations required in the window to produce a result. Setting it to 1 means a result will be produced as long as there is at least one value."
+      }
+    },
+    {
+      "id": "s3-window-003",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "累积求和 (expanding sum)",
+        "en": "Expanding Sum"
+      },
+      "description": {
+        "zh": "计算 'sales' 列的累积求和（expanding sum）。",
+        "en": "Calculate the expanding (cumulative) sum of the 'sales' column."
+      },
+      "codeTemplate": "result = df['sales'].___().sum()",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "expanding",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": ["expanding 创建一个从第一个元素到当前元素的不断增长的窗口"],
+        "en": ["expanding creates a growing window from the first element to the current element"]
+      },
+      "explanation": {
+        "zh": "expanding() 创建一个从第一行到当前行不断扩展的窗口。expanding().sum() 等价于 cumsum()。",
+        "en": "expanding() creates a window that grows from the first row to the current row. expanding().sum() is equivalent to cumsum()."
+      }
+    },
+    {
+      "id": "s3-window-004",
+      "type": "output-matching",
+      "difficulty": 4,
+      "title": {
+        "zh": "shift 平移操作",
+        "en": "shift Operation"
+      },
+      "description": {
+        "zh": "以下代码的输出是什么？",
+        "en": "What is the output of the following code?"
+      },
+      "code": "import pandas as pd\ns = pd.Series([10, 20, 30, 40])\nprint(s.shift(1).values)",
+      "options": {
+        "zh": ["[ nan  10.  20.  30.]", "[ 20.  30.  40.  nan]", "[10 20 30 40]", "[ nan  nan  10.  20.]"],
+        "en": ["[ nan  10.  20.  30.]", "[ 20.  30.  40.  nan]", "[10 20 30 40]", "[ nan  nan  10.  20.]"]
+      },
+      "correctIndex": 0,
+      "explanation": {
+        "zh": "shift(1) 将数据向下移动一行，第一行变为 NaN。常用于计算环比变化（当前值 - 上一期值）。",
+        "en": "shift(1) moves data down by one row, filling the first row with NaN. This is commonly used to calculate period-over-period changes (current value - previous value)."
+      }
+    },
+    {
+      "id": "s3-window-005",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "expanding 累积最大值",
+        "en": "Expanding Maximum"
+      },
+      "description": {
+        "zh": "计算 'price' 列的累积最大值（截至当前行的历史最高价）。",
+        "en": "Calculate the expanding (cumulative) maximum of the 'price' column (the highest price up to each row)."
+      },
+      "codeTemplate": "result = df['price'].___().max()",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "expanding",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": ["expanding() 创建从第一行到当前行的窗口", "对窗口调用 .max() 获取最大值"],
+        "en": ["expanding() creates a window from the first row to the current", "Call .max() on the window to get the maximum"]
+      },
+      "explanation": {
+        "zh": "expanding().max() 计算每个位置从开始到当前的最大值。这与 cummax() 功能相同，常用于追踪历史峰值。",
+        "en": "expanding().max() computes the maximum from the beginning up to each position. This is equivalent to cummax() and is commonly used to track historical peaks."
+      }
+    },
+    {
+      "id": "s3-window-006",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "rolling 的 center 参数",
+        "en": "rolling center Parameter"
+      },
+      "description": {
+        "zh": "计算 'price' 列的 3 日居中滚动平均值（窗口居中在当前位置）。",
+        "en": "Calculate the 3-day centered rolling mean of the 'price' column (window centered on current position)."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'date': pd.date_range('2024-01-01', periods=7), 'price': [100, 102, 101, 105, 107, 106, 110]})",
+      "starterCode": "# Centered rolling mean with window=3\nresult = ___",
+      "solutionCode": "result = df['price'].rolling(3, center=True).mean()",
+      "validationType": "dataframe-equals",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["center=True 让窗口以当前位置为中心", "居中窗口第一个和最后一个位置为 NaN"],
+        "en": ["center=True centers the window on the current position", "Centered window produces NaN at the first and last positions"]
+      },
+      "explanation": {
+        "zh": "默认的 rolling 窗口向后看（包含当前和之前的值）。center=True 让窗口居中：对于 window=3，每个位置使用前一个、当前和后一个值。首尾位置因窗口不满而为 NaN。",
+        "en": "Default rolling window looks backward (includes current and previous values). center=True centers the window: for window=3, each position uses the previous, current, and next value. First and last positions are NaN due to incomplete window."
+      }
+    },
+    {
+      "id": "s3-window-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "rolling 的 win_type 参数",
+        "en": "rolling win_type Parameter"
+      },
+      "description": {
+        "zh": "使用高斯窗口 (win_type='gaussian') 计算 'price' 列的 5 日加权滚动平均值，标准差 std=1。",
+        "en": "Use a Gaussian window (win_type='gaussian') to calculate the 5-day weighted rolling mean of the 'price' column with std=1."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'date': pd.date_range('2024-01-01', periods=10), 'price': [100, 102, 101, 105, 107, 106, 110, 108, 112, 115]})",
+      "starterCode": "# Gaussian weighted rolling mean\nresult = ___",
+      "solutionCode": "result = df['price'].rolling(5, win_type='gaussian').mean(std=1)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    import numpy as np\n    result_check = len(result) == 10 and np.isnan(result.iloc[0]) and not np.isnan(result.iloc[4])\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["win_type='gaussian' 使用高斯权重", "高斯窗口的 mean() 方法需要传入 std 参数"],
+        "en": ["win_type='gaussian' applies Gaussian weighting", "The mean() method on a Gaussian window requires the std parameter"]
+      },
+      "explanation": {
+        "zh": "win_type 参数指定窗口函数类型。高斯窗口赋予中心位置更高权重，边缘权重更低。其他窗口类型包括 'triang'（三角）、'blackman' 等。加权平均可以减少噪声。",
+        "en": "The win_type parameter specifies the window function type. Gaussian windows give higher weight to the center and lower weight to edges. Other types include 'triang' (triangular), 'blackman', etc. Weighted averages help reduce noise."
+      }
+    },
+    {
+      "id": "s3-window-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "ewm 指数加权移动平均",
+        "en": "ewm Exponential Weighted Moving Average"
+      },
+      "description": {
+        "zh": "使用指数加权移动平均 (ewm) 计算 'price' 列的平滑值，设置 span=5。",
+        "en": "Use exponential weighted moving average (ewm) to smooth the 'price' column with span=5."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'date': pd.date_range('2024-01-01', periods=10), 'price': [100, 102, 101, 105, 107, 106, 110, 108, 112, 115]})",
+      "starterCode": "# EWM with span=5\nresult = ___",
+      "solutionCode": "result = df['price'].ewm(span=5).mean()",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    import numpy as np\n    result_check = len(result) == 10 and not np.isnan(result.iloc[0]) and abs(result.iloc[0] - 100.0) < 0.01\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["ewm 不像 rolling 那样有 NaN，第一个值就有结果", "span 参数控制衰减的'跨度'"],
+        "en": ["Unlike rolling, ewm produces results from the first value (no NaN)", "The span parameter controls the decay 'span'"]
+      },
+      "explanation": {
+        "zh": "ewm (Exponential Weighted Moving) 给最近的数据更高权重，权重呈指数衰减。span 参数控制衰减速度：span 越大，权重衰减越慢，平滑效果越强。与 rolling 不同，ewm 从第一个值就开始计算。",
+        "en": "ewm (Exponential Weighted Moving) gives higher weight to recent data, with weights decaying exponentially. The span parameter controls decay speed: larger span means slower decay and stronger smoothing. Unlike rolling, ewm starts computing from the first value."
+      }
+    },
+    {
+      "id": "s3-window-009",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "ewm 的 span/com/halflife 参数",
+        "en": "ewm span/com/halflife Parameters"
+      },
+      "description": {
+        "zh": "ewm 有多种方式指定衰减参数：span、com 和 halflife。以下哪个描述正确？",
+        "en": "ewm offers multiple ways to specify the decay parameter: span, com, and halflife. Which description is correct?"
+      },
+      "options": {
+        "zh": [
+          "三者是等价的不同表达方式：span=(1+2*com), halflife=log(2)*span/(span-1)；只需指定一个",
+          "必须同时指定 span、com 和 halflife",
+          "span 用于日级数据，com 用于月级数据，halflife 用于年级数据",
+          "span 控制窗口大小，com 控制中心，halflife 控制宽度"
+        ],
+        "en": [
+          "They are equivalent ways to express the same decay: span=(1+2*com), halflife relates to span via log; only one should be specified",
+          "All three must be specified together",
+          "span is for daily data, com for monthly, halflife for yearly",
+          "span controls window size, com controls center, halflife controls width"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["这三个参数在数学上是可以互相转换的"],
+        "en": ["These three parameters are mathematically interconvertible"]
+      },
+      "explanation": {
+        "zh": "span、com（质心）和 halflife（半衰期）是指数衰减的三种等价表达。span=5 等价于 com=2（因为 span=1+2*com）。halflife 指权重衰减到一半所需的观测数。只需指定其中一个。",
+        "en": "span, com (center of mass), and halflife are three equivalent ways to express exponential decay. span=5 is equivalent to com=2 (since span=1+2*com). halflife is the number of observations for the weight to decay to half. Specify only one."
+      }
+    },
+    {
+      "id": "s3-window-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "rolling apply 自定义函数",
+        "en": "rolling apply with Custom Function"
+      },
+      "description": {
+        "zh": "使用 rolling(3).apply() 计算每个 3 日窗口内价格的极差（最大值减最小值）。",
+        "en": "Use rolling(3).apply() to compute the range (max minus min) within each 3-day window."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'price': [100, 102, 101, 105, 107, 106, 110]})",
+      "starterCode": "# Rolling range (max - min) with window=3\nresult = ___",
+      "solutionCode": "result = df['price'].rolling(3).apply(lambda x: x.max() - x.min())",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    import numpy as np\n    result_check = np.isnan(result.iloc[0]) and np.isnan(result.iloc[1]) and abs(result.iloc[2] - 2.0) < 0.01\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["apply 接受一个函数，该函数接收窗口内的 numpy 数组", "lambda x: x.max() - x.min() 计算极差"],
+        "en": ["apply accepts a function that receives a numpy array of the window values", "lambda x: x.max() - x.min() computes the range"]
+      },
+      "explanation": {
+        "zh": "rolling().apply() 允许使用自定义函数。函数接收窗口内的数据（numpy 数组），返回一个标量。注意 apply 比内置方法（如 mean、std）慢，因为它是逐窗口执行 Python 函数。",
+        "en": "rolling().apply() allows custom functions. The function receives the window data (numpy array) and returns a scalar. Note that apply is slower than built-in methods (like mean, std) because it executes a Python function per window."
+      }
+    },
+    {
+      "id": "s3-window-011",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "pct_change 百分比变化",
+        "en": "pct_change Percentage Change"
+      },
+      "description": {
+        "zh": "计算 'price' 列的逐日百分比变化。",
+        "en": "Calculate the day-over-day percentage change of the 'price' column."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'date': pd.date_range('2024-01-01', periods=5), 'price': [100, 105, 102, 110, 108]})",
+      "starterCode": "# Calculate percentage change\nresult = ___",
+      "solutionCode": "result = df['price'].pct_change()",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    import numpy as np\n    result_check = np.isnan(result.iloc[0]) and abs(result.iloc[1] - 0.05) < 0.001\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["pct_change() 计算当前值与前一个值的百分比变化", "第一个值为 NaN（没有前一个值）"],
+        "en": ["pct_change() computes the percentage change from the previous value", "The first value is NaN (no previous value)"]
+      },
+      "explanation": {
+        "zh": "pct_change() 计算 (当前值 - 前一值) / 前一值。例如 105 相对 100 的变化为 0.05 (5%)。可以传入 periods 参数比较更早的值，如 pct_change(2) 比较两行前。",
+        "en": "pct_change() computes (current - previous) / previous. For example, 105 relative to 100 is 0.05 (5%). Pass a periods parameter to compare with earlier values, e.g., pct_change(2) compares with two rows back."
+      }
+    },
+    {
+      "id": "s3-window-012",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 未排序数据上的滚动计算",
+        "en": "[Debug] Rolling on Non-Sorted Data"
+      },
+      "description": {
+        "zh": "以下代码计算按日期的 3 日滚动平均值，但数据未按日期排序，导致结果错误。请修复代码。",
+        "en": "The following code computes a 3-day rolling mean by date, but the data is not sorted by date, causing incorrect results. Fix the code."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'date': pd.to_datetime(['2024-01-03', '2024-01-01', '2024-01-05', '2024-01-02', '2024-01-04']), 'price': [101, 100, 107, 102, 105]})",
+      "starterCode": "# Bug: rolling on unsorted data gives wrong results\nresult = df['price'].rolling(3).mean()",
+      "solutionCode": "df = df.sort_values('date')\nresult = df['price'].rolling(3).mean()",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    import numpy as np\n    result_check = np.isnan(result.iloc[0]) and np.isnan(result.iloc[1]) and abs(result.iloc[2] - 101.0) < 0.01\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["rolling 按行顺序计算，不关心日期列的值", "确保数据按日期排序后再做滚动计算"],
+        "en": ["rolling computes based on row order, not date column values", "Sort data by date before performing rolling calculations"]
+      },
+      "explanation": {
+        "zh": "rolling 按 DataFrame 的行顺序计算，不会自动按日期排序。如果数据未按时间排序，窗口内的值可能不是连续日期的值。解决方法是先 sort_values('date') 排序，再计算滚动值。",
+        "en": "rolling computes based on row order, not automatically by date. If data isn't sorted by time, the window may contain non-consecutive dates. The fix is to sort_values('date') first, then compute rolling values."
+      }
+    },
+    {
+      "id": "s3-window-013",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "[最佳实践] rolling vs expanding vs ewm 的选择",
+        "en": "[Best Practice] rolling vs expanding vs ewm Selection"
+      },
+      "description": {
+        "zh": "以下哪种使用建议最合理？",
+        "en": "Which usage recommendation is most reasonable?"
+      },
+      "options": {
+        "zh": [
+          "rolling 适合固定时间窗口分析；expanding 适合累积统计；ewm 适合强调近期数据的平滑",
+          "三者完全等价，只是参数不同",
+          "ewm 总是优于 rolling，因为没有 NaN",
+          "expanding 比 rolling 更适合计算移动平均"
+        ],
+        "en": [
+          "rolling suits fixed-window analysis; expanding suits cumulative statistics; ewm suits smoothing with emphasis on recent data",
+          "All three are completely equivalent, just with different parameters",
+          "ewm is always better than rolling because it has no NaN",
+          "expanding is better than rolling for computing moving averages"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["每种方法有不同的窗口行为：固定、增长、指数衰减"],
+        "en": ["Each method has different window behavior: fixed, growing, exponentially decaying"]
+      },
+      "explanation": {
+        "zh": "rolling 使用固定大小的滑动窗口，适合计算 N 日均线等；expanding 窗口不断扩大（从第一行到当前），适合累积均值/总和；ewm 用指数衰减权重，最近的数据权重最大，适合金融数据平滑。",
+        "en": "rolling uses a fixed-size sliding window, ideal for N-day moving averages; expanding has a growing window (from first row to current), ideal for cumulative mean/sum; ewm uses exponentially decaying weights emphasizing recent data, ideal for financial data smoothing."
+      }
+    },
+    {
+      "id": "s3-window-014",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[综合] 股价分析：均线+波动率+信号",
+        "en": "[Challenge] Stock Price Analysis: MA + Volatility + Signals"
+      },
+      "description": {
+        "zh": "对股票数据进行技术分析：1) 计算 5 日移动平均线 (ma5)；2) 计算 5 日滚动标准差作为波动率 (volatility)；3) 添加 'signal' 列：当价格高于 ma5 时为 'buy'，否则为 'sell'。将所有新列添加到 df 中，最终 result = df。",
+        "en": "Perform technical analysis on stock data: 1) Calculate 5-day moving average (ma5); 2) Calculate 5-day rolling standard deviation as volatility; 3) Add a 'signal' column: 'buy' when price > ma5, 'sell' otherwise. Add all new columns to df, set result = df."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'date': pd.date_range('2024-01-01', periods=15), 'price': [100, 102, 101, 105, 107, 106, 110, 108, 112, 115, 113, 118, 120, 117, 122]})",
+      "starterCode": "# Step 1: 5-day moving average\n# Step 2: 5-day rolling std (volatility)\n# Step 3: signal based on price vs ma5\nresult = ___",
+      "solutionCode": "df['ma5'] = df['price'].rolling(5).mean()\ndf['volatility'] = df['price'].rolling(5).std()\ndf['signal'] = np.where(df['price'] > df['ma5'], 'buy', 'sell')\nresult = df",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = 'ma5' in result.columns and 'volatility' in result.columns and 'signal' in result.columns and len(result) == 15 and result['signal'].iloc[-1] in ['buy', 'sell']\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["ma5 = df['price'].rolling(5).mean()", "volatility = df['price'].rolling(5).std()", "用 np.where(条件, 'buy', 'sell') 生成信号列"],
+        "en": ["ma5 = df['price'].rolling(5).mean()", "volatility = df['price'].rolling(5).std()", "Use np.where(condition, 'buy', 'sell') to generate the signal column"]
+      },
+      "explanation": {
+        "zh": "这个综合练习模拟了股票技术分析的基本流程：移动平均线识别趋势，滚动标准差衡量波动风险，价格与均线的交叉生成买卖信号。这三个指标组合是量化分析的基础。",
+        "en": "This challenge simulates basic stock technical analysis: moving averages identify trends, rolling standard deviation measures volatility risk, and price-MA crossovers generate buy/sell signals. This combination of indicators is fundamental to quantitative analysis."
+      }
+    }
+  ]
+}

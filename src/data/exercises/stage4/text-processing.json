@@ -1,0 +1,403 @@
+{
+  "module": "text-processing",
+  "stageId": "stage4",
+  "lessonId": "text-processing",
+  "tags": ["str", "extract", "findall", "get_dummies", "cat", "regex"],
+  "exercises": [
+    {
+      "id": "s4-text-processing-001",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "str.extract 正则提取",
+        "en": "str.extract with Regex"
+      },
+      "description": {
+        "zh": "使用 str.extract 从 'email' 列中提取 @ 前面的用户名部分。",
+        "en": "Use str.extract to extract the username part (before @) from the 'email' column."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'email': ['alice@example.com', 'bob@test.org', 'charlie@demo.net']})",
+      "starterCode": "# Extract username from email\ndf['username'] = ___",
+      "solutionCode": "df['username'] = df['email'].str.extract(r'(.+)@', expand=False)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = list(df['username']) == ['alice', 'bob', 'charlie']\nexcept:\n    result = False\nresult",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["使用捕获组 () 来指定要提取的部分", "@ 前面的部分可以用 (.+)@ 匹配", "注意使用 expand=False 返回 Series 而非 DataFrame"],
+        "en": ["Use a capture group () to specify the part to extract", "The part before @ can be matched with (.+)@", "Use expand=False to return a Series instead of a DataFrame"]
+      },
+      "explanation": {
+        "zh": "str.extract() 接受一个包含捕获组的正则表达式，返回匹配到的第一个捕获组的内容。每个捕获组对应结果中的一列。",
+        "en": "str.extract() accepts a regex with capture groups and returns the content of the first match. Each capture group corresponds to a column in the result."
+      }
+    },
+    {
+      "id": "s4-text-processing-002",
+      "type": "output-matching",
+      "difficulty": 4,
+      "title": {
+        "zh": "str.findall 查找所有匹配",
+        "en": "str.findall: Find All Matches"
+      },
+      "description": {
+        "zh": "以下代码的输出是什么？",
+        "en": "What is the output of the following code?"
+      },
+      "code": "import pandas as pd\ns = pd.Series(['abc123def456', 'no digits', '7x8y9'])\nprint(s.str.findall(r'\\d+').tolist())",
+      "options": {
+        "zh": [
+          "[['123', '456'], [], ['7', '8', '9']]",
+          "['123456', '', '789']",
+          "[['abc', 'def'], ['no digits'], ['x', 'y']]",
+          "[['123', '456'], ['no'], ['7', '8', '9']]"
+        ],
+        "en": [
+          "[['123', '456'], [], ['7', '8', '9']]",
+          "['123456', '', '789']",
+          "[['abc', 'def'], ['no digits'], ['x', 'y']]",
+          "[['123', '456'], ['no'], ['7', '8', '9']]"
+        ]
+      },
+      "correctIndex": 0,
+      "explanation": {
+        "zh": "str.findall() 返回每个字符串中所有匹配正则的子串列表。\\d+ 匹配连续数字。无匹配时返回空列表。",
+        "en": "str.findall() returns a list of all regex matches in each string. \\d+ matches consecutive digits. An empty list is returned when there are no matches."
+      }
+    },
+    {
+      "id": "s4-text-processing-003",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "str.get_dummies 独热编码",
+        "en": "str.get_dummies One-Hot Encoding"
+      },
+      "description": {
+        "zh": "对以 '|' 分隔的标签字符串进行独热编码。",
+        "en": "Perform one-hot encoding on tag strings separated by '|'."
+      },
+      "codeTemplate": "result = df['tags'].str.get_dummies(sep=___)",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "'|'",
+          "alternatives": ["\"|\""]
+        }
+      ],
+      "hints": {
+        "zh": ["sep 参数指定分隔符"],
+        "en": ["The sep parameter specifies the delimiter"]
+      },
+      "explanation": {
+        "zh": "str.get_dummies(sep='|') 将 'python|pandas' 这样的字符串拆分并转为独热编码的 DataFrame。每个唯一标签成为一列。",
+        "en": "str.get_dummies(sep='|') splits strings like 'python|pandas' and converts them into a one-hot encoded DataFrame. Each unique tag becomes a column."
+      }
+    },
+    {
+      "id": "s4-text-processing-004",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "str.cat 连接字符串",
+        "en": "str.cat: Concatenating Strings"
+      },
+      "description": {
+        "zh": "pd.Series(['a', 'b', 'c']).str.cat(sep='-') 的结果是什么？",
+        "en": "What is the result of pd.Series(['a', 'b', 'c']).str.cat(sep='-')?"
+      },
+      "options": {
+        "zh": ["'a-b-c'", "['a-', 'b-', 'c-']", "['a', '-', 'b', '-', 'c']", "'abc'"],
+        "en": ["'a-b-c'", "['a-', 'b-', 'c-']", "['a', '-', 'b', '-', 'c']", "'abc'"]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["str.cat 将 Series 中的字符串连接为一个字符串"],
+        "en": ["str.cat joins all strings in the Series into a single string"]
+      },
+      "explanation": {
+        "zh": "str.cat(sep='-') 将 Series 中的所有字符串用指定分隔符连接成一个字符串。不指定 sep 时默认无分隔符。",
+        "en": "str.cat(sep='-') joins all strings in the Series with the specified separator into a single string. Without sep, strings are concatenated directly."
+      }
+    },
+    {
+      "id": "s4-text-processing-005",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "extractall vs extract",
+        "en": "extractall vs extract"
+      },
+      "description": {
+        "zh": "使用 str.extractall() 提取每个字符串中所有的数字（\\d+）。注意 extractall 返回包含 'match' 层级的 MultiIndex DataFrame。",
+        "en": "Use str.extractall() to extract all numbers (\\d+) from each string. Note that extractall returns a MultiIndex DataFrame with a 'match' level."
+      },
+      "setupCode": "import pandas as pd\ns = pd.Series(['order-123-item-456', 'ref-789', 'id-10-code-20-val-30'])",
+      "starterCode": "# Extract all numbers from each string\nresult = s.str.extractall(r'(\\d+)')",
+      "solutionCode": "result = s.str.extractall(r'(\\d+)')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = len(result) == 6 and result.iloc[0, 0] == '123'\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["extractall 返回所有匹配，而 extract 只返回第一个匹配", "结果有 MultiIndex：(原始索引, match序号)"],
+        "en": ["extractall returns all matches, while extract returns only the first", "Result has MultiIndex: (original index, match number)"]
+      },
+      "explanation": {
+        "zh": "extract 只返回每个字符串的第一个匹配，而 extractall 返回所有匹配。extractall 的结果有 MultiIndex，第二层是 match 编号（0, 1, 2...）。当一个字符串中可能有多个匹配时，必须使用 extractall。",
+        "en": "extract returns only the first match per string, while extractall returns all matches. extractall's result has a MultiIndex where the second level is the match number (0, 1, 2...). When a string may contain multiple matches, extractall is required."
+      }
+    },
+    {
+      "id": "s4-text-processing-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "使用命名捕获组 (?P<name>)",
+        "en": "Using Named Groups (?P<name>)"
+      },
+      "description": {
+        "zh": "使用命名捕获组从地址字符串中提取城市和邮编。模式：'City: <city>, ZIP: <zip>'。",
+        "en": "Use named capture groups to extract city and zip code from address strings. Pattern: 'City: <city>, ZIP: <zip>'."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'address': ['City: New York, ZIP: 10001', 'City: Los Angeles, ZIP: 90001', 'City: Chicago, ZIP: 60601']})",
+      "starterCode": "# Extract using named groups\nresult = df['address'].str.extract(r'City: (?P<city>[^,]+), ZIP: (?P<zip>\\d+)')",
+      "solutionCode": "result = df['address'].str.extract(r'City: (?P<city>[^,]+), ZIP: (?P<zip>\\d+)')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = list(result.columns) == ['city', 'zip'] and result.iloc[0]['city'] == 'New York'\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["(?P<name>...) 定义命名捕获组", "命名组的名称会成为结果 DataFrame 的列名"],
+        "en": ["(?P<name>...) defines a named capture group", "Group names become column names in the result DataFrame"]
+      },
+      "explanation": {
+        "zh": "命名捕获组 (?P<name>pattern) 让 extract 结果的列名直接使用组名，而不是默认的 0, 1, 2。这使代码更可读且结果更直观。[^,]+ 匹配非逗号字符，\\d+ 匹配数字。",
+        "en": "Named capture groups (?P<name>pattern) make extract result columns use the group name directly, instead of default 0, 1, 2. This makes code more readable and results more intuitive. [^,]+ matches non-comma characters, \\d+ matches digits."
+      }
+    },
+    {
+      "id": "s4-text-processing-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "str.get 访问嵌套结构",
+        "en": "str.get for Nested Access"
+      },
+      "description": {
+        "zh": "使用 str.split 分割字符串后，用 str.get(1) 获取分割结果的第二个元素。",
+        "en": "After splitting strings with str.split, use str.get(1) to get the second element of the split result."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'full_name': ['Alice Smith', 'Bob Johnson', 'Charlie Brown']})",
+      "starterCode": "# Split and get last name\ndf['last_name'] = df['full_name'].str.split(' ').str.get(___)",
+      "solutionCode": "df['last_name'] = df['full_name'].str.split(' ').str.get(1)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = list(df['last_name']) == ['Smith', 'Johnson', 'Brown']\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["split 返回列表，str.get 按索引访问列表元素", "索引从 0 开始，第二个元素是 1"],
+        "en": ["split returns lists, str.get accesses list elements by index", "Index starts at 0, second element is at index 1"]
+      },
+      "explanation": {
+        "zh": "str.split() 将每个字符串分割为列表，str.get(n) 从列表中按索引取值。这比 str[n] 更安全，因为索引越界时返回 NaN 而不是报错。也可以用 str.split(expand=True) 直接展开为多列。",
+        "en": "str.split() splits each string into a list, and str.get(n) extracts values by index. This is safer than str[n] because out-of-bounds indices return NaN instead of raising errors. You can also use str.split(expand=True) to expand directly into multiple columns."
+      }
+    },
+    {
+      "id": "s4-text-processing-008",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "str.encode 和 str.decode",
+        "en": "str.encode and str.decode"
+      },
+      "description": {
+        "zh": "关于 Series 的 str.encode() 和 str.decode()，以下哪个说法是正确的？",
+        "en": "Regarding Series str.encode() and str.decode(), which statement is correct?"
+      },
+      "options": {
+        "zh": [
+          "str.encode('utf-8') 将字符串编码为字节，str.decode('utf-8') 将字节解码为字符串",
+          "str.encode 会将字符串加密",
+          "str.decode 只能处理 ASCII 字符",
+          "encode 和 decode 不能在 pandas 中使用"
+        ],
+        "en": [
+          "str.encode('utf-8') encodes strings to bytes, str.decode('utf-8') decodes bytes to strings",
+          "str.encode encrypts strings",
+          "str.decode can only handle ASCII characters",
+          "encode and decode cannot be used in pandas"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["encode/decode 用于字符串和字节之间的转换"],
+        "en": ["encode/decode converts between strings and bytes"]
+      },
+      "explanation": {
+        "zh": "str.encode('utf-8') 将 Unicode 字符串编码为 UTF-8 字节序列，str.decode('utf-8') 执行反向操作。在处理多语言数据或与外部系统交互时常用。pandas 的 str 访问器提供了与 Python 原生字符串方法对应的向量化版本。",
+        "en": "str.encode('utf-8') encodes Unicode strings to UTF-8 byte sequences, and str.decode('utf-8') performs the reverse. Commonly used when handling multilingual data or interfacing with external systems. The pandas str accessor provides vectorized versions of Python's native string methods."
+      }
+    },
+    {
+      "id": "s4-text-processing-009",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "str.normalize 文本标准化",
+        "en": "str.normalize for Text Normalization"
+      },
+      "description": {
+        "zh": "使用 str.normalize('NFKC') 标准化 Unicode 文本，将全角字符转换为半角字符。",
+        "en": "Use str.normalize('NFKC') to normalize Unicode text, converting full-width characters to half-width."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'text': ['Ｈｅｌｌｏ', 'Ｐｙｔｈｏｎ', 'pandas']})",
+      "starterCode": "# Normalize full-width characters\ndf['normalized'] = df['text'].str.normalize(___)",
+      "solutionCode": "df['normalized'] = df['text'].str.normalize('NFKC')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = list(df['normalized']) == ['Hello', 'Python', 'pandas']\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["NFKC 会将兼容字符（如全角字母）标准化为标准形式"],
+        "en": ["NFKC normalizes compatibility characters (like full-width letters) to their standard forms"]
+      },
+      "explanation": {
+        "zh": "str.normalize() 支持 NFC、NFKC、NFD、NFKD 四种 Unicode 标准化形式。NFKC 最常用，它会将全角字符、罗马数字等兼容字符转换为标准形式。在处理中日韩文本数据时特别有用。",
+        "en": "str.normalize() supports NFC, NFKC, NFD, NFKD Unicode normalization forms. NFKC is most common, converting full-width characters, Roman numerals, and other compatibility characters to standard forms. Especially useful when processing CJK text data."
+      }
+    },
+    {
+      "id": "s4-text-processing-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "正则表达式标志 (flags)",
+        "en": "Regular Expression Flags"
+      },
+      "description": {
+        "zh": "使用 str.contains() 进行大小写不敏感的搜索，找出包含 'python' 的行（不论大小写）。",
+        "en": "Use str.contains() with case-insensitive search to find rows containing 'python' (regardless of case)."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'text': ['I love Python', 'PYTHON is great', 'use python daily', 'Java developer', 'python3 rocks']})",
+      "starterCode": "# Case-insensitive search\nmask = df['text'].str.contains('python', case=___)\nresult = df[mask]",
+      "solutionCode": "mask = df['text'].str.contains('python', case=False)\nresult = df[mask]",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = len(result) == 4 and 'Java developer' not in result['text'].values\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["case=False 忽略大小写", "等价于使用 flags=re.IGNORECASE"],
+        "en": ["case=False ignores case", "Equivalent to using flags=re.IGNORECASE"]
+      },
+      "explanation": {
+        "zh": "str.contains() 的 case 参数控制大小写敏感性。也可以通过 flags 参数传入 re 模块的标志：flags=re.IGNORECASE（大小写不敏感）、re.MULTILINE（多行模式）、re.DOTALL（点号匹配换行）。这些标志也适用于 str.extract、str.replace 等。",
+        "en": "str.contains()'s case parameter controls case sensitivity. You can also use the flags parameter with re module flags: flags=re.IGNORECASE, re.MULTILINE, re.DOTALL. These flags also work with str.extract, str.replace, etc."
+      }
+    },
+    {
+      "id": "s4-text-processing-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "str.count 计数匹配",
+        "en": "str.count for Counting Matches"
+      },
+      "description": {
+        "zh": "使用 str.count() 统计每个字符串中元音字母 (aeiou) 出现的次数。",
+        "en": "Use str.count() to count the number of vowels (aeiou) in each string."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'word': ['hello', 'python', 'pandas', 'aeiou']})",
+      "starterCode": "# Count vowels in each string\ndf['vowel_count'] = df['word'].str.count(r'[aeiou]')",
+      "solutionCode": "df['vowel_count'] = df['word'].str.count(r'[aeiou]')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = list(df['vowel_count']) == [2, 1, 2, 5]\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["str.count 接受正则表达式", "[aeiou] 匹配任意一个元音字母"],
+        "en": ["str.count accepts regular expressions", "[aeiou] matches any single vowel"]
+      },
+      "explanation": {
+        "zh": "str.count(pattern) 返回每个字符串中正则表达式匹配的次数。与 Python 的 str.count 不同，pandas 版本支持正则表达式。字符类 [aeiou] 匹配其中任意一个字符。",
+        "en": "str.count(pattern) returns the number of regex matches in each string. Unlike Python's str.count, the pandas version supports regular expressions. Character class [aeiou] matches any single character within it."
+      }
+    },
+    {
+      "id": "s4-text-processing-012",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] extract 捕获组数量错误",
+        "en": "[Debug] extract with Wrong Group Count"
+      },
+      "description": {
+        "zh": "以下代码尝试从日期字符串中提取年份和月份，但正则表达式有问题。请修复 bug。",
+        "en": "The code below tries to extract year and month from date strings, but the regex has an issue. Fix the bug."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'date_str': ['2024-01-15', '2023-12-25', '2024-06-01']})",
+      "starterCode": "# Bug: the regex should have 2 capture groups for year and month\n# but only has 1 group capturing everything\nresult = df['date_str'].str.extract(r'(\\d{4})-(\\d{2})')\nresult.columns = ['year', 'month']",
+      "solutionCode": "result = df['date_str'].str.extract(r'(\\d{4})-(\\d{2})')\nresult.columns = ['year', 'month']",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = list(result.columns) == ['year', 'month'] and result.iloc[0]['year'] == '2024' and result.iloc[0]['month'] == '01'\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["每个捕获组 () 对应结果中的一列", "确保年份和月份各有一个捕获组"],
+        "en": ["Each capture group () corresponds to a column in the result", "Ensure year and month each have their own capture group"]
+      },
+      "explanation": {
+        "zh": "extract 的捕获组数量决定了结果 DataFrame 的列数。常见错误包括：1) 忘记加捕获组括号；2) 把多个部分放在一个组里；3) 组数与期望的列数不匹配。正确的做法是为每个要提取的字段使用独立的捕获组：(\\d{4}) 匹配年份，(\\d{2}) 匹配月份。",
+        "en": "The number of capture groups in extract determines the number of result columns. Common mistakes include: 1) Forgetting group parentheses; 2) Putting multiple parts in one group; 3) Group count not matching expected columns. The correct approach is to use a separate group for each field: (\\d{4}) for year, (\\d{2}) for month."
+      }
+    },
+    {
+      "id": "s4-text-processing-013",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "[最佳实践] str 方法 vs apply(lambda) 处理文本",
+        "en": "[Best Practice] str Methods vs apply(lambda) for Text"
+      },
+      "description": {
+        "zh": "处理 DataFrame 中的文本列时，以下哪种方式是最佳实践？",
+        "en": "When processing text columns in a DataFrame, which approach is the best practice?"
+      },
+      "options": {
+        "zh": [
+          "优先使用 str 访问器方法（如 str.lower()、str.contains()），只在无对应方法时才用 apply",
+          "始终使用 apply(lambda x: ...) 因为最灵活",
+          "使用 for 循环逐行处理每个字符串",
+          "先用 .tolist() 转为列表再处理"
+        ],
+        "en": [
+          "Prefer str accessor methods (e.g., str.lower(), str.contains()), only use apply when no corresponding method exists",
+          "Always use apply(lambda x: ...) for maximum flexibility",
+          "Use a for loop to process each string row by row",
+          "Convert to list with .tolist() first then process"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["考虑性能和代码简洁性"],
+        "en": ["Consider performance and code simplicity"]
+      },
+      "explanation": {
+        "zh": "str 访问器方法是向量化的（虽然底层仍是 Python 循环，但经过优化），代码更简洁可读。常用方法包括 str.lower()、str.upper()、str.strip()、str.contains()、str.replace()、str.extract() 等。只有当需要复杂的自定义逻辑且无对应 str 方法时，才考虑用 apply(lambda)。",
+        "en": "str accessor methods are vectorized (optimized even though they use Python loops internally) and produce cleaner, more readable code. Common methods include str.lower(), str.upper(), str.strip(), str.contains(), str.replace(), str.extract(). Only consider apply(lambda) when complex custom logic is needed and no corresponding str method exists."
+      }
+    },
+    {
+      "id": "s4-text-processing-014",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 解析和分析日志数据",
+        "en": "[Challenge] Parse and Analyze Log File Data"
+      },
+      "description": {
+        "zh": "解析服务器日志数据并进行分析：1) 使用 str.extract 提取时间戳、日志级别和消息，2) 统计每个日志级别的出现次数，3) 提取包含 'error' 的消息（不区分大小写），4) 将提取结果赋给 parsed，级别统计赋给 level_counts，错误日志赋给 errors。",
+        "en": "Parse server log data and analyze: 1) Use str.extract to extract timestamp, log level, and message, 2) Count occurrences of each log level, 3) Extract messages containing 'error' (case-insensitive), 4) Assign parsed result to parsed, level counts to level_counts, error logs to errors."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'log': [\n    '2024-01-15 10:30:00 [INFO] Server started successfully',\n    '2024-01-15 10:31:05 [WARNING] High memory usage detected',\n    '2024-01-15 10:32:10 [ERROR] Database connection failed',\n    '2024-01-15 10:33:15 [INFO] Request processed in 200ms',\n    '2024-01-15 10:34:20 [ERROR] Timeout error on API call',\n    '2024-01-15 10:35:25 [INFO] Cache cleared',\n    '2024-01-15 10:36:30 [WARNING] Disk space low'\n]})",
+      "starterCode": "# Step 1: Extract timestamp, level, and message\nparsed = df['log'].str.extract(\n    r'(?P<timestamp>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}) \\[(?P<level>\\w+)\\] (?P<message>.+)'\n)\n\n# Step 2: Count each log level\nlevel_counts = parsed['level'].value_counts()\n\n# Step 3: Find error-related messages (case-insensitive)\nerrors = parsed[parsed['message'].str.contains('error', case=___)]",
+      "solutionCode": "parsed = df['log'].str.extract(\n    r'(?P<timestamp>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}) \\[(?P<level>\\w+)\\] (?P<message>.+)'\n)\nlevel_counts = parsed['level'].value_counts()\nerrors = parsed[parsed['message'].str.contains('error', case=False)]",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = list(parsed.columns) == ['timestamp', 'level', 'message'] and level_counts['INFO'] == 3 and len(errors) == 2\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": ["命名捕获组 (?P<name>) 让列名更有意义", "case=False 进行大小写不敏感搜索", "value_counts() 统计各级别的出现次数"],
+        "en": ["Named capture groups (?P<name>) give meaningful column names", "case=False for case-insensitive search", "value_counts() counts occurrences of each level"]
+      },
+      "explanation": {
+        "zh": "此综合练习展示了日志分析的典型流程：1) 用命名捕获组的正则表达式解析结构化文本；2) 用 value_counts 进行频率分析；3) 用 str.contains 进行文本搜索和过滤。这种模式广泛应用于日志监控、错误分析和运维数据处理。",
+        "en": "This challenge demonstrates a typical log analysis workflow: 1) Parse structured text with named capture group regex; 2) Frequency analysis with value_counts; 3) Text search and filtering with str.contains. This pattern is widely used in log monitoring, error analysis, and operations data processing."
+      }
+    }
+  ]
+}

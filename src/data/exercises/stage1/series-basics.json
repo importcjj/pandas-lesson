@@ -1,0 +1,416 @@
+{
+  "module": "series-basics",
+  "stageId": "stage1",
+  "lessonId": "series-basics",
+  "tags": ["Series", "creation", "indexing", "operations"],
+  "exercises": [
+    {
+      "id": "s1-series-001",
+      "type": "coding",
+      "difficulty": 1,
+      "title": {
+        "zh": "创建一个简单的 Series",
+        "en": "Create a Simple Series"
+      },
+      "description": {
+        "zh": "使用列表 [10, 20, 30, 40, 50] 创建一个 pandas Series，并将其赋值给变量 s，然后打印它。",
+        "en": "Create a pandas Series from the list [10, 20, 30, 40, 50], assign it to variable s, and print it."
+      },
+      "starterCode": "import pandas as pd\n\n# Create a Series from the list [10, 20, 30, 40, 50]\n",
+      "solutionCode": "import pandas as pd\n\ns = pd.Series([10, 20, 30, 40, 50])\nprint(s)",
+      "validationType": "exact-output",
+      "expectedOutput": "0    10\n1    20\n2    30\n3    40\n4    50\ndtype: int64",
+      "hints": {
+        "zh": [
+          "使用 pd.Series() 函数",
+          "传入一个列表作为参数：pd.Series([10, 20, 30, 40, 50])"
+        ],
+        "en": [
+          "Use the pd.Series() function",
+          "Pass a list as argument: pd.Series([10, 20, 30, 40, 50])"
+        ]
+      }
+    },
+    {
+      "id": "s1-series-002",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "创建带自定义索引的 Series",
+        "en": "Create a Series with Custom Index"
+      },
+      "description": {
+        "zh": "创建一个 Series，数据为 [85, 90, 78, 92]，索引为 ['语文', '数学', '英语', '科学']，赋值给变量 scores 并打印。",
+        "en": "Create a Series with data [85, 90, 78, 92] and index ['Chinese', 'Math', 'English', 'Science'], assign to variable scores and print."
+      },
+      "starterCode": "import pandas as pd\n\n# Create a Series with custom index\n",
+      "solutionCode": "import pandas as pd\n\nscores = pd.Series([85, 90, 78, 92], index=['Chinese', 'Math', 'English', 'Science'])\nprint(scores)",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    expected = pd.Series([85, 90, 78, 92], index=['Chinese', 'Math', 'English', 'Science'])\n    result = scores.equals(expected)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "pd.Series() 接受一个 index 参数",
+          "pd.Series([85, 90, 78, 92], index=[...])"
+        ],
+        "en": [
+          "pd.Series() accepts an index parameter",
+          "pd.Series([85, 90, 78, 92], index=[...])"
+        ]
+      }
+    },
+    {
+      "id": "s1-series-003",
+      "type": "multiple-choice",
+      "difficulty": 1,
+      "title": {
+        "zh": "Series 的索引访问",
+        "en": "Series Index Access"
+      },
+      "description": {
+        "zh": "给定 s = pd.Series([10, 20, 30], index=['a', 'b', 'c'])，s['b'] 的值是什么？",
+        "en": "Given s = pd.Series([10, 20, 30], index=['a', 'b', 'c']), what is the value of s['b']?"
+      },
+      "options": {
+        "zh": ["20", "10", "30", "报错"],
+        "en": ["20", "10", "30", "Error"]
+      },
+      "correctIndex": 0,
+      "explanation": {
+        "zh": "Series 可以通过标签索引访问元素，s['b'] 返回索引 'b' 对应的值 20。",
+        "en": "Series elements can be accessed by label index. s['b'] returns the value 20 corresponding to index 'b'."
+      }
+    },
+    {
+      "id": "s1-series-004",
+      "type": "fill-blank",
+      "difficulty": 2,
+      "title": {
+        "zh": "Series 的基本运算",
+        "en": "Basic Series Operations"
+      },
+      "description": {
+        "zh": "补全代码，计算 Series 中所有元素的平均值。",
+        "en": "Complete the code to calculate the mean of all elements in the Series."
+      },
+      "codeTemplate": "import pandas as pd\ns = pd.Series([10, 20, 30, 40, 50])\navg = s._____()\nprint(avg)",
+      "blanks": [
+        {
+          "placeholder": "_____",
+          "answer": "mean",
+          "alternatives": []
+        }
+      ],
+      "explanation": {
+        "zh": "Series 的 mean() 方法计算所有元素的算术平均值。",
+        "en": "The mean() method of Series calculates the arithmetic mean of all elements."
+      }
+    },
+    {
+      "id": "s1-series-005",
+      "type": "output-matching",
+      "difficulty": 2,
+      "title": {
+        "zh": "Series 的切片操作",
+        "en": "Series Slicing"
+      },
+      "description": {
+        "zh": "以下代码的输出是什么？",
+        "en": "What is the output of the following code?"
+      },
+      "code": "import pandas as pd\ns = pd.Series([10, 20, 30, 40, 50])\nprint(s[1:3])",
+      "options": {
+        "zh": [
+          "1    20\n2    30\ndtype: int64",
+          "0    10\n1    20\n2    30\ndtype: int64",
+          "20\n30",
+          "1    20\n2    30\n3    40\ndtype: int64"
+        ],
+        "en": [
+          "1    20\n2    30\ndtype: int64",
+          "0    10\n1    20\n2    30\ndtype: int64",
+          "20\n30",
+          "1    20\n2    30\n3    40\ndtype: int64"
+        ]
+      },
+      "correctIndex": 0,
+      "explanation": {
+        "zh": "Series 使用位置切片时，遵循 Python 的左闭右开原则：s[1:3] 包含索引 1 和 2 的元素。",
+        "en": "Series position-based slicing follows Python's half-open interval: s[1:3] includes elements at positions 1 and 2."
+      }
+    },
+    {
+      "id": "s1-series-006",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "Series 的布尔过滤",
+        "en": "Series Boolean Filtering"
+      },
+      "description": {
+        "zh": "给定 Series s = pd.Series([15, 22, 8, 35, 12, 28])，筛选出所有大于 20 的值并打印。",
+        "en": "Given Series s = pd.Series([15, 22, 8, 35, 12, 28]), filter and print all values greater than 20."
+      },
+      "starterCode": "import pandas as pd\n\ns = pd.Series([15, 22, 8, 35, 12, 28])\n\n# Filter values greater than 20\n",
+      "solutionCode": "import pandas as pd\n\ns = pd.Series([15, 22, 8, 35, 12, 28])\nprint(s[s > 20])",
+      "validationType": "exact-output",
+      "expectedOutput": "1    22\n3    35\n5    28\ndtype: int64",
+      "hints": {
+        "zh": [
+          "可以用比较运算符创建布尔 Series：s > 20",
+          "将布尔 Series 作为索引传入：s[s > 20]"
+        ],
+        "en": [
+          "Use comparison operator to create boolean Series: s > 20",
+          "Pass the boolean Series as index: s[s > 20]"
+        ]
+      }
+    },
+    {
+      "id": "s1-series-007",
+      "type": "coding",
+      "difficulty": 1,
+      "title": {
+        "zh": "从字典创建 Series",
+        "en": "Create Series from Dictionary"
+      },
+      "description": {
+        "zh": "使用字典 {'apple': 3, 'banana': 5, 'cherry': 2} 创建一个 Series，赋值给变量 fruits 并打印。",
+        "en": "Create a Series from the dictionary {'apple': 3, 'banana': 5, 'cherry': 2}, assign it to variable fruits and print it."
+      },
+      "starterCode": "import pandas as pd\n\n# Create a Series from a dictionary\n",
+      "solutionCode": "import pandas as pd\n\nfruits = pd.Series({'apple': 3, 'banana': 5, 'cherry': 2})\nprint(fruits)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    expected = pd.Series({'apple': 3, 'banana': 5, 'cherry': 2})\n    result = fruits.equals(expected)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "pd.Series() 可以直接接受字典作为参数",
+          "字典的键会变成 Series 的索引"
+        ],
+        "en": [
+          "pd.Series() can directly accept a dictionary as argument",
+          "Dictionary keys become the Series index"
+        ]
+      }
+    },
+    {
+      "id": "s1-series-008",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "Series 的 name 属性",
+        "en": "Series name Attribute"
+      },
+      "description": {
+        "zh": "创建一个 Series，数据为 [100, 200, 300]，并将其 name 属性设置为 'prices'，然后打印该 Series。",
+        "en": "Create a Series with data [100, 200, 300] and set its name attribute to 'prices', then print the Series."
+      },
+      "starterCode": "import pandas as pd\n\n# Create a Series with name 'prices'\n",
+      "solutionCode": "import pandas as pd\n\ns = pd.Series([100, 200, 300], name='prices')\nprint(s)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    result = s.name == 'prices' and list(s) == [100, 200, 300]\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "pd.Series() 有一个 name 参数",
+          "也可以创建后设置：s.name = 'prices'"
+        ],
+        "en": [
+          "pd.Series() has a name parameter",
+          "You can also set it after creation: s.name = 'prices'"
+        ]
+      }
+    },
+    {
+      "id": "s1-series-009",
+      "type": "output-matching",
+      "difficulty": 2,
+      "title": {
+        "zh": "Series 的算术对齐",
+        "en": "Series Arithmetic Alignment"
+      },
+      "description": {
+        "zh": "以下代码的输出是什么？",
+        "en": "What is the output of the following code?"
+      },
+      "code": "import pandas as pd\n\ns1 = pd.Series([1, 2, 3], index=['a', 'b', 'c'])\ns2 = pd.Series([10, 20, 30], index=['b', 'c', 'd'])\nprint((s1 + s2).sort_index())",
+      "options": {
+        "zh": [
+          "a     NaN\nb    12.0\nc    23.0\nd     NaN\ndtype: float64",
+          "a    11\nb    22\nc    33\ndtype: int64",
+          "b    12\nc    23\ndtype: int64",
+          "报错：索引不匹配"
+        ],
+        "en": [
+          "a     NaN\nb    12.0\nc    23.0\nd     NaN\ndtype: float64",
+          "a    11\nb    22\nc    33\ndtype: int64",
+          "b    12\nc    23\ndtype: int64",
+          "Error: index mismatch"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["Series 运算会按索引标签自动对齐", "没有匹配到的索引会产生 NaN"],
+        "en": ["Series operations automatically align by index labels", "Unmatched indices produce NaN"]
+      },
+      "explanation": {
+        "zh": "pandas 的 Series 运算按索引标签对齐。a 和 d 只在一个 Series 中存在，因此结果为 NaN。b=2+10=12, c=3+20=23。存在 NaN 时，dtype 变为 float64。",
+        "en": "pandas Series operations align by index labels. 'a' and 'd' only exist in one Series, so they become NaN. b=2+10=12, c=3+20=23. The presence of NaN converts dtype to float64."
+      }
+    },
+    {
+      "id": "s1-series-010",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "value_counts() 的参数",
+        "en": "value_counts() Parameters"
+      },
+      "description": {
+        "zh": "给定一个 Series，使用 value_counts() 并设置 normalize=True 来查看各值的占比，按索引排序后打印。",
+        "en": "Given a Series, use value_counts() with normalize=True to see the proportion of each value, sort by index and print."
+      },
+      "starterCode": "import pandas as pd\n\ns = pd.Series(['A', 'B', 'A', 'C', 'B', 'A', 'B', 'C', 'A', 'A'])\n\n# Use value_counts with normalize=True, then sort by index\n",
+      "solutionCode": "import pandas as pd\n\ns = pd.Series(['A', 'B', 'A', 'C', 'B', 'A', 'B', 'C', 'A', 'A'])\n\nprint(s.value_counts(normalize=True).sort_index())",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = '0.5' in _output and '0.3' in _output and '0.2' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "value_counts() 有 normalize 参数",
+          "normalize=True 会返回比例而不是计数",
+          "使用 .sort_index() 按索引排序"
+        ],
+        "en": [
+          "value_counts() has a normalize parameter",
+          "normalize=True returns proportions instead of counts",
+          "Use .sort_index() to sort by index"
+        ]
+      }
+    },
+    {
+      "id": "s1-series-011",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "unique() 和 nunique()",
+        "en": "unique() and nunique()"
+      },
+      "description": {
+        "zh": "给定一个 Series，先打印不重复的值（unique），再打印不重复值的数量（nunique）。",
+        "en": "Given a Series, first print the unique values, then print the count of unique values."
+      },
+      "starterCode": "import pandas as pd\n\ns = pd.Series(['cat', 'dog', 'cat', 'bird', 'dog', 'fish'])\n\n# Print unique values\n\n# Print count of unique values\n",
+      "solutionCode": "import pandas as pd\n\ns = pd.Series(['cat', 'dog', 'cat', 'bird', 'dog', 'fish'])\n\nprint(s.unique())\nprint(s.nunique())",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = '4' in _output and 'cat' in _output and 'bird' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "unique() 返回不重复值的数组",
+          "nunique() 返回不重复值的计数"
+        ],
+        "en": [
+          "unique() returns an array of unique values",
+          "nunique() returns the count of unique values"
+        ]
+      }
+    },
+    {
+      "id": "s1-series-012",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[调试] 索引对齐导致 NaN",
+        "en": "[Debug] Index Alignment Causing NaN"
+      },
+      "description": {
+        "zh": "以下代码试图将两个 Series 相加得到 [11, 22, 33]，但结果全是 NaN。找到并修复 bug。",
+        "en": "The following code tries to add two Series to get [11, 22, 33], but the result is all NaN. Find and fix the bug."
+      },
+      "starterCode": "import pandas as pd\n\ns1 = pd.Series([1, 2, 3], index=['a', 'b', 'c'])\ns2 = pd.Series([10, 20, 30], index=['x', 'y', 'z'])\nresult = s1 + s2\nprint(result)",
+      "solutionCode": "import pandas as pd\n\ns1 = pd.Series([1, 2, 3], index=['a', 'b', 'c'])\ns2 = pd.Series([10, 20, 30], index=['a', 'b', 'c'])\nresult = s1 + s2\nprint(result)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = '11' in _output and '22' in _output and '33' in _output and 'NaN' not in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "Series 加法按索引标签对齐",
+          "两个 Series 的索引完全不同时，所有值都会变成 NaN",
+          "让两个 Series 使用相同的索引即可"
+        ],
+        "en": [
+          "Series addition aligns by index labels",
+          "When two Series have completely different indices, all values become NaN",
+          "Make both Series use the same index"
+        ]
+      }
+    },
+    {
+      "id": "s1-series-013",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "[最佳实践] 获取 Series 的第一个值",
+        "en": "[Best Practice] Getting First Value of a Series"
+      },
+      "description": {
+        "zh": "以下哪种方式是获取 Series 第一个标量值的最佳实践？",
+        "en": "Which is the best practice for getting the first scalar value of a Series?"
+      },
+      "options": {
+        "zh": [
+          "s.iloc[0] — 明确使用位置索引，意图清晰",
+          "s.values[0] — 先转换为 NumPy 数组再取值",
+          "s[0] — 最简洁",
+          "s.head(1).item() — 最安全"
+        ],
+        "en": [
+          "s.iloc[0] — explicitly uses positional indexing, clear intent",
+          "s.values[0] — converts to NumPy array first",
+          "s[0] — most concise",
+          "s.head(1).item() — safest"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["考虑当 Series 的索引本身就是整数时，s[0] 可能产生歧义"],
+        "en": ["Consider that s[0] can be ambiguous when the Series has an integer index"]
+      },
+      "explanation": {
+        "zh": "s.iloc[0] 是最佳实践，因为它明确表示「按位置取第一个元素」。s[0] 在整数索引时可能与 loc 行为混淆，s.values[0] 会创建不必要的 NumPy 数组副本。",
+        "en": "s.iloc[0] is the best practice because it explicitly means 'get the first element by position'. s[0] can be confusing with integer indices, and s.values[0] creates an unnecessary NumPy array copy."
+      }
+    },
+    {
+      "id": "s1-series-014",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 成绩分析：均值、中位数、筛选和排名",
+        "en": "[Challenge] Score Analysis: Mean, Median, Filter, and Rank"
+      },
+      "description": {
+        "zh": "给定学生成绩 Series，完成以下任务：\n1. 打印平均分和中位数\n2. 筛选出高于平均分的成绩\n3. 对筛选后的成绩进行排名（降序），打印排名结果",
+        "en": "Given a student scores Series, complete the following tasks:\n1. Print the mean and median\n2. Filter scores above the mean\n3. Rank the filtered scores (descending) and print the ranking"
+      },
+      "starterCode": "import pandas as pd\n\nscores = pd.Series([72, 85, 90, 68, 95, 78, 88, 60], \n                   index=['Tom', 'Jane', 'Bob', 'Alice', 'Eve', 'Mike', 'Sara', 'Leo'])\n\n# Step 1: Print mean and median\n\n# Step 2: Filter scores above mean\n\n# Step 3: Rank filtered scores (descending) and print\n",
+      "solutionCode": "import pandas as pd\n\nscores = pd.Series([72, 85, 90, 68, 95, 78, 88, 60], \n                   index=['Tom', 'Jane', 'Bob', 'Alice', 'Eve', 'Mike', 'Sara', 'Leo'])\n\nprint(scores.mean())\nprint(scores.median())\nabove_avg = scores[scores > scores.mean()]\nprint(above_avg.rank(ascending=False))",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = '79.5' in _output and ('1.0' in _output or '1' in _output) and 'Eve' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "使用 .mean() 和 .median() 获取统计量",
+          "布尔索引：scores[scores > scores.mean()]",
+          "使用 .rank(ascending=False) 进行降序排名"
+        ],
+        "en": [
+          "Use .mean() and .median() for statistics",
+          "Boolean indexing: scores[scores > scores.mean()]",
+          "Use .rank(ascending=False) for descending ranking"
+        ]
+      }
+    }
+  ]
+}

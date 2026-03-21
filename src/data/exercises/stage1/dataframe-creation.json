@@ -1,0 +1,416 @@
+{
+  "module": "dataframe-creation",
+  "stageId": "stage1",
+  "lessonId": "dataframe-creation",
+  "tags": ["dataframe", "creation", "dict", "csv", "dtypes"],
+  "exercises": [
+    {
+      "id": "s1-dfcreate-001",
+      "type": "coding",
+      "difficulty": 1,
+      "title": {
+        "zh": "从字典创建 DataFrame",
+        "en": "Create DataFrame from Dictionary"
+      },
+      "description": {
+        "zh": "使用字典创建一个 DataFrame，包含两列：'name' 列为 ['Alice', 'Bob', 'Charlie']，'age' 列为 [25, 30, 35]。打印该 DataFrame。",
+        "en": "Create a DataFrame from a dictionary with two columns: 'name' with values ['Alice', 'Bob', 'Charlie'] and 'age' with values [25, 30, 35]. Print the DataFrame."
+      },
+      "starterCode": "import pandas as pd\n\n# Create a DataFrame from a dictionary\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'age': [25, 30, 35]})\nprint(df)",
+      "setupCode": "",
+      "validationType": "exact-output",
+      "expectedOutput": "      name  age\n0    Alice   25\n1      Bob   30\n2  Charlie   35",
+      "hints": {
+        "zh": [
+          "使用 pd.DataFrame() 并传入一个字典",
+          "字典的键是列名，值是列数据的列表"
+        ],
+        "en": [
+          "Use pd.DataFrame() and pass in a dictionary",
+          "Dictionary keys are column names, values are lists of column data"
+        ]
+      }
+    },
+    {
+      "id": "s1-dfcreate-002",
+      "type": "multiple-choice",
+      "difficulty": 1,
+      "title": {
+        "zh": "从字典列表创建 DataFrame",
+        "en": "Create DataFrame from List of Dicts"
+      },
+      "description": {
+        "zh": "使用以下代码创建 DataFrame 时，每个字典代表什么？\n\n```python\ndata = [{'x': 1, 'y': 2}, {'x': 3, 'y': 4}]\ndf = pd.DataFrame(data)\n```",
+        "en": "When creating a DataFrame with the following code, what does each dictionary represent?\n\n```python\ndata = [{'x': 1, 'y': 2}, {'x': 3, 'y': 4}]\ndf = pd.DataFrame(data)\n```"
+      },
+      "options": {
+        "zh": [
+          "每个字典代表一行数据",
+          "每个字典代表一列数据",
+          "每个字典代表一个 DataFrame",
+          "每个字典代表一个索引"
+        ],
+        "en": [
+          "Each dictionary represents one row",
+          "Each dictionary represents one column",
+          "Each dictionary represents one DataFrame",
+          "Each dictionary represents one index"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["观察字典的键和 DataFrame 的列名之间的关系"],
+        "en": ["Observe the relationship between dictionary keys and DataFrame column names"]
+      },
+      "explanation": {
+        "zh": "当传入字典列表时，每个字典代表一行数据，字典的键会成为列名。",
+        "en": "When passing a list of dictionaries, each dictionary represents one row, and the dictionary keys become column names."
+      }
+    },
+    {
+      "id": "s1-dfcreate-003",
+      "type": "fill-blank",
+      "difficulty": 2,
+      "title": {
+        "zh": "从嵌套列表创建 DataFrame",
+        "en": "Create DataFrame from List of Lists"
+      },
+      "description": {
+        "zh": "填写空白处，使用嵌套列表创建带有指定列名的 DataFrame。",
+        "en": "Fill in the blanks to create a DataFrame from a list of lists with specified column names."
+      },
+      "codeTemplate": "import pandas as pd\n\ndata = [[1, 'Alice'], [2, 'Bob']]\ndf = pd.DataFrame(data, ___=___)\nprint(df)",
+      "blanks": [
+        {
+          "placeholder": "___=___",
+          "answer": "columns=['id', 'name']",
+          "alternatives": ["columns = ['id', 'name']"]
+        }
+      ],
+      "hints": {
+        "zh": [
+          "pd.DataFrame() 有一个参数可以指定列名",
+          "使用 columns 参数传入列名列表"
+        ],
+        "en": [
+          "pd.DataFrame() has a parameter to specify column names",
+          "Use the columns parameter to pass a list of column names"
+        ]
+      },
+      "explanation": {
+        "zh": "使用 columns 参数可以为嵌套列表创建的 DataFrame 指定列名。",
+        "en": "Use the columns parameter to specify column names for a DataFrame created from a list of lists."
+      }
+    },
+    {
+      "id": "s1-dfcreate-004",
+      "type": "output-matching",
+      "difficulty": 2,
+      "title": {
+        "zh": "指定数据类型",
+        "en": "Specifying Data Types"
+      },
+      "description": {
+        "zh": "以下代码的输出是什么？",
+        "en": "What is the output of the following code?"
+      },
+      "code": "import pandas as pd\n\ndf = pd.DataFrame({'value': [1, 2, 3]}, dtype=float)\nprint(df['value'].dtype)",
+      "options": {
+        "zh": [
+          "float64",
+          "int64",
+          "float32",
+          "object"
+        ],
+        "en": [
+          "float64",
+          "int64",
+          "float32",
+          "object"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["dtype=float 会将数据转换为 float64 类型"],
+        "en": ["dtype=float converts the data to float64 type"]
+      },
+      "explanation": {
+        "zh": "使用 dtype=float 参数后，整数列会被转换为 float64 类型。",
+        "en": "When using the dtype=float parameter, the integer column is converted to float64 type."
+      }
+    },
+    {
+      "id": "s1-dfcreate-005",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "从 CSV 字符串读取数据",
+        "en": "Read Data from CSV String"
+      },
+      "description": {
+        "zh": "使用 pd.read_csv 和 io.StringIO 从以下 CSV 字符串读取数据并打印 DataFrame：\n\n```\nname,score\nAlice,90\nBob,85\n```",
+        "en": "Use pd.read_csv and io.StringIO to read data from the following CSV string and print the DataFrame:\n\n```\nname,score\nAlice,90\nBob,85\n```"
+      },
+      "starterCode": "import pandas as pd\nfrom io import StringIO\n\ncsv_string = \"\"\"name,score\nAlice,90\nBob,85\"\"\"\n\n# Read the CSV string into a DataFrame and print it\n",
+      "solutionCode": "import pandas as pd\nfrom io import StringIO\n\ncsv_string = \"\"\"name,score\nAlice,90\nBob,85\"\"\"\n\ndf = pd.read_csv(StringIO(csv_string))\nprint(df)",
+      "setupCode": "",
+      "validationType": "exact-output",
+      "expectedOutput": "    name  score\n0  Alice     90\n1    Bob     85",
+      "hints": {
+        "zh": [
+          "使用 StringIO 将字符串转换为文件对象",
+          "将 StringIO 对象传递给 pd.read_csv()"
+        ],
+        "en": [
+          "Use StringIO to convert the string into a file-like object",
+          "Pass the StringIO object to pd.read_csv()"
+        ]
+      }
+    },
+    {
+      "id": "s1-dfcreate-006",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "从嵌套字典创建 DataFrame",
+        "en": "Create DataFrame from Nested Dictionary"
+      },
+      "description": {
+        "zh": "使用嵌套字典创建 DataFrame，外层键为列名，内层键为行索引。创建一个包含 'math' 和 'english' 两列、索引为 'Alice' 和 'Bob' 的 DataFrame 并打印。",
+        "en": "Create a DataFrame from a nested dictionary where outer keys are column names and inner keys are row indices. Create a DataFrame with columns 'math' and 'english', index 'Alice' and 'Bob', and print it."
+      },
+      "starterCode": "import pandas as pd\n\n# Create DataFrame from nested dict\n# math: Alice=90, Bob=85\n# english: Alice=88, Bob=92\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({'math': {'Alice': 90, 'Bob': 85}, 'english': {'Alice': 88, 'Bob': 92}})\nprint(df)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    result = 'Alice' in _output and 'Bob' in _output and '90' in _output and '88' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "嵌套字典的结构：{'列名': {'行索引': 值}}",
+          "外层键成为列名，内层键成为行索引"
+        ],
+        "en": [
+          "Nested dict structure: {'column_name': {'row_index': value}}",
+          "Outer keys become column names, inner keys become row indices"
+        ]
+      }
+    },
+    {
+      "id": "s1-dfcreate-007",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "指定列顺序",
+        "en": "Specifying Column Order"
+      },
+      "description": {
+        "zh": "创建一个 DataFrame，包含 'name'、'age'、'city' 三列，但使用 columns 参数指定列的顺序为 ['city', 'name', 'age']，然后打印。",
+        "en": "Create a DataFrame with 'name', 'age', 'city' columns, but use the columns parameter to specify the order as ['city', 'name', 'age'], then print."
+      },
+      "starterCode": "import pandas as pd\n\ndata = {'name': ['Alice', 'Bob'], 'age': [25, 30], 'city': ['Beijing', 'Shanghai']}\n\n# Create DataFrame with column order: city, name, age\n",
+      "solutionCode": "import pandas as pd\n\ndata = {'name': ['Alice', 'Bob'], 'age': [25, 30], 'city': ['Beijing', 'Shanghai']}\n\ndf = pd.DataFrame(data, columns=['city', 'name', 'age'])\nprint(df)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    result = list(df.columns) == ['city', 'name', 'age']\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "pd.DataFrame() 有一个 columns 参数",
+          "columns 参数可以控制列的显示顺序"
+        ],
+        "en": [
+          "pd.DataFrame() has a columns parameter",
+          "The columns parameter controls the display order of columns"
+        ]
+      }
+    },
+    {
+      "id": "s1-dfcreate-008",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 from_records 创建 DataFrame",
+        "en": "Create DataFrame with from_records"
+      },
+      "description": {
+        "zh": "使用 pd.DataFrame.from_records() 从元组列表创建 DataFrame，并指定列名为 ['id', 'name', 'score']。",
+        "en": "Use pd.DataFrame.from_records() to create a DataFrame from a list of tuples, specifying column names as ['id', 'name', 'score']."
+      },
+      "starterCode": "import pandas as pd\n\nrecords = [(1, 'Alice', 90), (2, 'Bob', 85), (3, 'Charlie', 78)]\n\n# Create DataFrame using from_records\n",
+      "solutionCode": "import pandas as pd\n\nrecords = [(1, 'Alice', 90), (2, 'Bob', 85), (3, 'Charlie', 78)]\n\ndf = pd.DataFrame.from_records(records, columns=['id', 'name', 'score'])\nprint(df)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    result = list(df.columns) == ['id', 'name', 'score'] and len(df) == 3\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "from_records 是 DataFrame 的类方法",
+          "使用 columns 参数指定列名"
+        ],
+        "en": [
+          "from_records is a class method of DataFrame",
+          "Use the columns parameter to specify column names"
+        ]
+      }
+    },
+    {
+      "id": "s1-dfcreate-009",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "read_csv 的 usecols 和 nrows 参数",
+        "en": "read_csv usecols and nrows Parameters"
+      },
+      "description": {
+        "zh": "从 CSV 字符串中仅读取 'name' 和 'score' 两列，且只读取前 2 行数据，打印结果。",
+        "en": "From a CSV string, read only the 'name' and 'score' columns, and only the first 2 rows of data. Print the result."
+      },
+      "starterCode": "import pandas as pd\nfrom io import StringIO\n\ncsv_data = \"\"\"name,age,score,city\nAlice,25,90,Beijing\nBob,30,85,Shanghai\nCharlie,35,78,Guangzhou\"\"\"\n\n# Read only 'name' and 'score' columns, first 2 rows\n",
+      "solutionCode": "import pandas as pd\nfrom io import StringIO\n\ncsv_data = \"\"\"name,age,score,city\nAlice,25,90,Beijing\nBob,30,85,Shanghai\nCharlie,35,78,Guangzhou\"\"\"\n\ndf = pd.read_csv(StringIO(csv_data), usecols=['name', 'score'], nrows=2)\nprint(df)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    result = len(df) == 2 and 'name' in df.columns and 'score' in df.columns and 'age' not in df.columns\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "usecols 参数接受列名列表",
+          "nrows 参数限制读取的行数"
+        ],
+        "en": [
+          "usecols parameter accepts a list of column names",
+          "nrows parameter limits the number of rows to read"
+        ]
+      }
+    },
+    {
+      "id": "s1-dfcreate-010",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "空 DataFrame 反模式",
+        "en": "Empty DataFrame Anti-pattern"
+      },
+      "description": {
+        "zh": "以下哪种创建 DataFrame 的方式是不推荐的反模式？",
+        "en": "Which of the following DataFrame creation approaches is a discouraged anti-pattern?"
+      },
+      "options": {
+        "zh": [
+          "先创建空 DataFrame，然后逐行 append 数据",
+          "一次性从字典创建完整的 DataFrame",
+          "从列表的列表创建 DataFrame",
+          "使用 pd.read_csv 从文件创建"
+        ],
+        "en": [
+          "Create an empty DataFrame and append rows one by one",
+          "Create a complete DataFrame from a dictionary at once",
+          "Create a DataFrame from a list of lists",
+          "Create from a file using pd.read_csv"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["想想逐行添加数据的性能问题"],
+        "en": ["Think about the performance implications of adding rows one by one"]
+      },
+      "explanation": {
+        "zh": "逐行 append 到空 DataFrame 是一种反模式，因为每次 append 都会复制整个 DataFrame，导致 O(n²) 的时间复杂度。最佳做法是先收集数据到列表，最后一次性创建 DataFrame。",
+        "en": "Appending rows one by one to an empty DataFrame is an anti-pattern because each append copies the entire DataFrame, resulting in O(n²) time complexity. The best approach is to collect data into a list first, then create the DataFrame all at once."
+      }
+    },
+    {
+      "id": "s1-dfcreate-011",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "[调试] 字典键不一致导致 NaN",
+        "en": "[Debug] Inconsistent Dict Keys Causing NaN"
+      },
+      "description": {
+        "zh": "以下代码从字典列表创建 DataFrame，但由于键名不一致产生了 NaN。修复字典中的键名拼写，使 DataFrame 没有缺失值。",
+        "en": "The following code creates a DataFrame from a list of dicts, but inconsistent key names produce NaN. Fix the key name spelling in the dicts so the DataFrame has no missing values."
+      },
+      "starterCode": "import pandas as pd\n\ndata = [\n    {'name': 'Alice', 'age': 25, 'city': 'Beijing'},\n    {'name': 'Bob', 'Age': 30, 'city': 'Shanghai'},\n    {'Name': 'Charlie', 'age': 35, 'City': 'Guangzhou'}\n]\ndf = pd.DataFrame(data)\nprint(df)\nprint(df.isnull().sum())",
+      "solutionCode": "import pandas as pd\n\ndata = [\n    {'name': 'Alice', 'age': 25, 'city': 'Beijing'},\n    {'name': 'Bob', 'age': 30, 'city': 'Shanghai'},\n    {'name': 'Charlie', 'age': 35, 'city': 'Guangzhou'}\n]\ndf = pd.DataFrame(data)\nprint(df)\nprint(df.isnull().sum())",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    result = df.isnull().sum().sum() == 0 and len(df) == 3 and len(df.columns) == 3\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "仔细检查每个字典的键名大小写",
+          "pandas 区分大小写，'name' 和 'Name' 是不同的列",
+          "统一所有字典的键名为小写"
+        ],
+        "en": [
+          "Carefully check the case of each dictionary's keys",
+          "pandas is case-sensitive, 'name' and 'Name' are different columns",
+          "Make all dictionary keys consistently lowercase"
+        ]
+      }
+    },
+    {
+      "id": "s1-dfcreate-012",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "[最佳实践] 字典列表 vs 列表字典",
+        "en": "[Best Practice] List of Dicts vs Dict of Lists"
+      },
+      "description": {
+        "zh": "创建 DataFrame 时，以下两种方式有什么区别？\n\n方式A: `pd.DataFrame([{'a':1,'b':2}, {'a':3,'b':4}])`\n方式B: `pd.DataFrame({'a':[1,3], 'b':[2,4]})`",
+        "en": "When creating a DataFrame, what is the difference between these two approaches?\n\nApproach A: `pd.DataFrame([{'a':1,'b':2}, {'a':3,'b':4}])`\nApproach B: `pd.DataFrame({'a':[1,3], 'b':[2,4]})`"
+      },
+      "options": {
+        "zh": [
+          "结果相同，但方式B（列表字典）性能更好，适合已知列结构的场景",
+          "方式A 更快，应该优先使用",
+          "两种方式完全等价，没有任何区别",
+          "方式A 只能创建小数据集"
+        ],
+        "en": [
+          "Same result, but Approach B (dict of lists) has better performance and is preferred for known column structures",
+          "Approach A is faster and should be preferred",
+          "Both approaches are completely equivalent with no differences",
+          "Approach A can only create small datasets"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["考虑两种方式在内存分配上的区别"],
+        "en": ["Consider the difference in memory allocation between the two approaches"]
+      },
+      "explanation": {
+        "zh": "两种方式产生相同的结果，但列表字典（方式B）性能更好，因为 pandas 可以直接将每个列表转换为 Series。字典列表（方式A）更灵活，适合从 API/数据库读取的行式数据。",
+        "en": "Both produce the same result, but dict of lists (Approach B) performs better because pandas can directly convert each list to a Series. List of dicts (Approach A) is more flexible and suited for row-oriented data from APIs/databases."
+      }
+    },
+    {
+      "id": "s1-dfcreate-013",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 从多个来源创建并合并数据",
+        "en": "[Challenge] Create from Multiple Sources and Merge"
+      },
+      "description": {
+        "zh": "完成以下任务：\n1. 从字典创建 df1，包含 'id' 和 'name' 列\n2. 从列表创建 df2，包含 'id' 和 'score' 列\n3. 使用 pd.merge 按 'id' 合并两个 DataFrame\n4. 打印合并后的结果",
+        "en": "Complete the following tasks:\n1. Create df1 from a dict with 'id' and 'name' columns\n2. Create df2 from lists with 'id' and 'score' columns\n3. Merge the two DataFrames on 'id' using pd.merge\n4. Print the merged result"
+      },
+      "starterCode": "import pandas as pd\n\n# Step 1: Create df1 from dict with id=[1,2,3] and name=['Alice','Bob','Charlie']\n\n# Step 2: Create df2 with id=[1,2,3] and score=[90,85,78]\n\n# Step 3: Merge on 'id'\n\n# Step 4: Print result\n",
+      "solutionCode": "import pandas as pd\n\ndf1 = pd.DataFrame({'id': [1, 2, 3], 'name': ['Alice', 'Bob', 'Charlie']})\ndf2 = pd.DataFrame({'id': [1, 2, 3], 'score': [90, 85, 78]})\nresult = pd.merge(df1, df2, on='id')\nprint(result)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    result = 'name' in _output and 'score' in _output and 'Alice' in _output and '90' in _output and len(result.columns) == 3\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "使用 pd.DataFrame() 分别创建两个 DataFrame",
+          "pd.merge() 可以按共同列合并两个 DataFrame",
+          "on='id' 指定按 'id' 列合并"
+        ],
+        "en": [
+          "Use pd.DataFrame() to create each DataFrame separately",
+          "pd.merge() can merge two DataFrames on a common column",
+          "on='id' specifies merging on the 'id' column"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,384 @@
+{
+  "module": "data-inspection",
+  "stageId": "stage1",
+  "lessonId": "data-inspection",
+  "tags": ["dataframe", "inspection", "head", "tail", "info", "describe", "shape"],
+  "exercises": [
+    {
+      "id": "s1-inspect-001",
+      "type": "multiple-choice",
+      "difficulty": 1,
+      "title": {
+        "zh": "head() 方法的默认行为",
+        "en": "Default Behavior of head()"
+      },
+      "description": {
+        "zh": "调用 df.head() 不传参数时，默认返回多少行？",
+        "en": "How many rows does df.head() return by default when called without arguments?"
+      },
+      "options": {
+        "zh": ["5 行", "3 行", "10 行", "全部行"],
+        "en": ["5 rows", "3 rows", "10 rows", "All rows"]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["head() 和 tail() 有相同的默认参数"],
+        "en": ["head() and tail() share the same default parameter"]
+      },
+      "explanation": {
+        "zh": "df.head() 默认返回前 5 行数据。可以传入参数指定行数，如 df.head(10)。",
+        "en": "df.head() returns the first 5 rows by default. You can pass an argument to specify the number of rows, e.g., df.head(10)."
+      }
+    },
+    {
+      "id": "s1-inspect-002",
+      "type": "coding",
+      "difficulty": 1,
+      "title": {
+        "zh": "使用 tail() 查看末尾数据",
+        "en": "View Last Rows with tail()"
+      },
+      "description": {
+        "zh": "给定一个 DataFrame，使用 tail() 方法打印最后 3 行数据。",
+        "en": "Given a DataFrame, use the tail() method to print the last 3 rows."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({'x': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]})\n\n# Print the last 3 rows\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({'x': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]})\n\nprint(df.tail(3))",
+      "setupCode": "",
+      "validationType": "exact-output",
+      "expectedOutput": "    x\n7   8\n8   9\n9  10",
+      "hints": {
+        "zh": [
+          "tail() 方法接受一个整数参数来指定返回的行数",
+          "使用 df.tail(3) 获取最后 3 行"
+        ],
+        "en": [
+          "The tail() method accepts an integer argument to specify the number of rows",
+          "Use df.tail(3) to get the last 3 rows"
+        ]
+      }
+    },
+    {
+      "id": "s1-inspect-003",
+      "type": "true-false",
+      "difficulty": 1,
+      "title": {
+        "zh": "info() 方法的作用",
+        "en": "Purpose of info() Method"
+      },
+      "description": {
+        "zh": "df.info() 可以显示每列的数据类型和非空值的数量。",
+        "en": "df.info() can display the data type and non-null count of each column."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["info() 是查看 DataFrame 元数据的常用方法"],
+        "en": ["info() is a common method for viewing DataFrame metadata"]
+      },
+      "explanation": {
+        "zh": "df.info() 会输出每列的名称、非空值数量、数据类型，以及内存使用情况。",
+        "en": "df.info() outputs each column's name, non-null count, data type, and memory usage."
+      }
+    },
+    {
+      "id": "s1-inspect-004",
+      "type": "fill-blank",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 describe() 查看统计摘要",
+        "en": "Statistical Summary with describe()"
+      },
+      "description": {
+        "zh": "填写空白处，获取 DataFrame 中数值列的统计摘要。",
+        "en": "Fill in the blank to get the statistical summary of numeric columns in the DataFrame."
+      },
+      "codeTemplate": "import pandas as pd\n\ndf = pd.DataFrame({'score': [80, 90, 70, 85, 95]})\nprint(df.___())",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "describe",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "这个方法会返回包含 count、mean、std 等统计量的摘要",
+          "方法名称是 describe"
+        ],
+        "en": [
+          "This method returns a summary with count, mean, std, etc.",
+          "The method name is describe"
+        ]
+      },
+      "explanation": {
+        "zh": "describe() 方法返回数值列的统计摘要，包括 count、mean、std、min、25%、50%、75%、max。",
+        "en": "The describe() method returns a statistical summary of numeric columns, including count, mean, std, min, 25%, 50%, 75%, max."
+      }
+    },
+    {
+      "id": "s1-inspect-005",
+      "type": "output-matching",
+      "difficulty": 2,
+      "title": {
+        "zh": "shape 属性",
+        "en": "The shape Attribute"
+      },
+      "description": {
+        "zh": "以下代码的输出是什么？",
+        "en": "What is the output of the following code?"
+      },
+      "code": "import pandas as pd\n\ndf = pd.DataFrame({'a': [1, 2, 3], 'b': [4, 5, 6], 'c': [7, 8, 9]})\nprint(df.shape)",
+      "options": {
+        "zh": ["(3, 3)", "(3, 2)", "(9,)", "(2, 3)"],
+        "en": ["(3, 3)", "(3, 2)", "(9,)", "(2, 3)"]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["shape 返回 (行数, 列数) 的元组"],
+        "en": ["shape returns a tuple of (rows, columns)"]
+      },
+      "explanation": {
+        "zh": "df.shape 返回一个元组 (行数, 列数)。该 DataFrame 有 3 行 3 列，所以结果是 (3, 3)。",
+        "en": "df.shape returns a tuple (rows, columns). This DataFrame has 3 rows and 3 columns, so the result is (3, 3)."
+      }
+    },
+    {
+      "id": "s1-inspect-006",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "info() 的 memory_usage 参数",
+        "en": "info() memory_usage Parameter"
+      },
+      "description": {
+        "zh": "使用 df.info(memory_usage='deep') 查看 DataFrame 的详细内存使用情况并观察输出。",
+        "en": "Use df.info(memory_usage='deep') to view the detailed memory usage of the DataFrame and observe the output."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'] * 100,\n    'age': [25, 30, 35] * 100,\n    'score': [88.5, 92.0, 76.5] * 100\n})\n\n# Use info with deep memory usage\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'] * 100,\n    'age': [25, 30, 35] * 100,\n    'score': [88.5, 92.0, 76.5] * 100\n})\n\ndf.info(memory_usage='deep')",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'memory' in _output.lower() and ('KB' in _output or 'bytes' in _output or 'kb' in _output.lower() or '+' in _output)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "info() 方法有 memory_usage 参数",
+          "设置为 'deep' 可以获得更精确的内存使用统计"
+        ],
+        "en": [
+          "The info() method has a memory_usage parameter",
+          "Setting it to 'deep' provides more accurate memory usage statistics"
+        ]
+      }
+    },
+    {
+      "id": "s1-inspect-007",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "describe() 的 include 和 percentiles 参数",
+        "en": "describe() include and percentiles Parameters"
+      },
+      "description": {
+        "zh": "使用 describe(include='all') 查看所有列（包括非数值列）的统计信息，并打印结果。",
+        "en": "Use describe(include='all') to view statistics for all columns (including non-numeric), and print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Alice', 'Bob'],\n    'age': [25, 30, 35, 25, 30],\n    'score': [88.5, 92.0, 76.5, 90.0, 85.0]\n})\n\n# Use describe with include='all'\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Alice', 'Bob'],\n    'age': [25, 30, 35, 25, 30],\n    'score': [88.5, 92.0, 76.5, 90.0, 85.0]\n})\n\nprint(df.describe(include='all'))",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'unique' in _output and 'mean' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "include='all' 会同时显示数值和非数值列的统计信息",
+          "非数值列会显示 unique、top、freq 等统计量"
+        ],
+        "en": [
+          "include='all' shows statistics for both numeric and non-numeric columns",
+          "Non-numeric columns display unique, top, freq statistics"
+        ]
+      }
+    },
+    {
+      "id": "s1-inspect-008",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 select_dtypes 筛选列类型",
+        "en": "Filter Column Types with select_dtypes"
+      },
+      "description": {
+        "zh": "使用 select_dtypes(include='object') 选出所有字符串列，打印结果。",
+        "en": "Use select_dtypes(include='object') to select all string columns and print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou'],\n    'score': [88.5, 92.0, 76.5]\n})\n\n# Select only string (object) columns\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou'],\n    'score': [88.5, 92.0, 76.5]\n})\n\nprint(df.select_dtypes(include='object'))",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'name' in _output and 'city' in _output and 'age' not in _output and 'score' not in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "select_dtypes 可以按数据类型筛选列",
+          "字符串在 pandas 中默认是 object 类型"
+        ],
+        "en": [
+          "select_dtypes can filter columns by data type",
+          "Strings default to object type in pandas"
+        ]
+      }
+    },
+    {
+      "id": "s1-inspect-009",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 sample() 随机抽样",
+        "en": "Random Sampling with sample()"
+      },
+      "description": {
+        "zh": "使用 sample() 方法从 DataFrame 中随机抽取 3 行数据，设置 random_state=42 以确保结果可复现，打印结果。",
+        "en": "Use the sample() method to randomly select 3 rows from the DataFrame, set random_state=42 for reproducibility, and print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'id': range(1, 11),\n    'value': [23, 45, 12, 67, 89, 34, 56, 78, 90, 11]\n})\n\n# Sample 3 rows with random_state=42\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'id': range(1, 11),\n    'value': [23, 45, 12, 67, 89, 34, 56, 78, 90, 11]\n})\n\nprint(df.sample(n=3, random_state=42))",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    lines = [l for l in _output.strip().split('\\n') if l.strip() and not l.strip().startswith('id')]\n    result = len(lines) == 3 or (len(lines) == 4 and 'id' in lines[0])\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "sample() 的 n 参数指定抽取的行数",
+          "random_state 参数确保每次运行结果一致"
+        ],
+        "en": [
+          "The n parameter of sample() specifies the number of rows to select",
+          "The random_state parameter ensures consistent results across runs"
+        ]
+      }
+    },
+    {
+      "id": "s1-inspect-010",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "nlargest() 和 nsmallest()",
+        "en": "nlargest() and nsmallest()"
+      },
+      "description": {
+        "zh": "使用 nlargest() 找出分数最高的 3 名学生，然后使用 nsmallest() 找出分数最低的 2 名学生，分别打印。",
+        "en": "Use nlargest() to find the top 3 students by score, then use nsmallest() to find the bottom 2 students. Print both results."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'score': [88, 92, 76, 95, 83]\n})\n\n# Find top 3 by score\n\n# Find bottom 2 by score\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'score': [88, 92, 76, 95, 83]\n})\n\nprint(df.nlargest(3, 'score'))\nprint(df.nsmallest(2, 'score'))",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'Diana' in _output and '95' in _output and 'Charlie' in _output and '76' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "nlargest(n, columns) 返回指定列最大的 n 行",
+          "nsmallest(n, columns) 返回指定列最小的 n 行"
+        ],
+        "en": [
+          "nlargest(n, columns) returns the n rows with the largest values in the specified column",
+          "nsmallest(n, columns) returns the n rows with the smallest values"
+        ]
+      }
+    },
+    {
+      "id": "s1-inspect-011",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "[调试] describe() 只显示数值列",
+        "en": "[Debug] describe() Only Showing Numeric"
+      },
+      "description": {
+        "zh": "用户想用 describe() 查看所有列的统计信息，但只显示了数值列。修复代码使其同时显示字符串列的统计信息。",
+        "en": "A user wants to see statistics for all columns with describe(), but only numeric columns are shown. Fix the code to also show string column statistics."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Alice', 'Bob'],\n    'department': ['HR', 'IT', 'IT', 'HR', 'Finance'],\n    'salary': [50000, 60000, 55000, 52000, 65000]\n})\n\n# Bug: only shows numeric columns\nprint(df.describe())",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Alice', 'Bob'],\n    'department': ['HR', 'IT', 'IT', 'HR', 'Finance'],\n    'salary': [50000, 60000, 55000, 52000, 65000]\n})\n\nprint(df.describe(include='all'))",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'unique' in _output and 'name' in _output and 'department' in _output and 'mean' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "describe() 默认只统计数值列",
+          "需要添加一个参数来包含所有列类型",
+          "使用 include='all'"
+        ],
+        "en": [
+          "describe() only summarizes numeric columns by default",
+          "A parameter is needed to include all column types",
+          "Use include='all'"
+        ]
+      }
+    },
+    {
+      "id": "s1-inspect-012",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "[最佳实践] EDA 三件套",
+        "en": "[Best Practice] head+info+describe EDA Trio"
+      },
+      "description": {
+        "zh": "在探索性数据分析（EDA）中，以下哪个组合是快速了解数据集的最佳实践？",
+        "en": "In Exploratory Data Analysis (EDA), which combination is the best practice for quickly understanding a dataset?"
+      },
+      "options": {
+        "zh": [
+          "df.head() → df.info() → df.describe()：先看样本数据，再看元数据，最后看统计摘要",
+          "df.shape → df.columns → df.values：看维度、列名和原始值",
+          "df.to_string() 直接打印全部数据",
+          "df.dtypes → df.count()：只看类型和计数"
+        ],
+        "en": [
+          "df.head() → df.info() → df.describe(): view sample data, then metadata, then statistical summary",
+          "df.shape → df.columns → df.values: view dimensions, column names, and raw values",
+          "df.to_string() to print all data directly",
+          "df.dtypes → df.count(): only view types and counts"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["想想哪个组合能最全面地了解数据的结构、类型和分布"],
+        "en": ["Think about which combination provides the most comprehensive view of data structure, types, and distribution"]
+      },
+      "explanation": {
+        "zh": "head() 让你看到数据的实际样貌，info() 显示数据类型和缺失值信息，describe() 提供数值统计摘要。这三个方法组合是 EDA 的经典起手式。",
+        "en": "head() shows what the data actually looks like, info() reveals data types and missing values, describe() provides numerical statistics. This trio is the classic starting point for EDA."
+      }
+    },
+    {
+      "id": "s1-inspect-013",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 全面数据质量检查",
+        "en": "[Challenge] Comprehensive Data Quality Check"
+      },
+      "description": {
+        "zh": "对给定的 DataFrame 执行全面的数据质量检查：\n1. 打印形状（shape）\n2. 打印每列的缺失值数量\n3. 打印数值列的描述性统计\n4. 打印重复行的数量",
+        "en": "Perform a comprehensive data quality check on the given DataFrame:\n1. Print the shape\n2. Print the count of missing values per column\n3. Print descriptive statistics for numeric columns\n4. Print the number of duplicate rows"
+      },
+      "starterCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', None, 'Diana', 'Alice'],\n    'age': [25, np.nan, 35, 28, 25],\n    'score': [88.5, 92.0, 76.5, np.nan, 88.5],\n    'city': ['Beijing', 'Shanghai', 'Beijing', 'Guangzhou', 'Beijing']\n})\n\n# Step 1: Print shape\n\n# Step 2: Print missing values per column\n\n# Step 3: Print describe for numeric columns\n\n# Step 4: Print number of duplicate rows\n",
+      "solutionCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', None, 'Diana', 'Alice'],\n    'age': [25, np.nan, 35, 28, 25],\n    'score': [88.5, 92.0, 76.5, np.nan, 88.5],\n    'city': ['Beijing', 'Shanghai', 'Beijing', 'Guangzhou', 'Beijing']\n})\n\nprint(df.shape)\nprint(df.isnull().sum())\nprint(df.describe())\nprint(df.duplicated().sum())",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = '(5, 4)' in _output and 'mean' in _output and ('0' in _output or '1' in _output)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "使用 df.shape 查看维度",
+          "使用 df.isnull().sum() 统计每列缺失值",
+          "使用 df.describe() 获取统计摘要",
+          "使用 df.duplicated().sum() 统计重复行数"
+        ],
+        "en": [
+          "Use df.shape for dimensions",
+          "Use df.isnull().sum() to count missing values per column",
+          "Use df.describe() for statistical summary",
+          "Use df.duplicated().sum() to count duplicate rows"
+        ]
+      }
+    }
+  ]
+}

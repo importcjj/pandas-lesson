@@ -1,0 +1,363 @@
+{
+  "module": "categorical",
+  "stageId": "stage3",
+  "lessonId": "categorical",
+  "tags": ["categorical", "cat", "cut", "qcut", "dtype"],
+  "exercises": [
+    {
+      "id": "s3-categorical-001",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "Categorical 类型的优势",
+        "en": "Advantages of Categorical Type"
+      },
+      "description": {
+        "zh": "将字符串列转换为 Categorical 类型的主要优势是什么？",
+        "en": "What is the main advantage of converting a string column to Categorical type?"
+      },
+      "options": {
+        "zh": [
+          "节省内存，尤其是当列中有大量重复值时",
+          "可以让字符串支持数学运算",
+          "自动将数据排序",
+          "可以存储更长的字符串"
+        ],
+        "en": [
+          "Saves memory, especially when the column has many repeated values",
+          "Allows mathematical operations on strings",
+          "Automatically sorts the data",
+          "Can store longer strings"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["想想当同一个字符串出现上万次时，存储方式有什么区别"],
+        "en": ["Think about the storage difference when the same string appears thousands of times"]
+      },
+      "explanation": {
+        "zh": "Categorical 类型内部使用整数编码代替重复字符串，大幅减少内存占用。对于重复率高的字符串列效果尤为明显。",
+        "en": "Categorical type internally uses integer codes instead of repeated strings, significantly reducing memory usage. The effect is especially noticeable for string columns with high repetition rates."
+      }
+    },
+    {
+      "id": "s3-categorical-002",
+      "type": "output-matching",
+      "difficulty": 3,
+      "title": {
+        "zh": "cat.codes 编码",
+        "en": "cat.codes Encoding"
+      },
+      "description": {
+        "zh": "以下代码的输出是什么？",
+        "en": "What is the output of the following code?"
+      },
+      "code": "import pandas as pd\ns = pd.Categorical(['b', 'a', 'c', 'a'])\nprint(s.codes.tolist())",
+      "options": {
+        "zh": ["[1, 0, 2, 0]", "[0, 1, 2, 1]", "[2, 1, 3, 1]", "[1, 0, 2, 3]"],
+        "en": ["[1, 0, 2, 0]", "[0, 1, 2, 1]", "[2, 1, 3, 1]", "[1, 0, 2, 3]"]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["categories 默认按字母排序：a=0, b=1, c=2"],
+        "en": ["Categories are sorted alphabetically by default: a=0, b=1, c=2"]
+      },
+      "explanation": {
+        "zh": "Categorical 默认按字母顺序排列类别 (a=0, b=1, c=2)。codes 属性返回每个元素对应的整数编码。",
+        "en": "Categorical sorts categories alphabetically by default (a=0, b=1, c=2). The codes attribute returns the integer code for each element."
+      }
+    },
+    {
+      "id": "s3-categorical-003",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "pd.cut 分箱",
+        "en": "pd.cut for Binning"
+      },
+      "description": {
+        "zh": "使用 pd.cut 将 'score' 列分成 3 个等宽区间，并存入 'grade' 列。",
+        "en": "Use pd.cut to bin the 'score' column into 3 equal-width intervals and store the result in the 'grade' column."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'score': [55, 72, 88, 95, 60]})",
+      "starterCode": "# Bin scores into 3 equal-width intervals\ndf['grade'] = ___",
+      "solutionCode": "df['grade'] = pd.cut(df['score'], bins=3)",
+      "validationType": "dataframe-equals",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["pd.cut() 的 bins 参数可以是一个整数，表示等宽区间的数量"],
+        "en": ["The bins parameter of pd.cut() can be an integer specifying the number of equal-width bins"]
+      },
+      "explanation": {
+        "zh": "pd.cut(df['score'], bins=3) 将分数范围等分成 3 个区间，并为每个值分配对应的区间标签。返回的是 Categorical 类型。",
+        "en": "pd.cut(df['score'], bins=3) divides the score range into 3 equal-width intervals and assigns each value to the corresponding bin. The result is of Categorical type."
+      }
+    },
+    {
+      "id": "s3-categorical-004",
+      "type": "true-false",
+      "difficulty": 4,
+      "title": {
+        "zh": "cut 与 qcut 的区别",
+        "en": "Difference between cut and qcut"
+      },
+      "description": {
+        "zh": "pd.qcut() 将数据分成等频（每组数据量大致相同）的区间，而 pd.cut() 将数据分成等宽（每个区间宽度相同）的区间。",
+        "en": "pd.qcut() divides data into equal-frequency bins (approximately the same number of data points per group), while pd.cut() divides data into equal-width bins (each interval has the same width)."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["q 代表 quantile（分位数）"],
+        "en": ["q stands for quantile"]
+      },
+      "explanation": {
+        "zh": "pd.cut() 按值的范围等分（等宽），pd.qcut() 按数据的分位数等分（等频）。qcut 确保每组的数据量大致相等。",
+        "en": "pd.cut() splits by equal value ranges (equal-width), while pd.qcut() splits by quantiles (equal-frequency). qcut ensures approximately the same number of data points in each group."
+      }
+    },
+    {
+      "id": "s3-categorical-005",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "有序分类 (ordered categories)",
+        "en": "Ordered Categories"
+      },
+      "description": {
+        "zh": "创建一个有序分类列 'priority'，类别顺序为 low < medium < high。",
+        "en": "Create an ordered categorical column 'priority' with category order low < medium < high."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'task': ['Task A', 'Task B', 'Task C', 'Task D'], 'priority': ['high', 'low', 'medium', 'high']})",
+      "starterCode": "# Convert priority to ordered categorical\ndf['priority'] = ___",
+      "solutionCode": "df['priority'] = pd.Categorical(df['priority'], categories=['low', 'medium', 'high'], ordered=True)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = df['priority'].cat.ordered == True and list(df['priority'].cat.categories) == ['low', 'medium', 'high']\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["pd.Categorical 的 ordered=True 参数创建有序分类", "categories 参数定义排序顺序（从小到大）"],
+        "en": ["The ordered=True parameter of pd.Categorical creates ordered categories", "The categories parameter defines the sort order (smallest to largest)"]
+      },
+      "explanation": {
+        "zh": "有序分类支持比较运算符（<, >, <=, >=）。categories 列表的顺序定义了大小关系。有序分类在排序和 min/max 操作中非常有用。",
+        "en": "Ordered categories support comparison operators (<, >, <=, >=). The categories list order defines the ordering. Ordered categoricals are very useful for sorting and min/max operations."
+      }
+    },
+    {
+      "id": "s3-categorical-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "cat 访问器操作类别",
+        "en": "cat Accessor for Category Operations"
+      },
+      "description": {
+        "zh": "使用 cat.add_categories 为现有的分类列添加一个新类别 'urgent'，然后用 cat.reorder_categories 重新排序为 ['low', 'medium', 'high', 'urgent']。",
+        "en": "Use cat.add_categories to add a new category 'urgent' to the existing categorical column, then use cat.reorder_categories to reorder as ['low', 'medium', 'high', 'urgent']."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'priority': pd.Categorical(['low', 'medium', 'high', 'low'], categories=['low', 'medium', 'high'], ordered=True)})",
+      "starterCode": "# Add 'urgent' category and reorder\ndf['priority'] = df['priority'].cat.add_categories('urgent')\ndf['priority'] = ___",
+      "solutionCode": "df['priority'] = df['priority'].cat.add_categories('urgent')\ndf['priority'] = df['priority'].cat.reorder_categories(['low', 'medium', 'high', 'urgent'])",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = 'urgent' in df['priority'].cat.categories and list(df['priority'].cat.categories) == ['low', 'medium', 'high', 'urgent']\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["cat.add_categories() 添加新类别但不改变现有数据", "cat.reorder_categories() 重新排列类别顺序"],
+        "en": ["cat.add_categories() adds new categories without changing existing data", "cat.reorder_categories() rearranges category order"]
+      },
+      "explanation": {
+        "zh": "cat 访问器提供管理类别的方法：add_categories 添加、remove_categories 删除、set_categories 设置全部、reorder_categories 重排序、rename_categories 重命名。这些操作只修改类别定义，不改变数据值。",
+        "en": "The cat accessor provides methods for managing categories: add_categories to add, remove_categories to remove, set_categories to set all, reorder_categories to reorder, rename_categories to rename. These operations only modify category definitions, not data values."
+      }
+    },
+    {
+      "id": "s3-categorical-007",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "内存节省测量",
+        "en": "Memory Savings Measurement"
+      },
+      "description": {
+        "zh": "将 'city' 列转换为 Categorical 类型，然后比较转换前后的内存使用量。将节省的字节数（转换前内存 - 转换后内存）存入 result。",
+        "en": "Convert the 'city' column to Categorical type, then compare memory usage before and after. Store the bytes saved (before - after) in result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ncities = ['Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen', 'Chengdu']\ndf = pd.DataFrame({'city': np.random.choice(cities, 1000)})",
+      "starterCode": "# Measure memory before and after conversion\nmem_before = df['city'].memory_usage(deep=True)\ndf['city'] = df['city'].astype('category')\nmem_after = df['city'].memory_usage(deep=True)\nresult = ___",
+      "solutionCode": "mem_before = df['city'].memory_usage(deep=True)\ndf['city'] = df['city'].astype('category')\nmem_after = df['city'].memory_usage(deep=True)\nresult = mem_before - mem_after",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = result > 0\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["memory_usage(deep=True) 包含字符串的实际内存", "Categorical 用整数编码替代重复字符串，节省内存"],
+        "en": ["memory_usage(deep=True) includes actual string memory", "Categorical uses integer codes instead of repeated strings, saving memory"]
+      },
+      "explanation": {
+        "zh": "对于重复率高的字符串列，Categorical 类型只存储一份类别值加整数编码，大幅节省内存。1000 行 5 种城市名，转换后通常节省 50-80% 的内存。memory_usage(deep=True) 计算包含字符串实际大小的内存。",
+        "en": "For string columns with high repetition, Categorical stores only one copy of category values plus integer codes, greatly saving memory. With 1000 rows and 5 city names, conversion typically saves 50-80% memory. memory_usage(deep=True) includes the actual string size."
+      }
+    },
+    {
+      "id": "s3-categorical-008",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "cut 自定义标签",
+        "en": "cut with Custom Labels"
+      },
+      "description": {
+        "zh": "使用 pd.cut 将 'age' 列按 [0, 18, 35, 60, 100] 分箱，并使用自定义标签 ['少年', '青年', '中年', '老年']。",
+        "en": "Use pd.cut to bin the 'age' column with bins [0, 18, 35, 60, 100] and custom labels ['Youth', 'Young Adult', 'Middle-aged', 'Senior']."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'age': [15, 25, 42, 68, 30]})",
+      "starterCode": "# Bin ages with custom labels\ndf['age_group'] = ___",
+      "solutionCode": "df['age_group'] = pd.cut(df['age'], bins=[0, 18, 35, 60, 100], labels=['Youth', 'Young Adult', 'Middle-aged', 'Senior'])",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = df['age_group'].iloc[0] == 'Youth' and df['age_group'].iloc[3] == 'Senior' and df['age_group'].dtype.name == 'category'\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["bins 参数指定分箱边界", "labels 参数指定每个区间的标签名，数量必须比 bins 少一个"],
+        "en": ["The bins parameter specifies bin edges", "The labels parameter specifies label names for each interval, must be one fewer than bins"]
+      },
+      "explanation": {
+        "zh": "pd.cut 的 labels 参数为每个区间赋予有意义的标签名。标签数量必须等于区间数（bins 长度减 1）。自定义标签让分箱结果更易理解，同时保持 Categorical 类型。",
+        "en": "The labels parameter of pd.cut assigns meaningful names to each interval. The number of labels must equal the number of intervals (bins length minus 1). Custom labels make binned results more interpretable while maintaining Categorical type."
+      }
+    },
+    {
+      "id": "s3-categorical-009",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "qcut 处理重复值",
+        "en": "qcut with duplicates='drop'"
+      },
+      "description": {
+        "zh": "使用 pd.qcut 将 'score' 列分为 4 组，但因为有重复值可能导致边界重复。使用 duplicates='drop' 参数解决。",
+        "en": "Use pd.qcut to divide the 'score' column into 4 groups, but duplicate values may cause duplicate bin edges. Use duplicates='drop' to resolve."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], 'score': [50, 50, 50, 60, 70, 80, 90, 100]})",
+      "starterCode": "# qcut with duplicates handling\ndf['quartile'] = ___",
+      "solutionCode": "df['quartile'] = pd.qcut(df['score'], q=4, duplicates='drop')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = df['quartile'].dtype.name == 'category' and len(df['quartile'].cat.categories) <= 4\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["当数据有很多重复值时，qcut 的分位数边界可能重复", "duplicates='drop' 自动去掉重复的边界"],
+        "en": ["When data has many duplicates, qcut quantile boundaries may overlap", "duplicates='drop' automatically removes duplicate boundaries"]
+      },
+      "explanation": {
+        "zh": "当数据中有大量重复值时（如 50 出现 3 次），qcut 计算的分位数边界可能重合，默认会报 ValueError。duplicates='drop' 自动合并重复边界，最终分组数可能少于指定的 q。",
+        "en": "When data has many duplicates (e.g., 50 appears 3 times), qcut's quantile boundaries may overlap, raising ValueError by default. duplicates='drop' automatically merges duplicate boundaries, resulting in potentially fewer groups than the specified q."
+      }
+    },
+    {
+      "id": "s3-categorical-010",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "分类列的 value_counts",
+        "en": "value_counts on Categorical"
+      },
+      "description": {
+        "zh": "对分类列调用 value_counts()，确保结果包含所有已定义类别（即使某些类别在数据中没有出现）。",
+        "en": "Call value_counts() on a categorical column, ensuring the result includes all defined categories (even those not present in the data)."
+      },
+      "setupCode": "import pandas as pd\ns = pd.Categorical(['a', 'b', 'a', 'a'], categories=['a', 'b', 'c'])",
+      "starterCode": "# value_counts showing all categories\nresult = ___",
+      "solutionCode": "result = pd.Series(s).value_counts(dropna=False)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = len(result) == 3 and 'c' in result.index and result['c'] == 0\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["Categorical 类型的 value_counts 默认显示所有类别", "未出现的类别计数为 0"],
+        "en": ["value_counts on Categorical type shows all categories by default", "Absent categories have a count of 0"]
+      },
+      "explanation": {
+        "zh": "对 Categorical 列调用 value_counts() 时，结果会包含所有已定义类别，即使某些类别计数为 0。这在了解数据分布时非常有用，可以看到哪些类别完全缺失。",
+        "en": "When calling value_counts() on a Categorical column, the result includes all defined categories, even those with count 0. This is very useful for understanding data distribution and seeing which categories are completely absent."
+      }
+    },
+    {
+      "id": "s3-categorical-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 无序分类的比较错误",
+        "en": "[Debug] Categorical Comparison without Ordered"
+      },
+      "description": {
+        "zh": "以下代码试图筛选优先级高于 'medium' 的任务，但因为分类列没有设置有序而报错。请修复代码。",
+        "en": "The following code tries to filter tasks with priority higher than 'medium', but fails because the categorical column is not ordered. Fix the code."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'task': ['Task A', 'Task B', 'Task C', 'Task D'], 'priority': pd.Categorical(['high', 'low', 'medium', 'high'])})",
+      "starterCode": "# Bug: TypeError - Unordered Categoricals can not be compared\nresult = df[df['priority'] > 'medium']",
+      "solutionCode": "df['priority'] = df['priority'].cat.set_categories(['low', 'medium', 'high'], ordered=True)\nresult = df[df['priority'] > 'medium']",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = len(result) == 2 and all(result['priority'] == 'high')\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["无序 Categorical 不支持 > < 比较", "需要用 cat.set_categories 设置有序类别"],
+        "en": ["Unordered Categorical does not support > < comparisons", "Use cat.set_categories to set ordered categories"]
+      },
+      "explanation": {
+        "zh": "只有设置了 ordered=True 的分类列才支持大小比较（>, <, >=, <=）。用 cat.set_categories(['low', 'medium', 'high'], ordered=True) 同时定义类别顺序和启用有序。也可以用 cat.as_ordered() 将现有顺序标记为有序。",
+        "en": "Only categorical columns with ordered=True support ordering comparisons (>, <, >=, <=). Use cat.set_categories(['low', 'medium', 'high'], ordered=True) to define category order and enable ordering. You can also use cat.as_ordered() to mark existing order as ordered."
+      }
+    },
+    {
+      "id": "s3-categorical-012",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "[最佳实践] 何时使用 Categorical 类型",
+        "en": "[Best Practice] When to Use Categorical Type"
+      },
+      "description": {
+        "zh": "以下哪种场景最适合使用 Categorical 类型？",
+        "en": "Which scenario is most suitable for using Categorical type?"
+      },
+      "options": {
+        "zh": [
+          "重复率高的字符串列（如性别、城市、状态），且需要定义类别顺序或节省内存",
+          "唯一值很多的字符串列（如用户 ID、邮箱地址）",
+          "所有字符串列都应该转为 Categorical",
+          "只在需要排序时才使用 Categorical"
+        ],
+        "en": [
+          "String columns with high repetition (e.g., gender, city, status), especially when category order or memory savings are needed",
+          "String columns with many unique values (e.g., user IDs, email addresses)",
+          "All string columns should be converted to Categorical",
+          "Only use Categorical when sorting is needed"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["Categorical 的优势在于重复值多时节省内存和提高性能"],
+        "en": ["Categorical's advantage is memory savings and performance when there are many repeated values"]
+      },
+      "explanation": {
+        "zh": "Categorical 最适合：1) 有限类别的重复值列（如性别、国家）—节省内存；2) 需要自定义排序（如 low/medium/high）；3) 需要控制有效值范围。不适合唯一值多的列（如 ID），因为编码开销可能超过节省。",
+        "en": "Categorical is best for: 1) Columns with limited repeated categories (e.g., gender, country) — saves memory; 2) Custom ordering needed (e.g., low/medium/high); 3) Controlling valid value ranges. Not suitable for columns with many unique values (e.g., IDs) as encoding overhead may exceed savings."
+      }
+    },
+    {
+      "id": "s3-categorical-013",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[综合] 客户分层：cut + groupby 分析",
+        "en": "[Challenge] Customer Segmentation with cut + groupby"
+      },
+      "description": {
+        "zh": "完成客户分层分析：1) 用 pd.cut 按消费金额 'spending' 分为 3 组：[0,100] 'low', (100,500] 'medium', (500,2000] 'high'；2) 按分层分组计算每组的客户数 (count) 和平均消费 (avg_spending)；3) 按平均消费降序排列。存入 result。",
+        "en": "Complete customer segmentation analysis: 1) Use pd.cut to bin 'spending' into 3 groups: [0,100] 'low', (100,500] 'medium', (500,2000] 'high'; 2) Group by segment and compute customer count and average spending; 3) Sort by average spending descending. Store in result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'customer_id': range(1, 21), 'spending': [50, 120, 800, 200, 90, 350, 1200, 75, 450, 600, 30, 180, 950, 280, 60, 700, 150, 1500, 85, 420]})",
+      "starterCode": "# Step 1: Bin spending into segments\n# Step 2: Group and aggregate\n# Step 3: Sort by avg_spending desc\nresult = ___",
+      "solutionCode": "df['segment'] = pd.cut(df['spending'], bins=[0, 100, 500, 2000], labels=['low', 'medium', 'high'])\nresult = df.groupby('segment', observed=True).agg(count=('spending', 'count'), avg_spending=('spending', 'mean')).sort_values('avg_spending', ascending=False)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = len(result) == 3 and 'count' in result.columns and 'avg_spending' in result.columns and result.iloc[0]['avg_spending'] >= result.iloc[1]['avg_spending']\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["pd.cut(bins=[0,100,500,2000], labels=['low','medium','high'])", "groupby + 命名聚合: agg(count=('spending','count'), avg_spending=('spending','mean'))", "sort_values('avg_spending', ascending=False)"],
+        "en": ["pd.cut(bins=[0,100,500,2000], labels=['low','medium','high'])", "groupby + named aggregation: agg(count=('spending','count'), avg_spending=('spending','mean'))", "sort_values('avg_spending', ascending=False)"]
+      },
+      "explanation": {
+        "zh": "这个综合练习展示了 Categorical 在数据分析中的典型应用：先用 cut 将连续变量离散化为有意义的分层，再用 groupby 按分层进行统计分析。这种方法在 RFM 客户分析、信用评分等场景中广泛使用。",
+        "en": "This challenge demonstrates a typical Categorical application in data analysis: first discretize continuous variables into meaningful segments with cut, then use groupby for statistical analysis by segment. This approach is widely used in RFM customer analysis, credit scoring, and similar scenarios."
+      }
+    }
+  ]
+}

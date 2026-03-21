@@ -1,0 +1,389 @@
+{
+  "module": "datetime",
+  "stageId": "stage3",
+  "lessonId": "datetime",
+  "tags": ["datetime", "to_datetime", "dt", "resample", "date_range"],
+  "exercises": [
+    {
+      "id": "s3-datetime-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "to_datetime 转换",
+        "en": "to_datetime Conversion"
+      },
+      "description": {
+        "zh": "将 df 的 'date_str' 列从字符串转换为 datetime 类型。",
+        "en": "Convert the 'date_str' column of df from string to datetime type."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'date_str': ['2024-01-15', '2024-02-20', '2024-03-10'], 'value': [100, 200, 150]})",
+      "starterCode": "# Convert date_str column to datetime\ndf['date'] = ___",
+      "solutionCode": "df['date'] = pd.to_datetime(df['date_str'])",
+      "validationType": "dataframe-equals",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["使用 pd.to_datetime() 函数进行转换"],
+        "en": ["Use the pd.to_datetime() function for conversion"]
+      },
+      "explanation": {
+        "zh": "pd.to_datetime() 可以将多种字符串格式自动解析为 datetime64 类型，是处理日期数据的第一步。",
+        "en": "pd.to_datetime() can automatically parse various string formats into datetime64 type. It is the first step in working with date data."
+      }
+    },
+    {
+      "id": "s3-datetime-002",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "提取年月日",
+        "en": "Extract Year, Month, Day"
+      },
+      "description": {
+        "zh": "从 datetime 列中提取年份。",
+        "en": "Extract the year from a datetime column."
+      },
+      "codeTemplate": "df['year'] = df['date'].dt.___",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "year",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": ["dt 访问器提供 year, month, day 等属性"],
+        "en": ["The dt accessor provides attributes like year, month, day"]
+      },
+      "explanation": {
+        "zh": "通过 .dt 访问器可以获取 datetime 列的各种属性：dt.year（年）、dt.month（月）、dt.day（日）、dt.dayofweek（星期几）等。",
+        "en": "The .dt accessor provides various datetime attributes: dt.year, dt.month, dt.day, dt.dayofweek, etc."
+      }
+    },
+    {
+      "id": "s3-datetime-003",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "resample 时间重采样",
+        "en": "resample for Time Resampling"
+      },
+      "description": {
+        "zh": "对于一个以日期为索引的时间序列 DataFrame，df.resample('M').sum() 的作用是什么？",
+        "en": "For a time-indexed DataFrame, what does df.resample('M').sum() do?"
+      },
+      "options": {
+        "zh": [
+          "按月对数据进行重采样并求和",
+          "按分钟对数据进行重采样",
+          "只选择每月最后一天的数据",
+          "将数据转换为月度格式但不做聚合"
+        ],
+        "en": [
+          "Resample data by month and compute the sum",
+          "Resample data by minute",
+          "Select only the last day of each month",
+          "Convert data to monthly format without aggregation"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["'M' 表示月末频率（Month-end）"],
+        "en": ["'M' stands for month-end frequency"]
+      },
+      "explanation": {
+        "zh": "resample('M') 将数据按月分组，类似于 groupby 但专门用于时间序列。后面可以接 .sum()、.mean() 等聚合方法。",
+        "en": "resample('M') groups data by month, similar to groupby but specifically for time series. It can be followed by aggregation methods like .sum(), .mean(), etc."
+      }
+    },
+    {
+      "id": "s3-datetime-004",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "date_range 创建日期序列",
+        "en": "date_range for Date Sequences"
+      },
+      "description": {
+        "zh": "使用 pd.date_range 创建从 '2024-01-01' 开始的 5 个工作日日期序列。",
+        "en": "Use pd.date_range to create a sequence of 5 business days starting from '2024-01-01'."
+      },
+      "setupCode": "import pandas as pd",
+      "starterCode": "# Create 5 business days starting from 2024-01-01\nresult = ___",
+      "solutionCode": "result = pd.date_range('2024-01-01', periods=5, freq='B')",
+      "validationType": "dataframe-equals",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["freq='B' 表示工作日频率", "periods 参数指定日期的数量"],
+        "en": ["freq='B' means business day frequency", "The periods parameter specifies the number of dates"]
+      },
+      "explanation": {
+        "zh": "pd.date_range() 可以生成规则的日期序列。freq='B' 跳过周末，只生成工作日。常用频率还有 'D'（日）、'W'（周）、'M'（月末）等。",
+        "en": "pd.date_range() generates regular date sequences. freq='B' skips weekends, generating only business days. Other common frequencies include 'D' (daily), 'W' (weekly), 'M' (month-end), etc."
+      }
+    },
+    {
+      "id": "s3-datetime-005",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "Timedelta 时间差运算",
+        "en": "Timedelta Arithmetic"
+      },
+      "description": {
+        "zh": "执行 pd.Timestamp('2024-03-15') - pd.Timestamp('2024-01-01') 的结果类型是什么？",
+        "en": "What is the type of the result of pd.Timestamp('2024-03-15') - pd.Timestamp('2024-01-01')?"
+      },
+      "options": {
+        "zh": [
+          "Timedelta（时间差）",
+          "int（整数天数）",
+          "Timestamp（时间戳）",
+          "float（浮点天数）"
+        ],
+        "en": [
+          "Timedelta (time delta)",
+          "int (integer days)",
+          "Timestamp",
+          "float (floating-point days)"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["两个时间戳相减的结果表示时间间隔"],
+        "en": ["Subtracting two timestamps gives a time interval"]
+      },
+      "explanation": {
+        "zh": "两个 Timestamp 相减得到 Timedelta 对象（如 Timedelta('74 days')）。可以用 .days 属性获取天数，用 .total_seconds() 获取秒数。Timedelta 也可以加到 Timestamp 上：ts + pd.Timedelta(days=7)。",
+        "en": "Subtracting two Timestamps produces a Timedelta object (e.g., Timedelta('74 days')). Use .days for the day count or .total_seconds() for seconds. Timedelta can also be added to a Timestamp: ts + pd.Timedelta(days=7)."
+      }
+    },
+    {
+      "id": "s3-datetime-006",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "dt 访问器的多种属性",
+        "en": "dt Accessor Attributes"
+      },
+      "description": {
+        "zh": "从 datetime 列中同时提取月份 (month)、星期几 (dayofweek, 0=Monday) 和小时 (hour)，分别存入 'month'、'weekday'、'hour' 列。",
+        "en": "Extract month, day of week (dayofweek, 0=Monday), and hour from a datetime column, storing them in 'month', 'weekday', and 'hour' columns."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'timestamp': pd.to_datetime(['2024-01-15 09:30:00', '2024-02-20 14:45:00', '2024-03-10 18:00:00'])})",
+      "starterCode": "# Extract month, weekday, and hour\ndf['month'] = ___\ndf['weekday'] = ___\ndf['hour'] = ___",
+      "solutionCode": "df['month'] = df['timestamp'].dt.month\ndf['weekday'] = df['timestamp'].dt.dayofweek\ndf['hour'] = df['timestamp'].dt.hour",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = df['month'].tolist() == [1, 2, 3] and df['hour'].tolist() == [9, 14, 18] and df['weekday'].iloc[0] == 0\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["dt 访问器有 year, month, day, hour, minute, second, dayofweek 等属性", "dayofweek 中 0 表示星期一，6 表示星期日"],
+        "en": ["The dt accessor has year, month, day, hour, minute, second, dayofweek attributes", "In dayofweek, 0 is Monday and 6 is Sunday"]
+      },
+      "explanation": {
+        "zh": "dt 访问器提供丰富的时间属性：year/month/day（日期部分）、hour/minute/second（时间部分）、dayofweek（星期几，0=周一）、dayofyear（一年中第几天）、quarter（季度）等。",
+        "en": "The dt accessor provides rich datetime attributes: year/month/day (date parts), hour/minute/second (time parts), dayofweek (day of week, 0=Monday), dayofyear (day of year), quarter, etc."
+      }
+    },
+    {
+      "id": "s3-datetime-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "tz_localize 和 tz_convert 时区操作",
+        "en": "tz_localize and tz_convert Timezone Operations"
+      },
+      "description": {
+        "zh": "将无时区的 datetime 列先本地化为 'UTC'，然后转换为 'Asia/Shanghai' 时区。",
+        "en": "Localize a timezone-naive datetime column to 'UTC', then convert it to 'Asia/Shanghai' timezone."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'time': pd.to_datetime(['2024-01-15 08:00:00', '2024-01-15 12:00:00', '2024-01-15 18:00:00'])})",
+      "starterCode": "# Localize to UTC then convert to Shanghai\ndf['time_shanghai'] = ___",
+      "solutionCode": "df['time_shanghai'] = df['time'].dt.tz_localize('UTC').dt.tz_convert('Asia/Shanghai')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = str(df['time_shanghai'].dt.tz) == 'Asia/Shanghai' and df['time_shanghai'].iloc[0].hour == 16\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["先用 tz_localize 标记当前时区，再用 tz_convert 转换", "tz_localize 用于无时区的数据，tz_convert 用于已有时区的数据"],
+        "en": ["First use tz_localize to mark the current timezone, then tz_convert to change it", "tz_localize is for timezone-naive data, tz_convert is for timezone-aware data"]
+      },
+      "explanation": {
+        "zh": "tz_localize 将 naive datetime 标记为指定时区（不改变时间值）；tz_convert 将已有时区的时间转换为另一时区（会改变时间值）。上海是 UTC+8，所以 UTC 08:00 变成上海 16:00。",
+        "en": "tz_localize marks naive datetime with a timezone (doesn't change the time value); tz_convert converts between timezones (changes the time value). Shanghai is UTC+8, so UTC 08:00 becomes Shanghai 16:00."
+      }
+    },
+    {
+      "id": "s3-datetime-008",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "Period 和 PeriodIndex",
+        "en": "Period and PeriodIndex"
+      },
+      "description": {
+        "zh": "关于 pd.Period 和 pd.PeriodIndex，以下哪个描述正确？",
+        "en": "Which description about pd.Period and pd.PeriodIndex is correct?"
+      },
+      "options": {
+        "zh": [
+          "Period 表示一个时间段（如 2024 年 1 月），而 Timestamp 表示一个时间点；可以用 to_period() 和 to_timestamp() 互转",
+          "Period 和 Timestamp 完全相同，只是命名不同",
+          "PeriodIndex 只能表示月份级别的时间段",
+          "Period 不能用于 groupby 操作"
+        ],
+        "en": [
+          "Period represents a time span (e.g., January 2024), while Timestamp is a point in time; they can be converted via to_period() and to_timestamp()",
+          "Period and Timestamp are identical, just named differently",
+          "PeriodIndex can only represent monthly time spans",
+          "Period cannot be used in groupby operations"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["Period 代表整个时间段，如 '2024-01' 代表整个一月份"],
+        "en": ["A Period represents an entire time span, e.g., '2024-01' represents the entire month of January"]
+      },
+      "explanation": {
+        "zh": "Period 是时间段的概念（如一天、一个月、一个季度），Timestamp 是时间点。用 s.dt.to_period('M') 将 Timestamp 转为月度 Period，用 period.to_timestamp() 反向转换。PeriodIndex 支持各种频率。",
+        "en": "Period represents a time span (a day, month, quarter), while Timestamp is a point in time. Use s.dt.to_period('M') to convert Timestamps to monthly Periods, and period.to_timestamp() to convert back. PeriodIndex supports various frequencies."
+      }
+    },
+    {
+      "id": "s3-datetime-009",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "Timedelta 算术运算",
+        "en": "Timedelta Arithmetic"
+      },
+      "description": {
+        "zh": "给 'order_date' 列的每个日期加上 7 天，生成 'delivery_date' 列。",
+        "en": "Add 7 days to each date in the 'order_date' column to create a 'delivery_date' column."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'order_id': [1, 2, 3], 'order_date': pd.to_datetime(['2024-01-10', '2024-01-15', '2024-01-20'])})",
+      "starterCode": "# Add 7 days to order_date\ndf['delivery_date'] = ___",
+      "solutionCode": "df['delivery_date'] = df['order_date'] + pd.Timedelta(days=7)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = df['delivery_date'].iloc[0] == pd.Timestamp('2024-01-17') and df['delivery_date'].iloc[2] == pd.Timestamp('2024-01-27')\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["pd.Timedelta(days=7) 创建一个 7 天的时间差", "直接用 + 运算符将 Timedelta 加到 datetime 列"],
+        "en": ["pd.Timedelta(days=7) creates a 7-day time delta", "Use the + operator to add Timedelta to a datetime column"]
+      },
+      "explanation": {
+        "zh": "pd.Timedelta 支持 days、hours、minutes、seconds 等参数。datetime 列可以直接与 Timedelta 做加减运算。也可以用 pd.DateOffset(days=7) 达到类似效果。",
+        "en": "pd.Timedelta supports days, hours, minutes, seconds parameters. Datetime columns can directly add/subtract Timedelta values. pd.DateOffset(days=7) achieves a similar result."
+      }
+    },
+    {
+      "id": "s3-datetime-010",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "date_range 的频率代码",
+        "en": "date_range Frequency Codes"
+      },
+      "description": {
+        "zh": "使用 pd.date_range 创建从 '2024-01-01' 到 '2024-12-31' 的月末日期序列。",
+        "en": "Use pd.date_range to create a month-end date sequence from '2024-01-01' to '2024-12-31'."
+      },
+      "setupCode": "import pandas as pd",
+      "starterCode": "# Create month-end dates for 2024\nresult = ___",
+      "solutionCode": "result = pd.date_range('2024-01-01', '2024-12-31', freq='ME')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = len(result) == 12 and result[0].month == 1 and result[-1].month == 12 and result[0].day >= 28\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["freq='ME' 表示月末频率（Month End）", "常用频率：'B' 工作日, 'W' 周, 'ME' 月末, 'QE' 季末, 'YE' 年末"],
+        "en": ["freq='ME' means month-end frequency", "Common frequencies: 'B' business day, 'W' weekly, 'ME' month-end, 'QE' quarter-end, 'YE' year-end"]
+      },
+      "explanation": {
+        "zh": "date_range 支持丰富的频率代码：'B'（工作日）、'W'（周日）、'W-MON'（周一）、'ME'（月末）、'MS'（月初）、'QE'（季末）、'YE'（年末）等。注意 pandas 2.2+ 中 'M' 改为 'ME'，'Q' 改为 'QE'。",
+        "en": "date_range supports rich frequency codes: 'B' (business day), 'W' (Sunday), 'W-MON' (Monday), 'ME' (month-end), 'MS' (month-start), 'QE' (quarter-end), 'YE' (year-end), etc. Note: in pandas 2.2+, 'M' changed to 'ME', 'Q' to 'QE'."
+      }
+    },
+    {
+      "id": "s3-datetime-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 时区感知与时区无关的比较错误",
+        "en": "[Debug] Timezone-Naive vs Aware Comparison Error"
+      },
+      "description": {
+        "zh": "以下代码试图比较两个日期列，但一个有时区信息一个没有，导致 TypeError。请修复代码，使比较能正常进行（将 time_aware 转为 naive）。",
+        "en": "The following code tries to compare two date columns, but one is timezone-aware and the other is naive, causing a TypeError. Fix the code to make the comparison work (convert time_aware to naive)."
+      },
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'time_naive': pd.to_datetime(['2024-01-15 08:00', '2024-01-15 12:00']), 'time_aware': pd.to_datetime(['2024-01-15 16:00', '2024-01-15 20:00']).tz_localize('Asia/Shanghai')})",
+      "starterCode": "# Bug: TypeError comparing tz-naive and tz-aware datetimes\nresult = df['time_naive'] < df['time_aware']",
+      "solutionCode": "result = df['time_naive'] < df['time_aware'].dt.tz_localize(None)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = len(result) == 2 and result.dtype == bool\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["不能直接比较有时区和无时区的 datetime", "用 .dt.tz_localize(None) 去除时区信息，或用 .dt.tz_localize('Asia/Shanghai') 添加时区"],
+        "en": ["Cannot directly compare tz-aware and tz-naive datetimes", "Use .dt.tz_localize(None) to remove timezone info, or .dt.tz_localize() to add it"]
+      },
+      "explanation": {
+        "zh": "pandas 不允许直接比较有时区和无时区的 datetime。解决方法：1) 用 .dt.tz_localize(None) 移除时区使两者都是 naive；2) 或用 .dt.tz_localize('UTC') 给 naive 添加时区后再 tz_convert。选择哪种取决于业务需求。",
+        "en": "pandas does not allow direct comparison between tz-aware and tz-naive datetimes. Solutions: 1) Use .dt.tz_localize(None) to remove timezone making both naive; 2) Or use .dt.tz_localize('UTC') on the naive column then tz_convert. The choice depends on business requirements."
+      }
+    },
+    {
+      "id": "s3-datetime-012",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "[最佳实践] datetime 类型 vs 字符串存储日期",
+        "en": "[Best Practice] datetime vs String for Date Columns"
+      },
+      "description": {
+        "zh": "为什么应该将日期列转换为 datetime 类型而不是保持字符串？",
+        "en": "Why should date columns be converted to datetime type instead of keeping them as strings?"
+      },
+      "options": {
+        "zh": [
+          "datetime 类型支持日期运算、时间序列操作（resample/rolling）、正确的排序和比较，且通常更省内存",
+          "字符串类型存储日期更节省内存",
+          "datetime 类型只是为了显示格式更美观",
+          "两者没有区别，都可以用于时间序列分析"
+        ],
+        "en": [
+          "datetime type supports date arithmetic, time series operations (resample/rolling), correct sorting and comparison, and usually uses less memory",
+          "String type uses less memory for storing dates",
+          "datetime type is only for nicer display formatting",
+          "There is no difference, both work for time series analysis"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["试试对字符串列做 .dt.year 或 resample 操作"],
+        "en": ["Try doing .dt.year or resample on a string column"]
+      },
+      "explanation": {
+        "zh": "datetime 类型的优势：1) 支持 dt 访问器提取年/月/日等；2) 支持 resample/rolling 等时间序列操作；3) 支持 Timedelta 算术；4) 正确的时间顺序排序；5) 内存效率更高（int64 而非变长字符串）。",
+        "en": "datetime type advantages: 1) dt accessor for year/month/day extraction; 2) resample/rolling time series operations; 3) Timedelta arithmetic; 4) correct chronological sorting; 5) better memory efficiency (int64 vs variable-length strings)."
+      }
+    },
+    {
+      "id": "s3-datetime-013",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[综合] 时间序列分析：重采样+滚动+日期筛选",
+        "en": "[Challenge] Time Series Analysis: resample+rolling+date filtering"
+      },
+      "description": {
+        "zh": "对销售数据进行时间序列分析：1) 将 'date' 设为索引；2) 按月重采样 (resample('ME')) 并求 'sales' 的月总和，存入 monthly；3) 计算月总和的 3 月滚动平均存入 monthly['ma3']；4) 筛选 2024 年下半年（7月到12月）的数据存入 result。",
+        "en": "Perform time series analysis on sales data: 1) Set 'date' as index; 2) Resample monthly (resample('ME')) and sum 'sales', store in monthly; 3) Compute 3-month rolling mean of monthly sums as monthly['ma3']; 4) Filter for the second half of 2024 (July-December) and store in result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2024-01-01', '2024-12-31', freq='D')\ndf = pd.DataFrame({'date': dates, 'sales': np.random.randint(100, 500, len(dates))})",
+      "starterCode": "# Step 1: Set date as index\n# Step 2: Monthly resample and sum\n# Step 3: 3-month rolling mean\n# Step 4: Filter second half of 2024\nresult = ___",
+      "solutionCode": "df = df.set_index('date')\nmonthly = df['sales'].resample('ME').sum().to_frame()\nmonthly['ma3'] = monthly['sales'].rolling(3).mean()\nresult = monthly['2024-07':'2024-12']",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = len(result) == 6 and 'ma3' in result.columns and result.index[0].month == 7 and result.index[-1].month == 12\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["先 set_index('date')，然后 resample('ME').sum()", "用字符串切片筛选日期范围：monthly['2024-07':'2024-12']", "rolling(3).mean() 计算 3 期移动平均"],
+        "en": ["First set_index('date'), then resample('ME').sum()", "Use string slicing for date range filtering: monthly['2024-07':'2024-12']", "rolling(3).mean() computes 3-period moving average"]
+      },
+      "explanation": {
+        "zh": "这个综合练习展示了完整的时间序列分析流程：设置日期索引 -> 月度重采样聚合 -> 滚动平均平滑趋势 -> 日期范围筛选。DatetimeIndex 的字符串切片功能让日期筛选非常直观。",
+        "en": "This challenge demonstrates a complete time series analysis workflow: set date index -> monthly resample aggregation -> rolling mean for trend smoothing -> date range filtering. DatetimeIndex string slicing makes date filtering very intuitive."
+      }
+    }
+  ]
+}

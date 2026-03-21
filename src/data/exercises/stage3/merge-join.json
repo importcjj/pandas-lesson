@@ -1,0 +1,414 @@
+{
+  "module": "merge-join",
+  "stageId": "stage3",
+  "lessonId": "merge-join",
+  "tags": ["merge", "join", "concat", "inner", "left", "right"],
+  "exercises": [
+    {
+      "id": "s3-merge-join-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "内连接 (inner merge)",
+        "en": "Inner Merge"
+      },
+      "description": {
+        "zh": "将 df_orders 和 df_customers 通过 'customer_id' 列进行内连接。",
+        "en": "Perform an inner merge of df_orders and df_customers on the 'customer_id' column."
+      },
+      "setupCode": "import pandas as pd\ndf_orders = pd.DataFrame({'order_id': [1, 2, 3], 'customer_id': [101, 102, 103], 'amount': [250, 150, 300]})\ndf_customers = pd.DataFrame({'customer_id': [101, 102, 104], 'name': ['Alice', 'Bob', 'David']})",
+      "starterCode": "# Inner merge on customer_id\nresult = ___",
+      "solutionCode": "result = pd.merge(df_orders, df_customers, on='customer_id', how='inner')",
+      "validationType": "dataframe-equals",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["使用 pd.merge() 函数", "how='inner' 是默认值，只保留两边都有的键"],
+        "en": ["Use the pd.merge() function", "how='inner' is the default and keeps only keys present in both sides"]
+      },
+      "explanation": {
+        "zh": "内连接只保留两个 DataFrame 中 customer_id 都存在的行。客户 103 和 104 因为只在一边存在而被排除。",
+        "en": "Inner merge keeps only rows where customer_id exists in both DataFrames. Customers 103 and 104 are excluded because they only exist in one side."
+      }
+    },
+    {
+      "id": "s3-merge-join-002",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "左连接与右连接",
+        "en": "Left and Right Merge"
+      },
+      "description": {
+        "zh": "执行 pd.merge(df_a, df_b, on='key', how='left') 后，结果中的行数取决于什么？",
+        "en": "After executing pd.merge(df_a, df_b, on='key', how='left'), what determines the number of rows in the result?"
+      },
+      "options": {
+        "zh": [
+          "结果至少包含 df_a 的所有行（如果 df_b 中 key 有重复可能更多）",
+          "结果只包含 df_b 的所有行",
+          "结果行数等于 df_a 和 df_b 行数之和",
+          "结果行数等于两个 DataFrame 中 key 的交集大小"
+        ],
+        "en": [
+          "The result contains at least all rows from df_a (possibly more if df_b has duplicate keys)",
+          "The result contains only all rows from df_b",
+          "The number of rows equals the sum of rows in df_a and df_b",
+          "The number of rows equals the size of the intersection of keys"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["左连接保留左表的所有行"],
+        "en": ["Left join keeps all rows from the left table"]
+      },
+      "explanation": {
+        "zh": "左连接保留左表 (df_a) 的所有行。如果右表中的 key 有重复，结果中对应的左表行会被复制。",
+        "en": "Left join keeps all rows from the left table (df_a). If keys in the right table have duplicates, corresponding rows from the left table will be duplicated."
+      }
+    },
+    {
+      "id": "s3-merge-join-003",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "多键合并",
+        "en": "Merge on Multiple Keys"
+      },
+      "description": {
+        "zh": "在两个 DataFrame 上使用多个键进行合并。",
+        "en": "Merge two DataFrames on multiple keys."
+      },
+      "codeTemplate": "result = pd.merge(df1, df2, on=[___], how='inner')",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "'year', 'month'",
+          "alternatives": ["\"year\", \"month\""]
+        }
+      ],
+      "hints": {
+        "zh": ["on 参数可以接受一个列名列表来指定多个合并键"],
+        "en": ["The on parameter can accept a list of column names for multiple merge keys"]
+      },
+      "explanation": {
+        "zh": "当需要按多个列匹配时，将列名列表传给 on 参数。两个 DataFrame 必须都包含这些列。",
+        "en": "When matching on multiple columns, pass a list of column names to the on parameter. Both DataFrames must contain these columns."
+      }
+    },
+    {
+      "id": "s3-merge-join-004",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "concat 纵向拼接",
+        "en": "concat Along axis=0"
+      },
+      "description": {
+        "zh": "使用 pd.concat() 将 df1 和 df2 纵向拼接（沿 axis=0），并重置索引（ignore_index=True）。",
+        "en": "Use pd.concat() to concatenate df1 and df2 vertically (along axis=0) with reset index (ignore_index=True)."
+      },
+      "setupCode": "import pandas as pd\ndf1 = pd.DataFrame({'name': ['Alice', 'Bob'], 'score': [90, 85]})\ndf2 = pd.DataFrame({'name': ['Charlie', 'David'], 'score': [78, 92]})",
+      "starterCode": "# Concatenate df1 and df2 vertically\nresult = ___",
+      "solutionCode": "result = pd.concat([df1, df2], ignore_index=True)",
+      "validationType": "dataframe-equals",
+      "expectedOutput": "",
+      "hints": {
+        "zh": ["pd.concat() 接受一个 DataFrame 列表", "ignore_index=True 会重新生成从 0 开始的索引"],
+        "en": ["pd.concat() accepts a list of DataFrames", "ignore_index=True generates a new index starting from 0"]
+      },
+      "explanation": {
+        "zh": "pd.concat([df1, df2], ignore_index=True) 将两个 DataFrame 上下拼接，并创建连续的新索引。",
+        "en": "pd.concat([df1, df2], ignore_index=True) stacks the two DataFrames vertically and creates a new continuous index."
+      }
+    },
+    {
+      "id": "s3-merge-join-005",
+      "type": "true-false",
+      "difficulty": 3,
+      "title": {
+        "zh": "concat axis=1 横向拼接",
+        "en": "concat Along axis=1"
+      },
+      "description": {
+        "zh": "pd.concat([df1, df2], axis=1) 会将两个 DataFrame 横向并排拼接（按列合并）。",
+        "en": "pd.concat([df1, df2], axis=1) concatenates two DataFrames side by side (column-wise)."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["axis=0 是纵向拼接，axis=1 呢？"],
+        "en": ["axis=0 is vertical concatenation, what about axis=1?"]
+      },
+      "explanation": {
+        "zh": "axis=1 表示沿列方向拼接，即将两个 DataFrame 的列合并在一起。如果索引不对齐，缺失位置会填充 NaN。",
+        "en": "axis=1 means concatenation along the column axis, combining columns from both DataFrames. If indices don't align, missing positions are filled with NaN."
+      }
+    },
+    {
+      "id": "s3-merge-join-006",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "外连接 (outer merge)",
+        "en": "Outer Merge"
+      },
+      "description": {
+        "zh": "使用 outer 合并将 df_orders 和 df_customers 通过 'customer_id' 进行外连接，保留所有行。",
+        "en": "Perform an outer merge of df_orders and df_customers on 'customer_id', keeping all rows from both sides."
+      },
+      "setupCode": "import pandas as pd\ndf_orders = pd.DataFrame({'order_id': [1, 2, 3], 'customer_id': [101, 102, 103], 'amount': [250, 150, 300]})\ndf_customers = pd.DataFrame({'customer_id': [101, 102, 104], 'name': ['Alice', 'Bob', 'David']})",
+      "starterCode": "# Outer merge on customer_id\nresult = ___",
+      "solutionCode": "result = pd.merge(df_orders, df_customers, on='customer_id', how='outer')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = len(result) == 4 and result['customer_id'].tolist() == [101, 102, 103, 104]\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["how='outer' 保留两边所有的键", "不匹配的行用 NaN 填充"],
+        "en": ["how='outer' keeps all keys from both sides", "Unmatched rows are filled with NaN"]
+      },
+      "explanation": {
+        "zh": "外连接保留两个 DataFrame 的所有行。customer_id 103 只在订单中，104 只在客户中，两者都被保留，缺失列用 NaN 填充。",
+        "en": "Outer merge keeps all rows from both DataFrames. customer_id 103 exists only in orders, 104 only in customers — both are kept with NaN for missing columns."
+      }
+    },
+    {
+      "id": "s3-merge-join-007",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "merge 的 suffixes 参数",
+        "en": "merge suffixes Parameter"
+      },
+      "description": {
+        "zh": "合并两个有同名列 'score' 的 DataFrame，使用自定义后缀 '_math' 和 '_english' 区分。",
+        "en": "Merge two DataFrames that both have a 'score' column, using custom suffixes '_math' and '_english' to distinguish them."
+      },
+      "codeTemplate": "result = pd.merge(df_math, df_english, on='name', ___=('_math', '_english'))",
+      "blanks": [
+        {
+          "placeholder": "___",
+          "answer": "suffixes",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": ["当两个 DataFrame 有同名列（非 key 列）时，需要用后缀区分"],
+        "en": ["When both DataFrames have columns with the same name (non-key columns), suffixes are needed to distinguish them"]
+      },
+      "explanation": {
+        "zh": "suffixes 参数接受一个元组，分别为左右 DataFrame 的重复列名添加后缀。默认是 ('_x', '_y')。自定义后缀让结果列名更有意义。",
+        "en": "The suffixes parameter accepts a tuple, adding suffixes to duplicate column names from the left and right DataFrames. Default is ('_x', '_y'). Custom suffixes make column names more meaningful."
+      }
+    },
+    {
+      "id": "s3-merge-join-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "merge 的 indicator 参数",
+        "en": "merge indicator Parameter"
+      },
+      "description": {
+        "zh": "使用 indicator=True 进行外连接，查看每行数据来自哪个 DataFrame。结果中会多出一列 '_merge'。",
+        "en": "Use indicator=True with an outer merge to see which DataFrame each row comes from. The result will have an extra '_merge' column."
+      },
+      "setupCode": "import pandas as pd\ndf_orders = pd.DataFrame({'customer_id': [101, 102, 103], 'amount': [250, 150, 300]})\ndf_customers = pd.DataFrame({'customer_id': [101, 102, 104], 'name': ['Alice', 'Bob', 'David']})",
+      "starterCode": "# Outer merge with indicator\nresult = ___",
+      "solutionCode": "result = pd.merge(df_orders, df_customers, on='customer_id', how='outer', indicator=True)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = '_merge' in result.columns and set(result['_merge'].unique()) == {'both', 'left_only', 'right_only'}\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["indicator=True 添加 '_merge' 列，值为 'both'、'left_only' 或 'right_only'"],
+        "en": ["indicator=True adds a '_merge' column with values 'both', 'left_only', or 'right_only'"]
+      },
+      "explanation": {
+        "zh": "indicator=True 在结果中添加 '_merge' 列：'both' 表示两边都有，'left_only' 只在左表，'right_only' 只在右表。这在数据质量检查时非常有用。",
+        "en": "indicator=True adds a '_merge' column to the result: 'both' means present in both sides, 'left_only' only in left, 'right_only' only in right. Very useful for data quality checks."
+      }
+    },
+    {
+      "id": "s3-merge-join-009",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "merge 的 validate 参数",
+        "en": "merge validate Parameter"
+      },
+      "description": {
+        "zh": "merge 的 validate 参数有什么作用？",
+        "en": "What does the validate parameter of merge do?"
+      },
+      "options": {
+        "zh": [
+          "验证合并键的关系（如一对一、一对多），不符合时抛出 MergeError",
+          "验证合并后的 DataFrame 是否有效",
+          "自动修复合并中的数据类型不匹配",
+          "验证两个 DataFrame 的行数是否相同"
+        ],
+        "en": [
+          "Validates the merge key relationship (e.g., one-to-one, one-to-many), raising MergeError if violated",
+          "Validates whether the merged DataFrame is valid",
+          "Automatically fixes data type mismatches in the merge",
+          "Validates whether both DataFrames have the same number of rows"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["validate 可以设为 '1:1'、'1:m'、'm:1' 或 'm:m'"],
+        "en": ["validate can be set to '1:1', '1:m', 'm:1', or 'm:m'"]
+      },
+      "explanation": {
+        "zh": "validate 参数检查合并键的基数关系：'1:1' 要求两边键都唯一，'1:m' 要求左边唯一，'m:1' 要求右边唯一，'m:m' 不做限制。这有助于在合并时发现数据问题。",
+        "en": "The validate parameter checks the cardinality of merge keys: '1:1' requires unique keys on both sides, '1:m' requires unique left keys, 'm:1' requires unique right keys, 'm:m' has no restrictions. Helps catch data issues during merging."
+      }
+    },
+    {
+      "id": "s3-merge-join-010",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "join 与 merge 的区别",
+        "en": "join vs merge Distinction"
+      },
+      "description": {
+        "zh": "关于 DataFrame.join() 和 pd.merge()，以下哪个描述最准确？",
+        "en": "Which statement about DataFrame.join() and pd.merge() is most accurate?"
+      },
+      "options": {
+        "zh": [
+          "join 默认按索引合并，merge 默认按列合并；join 是 merge 的便捷方法",
+          "join 只能做内连接，merge 可以做各种连接",
+          "join 性能比 merge 好很多",
+          "join 和 merge 完全相同，没有任何区别"
+        ],
+        "en": [
+          "join defaults to index-based merging, merge defaults to column-based merging; join is a convenience method for merge",
+          "join can only do inner joins, merge can do all types",
+          "join has much better performance than merge",
+          "join and merge are completely identical with no differences"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["注意两者默认的合并键不同：join 用索引，merge 用列"],
+        "en": ["Note the different default merge keys: join uses index, merge uses columns"]
+      },
+      "explanation": {
+        "zh": "df.join(other) 默认按索引合并（left join），等价于 pd.merge(df, other, left_index=True, right_index=True, how='left')。join 更简洁但灵活性较低。",
+        "en": "df.join(other) defaults to index-based merging (left join), equivalent to pd.merge(df, other, left_index=True, right_index=True, how='left'). join is more concise but less flexible."
+      }
+    },
+    {
+      "id": "s3-merge-join-011",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "concat 的 keys 参数追踪来源",
+        "en": "concat keys Parameter for Source Tracking"
+      },
+      "description": {
+        "zh": "使用 pd.concat 拼接 df1 和 df2，并使用 keys 参数添加来源标签 ['2023', '2024']。",
+        "en": "Use pd.concat to concatenate df1 and df2, adding source labels ['2023', '2024'] with the keys parameter."
+      },
+      "setupCode": "import pandas as pd\ndf1 = pd.DataFrame({'product': ['A', 'B'], 'sales': [100, 200]})\ndf2 = pd.DataFrame({'product': ['A', 'B'], 'sales': [120, 220]})",
+      "starterCode": "# Concat with keys for source tracking\nresult = ___",
+      "solutionCode": "result = pd.concat([df1, df2], keys=['2023', '2024'])",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = result.index.nlevels == 2 and '2023' in result.index.get_level_values(0) and '2024' in result.index.get_level_values(0)\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["keys 参数为每个 DataFrame 添加外层索引标签", "结果会有 MultiIndex"],
+        "en": ["The keys parameter adds outer index labels for each DataFrame", "The result will have a MultiIndex"]
+      },
+      "explanation": {
+        "zh": "keys 参数在拼接时创建 MultiIndex，外层是标签（如年份），内层是原始索引。这可以追踪每行数据来自哪个源 DataFrame。",
+        "en": "The keys parameter creates a MultiIndex during concatenation, with the outer level being the labels (e.g., year) and the inner level being the original index. This tracks which source DataFrame each row comes from."
+      }
+    },
+    {
+      "id": "s3-merge-join-012",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 合并时数据类型不匹配",
+        "en": "[Debug] merge on Mismatched dtypes"
+      },
+      "description": {
+        "zh": "以下代码合并两个 DataFrame，但 'id' 列的数据类型不匹配（一个是 int，一个是 str），导致合并结果为空或不正确。请修复代码。",
+        "en": "The following code merges two DataFrames, but the 'id' column has mismatched dtypes (one is int, one is str), causing empty or incorrect results. Fix the code."
+      },
+      "setupCode": "import pandas as pd\ndf1 = pd.DataFrame({'id': [1, 2, 3], 'value_a': [10, 20, 30]})\ndf2 = pd.DataFrame({'id': ['1', '2', '4'], 'value_b': [100, 200, 400]})",
+      "starterCode": "# Bug: merge produces empty result due to dtype mismatch\nresult = pd.merge(df1, df2, on='id')",
+      "solutionCode": "df2['id'] = df2['id'].astype(int)\nresult = pd.merge(df1, df2, on='id')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = len(result) == 2 and list(result['id']) == [1, 2]\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["检查两个 DataFrame 中 'id' 列的 dtype", "用 astype() 统一数据类型后再合并"],
+        "en": ["Check the dtype of 'id' column in both DataFrames", "Use astype() to unify dtypes before merging"]
+      },
+      "explanation": {
+        "zh": "合并键的数据类型必须匹配。int 类型的 1 和 str 类型的 '1' 不会匹配。解决方法是先用 astype() 将一方转换为相同类型，然后再合并。",
+        "en": "Merge keys must have matching dtypes. Integer 1 and string '1' will not match. The fix is to use astype() to convert one side to the same type before merging."
+      }
+    },
+    {
+      "id": "s3-merge-join-013",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "[最佳实践] merge vs join vs concat 的选择",
+        "en": "[Best Practice] merge vs join vs concat Selection"
+      },
+      "description": {
+        "zh": "以下哪种使用建议最合理？",
+        "en": "Which usage recommendation is most reasonable?"
+      },
+      "options": {
+        "zh": [
+          "需要按列合并用 merge；按索引合并用 join；上下/左右拼接用 concat",
+          "任何场景都应该用 merge，它最通用",
+          "concat 只能纵向拼接，不能横向拼接",
+          "join 可以完全替代 merge，不需要学习 merge"
+        ],
+        "en": [
+          "Use merge for column-based joining; join for index-based joining; concat for stacking/combining",
+          "Use merge for everything, it's the most general",
+          "concat can only stack vertically, not horizontally",
+          "join can fully replace merge, no need to learn merge"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["每种方法都有最适合的使用场景"],
+        "en": ["Each method has its best use case"]
+      },
+      "explanation": {
+        "zh": "merge 灵活强大，适合按列名合并；join 简洁，适合按索引快速合并；concat 适合将结构相同的 DataFrame 上下拼接或左右组合。选择合适的方法让代码更简洁易懂。",
+        "en": "merge is flexible and powerful for column-based joins; join is concise for quick index-based joins; concat is ideal for stacking DataFrames with similar structure. Choosing the right method makes code cleaner and more readable."
+      }
+    },
+    {
+      "id": "s3-merge-join-014",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[综合] 合并三个不同键的数据源",
+        "en": "[Challenge] Combine 3 Data Sources with Different Keys"
+      },
+      "description": {
+        "zh": "将三个数据源合并：1) 先将 df_orders 和 df_customers 通过 'customer_id' 左连接；2) 再将结果和 df_products 通过 'product_id' 左连接；3) 最终结果应包含订单、客户和产品信息。",
+        "en": "Combine three data sources: 1) Left merge df_orders and df_customers on 'customer_id'; 2) Left merge the result with df_products on 'product_id'; 3) The final result should contain order, customer, and product information."
+      },
+      "setupCode": "import pandas as pd\ndf_orders = pd.DataFrame({'order_id': [1, 2, 3, 4], 'customer_id': [101, 102, 101, 103], 'product_id': ['P1', 'P2', 'P3', 'P1'], 'quantity': [2, 1, 3, 1]})\ndf_customers = pd.DataFrame({'customer_id': [101, 102, 103], 'name': ['Alice', 'Bob', 'Charlie']})\ndf_products = pd.DataFrame({'product_id': ['P1', 'P2', 'P3'], 'product_name': ['Widget', 'Gadget', 'Doohickey'], 'price': [10.0, 25.0, 15.0]})",
+      "starterCode": "# Step 1: merge orders with customers\n# Step 2: merge result with products\nresult = ___",
+      "solutionCode": "result = pd.merge(df_orders, df_customers, on='customer_id', how='left')\nresult = pd.merge(result, df_products, on='product_id', how='left')",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result_check = len(result) == 4 and 'name' in result.columns and 'product_name' in result.columns and 'price' in result.columns and result['name'].tolist() == ['Alice', 'Bob', 'Alice', 'Charlie']\nexcept:\n    result_check = False\nresult_check",
+      "hints": {
+        "zh": ["分两步合并：先合并订单和客户，再合并产品", "每次合并使用不同的 on 参数", "使用 how='left' 保留所有订单"],
+        "en": ["Merge in two steps: first orders with customers, then with products", "Each merge uses a different on parameter", "Use how='left' to keep all orders"]
+      },
+      "explanation": {
+        "zh": "多表合并是数据分析中的常见操作。关键是确定合并顺序和合并键。这里先用 customer_id 关联客户信息，再用 product_id 关联产品信息，最终得到包含所有维度的完整订单数据。",
+        "en": "Multi-table merging is common in data analysis. The key is determining the merge order and keys. Here we first join customer info via customer_id, then product info via product_id, producing a complete order dataset with all dimensions."
+      }
+    }
+  ]
+}

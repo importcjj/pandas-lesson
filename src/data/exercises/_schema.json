@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Exercise Module",
+  "description": "A module containing pandas exercises for a specific topic",
+  "type": "object",
+  "required": ["module", "stageId", "lessonId", "tags", "exercises"],
+  "properties": {
+    "module": {
+      "type": "string",
+      "description": "Module identifier, e.g. 'series-basics'"
+    },
+    "stageId": {
+      "type": "string",
+      "enum": ["stage1", "stage2", "stage3", "stage4"],
+      "description": "Which stage this module belongs to"
+    },
+    "lessonId": {
+      "type": "string",
+      "description": "The lesson ID this module is associated with"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Knowledge point tags for filtering"
+    },
+    "exercises": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/exercise" },
+      "minItems": 1
+    }
+  },
+  "definitions": {
+    "localizedString": {
+      "type": "object",
+      "required": ["zh", "en"],
+      "properties": {
+        "zh": { "type": "string" },
+        "en": { "type": "string" }
+      }
+    },
+    "localizedStringArray": {
+      "type": "object",
+      "required": ["zh", "en"],
+      "properties": {
+        "zh": { "type": "array", "items": { "type": "string" } },
+        "en": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "exercise": {
+      "type": "object",
+      "required": ["id", "type", "difficulty", "title", "description"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^s[1-4]-[a-z0-9-]+-[0-9]{3}$",
+          "description": "Globally unique ID. Format: s{stage}-{topic}-{3-digit-number}, e.g. s1-series-001"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["multiple-choice", "true-false", "fill-blank", "coding", "output-matching"]
+        },
+        "difficulty": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "title": { "$ref": "#/definitions/localizedString" },
+        "description": { "$ref": "#/definitions/localizedString" },
+        "hints": { "$ref": "#/definitions/localizedStringArray" },
+        "explanation": { "$ref": "#/definitions/localizedString" },
+        "options": { "$ref": "#/definitions/localizedStringArray" },
+        "correctIndex": { "type": "integer", "minimum": 0 },
+        "correctAnswer": { "type": "boolean" },
+        "codeTemplate": { "type": "string" },
+        "blanks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["placeholder", "answer"],
+            "properties": {
+              "placeholder": { "type": "string" },
+              "answer": { "type": "string" },
+              "alternatives": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "starterCode": { "type": "string" },
+        "solutionCode": { "type": "string" },
+        "setupCode": { "type": "string" },
+        "validationType": {
+          "type": "string",
+          "enum": ["exact-output", "dataframe-equals", "custom-check"]
+        },
+        "expectedOutput": { "type": "string" },
+        "checkCode": { "type": "string" },
+        "code": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "multiple-choice" } } },
+          "then": { "required": ["options", "correctIndex"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "true-false" } } },
+          "then": { "required": ["correctAnswer"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "fill-blank" } } },
+          "then": { "required": ["codeTemplate", "blanks"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "coding" } } },
+          "then": { "required": ["starterCode", "solutionCode", "validationType"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "output-matching" } } },
+          "then": { "required": ["code", "options", "correctIndex"] }
+        }
+      ]
+    }
+  }
+}

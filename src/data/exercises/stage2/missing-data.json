@@ -1,0 +1,451 @@
+{
+  "module": "missing-data",
+  "stageId": "stage2",
+  "lessonId": "missing-data",
+  "tags": ["isna", "isnull", "fillna", "dropna", "missing-data", "ffill"],
+  "exercises": [
+    {
+      "id": "s2-missing-001",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "检测缺失值的方法",
+        "en": "Methods to Detect Missing Values"
+      },
+      "description": {
+        "zh": "以下哪个方法可以检测 DataFrame 中的缺失值（NaN）？",
+        "en": "Which method can detect missing values (NaN) in a DataFrame?"
+      },
+      "options": {
+        "zh": [
+          "df.isna()",
+          "df.is_missing()",
+          "df.find_null()",
+          "df.check_na()"
+        ],
+        "en": [
+          "df.isna()",
+          "df.is_missing()",
+          "df.find_null()",
+          "df.check_na()"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["pandas 中 isna() 和 isnull() 是等价的"],
+        "en": ["In pandas, isna() and isnull() are equivalent"]
+      },
+      "explanation": {
+        "zh": "df.isna() 返回一个同形状的布尔 DataFrame，缺失值位置为 True。isna() 和 isnull() 功能完全相同。",
+        "en": "df.isna() returns a boolean DataFrame of the same shape, with True at positions of missing values. isna() and isnull() are functionally identical."
+      }
+    },
+    {
+      "id": "s2-missing-002",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "统计每列缺失值的数量",
+        "en": "Count Missing Values Per Column"
+      },
+      "description": {
+        "zh": "统计 DataFrame df 中每列的缺失值数量并打印结果。",
+        "en": "Count the number of missing values in each column of DataFrame df and print the result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'A': [1, np.nan, 3, np.nan, 5],\n    'B': [np.nan, 2, np.nan, 4, 5],\n    'C': [1, 2, 3, 4, 5]\n})",
+      "starterCode": "# Count missing values per column and print\n",
+      "solutionCode": "print(df.isna().sum())",
+      "validationType": "exact-output",
+      "expectedOutput": "A    2\nB    2\nC    0\ndtype: int64",
+      "hints": {
+        "zh": [
+          "先用 isna() 得到布尔矩阵",
+          "再用 sum() 对每列求和，True 计为 1"
+        ],
+        "en": [
+          "First use isna() to get a boolean matrix",
+          "Then use sum() to sum each column, where True counts as 1"
+        ]
+      },
+      "explanation": {
+        "zh": "df.isna().sum() 先将每个值转为布尔值（缺失为 True），然后按列求和得到每列的缺失值数量。",
+        "en": "df.isna().sum() first converts each value to a boolean (True for missing), then sums by column to get the count of missing values per column."
+      }
+    },
+    {
+      "id": "s2-missing-003",
+      "type": "fill-blank",
+      "difficulty": 2,
+      "title": {
+        "zh": "用固定值填充缺失值",
+        "en": "Fill Missing Values with a Constant"
+      },
+      "description": {
+        "zh": "填写代码，用 0 填充 DataFrame 中的所有缺失值。",
+        "en": "Fill in the code to fill all missing values in the DataFrame with 0."
+      },
+      "codeTemplate": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'A': [1, np.nan, 3], 'B': [np.nan, 5, 6]})\ndf_filled = df.___1___(___2___)",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "fillna",
+          "alternatives": []
+        },
+        {
+          "placeholder": "___2___",
+          "answer": "0",
+          "alternatives": ["0.0"]
+        }
+      ],
+      "hints": {
+        "zh": [
+          "fillna() 方法用于填充缺失值",
+          "传入要填充的值作为参数"
+        ],
+        "en": [
+          "The fillna() method is used to fill missing values",
+          "Pass the value to fill as an argument"
+        ]
+      },
+      "explanation": {
+        "zh": "df.fillna(0) 将 DataFrame 中所有的 NaN 替换为 0，返回一个新的 DataFrame。",
+        "en": "df.fillna(0) replaces all NaN values in the DataFrame with 0, returning a new DataFrame."
+      }
+    },
+    {
+      "id": "s2-missing-004",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "删除含缺失值的行",
+        "en": "Drop Rows with Missing Values"
+      },
+      "description": {
+        "zh": "使用 dropna() 删除 DataFrame df 中包含任何缺失值的行，并打印结果。",
+        "en": "Use dropna() to drop rows in DataFrame df that contain any missing values, and print the result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'David'],\n    'age': [25, np.nan, 35, 40],\n    'score': [90, 85, np.nan, 70]\n})",
+      "starterCode": "# Drop rows with any missing values and print\n",
+      "solutionCode": "print(df.dropna())",
+      "validationType": "exact-output",
+      "expectedOutput": "    name   age  score\n0  Alice  25.0   90.0\n3  David  40.0   70.0",
+      "hints": {
+        "zh": [
+          "dropna() 默认删除包含任何 NaN 的行",
+          "可以用 how='all' 只删除全为 NaN 的行"
+        ],
+        "en": [
+          "dropna() drops rows containing any NaN by default",
+          "Use how='all' to only drop rows that are entirely NaN"
+        ]
+      },
+      "explanation": {
+        "zh": "df.dropna() 默认删除包含任意缺失值的行。Bob 和 Charlie 的行因为各有一个 NaN 被删除。",
+        "en": "df.dropna() drops rows containing any missing values by default. Bob's and Charlie's rows are dropped because each has one NaN."
+      }
+    },
+    {
+      "id": "s2-missing-005",
+      "type": "true-false",
+      "difficulty": 3,
+      "title": {
+        "zh": "fillna 的 ffill 方法",
+        "en": "The ffill Method in fillna"
+      },
+      "description": {
+        "zh": "使用 df.ffill() 可以用前一个非缺失值来填充 NaN（前向填充）。",
+        "en": "Using df.ffill() fills NaN values with the previous non-missing value (forward fill)."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["ffill 是 forward fill 的缩写，表示用前面的值向前填充"],
+        "en": ["ffill stands for forward fill, meaning it fills with the preceding value"]
+      },
+      "explanation": {
+        "zh": "df.ffill() 执行前向填充，即用每个 NaN 前面最近的非缺失值来替换它。这在时间序列数据中非常常用。",
+        "en": "df.ffill() performs forward fill, replacing each NaN with the nearest preceding non-missing value. This is very commonly used in time series data."
+      }
+    },
+    {
+      "id": "s2-missing-006",
+      "type": "true-false",
+      "difficulty": 2,
+      "title": {
+        "zh": "isna 与 isnull 的等价性",
+        "en": "isna vs isnull Equivalence"
+      },
+      "description": {
+        "zh": "df.isna() 和 df.isnull() 是完全等价的方法，它们返回相同的结果。",
+        "en": "df.isna() and df.isnull() are completely equivalent methods that return the same result."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["查看 pandas 源码可以发现 isnull 就是 isna 的别名"],
+        "en": ["Looking at pandas source code reveals that isnull is just an alias for isna"]
+      },
+      "explanation": {
+        "zh": "isna() 和 isnull() 完全等价，isnull 是 isna 的别名。同理，notna() 和 notnull() 也完全等价。推荐统一使用 isna()/notna()，因为它们与 pd.NA 的命名更一致。",
+        "en": "isna() and isnull() are fully equivalent — isnull is an alias for isna. Similarly, notna() and notnull() are equivalent. Using isna()/notna() is recommended for consistency with pd.NA naming."
+      }
+    },
+    {
+      "id": "s2-missing-007",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 ffill 和 bfill 填充",
+        "en": "Fill with ffill and bfill"
+      },
+      "description": {
+        "zh": "对 DataFrame df 先使用 ffill()（前向填充）填充缺失值，将结果赋值给 df_ffill，然后打印 df_ffill。",
+        "en": "Apply ffill() (forward fill) to DataFrame df, assign the result to df_ffill, then print df_ffill."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'temp': [20.0, np.nan, np.nan, 23.0, np.nan],\n    'humidity': [45, 50, np.nan, np.nan, 60]\n})",
+      "starterCode": "# Forward fill the DataFrame and print\n",
+      "solutionCode": "df_ffill = df.ffill()\nprint(df_ffill)",
+      "validationType": "exact-output",
+      "expectedOutput": "   temp  humidity\n0  20.0      45.0\n1  20.0      50.0\n2  20.0      50.0\n3  23.0      50.0\n4  23.0      60.0",
+      "hints": {
+        "zh": [
+          "ffill() 用前一个有效值填充 NaN",
+          "ffill 是 forward fill 的简写"
+        ],
+        "en": [
+          "ffill() fills NaN with the previous valid value",
+          "ffill is short for forward fill"
+        ]
+      },
+      "explanation": {
+        "zh": "df.ffill() 用前面最近的非缺失值填充 NaN。对应地，df.bfill() 用后面的值填充（backward fill）。这两种方法在时间序列数据中非常常用。",
+        "en": "df.ffill() fills NaN with the nearest preceding non-missing value. Conversely, df.bfill() fills with the next value (backward fill). Both are commonly used in time series data."
+      }
+    },
+    {
+      "id": "s2-missing-008",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "fillna 的 limit 参数",
+        "en": "fillna limit Parameter"
+      },
+      "description": {
+        "zh": "使用 ffill() 填充 df 的缺失值，但通过 limit=1 限制最多只向前填充 1 个连续 NaN。打印结果。",
+        "en": "Use ffill() to fill missing values in df, but limit forward filling to at most 1 consecutive NaN using limit=1. Print the result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'value': [10.0, np.nan, np.nan, np.nan, 50.0]\n})",
+      "starterCode": "# Forward fill with limit=1 and print\n",
+      "solutionCode": "print(df.ffill(limit=1))",
+      "validationType": "exact-output",
+      "expectedOutput": "   value\n0   10.0\n1   10.0\n2    NaN\n3    NaN\n4   50.0",
+      "hints": {
+        "zh": [
+          "limit 参数控制连续填充的最大数量",
+          "超过 limit 的连续 NaN 不会被填充"
+        ],
+        "en": [
+          "The limit parameter controls the maximum number of consecutive fills",
+          "Consecutive NaNs beyond the limit remain unfilled"
+        ]
+      },
+      "explanation": {
+        "zh": "limit=1 表示每次遇到连续 NaN 时，最多只填充 1 个。索引 1 被填充为 10.0，但索引 2 和 3 因超出 limit 而保持 NaN。这可以防止过度填充。",
+        "en": "limit=1 means at most 1 consecutive NaN is filled each time. Index 1 is filled with 10.0, but indices 2 and 3 remain NaN as they exceed the limit. This prevents over-filling."
+      }
+    },
+    {
+      "id": "s2-missing-009",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "使用 interpolate() 插值填充",
+        "en": "Fill with interpolate()"
+      },
+      "description": {
+        "zh": "使用 interpolate() 方法对 df 的缺失值进行线性插值填充，然后打印结果。",
+        "en": "Use the interpolate() method to fill missing values in df with linear interpolation, then print the result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'value': [0.0, np.nan, np.nan, 30.0, np.nan, 50.0]\n})",
+      "starterCode": "# Interpolate missing values and print\n",
+      "solutionCode": "print(df.interpolate())",
+      "validationType": "exact-output",
+      "expectedOutput": "   value\n0    0.0\n1   10.0\n2   20.0\n3   30.0\n4   40.0\n5   50.0",
+      "hints": {
+        "zh": [
+          "interpolate() 默认使用线性插值",
+          "线性插值会根据前后已知值计算中间值"
+        ],
+        "en": [
+          "interpolate() uses linear interpolation by default",
+          "Linear interpolation calculates intermediate values based on known surrounding values"
+        ]
+      },
+      "explanation": {
+        "zh": "interpolate() 默认执行线性插值，根据前后已知值均匀分配中间值。例如 0 和 30 之间的两个 NaN 被填充为 10 和 20。比 ffill/bfill 更适合数值连续变化的场景。",
+        "en": "interpolate() performs linear interpolation by default, evenly distributing values between known points. For example, two NaNs between 0 and 30 become 10 and 20. Better than ffill/bfill for continuously changing numeric data."
+      }
+    },
+    {
+      "id": "s2-missing-010",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "dropna 的 thresh 参数",
+        "en": "dropna thresh Parameter"
+      },
+      "description": {
+        "zh": "使用 dropna() 的 thresh 参数，只保留至少有 3 个非缺失值的行。打印结果。",
+        "en": "Use the thresh parameter of dropna() to keep only rows with at least 3 non-missing values. Print the result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'A': [1, np.nan, 3, np.nan],\n    'B': [np.nan, np.nan, 6, 8],\n    'C': [7, np.nan, 9, 10],\n    'D': [10, np.nan, 12, np.nan]\n})",
+      "starterCode": "# Keep rows with at least 3 non-NaN values and print\n",
+      "solutionCode": "print(df.dropna(thresh=3))",
+      "validationType": "exact-output",
+      "expectedOutput": "     A    B  C     D\n0  1.0  NaN  7  10.0\n2  3.0  6.0  9  12.0",
+      "hints": {
+        "zh": [
+          "thresh 表示保留一行所需的最少非缺失值数量",
+          "thresh=3 表示一行至少需要 3 个非 NaN 值才被保留"
+        ],
+        "en": [
+          "thresh specifies the minimum number of non-missing values required to keep a row",
+          "thresh=3 means a row needs at least 3 non-NaN values to be kept"
+        ]
+      },
+      "explanation": {
+        "zh": "thresh=3 要求每行至少有 3 个非缺失值。第 0 行有 3 个值（A=1, C=7, D=10），第 2 行有 4 个值，所以保留。第 1 行全为 NaN，第 3 行只有 2 个值，被删除。",
+        "en": "thresh=3 requires each row to have at least 3 non-missing values. Row 0 has 3 values (A=1, C=7, D=10), row 2 has 4 values, so they are kept. Row 1 is all NaN, row 3 has only 2 values — both dropped."
+      }
+    },
+    {
+      "id": "s2-missing-011",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "dropna 的 subset 参数",
+        "en": "dropna subset Parameter"
+      },
+      "description": {
+        "zh": "使用 dropna() 的 subset 参数，只检查 'name' 和 'score' 列是否有缺失值，删除这两列中有缺失的行。打印结果。",
+        "en": "Use the subset parameter of dropna() to check only the 'name' and 'score' columns for missing values, dropping rows where these columns have NaN. Print the result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', np.nan, 'Charlie', 'David'],\n    'age': [25, 30, np.nan, 40],\n    'score': [90, 85, 70, np.nan]\n})",
+      "starterCode": "# Drop rows with NaN in 'name' or 'score' columns and print\n",
+      "solutionCode": "print(df.dropna(subset=['name', 'score']))",
+      "validationType": "exact-output",
+      "expectedOutput": "      name   age  score\n0    Alice  25.0   90.0\n2  Charlie   NaN   70.0",
+      "hints": {
+        "zh": [
+          "subset 参数接收一个列名列表",
+          "只检查指定列中的缺失值，其他列的 NaN 不影响"
+        ],
+        "en": [
+          "The subset parameter takes a list of column names",
+          "Only checks specified columns for NaN; NaN in other columns doesn't matter"
+        ]
+      },
+      "explanation": {
+        "zh": "subset=['name', 'score'] 只检查 name 和 score 列。第 1 行 name 为 NaN，第 3 行 score 为 NaN，均被删除。第 2 行虽然 age 为 NaN，但不在检查范围内，所以保留。",
+        "en": "subset=['name', 'score'] only checks the name and score columns. Row 1 has NaN in name, row 3 has NaN in score — both dropped. Row 2 has NaN in age, but it's not in the subset, so it's kept."
+      }
+    },
+    {
+      "id": "s2-missing-012",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 notna() 进行筛选",
+        "en": "Filtering with notna()"
+      },
+      "description": {
+        "zh": "使用 notna() 筛选出 df 中 'email' 列不为缺失值的行，并打印结果。",
+        "en": "Use notna() to filter rows where the 'email' column is not missing, and print the result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'David'],\n    'email': ['alice@example.com', np.nan, 'charlie@example.com', np.nan]\n})",
+      "starterCode": "# Filter rows where email is not NaN and print\n",
+      "solutionCode": "print(df[df['email'].notna()])",
+      "validationType": "exact-output",
+      "expectedOutput": "      name                email\n0    Alice    alice@example.com\n2  Charlie  charlie@example.com",
+      "hints": {
+        "zh": [
+          "notna() 返回布尔 Series，非缺失值为 True",
+          "可以直接将布尔 Series 用于行筛选"
+        ],
+        "en": [
+          "notna() returns a boolean Series, True for non-missing values",
+          "The boolean Series can be used directly for row filtering"
+        ]
+      },
+      "explanation": {
+        "zh": "df['email'].notna() 返回布尔 Series，email 有值的为 True。用这个布尔 Series 筛选 df，只保留 email 不为 NaN 的行。notna() 是 isna() 的反操作。",
+        "en": "df['email'].notna() returns a boolean Series, True where email has a value. Using this to filter df keeps only rows where email is not NaN. notna() is the inverse of isna()."
+      }
+    },
+    {
+      "id": "s2-missing-013",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[调试] fillna 没有修改原始 DataFrame",
+        "en": "[Debug] fillna Not Modifying Original DataFrame"
+      },
+      "description": {
+        "zh": "以下代码想用 0 填充 df 中的缺失值，但打印 df 时发现缺失值仍然存在。请找到并修复 bug。",
+        "en": "The following code intends to fill missing values in df with 0, but printing df shows the NaN values are still there. Find and fix the bug."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'A': [1, np.nan, 3],\n    'B': [np.nan, 5, 6]\n})",
+      "starterCode": "# Bug: fillna doesn't modify df in place\ndf.fillna(0)\nprint(df)",
+      "solutionCode": "df = df.fillna(0)\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "     A    B\n0  1.0  0.0\n1  0.0  5.0\n2  3.0  6.0",
+      "hints": {
+        "zh": [
+          "fillna() 默认返回新的 DataFrame，不会修改原 df",
+          "需要将结果赋值回 df，或使用 inplace=True"
+        ],
+        "en": [
+          "fillna() returns a new DataFrame by default and doesn't modify the original",
+          "You need to assign the result back to df, or use inplace=True"
+        ]
+      },
+      "explanation": {
+        "zh": "fillna() 默认不修改原 DataFrame，而是返回一个新的。修复方式是 df = df.fillna(0)。大部分 pandas 方法都遵循这种模式。虽然 inplace=True 也可以，但不推荐使用。",
+        "en": "fillna() doesn't modify the original DataFrame by default — it returns a new one. The fix is df = df.fillna(0). Most pandas methods follow this pattern. While inplace=True also works, it's not recommended."
+      }
+    },
+    {
+      "id": "s2-missing-014",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 设计并执行缺失数据处理策略",
+        "en": "[Challenge] Design and Execute Missing Data Strategy"
+      },
+      "description": {
+        "zh": "对员工数据 df 执行完整的缺失值处理：1) 删除 'name' 列有缺失的行；2) 用 'salary' 列的中位数填充 salary 的缺失值；3) 用 'Unknown' 填充 'department' 列的缺失值。最终打印 df。",
+        "en": "Execute a complete missing data strategy on employee data df: 1) Drop rows where 'name' is missing; 2) Fill missing salary values with the median of the 'salary' column; 3) Fill missing 'department' values with 'Unknown'. Finally print df."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', np.nan, 'David', 'Eve'],\n    'salary': [50000, np.nan, 60000, np.nan, 70000],\n    'department': ['Engineering', 'Marketing', 'Engineering', np.nan, np.nan]\n})",
+      "starterCode": "# Step 1: Drop rows where name is missing\n\n# Step 2: Fill salary NaN with median of salary\n\n# Step 3: Fill department NaN with 'Unknown'\n\n# Print df\n",
+      "solutionCode": "df = df.dropna(subset=['name'])\ndf['salary'] = df['salary'].fillna(df['salary'].median())\ndf['department'] = df['department'].fillna('Unknown')\nprint(df)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "try:\n    checks = []\n    checks.append(len(df) == 4)\n    checks.append(df['name'].notna().all())\n    checks.append(df['salary'].notna().all())\n    checks.append(df['department'].notna().all())\n    checks.append('Unknown' in df['department'].values)\n    checks.append(df.loc[df['name'] == 'Bob', 'salary'].iloc[0] == 60000.0)\n    result = all(checks)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "使用 dropna(subset=['name']) 只删除 name 缺失的行",
+          "先计算 median 再填充，顺序很重要",
+          "不同列可以用不同策略填充缺失值"
+        ],
+        "en": [
+          "Use dropna(subset=['name']) to drop only rows with missing name",
+          "Calculate median first, then fill — order matters",
+          "Different columns can use different strategies for filling missing values"
+        ]
+      },
+      "explanation": {
+        "zh": "综合缺失数据处理需要针对不同列采用不同策略：关键标识列（name）缺失直接删行；数值列（salary）用统计值（中位数）填充；分类列（department）用默认值填充。注意处理顺序：先删行再计算中位数，避免被删除行影响统计结果。",
+        "en": "Comprehensive missing data handling requires different strategies for different columns: drop rows where key identifier (name) is missing; fill numeric columns (salary) with statistical values (median); fill categorical columns (department) with defaults. Note the order: drop rows first, then calculate median to avoid deleted rows affecting statistics."
+      }
+    }
+  ]
+}

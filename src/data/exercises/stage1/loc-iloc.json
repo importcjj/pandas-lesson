@@ -1,0 +1,416 @@
+{
+  "module": "loc-iloc",
+  "stageId": "stage1",
+  "lessonId": "loc-iloc",
+  "tags": ["dataframe", "loc", "iloc", "indexing", "boolean"],
+  "exercises": [
+    {
+      "id": "s1-lociloc-001",
+      "type": "output-matching",
+      "difficulty": 1,
+      "title": {
+        "zh": "iloc 选择单个元素",
+        "en": "iloc Single Element Selection"
+      },
+      "description": {
+        "zh": "以下代码的输出是什么？",
+        "en": "What is the output of the following code?"
+      },
+      "code": "import pandas as pd\n\ndf = pd.DataFrame({'a': [10, 20, 30], 'b': [40, 50, 60]})\nprint(df.iloc[1, 0])",
+      "options": {
+        "zh": ["20", "50", "10", "40"],
+        "en": ["20", "50", "10", "40"]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["iloc 使用整数位置索引，格式为 [行, 列]"],
+        "en": ["iloc uses integer position indexing in the format [row, column]"]
+      },
+      "explanation": {
+        "zh": "df.iloc[1, 0] 选择第 2 行（索引 1）、第 1 列（索引 0）的元素，即 20。",
+        "en": "df.iloc[1, 0] selects the element at the 2nd row (index 1) and 1st column (index 0), which is 20."
+      }
+    },
+    {
+      "id": "s1-lociloc-002",
+      "type": "coding",
+      "difficulty": 1,
+      "title": {
+        "zh": "iloc 行列切片",
+        "en": "iloc Row and Column Slicing"
+      },
+      "description": {
+        "zh": "使用 iloc 选择前 2 行和所有列，并打印结果。",
+        "en": "Use iloc to select the first 2 rows and all columns, then print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({'x': [1, 2, 3, 4], 'y': [5, 6, 7, 8], 'z': [9, 10, 11, 12]})\n\n# Use iloc to select the first 2 rows and all columns\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({'x': [1, 2, 3, 4], 'y': [5, 6, 7, 8], 'z': [9, 10, 11, 12]})\n\nprint(df.iloc[:2, :])",
+      "setupCode": "",
+      "validationType": "exact-output",
+      "expectedOutput": "   x  y   z\n0  1  5   9\n1  2  6  10",
+      "hints": {
+        "zh": [
+          "iloc 切片与 Python 列表切片规则相同",
+          "使用 :2 选择前两行，: 选择所有列"
+        ],
+        "en": [
+          "iloc slicing follows the same rules as Python list slicing",
+          "Use :2 to select the first two rows, : to select all columns"
+        ]
+      }
+    },
+    {
+      "id": "s1-lociloc-003",
+      "type": "fill-blank",
+      "difficulty": 2,
+      "title": {
+        "zh": "loc 使用标签索引",
+        "en": "loc with Label Indexing"
+      },
+      "description": {
+        "zh": "填写空白处，使用 loc 选择 index 为 'b' 的行的 'score' 列值。",
+        "en": "Fill in the blank to use loc to select the 'score' column value for the row with index 'b'."
+      },
+      "codeTemplate": "import pandas as pd\n\ndf = pd.DataFrame({'score': [90, 85, 78]}, index=['a', 'b', 'c'])\nprint(df.loc[___, ___])",
+      "blanks": [
+        {
+          "placeholder": "___, ___",
+          "answer": "'b', 'score'",
+          "alternatives": ["\"b\", \"score\""]
+        }
+      ],
+      "hints": {
+        "zh": [
+          "loc 使用标签进行索引，不是整数位置",
+          "格式为 df.loc[行标签, 列标签]"
+        ],
+        "en": [
+          "loc uses labels for indexing, not integer positions",
+          "The format is df.loc[row_label, column_label]"
+        ]
+      },
+      "explanation": {
+        "zh": "df.loc['b', 'score'] 使用行标签 'b' 和列标签 'score' 来定位元素，返回 85。",
+        "en": "df.loc['b', 'score'] uses the row label 'b' and column label 'score' to locate the element, returning 85."
+      }
+    },
+    {
+      "id": "s1-lociloc-004",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "loc 与布尔索引",
+        "en": "loc with Boolean Indexing"
+      },
+      "description": {
+        "zh": "以下代码返回什么？\n\n```python\nimport pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'score': [90, 60, 80]})\nresult = df.loc[df['score'] >= 80, 'name']\n```",
+        "en": "What does the following code return?\n\n```python\nimport pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'score': [90, 60, 80]})\nresult = df.loc[df['score'] >= 80, 'name']\n```"
+      },
+      "options": {
+        "zh": [
+          "包含 'Alice' 和 'Charlie' 的 Series",
+          "包含 'Alice' 和 'Bob' 的 Series",
+          "包含所有三个名字的 Series",
+          "一个 DataFrame"
+        ],
+        "en": [
+          "A Series containing 'Alice' and 'Charlie'",
+          "A Series containing 'Alice' and 'Bob'",
+          "A Series containing all three names",
+          "A DataFrame"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["先看 score >= 80 的条件筛选了哪些行，然后取 name 列"],
+        "en": ["First check which rows satisfy score >= 80, then select the name column"]
+      },
+      "explanation": {
+        "zh": "df['score'] >= 80 筛选出 Alice (90) 和 Charlie (80) 对应的行，然后 'name' 列返回这两个名字的 Series。",
+        "en": "df['score'] >= 80 filters rows for Alice (90) and Charlie (80), then the 'name' column returns a Series with these two names."
+      }
+    },
+    {
+      "id": "s1-lociloc-005",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "组合 loc 条件",
+        "en": "Combining loc Conditions"
+      },
+      "description": {
+        "zh": "使用 loc 和组合条件，从 DataFrame 中选择 age > 25 且 city 为 'Beijing' 的行，打印结果。",
+        "en": "Use loc with combined conditions to select rows where age > 25 and city is 'Beijing', then print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'age': [28, 22, 35, 30],\n    'city': ['Beijing', 'Shanghai', 'Beijing', 'Guangzhou']\n})\n\n# Select rows where age > 25 AND city is 'Beijing'\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'age': [28, 22, 35, 30],\n    'city': ['Beijing', 'Shanghai', 'Beijing', 'Guangzhou']\n})\n\nprint(df.loc[(df['age'] > 25) & (df['city'] == 'Beijing')])",
+      "setupCode": "",
+      "validationType": "exact-output",
+      "expectedOutput": "      name  age     city\n0    Alice   28  Beijing\n2  Charlie   35  Beijing",
+      "hints": {
+        "zh": [
+          "使用 & 运算符组合多个布尔条件",
+          "每个条件必须用括号包裹",
+          "格式为 df.loc[(条件1) & (条件2)]"
+        ],
+        "en": [
+          "Use the & operator to combine multiple boolean conditions",
+          "Each condition must be wrapped in parentheses",
+          "The format is df.loc[(condition1) & (condition2)]"
+        ]
+      }
+    },
+    {
+      "id": "s1-lociloc-006",
+      "type": "output-matching",
+      "difficulty": 2,
+      "title": {
+        "zh": "loc 闭区间 vs iloc 半开区间",
+        "en": "loc Closed Interval vs iloc Half-open"
+      },
+      "description": {
+        "zh": "以下两段代码的输出行数分别是多少？\n\n```python\ndf = pd.DataFrame({'x': [10, 20, 30, 40, 50]})\nprint(len(df.loc[1:3]))   # A\nprint(len(df.iloc[1:3]))  # B\n```",
+        "en": "How many rows do the following two code segments output respectively?\n\n```python\ndf = pd.DataFrame({'x': [10, 20, 30, 40, 50]})\nprint(len(df.loc[1:3]))   # A\nprint(len(df.iloc[1:3]))  # B\n```"
+      },
+      "options": {
+        "zh": [
+          "A: 3行, B: 2行 — loc 包含末端，iloc 不包含",
+          "A: 2行, B: 2行 — 两者都不包含末端",
+          "A: 3行, B: 3行 — 两者都包含末端",
+          "A: 2行, B: 3行 — loc 不包含，iloc 包含"
+        ],
+        "en": [
+          "A: 3 rows, B: 2 rows — loc includes the endpoint, iloc does not",
+          "A: 2 rows, B: 2 rows — both exclude the endpoint",
+          "A: 3 rows, B: 3 rows — both include the endpoint",
+          "A: 2 rows, B: 3 rows — loc excludes, iloc includes"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["loc 使用标签切片是闭区间（两端都包含），iloc 使用位置切片是半开区间（不包含右端）"],
+        "en": ["loc label slicing is a closed interval (both ends included), iloc positional slicing is half-open (excludes right end)"]
+      },
+      "explanation": {
+        "zh": "这是 loc 和 iloc 最重要的区别之一：loc[1:3] 返回标签 1、2、3（3行），iloc[1:3] 返回位置 1、2（2行）。当索引是默认整数索引时，这个区别容易混淆。",
+        "en": "This is one of the most important differences between loc and iloc: loc[1:3] returns labels 1, 2, 3 (3 rows), iloc[1:3] returns positions 1, 2 (2 rows). This difference is easy to confuse with default integer indices."
+      }
+    },
+    {
+      "id": "s1-lociloc-007",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "loc 使用 callable",
+        "en": "loc with Callable"
+      },
+      "description": {
+        "zh": "使用 loc 和 lambda 函数选择 score 列大于均值的行，打印结果。",
+        "en": "Use loc with a lambda function to select rows where the score column is above the mean, and print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'score': [90, 70, 85, 60]\n})\n\n# Use loc with lambda to select rows where score > mean\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'score': [90, 70, 85, 60]\n})\n\nprint(df.loc[lambda x: x['score'] > x['score'].mean()])",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'Alice' in _output and 'Charlie' in _output and 'Diana' not in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "loc 可以接受一个 callable（如 lambda）作为行选择器",
+          "lambda 接收 DataFrame 本身作为参数",
+          "格式：df.loc[lambda x: 条件]"
+        ],
+        "en": [
+          "loc can accept a callable (like lambda) as a row selector",
+          "The lambda receives the DataFrame itself as the argument",
+          "Format: df.loc[lambda x: condition]"
+        ]
+      }
+    },
+    {
+      "id": "s1-lociloc-008",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "iloc 负数索引",
+        "en": "iloc Negative Indexing"
+      },
+      "description": {
+        "zh": "使用 iloc 和负数索引选择 DataFrame 的最后 2 行和最后 2 列，打印结果。",
+        "en": "Use iloc with negative indexing to select the last 2 rows and last 2 columns of the DataFrame, and print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'a': [1, 2, 3, 4],\n    'b': [5, 6, 7, 8],\n    'c': [9, 10, 11, 12],\n    'd': [13, 14, 15, 16]\n})\n\n# Use iloc with negative indexing to get last 2 rows, last 2 columns\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'a': [1, 2, 3, 4],\n    'b': [5, 6, 7, 8],\n    'c': [9, 10, 11, 12],\n    'd': [13, 14, 15, 16]\n})\n\nprint(df.iloc[-2:, -2:])",
+      "setupCode": "",
+      "validationType": "exact-output",
+      "expectedOutput": "    c   d\n2  11  15\n3  12  16",
+      "hints": {
+        "zh": [
+          "负数索引从末尾开始计数：-1 是最后一个",
+          "iloc[-2:] 选择最后 2 行",
+          "使用 df.iloc[-2:, -2:] 同时选择行和列"
+        ],
+        "en": [
+          "Negative indexing counts from the end: -1 is the last one",
+          "iloc[-2:] selects the last 2 rows",
+          "Use df.iloc[-2:, -2:] to select both rows and columns"
+        ]
+      }
+    },
+    {
+      "id": "s1-lociloc-009",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "loc 同时选择行和列",
+        "en": "loc Selecting Rows and Columns"
+      },
+      "description": {
+        "zh": "使用 loc 选择索引为 'b' 到 'd' 的行，且只选择 'name' 和 'score' 两列，打印结果。",
+        "en": "Use loc to select rows from index 'b' to 'd', and only the 'name' and 'score' columns. Print the result."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'age': [25, 30, 35, 28, 22],\n    'score': [88, 92, 76, 95, 83]\n}, index=['a', 'b', 'c', 'd', 'e'])\n\n# Use loc to select rows 'b' to 'd', columns 'name' and 'score'\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'age': [25, 30, 35, 28, 22],\n    'score': [88, 92, 76, 95, 83]\n}, index=['a', 'b', 'c', 'd', 'e'])\n\nprint(df.loc['b':'d', ['name', 'score']])",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'Bob' in _output and 'Diana' in _output and 'Charlie' in _output and 'age' not in _output and 'Alice' not in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "loc 的行选择使用标签范围 'b':'d'（闭区间）",
+          "列选择使用列名列表 ['name', 'score']",
+          "格式：df.loc[行选择, 列选择]"
+        ],
+        "en": [
+          "loc row selection uses label range 'b':'d' (closed interval)",
+          "Column selection uses a list of column names ['name', 'score']",
+          "Format: df.loc[row_selection, column_selection]"
+        ]
+      }
+    },
+    {
+      "id": "s1-lociloc-010",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 loc 赋值",
+        "en": "Assignment with loc"
+      },
+      "description": {
+        "zh": "使用 loc 将 score 小于 80 的行的 'grade' 列设置为 'C'，score >= 80 的设置为 'A'，然后打印 DataFrame。",
+        "en": "Use loc to set the 'grade' column to 'C' for rows where score < 80, and 'A' for rows where score >= 80, then print the DataFrame."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'score': [90, 65, 78]\n})\n\n# Use loc to assign grades based on score\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'score': [90, 65, 78]\n})\n\ndf.loc[df['score'] >= 80, 'grade'] = 'A'\ndf.loc[df['score'] < 80, 'grade'] = 'C'\nprint(df)",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'grade' in _output and 'A' in _output and 'C' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "loc 不仅可以选择数据，还可以赋值",
+          "df.loc[条件, '列名'] = 值",
+          "可以给不存在的列赋值来创建新列"
+        ],
+        "en": [
+          "loc can not only select data but also assign values",
+          "df.loc[condition, 'column_name'] = value",
+          "You can assign to non-existent columns to create new ones"
+        ]
+      }
+    },
+    {
+      "id": "s1-lociloc-011",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[调试] 整数索引时 loc 的混淆",
+        "en": "[Debug] loc Confusion with Integer Index"
+      },
+      "description": {
+        "zh": "以下代码使用 loc[0] 想取第一行，但由于自定义索引不包含 0 导致报错。修复代码使其正确获取第一行数据。",
+        "en": "The following code uses loc[0] to get the first row, but the custom index doesn't contain 0 causing an error. Fix the code to correctly get the first row."
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'score': [90, 85, 78]\n}, index=[10, 20, 30])\n\n# Bug: KeyError because index doesn't have label 0\nprint(df.loc[0])",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'score': [90, 85, 78]\n}, index=[10, 20, 30])\n\nprint(df.iloc[0])",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'Alice' in _output and '90' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "loc 使用标签索引，索引中没有标签 0",
+          "要按位置获取第一行，应该使用哪个方法？",
+          "iloc 按位置索引，iloc[0] 总是第一行"
+        ],
+        "en": [
+          "loc uses label indexing, and label 0 doesn't exist in the index",
+          "Which method should you use to get the first row by position?",
+          "iloc uses positional indexing, iloc[0] is always the first row"
+        ]
+      }
+    },
+    {
+      "id": "s1-lociloc-012",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "[最佳实践] loc vs iloc vs at vs iat 如何选择",
+        "en": "[Best Practice] How to Choose loc vs iloc vs at vs iat"
+      },
+      "description": {
+        "zh": "以下场景应该使用哪个方法？\n\n场景：你需要从 DataFrame 中快速获取第 3 行第 2 列的单个值。",
+        "en": "Which method should you use in the following scenario?\n\nScenario: You need to quickly get a single value from the 3rd row, 2nd column of a DataFrame."
+      },
+      "options": {
+        "zh": [
+          "df.iat[2, 1] — 按位置获取单个值，速度最快",
+          "df.iloc[2, 1] — 按位置获取，通用方法",
+          "df.loc[2, df.columns[1]] — 按标签获取",
+          "df.values[2][1] — 转换为数组后获取"
+        ],
+        "en": [
+          "df.iat[2, 1] — get single value by position, fastest",
+          "df.iloc[2, 1] — get by position, general method",
+          "df.loc[2, df.columns[1]] — get by label",
+          "df.values[2][1] — convert to array then access"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["获取单个标量值时，at/iat 比 loc/iloc 更快"],
+        "en": ["For getting a single scalar value, at/iat is faster than loc/iloc"]
+      },
+      "explanation": {
+        "zh": "获取单个值时的速度排序：iat/at > iloc/loc > values[][]。iat 用于位置索引，at 用于标签索引。当需要在循环中频繁访问单个值时，iat/at 的性能优势更明显。",
+        "en": "Speed ranking for single value access: iat/at > iloc/loc > values[][]. iat is for positional indexing, at is for label indexing. The performance advantage of iat/at is more significant when accessing single values frequently in loops."
+      }
+    },
+    {
+      "id": "s1-lociloc-013",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 多条件定位与批量修改",
+        "en": "[Challenge] Multi-condition Locate and Batch Modify"
+      },
+      "description": {
+        "zh": "完成以下任务：\n1. 找出 department 为 'IT' 且 salary < 60000 的员工\n2. 将这些员工的 salary 增加 5000\n3. 使用 iloc 获取修改后的前 3 行和前 3 列\n4. 打印结果",
+        "en": "Complete the following tasks:\n1. Find employees in 'IT' department with salary < 60000\n2. Increase their salary by 5000\n3. Use iloc to get the first 3 rows and first 3 columns after modification\n4. Print the result"
+      },
+      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'department': ['IT', 'HR', 'IT', 'IT', 'Finance'],\n    'salary': [55000, 50000, 65000, 48000, 60000],\n    'years': [3, 5, 7, 2, 4]\n})\n\n# Step 1-2: Find IT employees with salary < 60000 and increase by 5000\n\n# Step 3-4: Get first 3 rows, first 3 columns with iloc and print\n",
+      "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'department': ['IT', 'HR', 'IT', 'IT', 'Finance'],\n    'salary': [55000, 50000, 65000, 48000, 60000],\n    'years': [3, 5, 7, 2, 4]\n})\n\ndf.loc[(df['department'] == 'IT') & (df['salary'] < 60000), 'salary'] += 5000\nprint(df.iloc[:3, :3])",
+      "setupCode": "",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = '60000' in _output and 'Alice' in _output and 'years' not in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "使用 loc 同时指定行条件和列",
+          "df.loc[条件, '列名'] += 值 可以原地修改",
+          "iloc[:3, :3] 选择前 3 行前 3 列"
+        ],
+        "en": [
+          "Use loc to specify both row conditions and columns",
+          "df.loc[condition, 'column'] += value modifies in place",
+          "iloc[:3, :3] selects first 3 rows and first 3 columns"
+        ]
+      }
+    }
+  ]
+}

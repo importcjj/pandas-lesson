@@ -1,0 +1,398 @@
+{
+  "module": "rename-reindex",
+  "stageId": "stage2",
+  "lessonId": "rename-reindex",
+  "tags": ["rename", "reset_index", "set_index", "reindex"],
+  "exercises": [
+    {
+      "id": "s2-renameidx-001",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "rename 方法的参数",
+        "en": "Parameters of the rename Method"
+      },
+      "description": {
+        "zh": "使用 df.rename() 重命名列时，应该将映射字典传给哪个参数？",
+        "en": "When renaming columns with df.rename(), which parameter should the mapping dictionary be passed to?"
+      },
+      "options": {
+        "zh": [
+          "columns",
+          "names",
+          "labels",
+          "headers"
+        ],
+        "en": [
+          "columns",
+          "names",
+          "labels",
+          "headers"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["rename() 同时支持 index 和 columns 参数"],
+        "en": ["rename() supports both index and columns parameters"]
+      },
+      "explanation": {
+        "zh": "df.rename(columns={'old': 'new'}) 是重命名列的标准方式。类似地，可以用 index 参数重命名行索引。",
+        "en": "df.rename(columns={'old': 'new'}) is the standard way to rename columns. Similarly, the index parameter can be used to rename row indices."
+      }
+    },
+    {
+      "id": "s2-renameidx-002",
+      "type": "fill-blank",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用字典批量重命名列",
+        "en": "Batch Rename Columns with a Dictionary"
+      },
+      "description": {
+        "zh": "填写代码，使用 rename() 将列名 'x' 改为 'width'，'y' 改为 'height'。",
+        "en": "Fill in the code to use rename() to change column 'x' to 'width' and 'y' to 'height'."
+      },
+      "codeTemplate": "import pandas as pd\ndf = pd.DataFrame({'x': [1, 2], 'y': [3, 4]})\ndf = df.rename(___1___={'x': 'width', 'y': 'height'})",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "columns",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": ["用 columns 参数传递列名映射字典"],
+        "en": ["Pass the column name mapping dictionary via the columns parameter"]
+      },
+      "explanation": {
+        "zh": "rename(columns={'x': 'width', 'y': 'height'}) 将列名 x 映射为 width，y 映射为 height。未在字典中的列保持不变。",
+        "en": "rename(columns={'x': 'width', 'y': 'height'}) maps column x to width and y to height. Columns not in the dictionary remain unchanged."
+      }
+    },
+    {
+      "id": "s2-renameidx-003",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "重置索引",
+        "en": "Reset Index"
+      },
+      "description": {
+        "zh": "对筛选后的 DataFrame df_filtered 使用 reset_index(drop=True) 重置索引，然后打印结果。",
+        "en": "Use reset_index(drop=True) on the filtered DataFrame df_filtered to reset the index, then print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David'], 'age': [25, 30, 35, 40]})\ndf_filtered = df[df['age'] > 28]",
+      "starterCode": "# Reset index of df_filtered with drop=True and print\n",
+      "solutionCode": "print(df_filtered.reset_index(drop=True))",
+      "validationType": "exact-output",
+      "expectedOutput": "      name  age\n0      Bob   30\n1  Charlie   35\n2    David   40",
+      "hints": {
+        "zh": [
+          "reset_index() 重新生成从 0 开始的连续索引",
+          "drop=True 表示丢弃旧索引，不将其变为列"
+        ],
+        "en": [
+          "reset_index() generates a new sequential index starting from 0",
+          "drop=True means discard the old index instead of converting it to a column"
+        ]
+      },
+      "explanation": {
+        "zh": "筛选后的 DataFrame 保留了原始索引（1, 2, 3），reset_index(drop=True) 将其重置为 0, 1, 2。drop=True 避免旧索引变成新列。",
+        "en": "The filtered DataFrame retains the original index (1, 2, 3). reset_index(drop=True) resets it to 0, 1, 2. drop=True prevents the old index from becoming a new column."
+      }
+    },
+    {
+      "id": "s2-renameidx-004",
+      "type": "true-false",
+      "difficulty": 3,
+      "title": {
+        "zh": "set_index 的作用",
+        "en": "Purpose of set_index"
+      },
+      "description": {
+        "zh": "df.set_index('name') 会将 'name' 列设为 DataFrame 的行索引，并且该列不再出现在普通列中。",
+        "en": "df.set_index('name') sets the 'name' column as the DataFrame's row index, and the column no longer appears among the regular columns."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["set_index() 将指定列提升为索引"],
+        "en": ["set_index() promotes the specified column to the index"]
+      },
+      "explanation": {
+        "zh": "set_index('name') 将 name 列移到索引位置，原来的整数索引被替换。如果想保留该列同时设为索引，可以先复制一份。用 reset_index() 可以反向操作。",
+        "en": "set_index('name') moves the name column to the index position, replacing the original integer index. To keep the column while setting it as index, copy it first. Use reset_index() for the reverse operation."
+      }
+    },
+    {
+      "id": "s2-renameidx-005",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "rename 的 mapper + axis 参数",
+        "en": "rename mapper + axis Parameters"
+      },
+      "description": {
+        "zh": "使用 rename() 的 mapper 和 axis 参数，将所有列名转为大写。打印结果。",
+        "en": "Use rename()'s mapper and axis parameters to convert all column names to uppercase. Print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'age': [25, 30], 'city': ['Beijing', 'Shanghai']})",
+      "starterCode": "# Rename all columns to uppercase using mapper + axis\n",
+      "solutionCode": "print(df.rename(mapper=str.upper, axis=1))",
+      "validationType": "exact-output",
+      "expectedOutput": "    NAME  AGE      CITY\n0  Alice   25   Beijing\n1    Bob   30  Shanghai",
+      "hints": {
+        "zh": [
+          "mapper 可以接收一个函数，应用到所有标签",
+          "axis=1 表示对列名操作，axis=0 表示对行索引操作"
+        ],
+        "en": [
+          "mapper can take a function applied to all labels",
+          "axis=1 operates on column names, axis=0 on row index"
+        ]
+      },
+      "explanation": {
+        "zh": "rename(mapper=str.upper, axis=1) 将函数 str.upper 应用到所有列名。mapper+axis 的方式比 columns 参数更灵活，可以用任意函数批量转换列名。",
+        "en": "rename(mapper=str.upper, axis=1) applies str.upper to all column names. The mapper+axis approach is more flexible than the columns parameter, allowing any function for batch column name transformation."
+      }
+    },
+    {
+      "id": "s2-renameidx-006",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "rename 分别重命名列和索引",
+        "en": "rename columns vs index Parameters"
+      },
+      "description": {
+        "zh": "使用 rename() 同时重命名列（'x' -> 'width'）和行索引（0 -> 'first', 1 -> 'second'）。打印结果。",
+        "en": "Use rename() to rename both columns ('x' -> 'width') and row index (0 -> 'first', 1 -> 'second'). Print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'x': [10, 20], 'y': [30, 40]})",
+      "starterCode": "# Rename column x -> width AND index 0 -> first, 1 -> second\n",
+      "solutionCode": "print(df.rename(columns={'x': 'width'}, index={0: 'first', 1: 'second'}))",
+      "validationType": "exact-output",
+      "expectedOutput": "        width   y\nfirst      10  30\nsecond     20  40",
+      "hints": {
+        "zh": [
+          "columns 和 index 参数可以在同一次 rename 调用中使用",
+          "两个参数都接收字典映射"
+        ],
+        "en": [
+          "columns and index parameters can be used in the same rename call",
+          "Both parameters accept dictionary mappings"
+        ]
+      },
+      "explanation": {
+        "zh": "rename() 支持同时通过 columns 和 index 参数分别重命名列名和行索引。columns={'x': 'width'} 重命名列，index={0: 'first', 1: 'second'} 重命名索引。",
+        "en": "rename() supports simultaneous renaming of column names and row index via columns and index parameters. columns={'x': 'width'} renames columns; index={0: 'first', 1: 'second'} renames the index."
+      }
+    },
+    {
+      "id": "s2-renameidx-007",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "set_index 的 drop 和 append 参数",
+        "en": "set_index drop and append Parameters"
+      },
+      "description": {
+        "zh": "使用 set_index() 将 'name' 列设为索引，但通过 drop=False 保留该列。打印结果。",
+        "en": "Use set_index() to set 'name' as the index, but keep the column by using drop=False. Print the result."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'score': [90, 85, 78]})",
+      "starterCode": "# Set 'name' as index but keep the column using drop=False\n",
+      "solutionCode": "print(df.set_index('name', drop=False))",
+      "validationType": "exact-output",
+      "expectedOutput": "            name  score\nname                   \nAlice      Alice     90\nBob          Bob     85\nCharlie  Charlie     78",
+      "hints": {
+        "zh": [
+          "drop=False 设置索引时保留原列",
+          "默认 drop=True 会移除该列"
+        ],
+        "en": [
+          "drop=False keeps the original column when setting the index",
+          "Default drop=True removes the column"
+        ]
+      },
+      "explanation": {
+        "zh": "set_index('name', drop=False) 将 name 设为索引的同时保留该列。默认 drop=True 会移除列。append=True 可以在现有索引基础上追加新索引（创建多级索引）。",
+        "en": "set_index('name', drop=False) sets name as the index while keeping the column. Default drop=True removes it. append=True appends to the existing index (creating a MultiIndex)."
+      }
+    },
+    {
+      "id": "s2-renameidx-008",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "reindex 的 fill_value 参数",
+        "en": "reindex fill_value Parameter"
+      },
+      "description": {
+        "zh": "使用 reindex() 按新索引重建 Series，不存在的索引用 0 填充（通过 fill_value 参数）。打印结果。",
+        "en": "Use reindex() to rebuild a Series with new indices, filling non-existent indices with 0 (via fill_value). Print the result."
+      },
+      "setupCode": "import pandas as pd\n\ns = pd.Series([10, 20, 30], index=['a', 'b', 'c'])",
+      "starterCode": "# Reindex with new indices including 'd' and 'e', fill_value=0\n",
+      "solutionCode": "print(s.reindex(['a', 'b', 'c', 'd', 'e'], fill_value=0))",
+      "validationType": "exact-output",
+      "expectedOutput": "a    10\nb    20\nc    30\nd     0\ne     0\ndtype: int64",
+      "hints": {
+        "zh": [
+          "reindex 按新索引重建，不存在的位置默认为 NaN",
+          "fill_value 指定不存在的索引要填充的值"
+        ],
+        "en": [
+          "reindex rebuilds with new indices, defaulting non-existent positions to NaN",
+          "fill_value specifies the value for non-existent indices"
+        ]
+      },
+      "explanation": {
+        "zh": "reindex() 按新索引列表重新排列数据。新增的索引 'd' 和 'e' 默认为 NaN，fill_value=0 将它们填充为 0。这在对齐不同来源的数据时非常有用。",
+        "en": "reindex() rearranges data according to a new index list. New indices 'd' and 'e' default to NaN; fill_value=0 fills them with 0. Very useful when aligning data from different sources."
+      }
+    },
+    {
+      "id": "s2-renameidx-009",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "直接赋值 df.columns",
+        "en": "Direct Assignment to df.columns"
+      },
+      "description": {
+        "zh": "通过直接赋值 df.columns 将列名改为 ['姓名', '年龄', '城市']。打印 df。",
+        "en": "Rename all columns by directly assigning df.columns to ['Name', 'Age', 'City']. Print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'col1': ['Alice', 'Bob'], 'col2': [25, 30], 'col3': ['Beijing', 'Shanghai']})",
+      "starterCode": "# Directly assign new column names\n\n# Print df\n",
+      "solutionCode": "df.columns = ['Name', 'Age', 'City']\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "    Name  Age      City\n0  Alice   25   Beijing\n1    Bob   30  Shanghai",
+      "hints": {
+        "zh": [
+          "df.columns 可以直接赋值一个列表",
+          "列表长度必须与现有列数一致"
+        ],
+        "en": [
+          "df.columns can be directly assigned a list",
+          "The list length must match the number of existing columns"
+        ]
+      },
+      "explanation": {
+        "zh": "直接赋值 df.columns = [...] 是批量重命名所有列的最简单方式。但必须提供与现有列数一致的列表。适合需要重命名全部列的情况，不适合只改部分列名。",
+        "en": "Direct assignment df.columns = [...] is the simplest way to rename all columns at once. The list must match the existing column count. Suitable for renaming all columns, not for partial renaming."
+      }
+    },
+    {
+      "id": "s2-renameidx-010",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[调试] set_index 后 merge 失败",
+        "en": "[Debug] set_index Then Merge Failure"
+      },
+      "description": {
+        "zh": "以下代码在 set_index 后尝试用 merge 合并两个 DataFrame，但合并列找不到（因为变成了索引）。请修复 bug。",
+        "en": "The following code tries to merge two DataFrames after set_index, but the merge column is not found (because it became the index). Fix the bug."
+      },
+      "setupCode": "import pandas as pd\n\ndf1 = pd.DataFrame({'id': [1, 2, 3], 'name': ['Alice', 'Bob', 'Charlie']})\ndf2 = pd.DataFrame({'id': [1, 2, 3], 'score': [90, 85, 78]})",
+      "starterCode": "# Bug: after set_index, 'id' is no longer a column, merge fails\ndf1 = df1.set_index('id')\nresult = pd.merge(df1, df2, on='id')\nprint(result)",
+      "solutionCode": "df1 = df1.set_index('id')\nresult = pd.merge(df1, df2, left_index=True, right_on='id')\nprint(result)",
+      "validationType": "exact-output",
+      "expectedOutput": "      name  id  score\n0    Alice   1     90\n1      Bob   2     85\n2  Charlie   3     78",
+      "hints": {
+        "zh": [
+          "set_index 后 'id' 变成了索引，不再是列",
+          "merge 时需要用 left_index=True 来匹配索引",
+          "或者先 reset_index 再 merge"
+        ],
+        "en": [
+          "After set_index, 'id' becomes the index, no longer a column",
+          "Use left_index=True in merge to match on the index",
+          "Or reset_index first, then merge"
+        ]
+      },
+      "explanation": {
+        "zh": "set_index('id') 后 id 变成索引，on='id' 找不到列名。修复方式：1) 用 left_index=True, right_on='id'；2) 先 reset_index() 再 merge on='id'。这是 set_index 和 merge 配合时的常见问题。",
+        "en": "After set_index('id'), id becomes the index and on='id' can't find the column. Fixes: 1) Use left_index=True, right_on='id'; 2) reset_index() first, then merge on='id'. This is a common issue when combining set_index with merge."
+      }
+    },
+    {
+      "id": "s2-renameidx-011",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "[最佳实践] rename vs 直接赋值 columns",
+        "en": "[Best Practice] rename vs columns Assignment"
+      },
+      "description": {
+        "zh": "需要将 DataFrame 中部分列名从英文改为中文，以下哪种方式最佳？",
+        "en": "You need to rename some (not all) column names from English to Chinese. Which approach is best?"
+      },
+      "options": {
+        "zh": [
+          "df.rename(columns={'name': '姓名', 'age': '年龄'}) — 只改指定列，更安全",
+          "df.columns = ['姓名', '年龄', ...] — 一次性全改，更简洁",
+          "for 循环遍历列名逐个修改",
+          "创建一个新 DataFrame 并复制数据"
+        ],
+        "en": [
+          "df.rename(columns={'name': '姓名', 'age': '年龄'}) — only changes specified columns, safer",
+          "df.columns = ['姓名', '年龄', ...] — changes all at once, more concise",
+          "Use a for loop to modify column names one by one",
+          "Create a new DataFrame and copy data"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "只需要改部分列名时，rename 更安全",
+          "df.columns 赋值需要列出所有列名，容易出错"
+        ],
+        "en": [
+          "When only some columns need renaming, rename is safer",
+          "df.columns assignment requires listing all columns, error-prone"
+        ]
+      },
+      "explanation": {
+        "zh": "rename(columns={...}) 只修改指定列，未提及的列保持不变，不容易出错。df.columns 赋值需要提供所有列名的完整列表，列数多时容易写错或遗漏。rename 更适合部分重命名。",
+        "en": "rename(columns={...}) only modifies specified columns; unmentioned ones stay the same. df.columns assignment requires the complete list of all column names, which is error-prone with many columns. rename is better for partial renaming."
+      }
+    },
+    {
+      "id": "s2-renameidx-012",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 标准化来自不同系统的列名",
+        "en": "[Challenge] Standardize Column Names from Different Systems"
+      },
+      "description": {
+        "zh": "df 的列名来自外部系统，格式混乱。请完成标准化：1) 用 str.strip() 去除列名前后空白；2) 用 str.lower() 转为小写；3) 将空格替换为下划线；4) 将 'user_name' 重命名为 'name'。打印 df.columns.tolist()。",
+        "en": "df's column names come from an external system with messy formatting. Standardize them: 1) Strip whitespace with str.strip(); 2) Convert to lowercase with str.lower(); 3) Replace spaces with underscores; 4) Rename 'user_name' to 'name'. Print df.columns.tolist()."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    '  User Name ': ['Alice', 'Bob'],\n    'AGE': [25, 30],\n    ' Email Address': ['a@b.com', 'b@c.com']\n})",
+      "starterCode": "# Step 1: Strip whitespace from column names\n\n# Step 2: Convert to lowercase\n\n# Step 3: Replace spaces with underscores\n\n# Step 4: Rename 'user_name' to 'name'\n\n# Print column list\n",
+      "solutionCode": "df.columns = df.columns.str.strip().str.lower().str.replace(' ', '_', regex=False)\ndf = df.rename(columns={'user_name': 'name'})\nprint(df.columns.tolist())",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "try:\n    cols = df.columns.tolist()\n    checks = []\n    checks.append('name' in cols)\n    checks.append('age' in cols)\n    checks.append('email_address' in cols)\n    checks.append(len(cols) == 3)\n    checks.append(all(c == c.lower() for c in cols))\n    checks.append(all(' ' not in c for c in cols))\n    result = all(checks)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "df.columns 是一个 Index 对象，支持 .str 方法",
+          "可以链式调用 .str.strip().str.lower().str.replace()",
+          "最后用 rename 进行语义重命名"
+        ],
+        "en": [
+          "df.columns is an Index object that supports .str methods",
+          "Can chain .str.strip().str.lower().str.replace()",
+          "Use rename at the end for semantic renaming"
+        ]
+      },
+      "explanation": {
+        "zh": "列名标准化是数据整合的基础。通过 df.columns.str 链式操作统一格式（去空白、小写、替换空格），再用 rename 做语义映射。这种模式在合并多来源数据时非常常见。",
+        "en": "Column name standardization is fundamental to data integration. Using chained df.columns.str operations to unify formatting (strip, lowercase, replace spaces), then rename for semantic mapping. This pattern is very common when merging multi-source data."
+      }
+    }
+  ]
+}

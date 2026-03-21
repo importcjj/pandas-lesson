@@ -1,0 +1,411 @@
+{
+  "module": "type-conversion",
+  "stageId": "stage2",
+  "lessonId": "type-conversion",
+  "tags": ["astype", "to_numeric", "to_datetime", "type-conversion", "coerce"],
+  "exercises": [
+    {
+      "id": "s2-typeconv-001",
+      "type": "fill-blank",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 astype 转换类型",
+        "en": "Type Conversion with astype"
+      },
+      "description": {
+        "zh": "填写代码，将 'price' 列从整数类型转换为浮点数类型。",
+        "en": "Fill in the code to convert the 'price' column from integer to float type."
+      },
+      "codeTemplate": "import pandas as pd\ndf = pd.DataFrame({'price': [10, 20, 30]})\ndf['price'] = df['price'].___1___(___2___)",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "astype",
+          "alternatives": []
+        },
+        {
+          "placeholder": "___2___",
+          "answer": "float",
+          "alternatives": ["'float'", "'float64'", "float64"]
+        }
+      ],
+      "hints": {
+        "zh": [
+          "astype() 方法用于转换 Series 的数据类型",
+          "传入目标类型作为参数"
+        ],
+        "en": [
+          "The astype() method converts the data type of a Series",
+          "Pass the target type as an argument"
+        ]
+      },
+      "explanation": {
+        "zh": "astype(float) 将 Series 中的每个值转换为浮点数类型。astype 可以接受 Python 类型（如 float、int、str）或 NumPy/pandas 类型。",
+        "en": "astype(float) converts each value in the Series to float type. astype accepts Python types (like float, int, str) or NumPy/pandas types."
+      }
+    },
+    {
+      "id": "s2-typeconv-002",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "使用 pd.to_numeric 转换",
+        "en": "Conversion with pd.to_numeric"
+      },
+      "description": {
+        "zh": "使用 pd.to_numeric() 将 df 的 'value' 列转换为数值类型，对无法转换的值使用 errors='coerce' 设为 NaN，然后打印 df。",
+        "en": "Use pd.to_numeric() to convert the 'value' column of df to numeric type, using errors='coerce' to set unconvertible values to NaN, then print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'value': ['10', '20', 'abc', '40', 'N/A']})",
+      "starterCode": "# Convert 'value' column to numeric with errors='coerce'\n\n# Print df\n",
+      "solutionCode": "df['value'] = pd.to_numeric(df['value'], errors='coerce')\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "   value\n0   10.0\n1   20.0\n2    NaN\n3   40.0\n4    NaN",
+      "hints": {
+        "zh": [
+          "pd.to_numeric() 是全局函数，不是方法",
+          "errors='coerce' 将无法转换的值变为 NaN"
+        ],
+        "en": [
+          "pd.to_numeric() is a global function, not a method",
+          "errors='coerce' turns unconvertible values into NaN"
+        ]
+      },
+      "explanation": {
+        "zh": "pd.to_numeric(df['value'], errors='coerce') 尝试将每个值转为数值。'abc' 和 'N/A' 无法转换，errors='coerce' 使它们变为 NaN 而不是报错。",
+        "en": "pd.to_numeric(df['value'], errors='coerce') attempts to convert each value to numeric. 'abc' and 'N/A' cannot be converted; errors='coerce' turns them into NaN instead of raising an error."
+      }
+    },
+    {
+      "id": "s2-typeconv-003",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "使用 pd.to_datetime 转换日期",
+        "en": "Convert to Datetime with pd.to_datetime"
+      },
+      "description": {
+        "zh": "使用 pd.to_datetime() 将 df 的 'date' 列转换为日期时间类型，然后打印 df.dtypes。",
+        "en": "Use pd.to_datetime() to convert the 'date' column of df to datetime type, then print df.dtypes."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'date': ['2024-01-15', '2024-02-20', '2024-03-25'], 'value': [100, 200, 300]})",
+      "starterCode": "# Convert 'date' column to datetime\n\n# Print df.dtypes\n",
+      "solutionCode": "df['date'] = pd.to_datetime(df['date'])\nprint(df.dtypes)",
+      "validationType": "exact-output",
+      "expectedOutput": "date     datetime64[ns]\nvalue             int64\ndtype: object",
+      "hints": {
+        "zh": [
+          "pd.to_datetime() 可以自动识别常见的日期格式",
+          "转换后列的类型变为 datetime64[ns]"
+        ],
+        "en": [
+          "pd.to_datetime() can automatically recognize common date formats",
+          "After conversion, the column type becomes datetime64[ns]"
+        ]
+      },
+      "explanation": {
+        "zh": "pd.to_datetime() 将字符串解析为 datetime 类型。它能自动识别多种日期格式，也可以通过 format 参数指定格式。",
+        "en": "pd.to_datetime() parses strings into datetime type. It can automatically recognize many date formats, or you can specify the format with the format parameter."
+      }
+    },
+    {
+      "id": "s2-typeconv-004",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "errors='coerce' 的作用",
+        "en": "Purpose of errors='coerce'"
+      },
+      "description": {
+        "zh": "在 pd.to_numeric() 或 pd.to_datetime() 中，errors='coerce' 参数的作用是什么？",
+        "en": "In pd.to_numeric() or pd.to_datetime(), what does the errors='coerce' parameter do?"
+      },
+      "options": {
+        "zh": [
+          "将无法转换的值设为 NaN/NaT",
+          "跳过无法转换的值，保持原始值",
+          "抛出异常并停止执行",
+          "自动猜测正确的类型"
+        ],
+        "en": [
+          "Set unconvertible values to NaN/NaT",
+          "Skip unconvertible values and keep original values",
+          "Raise an exception and stop execution",
+          "Automatically guess the correct type"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["coerce 的英文含义是'强制转换'"],
+        "en": ["The word 'coerce' means to force or compel"]
+      },
+      "explanation": {
+        "zh": "errors='coerce' 会将无法转换的值替换为 NaN（数值）或 NaT（日期时间），而不是抛出错误。errors='raise'（默认）会抛出异常，errors='ignore' 则保留原值。",
+        "en": "errors='coerce' replaces unconvertible values with NaN (numeric) or NaT (datetime) instead of raising an error. errors='raise' (default) raises an exception; errors='ignore' keeps the original value."
+      }
+    },
+    {
+      "id": "s2-typeconv-005",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "astype 的 errors 参数",
+        "en": "astype errors Parameter"
+      },
+      "description": {
+        "zh": "使用 pd.to_numeric() 将混合类型的 'value' 列转为数值类型。无法转换的值设为 NaN（使用 errors='coerce'）。再用 astype(int) 之前先 fillna(0)。打印 df.dtypes。",
+        "en": "Use pd.to_numeric() to convert the mixed-type 'value' column to numeric. Set unconvertible values to NaN (using errors='coerce'). Then fillna(0) before astype(int). Print df.dtypes."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'value': ['10', '20', 'abc', '40']})",
+      "starterCode": "# Convert to numeric with errors='coerce', fill NaN with 0, then convert to int\n\n# Print df.dtypes\n",
+      "solutionCode": "df['value'] = pd.to_numeric(df['value'], errors='coerce').fillna(0).astype(int)\nprint(df.dtypes)",
+      "validationType": "exact-output",
+      "expectedOutput": "value    int64\ndtype: object",
+      "hints": {
+        "zh": [
+          "先 to_numeric 转换，无效值变 NaN",
+          "NaN 不能直接转 int，需要先 fillna",
+          "可以链式调用 .fillna(0).astype(int)"
+        ],
+        "en": [
+          "First to_numeric converts, invalid values become NaN",
+          "NaN can't be directly converted to int — fillna first",
+          "Can chain .fillna(0).astype(int)"
+        ]
+      },
+      "explanation": {
+        "zh": "astype(int) 不能处理 NaN 值，会报错。解决方法是先 fillna(0) 填充缺失值，再 astype(int)。或者使用 pandas 的可空整数类型 Int64（大写 I）。",
+        "en": "astype(int) cannot handle NaN values and raises an error. The solution is to fillna(0) first, then astype(int). Alternatively, use pandas' nullable integer type Int64 (capital I)."
+      }
+    },
+    {
+      "id": "s2-typeconv-006",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "to_datetime 的 format 参数",
+        "en": "to_datetime format Parameter"
+      },
+      "description": {
+        "zh": "使用 pd.to_datetime() 将非标准日期格式 'DD/MM/YYYY' 转换为日期类型。通过 format 参数指定格式。打印 df。",
+        "en": "Use pd.to_datetime() to convert non-standard date format 'DD/MM/YYYY' to datetime. Specify the format via the format parameter. Print df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'date': ['15/01/2024', '20/02/2024', '25/03/2024']})",
+      "starterCode": "# Convert date column with format='%d/%m/%Y'\n\n# Print df\n",
+      "solutionCode": "df['date'] = pd.to_datetime(df['date'], format='%d/%m/%Y')\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "        date\n0 2024-01-15\n1 2024-02-20\n2 2024-03-25",
+      "hints": {
+        "zh": [
+          "%d 表示日，%m 表示月，%Y 表示四位年份",
+          "format 参数帮助 pandas 正确解析非标准格式"
+        ],
+        "en": [
+          "%d is day, %m is month, %Y is four-digit year",
+          "The format parameter helps pandas correctly parse non-standard formats"
+        ]
+      },
+      "explanation": {
+        "zh": "format='%d/%m/%Y' 告诉 pandas 日期格式是 日/月/年。不指定格式时 pandas 可能误将 15/01 解析为 月=15（不存在）。指定 format 既准确又能提升解析速度。",
+        "en": "format='%d/%m/%Y' tells pandas the date format is day/month/year. Without format, pandas might misparse 15/01 as month=15 (invalid). Specifying format is both accurate and improves parsing speed."
+      }
+    },
+    {
+      "id": "s2-typeconv-007",
+      "type": "true-false",
+      "difficulty": 3,
+      "title": {
+        "zh": "to_datetime 的 dayfirst 参数",
+        "en": "to_datetime dayfirst Parameter"
+      },
+      "description": {
+        "zh": "pd.to_datetime('05/06/2024', dayfirst=True) 会将其解析为 2024年6月5日（6月5日），而不是 5月6日。",
+        "en": "pd.to_datetime('05/06/2024', dayfirst=True) will parse it as June 5, 2024 (5th of June), not May 6."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": ["dayfirst=True 表示日期字符串中第一个数字是\"日\""],
+        "en": ["dayfirst=True means the first number in the date string is the 'day'"]
+      },
+      "explanation": {
+        "zh": "dayfirst=True 告诉 pandas 日期字符串的第一部分是'日'而非'月'。所以 05/06/2024 解析为 6月5日（日=05，月=06）。这在处理欧洲日期格式时非常有用。",
+        "en": "dayfirst=True tells pandas the first part of the date string is 'day', not 'month'. So 05/06/2024 is parsed as June 5 (day=05, month=06). Very useful for European date formats."
+      }
+    },
+    {
+      "id": "s2-typeconv-008",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "pd.to_timedelta() 时间差转换",
+        "en": "pd.to_timedelta() Time Delta Conversion"
+      },
+      "description": {
+        "zh": "使用 pd.to_timedelta() 将 'duration' 列（字符串格式）转换为时间差类型，然后打印 df.dtypes。",
+        "en": "Use pd.to_timedelta() to convert the 'duration' column (string format) to timedelta type, then print df.dtypes."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'task': ['A', 'B', 'C'], 'duration': ['1 days', '2 days', '3 days']})",
+      "starterCode": "# Convert 'duration' to timedelta\n\n# Print df.dtypes\n",
+      "solutionCode": "df['duration'] = pd.to_timedelta(df['duration'])\nprint(df.dtypes)",
+      "validationType": "exact-output",
+      "expectedOutput": "task               object\nduration    timedelta64[ns]\ndtype: object",
+      "hints": {
+        "zh": [
+          "pd.to_timedelta() 可以解析如 '1 days', '2 hours' 等时间差字符串",
+          "转换后类型为 timedelta64[ns]"
+        ],
+        "en": [
+          "pd.to_timedelta() can parse time delta strings like '1 days', '2 hours'",
+          "After conversion, the type is timedelta64[ns]"
+        ]
+      },
+      "explanation": {
+        "zh": "pd.to_timedelta() 将字符串转为时间差类型（timedelta64）。支持 '1 days'、'2 hours 30 minutes' 等多种格式。转换后可以做时间运算，如计算截止日期。",
+        "en": "pd.to_timedelta() converts strings to timedelta type (timedelta64). Supports formats like '1 days', '2 hours 30 minutes'. After conversion, time arithmetic is possible, such as calculating deadlines."
+      }
+    },
+    {
+      "id": "s2-typeconv-009",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "pd.Categorical() 分类类型",
+        "en": "pd.Categorical() Category Type"
+      },
+      "description": {
+        "zh": "将 df 的 'size' 列转为有序分类类型，顺序为 ['S', 'M', 'L', 'XL']，然后打印 df.dtypes 和 df.sort_values('size')。",
+        "en": "Convert df's 'size' column to an ordered categorical type with order ['S', 'M', 'L', 'XL'], then print df.dtypes and df.sort_values('size')."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({'product': ['Shirt', 'Pants', 'Jacket', 'Hat'], 'size': ['M', 'XL', 'S', 'L']})",
+      "starterCode": "# Convert 'size' to ordered categorical\n\n# Print df.dtypes and sorted df\n",
+      "solutionCode": "df['size'] = pd.Categorical(df['size'], categories=['S', 'M', 'L', 'XL'], ordered=True)\nprint(df.dtypes)\nprint(df.sort_values('size'))",
+      "validationType": "exact-output",
+      "expectedOutput": "product      object\nsize       category\ndtype: object\n  product size\n2  Jacket    S\n0   Shirt    M\n3     Hat    L\n1   Pants   XL",
+      "hints": {
+        "zh": [
+          "pd.Categorical() 的 categories 参数定义有效类别",
+          "ordered=True 表示类别有顺序"
+        ],
+        "en": [
+          "pd.Categorical()'s categories parameter defines valid categories",
+          "ordered=True means categories have an order"
+        ]
+      },
+      "explanation": {
+        "zh": "pd.Categorical() 创建分类类型，categories 定义类别，ordered=True 使其有序。有序分类支持比较和排序：S < M < L < XL。sort_values 会按定义的顺序排序而非字母顺序。",
+        "en": "pd.Categorical() creates a categorical type, categories defines the categories, ordered=True makes them ordered. Ordered categoricals support comparison and sorting: S < M < L < XL. sort_values sorts by defined order, not alphabetically."
+      }
+    },
+    {
+      "id": "s2-typeconv-010",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "category 类型的内存优势",
+        "en": "Memory Advantage of Category Type"
+      },
+      "description": {
+        "zh": "将一个包含 100 万行但只有 5 种不同值的字符串列转为 category 类型，主要好处是什么？",
+        "en": "Converting a string column with 1 million rows but only 5 unique values to category type — what is the main benefit?"
+      },
+      "options": {
+        "zh": [
+          "大幅减少内存占用，因为 category 只存储整数编码和类别映射",
+          "提高所有操作的计算速度",
+          "使该列变为不可变",
+          "自动去除重复值"
+        ],
+        "en": [
+          "Significantly reduces memory usage, as category stores only integer codes and category mapping",
+          "Speeds up all operations",
+          "Makes the column immutable",
+          "Automatically removes duplicate values"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "字符串列中每个值都存储完整字符串",
+          "category 类型用整数编码替代重复字符串"
+        ],
+        "en": [
+          "String columns store the full string for every value",
+          "Category type uses integer codes instead of repeated strings"
+        ]
+      },
+      "explanation": {
+        "zh": "category 类型内部用整数编码存储数据，只保存一份类别到字符串的映射表。100 万行只有 5 种值时，从存 100 万个字符串变为存 100 万个整数 + 5 个字符串。内存可减少 90% 以上。",
+        "en": "Category type internally stores data as integer codes, keeping only one mapping table from categories to strings. With 1M rows and 5 unique values, it changes from storing 1M strings to 1M integers + 5 strings. Memory can be reduced by over 90%."
+      }
+    },
+    {
+      "id": "s2-typeconv-011",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[调试] astype(int) 遇到 NaN 报错",
+        "en": "[Debug] astype(int) with NaN Error"
+      },
+      "description": {
+        "zh": "以下代码试图将包含 NaN 的浮点列转为整数类型，但报错了。请修复 bug（使用 pandas 的可空整数类型 'Int64'）。",
+        "en": "The following code tries to convert a float column with NaN to integer type but fails. Fix the bug (use pandas' nullable integer type 'Int64')."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({'score': [90.0, np.nan, 85.0, np.nan, 70.0]})",
+      "starterCode": "# Bug: astype(int) fails when column contains NaN\ndf['score'] = df['score'].astype(int)\nprint(df)",
+      "solutionCode": "df['score'] = df['score'].astype('Int64')\nprint(df)",
+      "validationType": "exact-output",
+      "expectedOutput": "   score\n0     90\n1   <NA>\n2     85\n3   <NA>\n4     70",
+      "hints": {
+        "zh": [
+          "NaN 是浮点数概念，Python 原生 int 不支持",
+          "pandas 提供了可空整数类型 'Int64'（大写 I）"
+        ],
+        "en": [
+          "NaN is a float concept — Python's native int doesn't support it",
+          "pandas provides nullable integer type 'Int64' (capital I)"
+        ]
+      },
+      "explanation": {
+        "zh": "NaN 只存在于浮点数中，astype(int) 遇到 NaN 会报 IntCastingNaNError。解决方法是用 pandas 的可空整数类型 'Int64'（注意大写 I），它可以同时存储整数和缺失值 <NA>。",
+        "en": "NaN only exists in float types; astype(int) raises IntCastingNaNError when encountering NaN. The fix is pandas' nullable integer type 'Int64' (capital I), which can store both integers and missing values <NA>."
+      }
+    },
+    {
+      "id": "s2-typeconv-012",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 混合类型列的清洗和转换",
+        "en": "[Challenge] Mixed-Type Column Cleaning and Conversion"
+      },
+      "description": {
+        "zh": "df 有一个混合类型的 'amount' 列，包含数字、带逗号的数字和文本。清洗步骤：1) 用 str.replace 去除逗号；2) 用 pd.to_numeric(errors='coerce') 转为数值；3) 用中位数填充 NaN；4) 转为整数类型。打印最终的 df。",
+        "en": "df has a mixed-type 'amount' column with numbers, comma-formatted numbers, and text. Cleaning steps: 1) Remove commas with str.replace; 2) Convert with pd.to_numeric(errors='coerce'); 3) Fill NaN with median; 4) Convert to integer. Print the final df."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'item': ['A', 'B', 'C', 'D', 'E'],\n    'amount': ['1000', '2,500', 'N/A', '3,000', '500']\n})",
+      "starterCode": "# Step 1: Remove commas from amount\n\n# Step 2: Convert to numeric with errors='coerce'\n\n# Step 3: Fill NaN with median\n\n# Step 4: Convert to int\n\n# Print df\n",
+      "solutionCode": "df['amount'] = df['amount'].str.replace(',', '', regex=False)\ndf['amount'] = pd.to_numeric(df['amount'], errors='coerce')\ndf['amount'] = df['amount'].fillna(df['amount'].median())\ndf['amount'] = df['amount'].astype(int)\nprint(df)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "try:\n    checks = []\n    checks.append(df['amount'].dtype in ['int64', 'int32'])\n    checks.append(df['amount'].notna().all())\n    checks.append(df['amount'].iloc[0] == 1000)\n    checks.append(df['amount'].iloc[1] == 2500)\n    checks.append(df['amount'].iloc[3] == 3000)\n    result = all(checks)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "先处理字符串格式问题（逗号），再转数值类型",
+          "str.replace(',', '', regex=False) 去除逗号",
+          "中位数会忽略 NaN 值",
+          "fillna 后再 astype(int) 就不会报错了"
+        ],
+        "en": [
+          "First handle string formatting (commas), then convert to numeric",
+          "str.replace(',', '', regex=False) removes commas",
+          "Median calculation ignores NaN values",
+          "After fillna, astype(int) won't raise errors"
+        ]
+      },
+      "explanation": {
+        "zh": "混合类型列的清洗流程：1) str.replace 去除格式字符（逗号）；2) to_numeric(errors='coerce') 将无效值变为 NaN；3) fillna 用统计值填充；4) astype(int) 转为整数。这是数据清洗中非常典型的管道流程。",
+        "en": "Mixed-type column cleaning pipeline: 1) str.replace removes formatting characters (commas); 2) to_numeric(errors='coerce') converts invalid values to NaN; 3) fillna fills with statistical values; 4) astype(int) converts to integer. This is a very typical data cleaning pipeline."
+      }
+    }
+  ]
+}
