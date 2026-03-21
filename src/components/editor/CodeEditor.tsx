@@ -22,6 +22,7 @@ export default function CodeEditor({
   const containerRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const onChangeRef = useRef(onChange);
+  const isInternalChange = useRef(false);
   onChangeRef.current = onChange;
 
   useEffect(() => {
@@ -45,6 +46,7 @@ export default function CodeEditor({
       extensions.push(
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
+            isInternalChange.current = true;
             onChangeRef.current?.(update.state.doc.toString());
           }
         })
@@ -72,7 +74,12 @@ export default function CodeEditor({
   }, [readOnly, minHeight]);
 
   // Sync external value changes without re-creating the editor
+  // Skip if the change originated from the editor itself (avoids cursor/focus loss)
   useEffect(() => {
+    if (isInternalChange.current) {
+      isInternalChange.current = false;
+      return;
+    }
     const view = viewRef.current;
     if (!view) return;
     const current = view.state.doc.toString();
