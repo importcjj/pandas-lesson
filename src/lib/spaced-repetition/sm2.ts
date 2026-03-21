@@ -61,7 +61,7 @@ export function createReviewCard(
     repetitions: 0,
     easeFactor: 2.5,
     interval: 1,
-    nextReviewDate: now + DAY_MS,
+    nextReviewDate: now, // immediately available for review
     wrongCount: 1,
     lastWrongAnswer: wrongAnswer,
     createdAt: now,

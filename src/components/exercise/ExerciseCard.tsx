@@ -81,7 +81,7 @@ export default function ExerciseCard({
               lastWrongAnswer: "",
               repetitions: 0,
               interval: 1,
-              nextReviewDate: Date.now() + 24 * 60 * 60 * 1000,
+              nextReviewDate: Date.now(), // immediately available for review
             });
           } else {
             const card = createReviewCard(exercise.id, "");
