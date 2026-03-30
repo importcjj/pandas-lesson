@@ -15,7 +15,7 @@ async function initPyodide() {
   });
 
   self.postMessage({ type: "status", message: "Loading pandas..." });
-  await pyodide.loadPackage(["pandas", "scipy"]);
+  await pyodide.loadPackage(["pandas", "scipy", "matplotlib"]);
 
   isReady = true;
   self.postMessage({ type: "ready" });
