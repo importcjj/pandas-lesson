@@ -28,7 +28,9 @@
     "completed": "已完成",
     "inProgress": "进行中",
     "locked": "未解锁",
-    "notStarted": "未开始"
+    "notStarted": "未开始",
+    "daily": "每日练习",
+    "reference": "速查表"
   },
   "home": {
     "title": "欢迎来到 Pandas 学堂",
@@ -75,6 +77,32 @@
     "wrongCount": "错误次数",
     "lastReview": "上次复习",
     "nextReview": "下次复习"
+  },
+  "daily": {
+    "title": "每日练习",
+    "subtitle": "每天从各阶段随机抽取题目，保持手感",
+    "todayProgress": "今日进度",
+    "refreshTomorrow": "明日自动刷新新题",
+    "allDone": "今天的题目都做完了，明天再来！",
+    "generating": "正在生成今日题目..."
+  },
+  "reference": {
+    "title": "Pandas 速查表",
+    "subtitle": "按主题速查 API、惯用写法和踩坑指南",
+    "searchPlaceholder": "搜索 API、写法、踩坑...",
+    "noResults": "没有找到相关内容",
+    "api": "常用 API",
+    "patterns": "惯用写法",
+    "pitfalls": "易混淆 & 踩坑",
+    "params": "参数",
+    "returns": "返回",
+    "example": "示例",
+    "output": "输出",
+    "wrong": "错误写法",
+    "right": "正确写法",
+    "expandParams": "展开参数",
+    "collapseParams": "收起参数",
+    "topics": "主题目录"
   },
   "progress": {
     "title": "学习进度",

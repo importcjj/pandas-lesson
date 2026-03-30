@@ -2,7 +2,14 @@
   "module": "text-processing",
   "stageId": "stage4",
   "lessonId": "text-processing",
-  "tags": ["str", "extract", "findall", "get_dummies", "cat", "regex"],
+  "tags": [
+    "str",
+    "extract",
+    "findall",
+    "get_dummies",
+    "cat",
+    "regex"
+  ],
   "exercises": [
     {
       "id": "s4-text-processing-001",
@@ -20,11 +27,19 @@
       "starterCode": "# Extract username from email\ndf['username'] = ___",
       "solutionCode": "df['username'] = df['email'].str.extract(r'(.+)@', expand=False)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = list(df['username']) == ['alice', 'bob', 'charlie']\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'email': ['alice@example.com', 'bob@test.org', 'charlie@demo.net']})\", _expected_ns)\nexec(\"df['username'] = df['email'].str.extract(r'(.+)@', expand=False)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "expectedOutput": "",
       "hints": {
-        "zh": ["使用捕获组 () 来指定要提取的部分", "@ 前面的部分可以用 (.+)@ 匹配", "注意使用 expand=False 返回 Series 而非 DataFrame"],
-        "en": ["Use a capture group () to specify the part to extract", "The part before @ can be matched with (.+)@", "Use expand=False to return a Series instead of a DataFrame"]
+        "zh": [
+          "使用捕获组 () 来指定要提取的部分",
+          "@ 前面的部分可以用 (.+)@ 匹配",
+          "注意使用 expand=False 返回 Series 而非 DataFrame"
+        ],
+        "en": [
+          "Use a capture group () to specify the part to extract",
+          "The part before @ can be matched with (.+)@",
+          "Use expand=False to return a Series instead of a DataFrame"
+        ]
       },
       "explanation": {
         "zh": "str.extract() 接受一个包含捕获组的正则表达式，返回匹配到的第一个捕获组的内容。每个捕获组对应结果中的一列。",
@@ -81,12 +96,18 @@
         {
           "placeholder": "___",
           "answer": "'|'",
-          "alternatives": ["\"|\""]
+          "alternatives": [
+            "\"|\""
+          ]
         }
       ],
       "hints": {
-        "zh": ["sep 参数指定分隔符"],
-        "en": ["The sep parameter specifies the delimiter"]
+        "zh": [
+          "sep 参数指定分隔符"
+        ],
+        "en": [
+          "The sep parameter specifies the delimiter"
+        ]
       },
       "explanation": {
         "zh": "str.get_dummies(sep='|') 将 'python|pandas' 这样的字符串拆分并转为独热编码的 DataFrame。每个唯一标签成为一列。",
@@ -106,13 +127,27 @@
         "en": "What is the result of pd.Series(['a', 'b', 'c']).str.cat(sep='-')?"
       },
       "options": {
-        "zh": ["'a-b-c'", "['a-', 'b-', 'c-']", "['a', '-', 'b', '-', 'c']", "'abc'"],
-        "en": ["'a-b-c'", "['a-', 'b-', 'c-']", "['a', '-', 'b', '-', 'c']", "'abc'"]
+        "zh": [
+          "'a-b-c'",
+          "['a-', 'b-', 'c-']",
+          "['a', '-', 'b', '-', 'c']",
+          "'abc'"
+        ],
+        "en": [
+          "'a-b-c'",
+          "['a-', 'b-', 'c-']",
+          "['a', '-', 'b', '-', 'c']",
+          "'abc'"
+        ]
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["str.cat 将 Series 中的字符串连接为一个字符串"],
-        "en": ["str.cat joins all strings in the Series into a single string"]
+        "zh": [
+          "str.cat 将 Series 中的字符串连接为一个字符串"
+        ],
+        "en": [
+          "str.cat joins all strings in the Series into a single string"
+        ]
       },
       "explanation": {
         "zh": "str.cat(sep='-') 将 Series 中的所有字符串用指定分隔符连接成一个字符串。不指定 sep 时默认无分隔符。",
@@ -135,10 +170,16 @@
       "starterCode": "# Extract all numbers from each string\nresult = s.str.extractall(r'(\\d+)')",
       "solutionCode": "result = s.str.extractall(r'(\\d+)')",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = len(result) == 6 and result.iloc[0, 0] == '123'\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ns = pd.Series(['order-123-item-456', 'ref-789', 'id-10-code-20-val-30'])\", _expected_ns)\nexec(\"result = s.str.extractall(r'(\\\\d+)')\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["extractall 返回所有匹配，而 extract 只返回第一个匹配", "结果有 MultiIndex：(原始索引, match序号)"],
-        "en": ["extractall returns all matches, while extract returns only the first", "Result has MultiIndex: (original index, match number)"]
+        "zh": [
+          "extractall 返回所有匹配，而 extract 只返回第一个匹配",
+          "结果有 MultiIndex：(原始索引, match序号)"
+        ],
+        "en": [
+          "extractall returns all matches, while extract returns only the first",
+          "Result has MultiIndex: (original index, match number)"
+        ]
       },
       "explanation": {
         "zh": "extract 只返回每个字符串的第一个匹配，而 extractall 返回所有匹配。extractall 的结果有 MultiIndex，第二层是 match 编号（0, 1, 2...）。当一个字符串中可能有多个匹配时，必须使用 extractall。",
@@ -161,10 +202,16 @@
       "starterCode": "# Extract using named groups\nresult = df['address'].str.extract(r'City: (?P<city>[^,]+), ZIP: (?P<zip>\\d+)')",
       "solutionCode": "result = df['address'].str.extract(r'City: (?P<city>[^,]+), ZIP: (?P<zip>\\d+)')",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = list(result.columns) == ['city', 'zip'] and result.iloc[0]['city'] == 'New York'\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'address': ['City: New York, ZIP: 10001', 'City: Los Angeles, ZIP: 90001', 'City: Chicago, ZIP: 60601']})\", _expected_ns)\nexec(\"result = df['address'].str.extract(r'City: (?P<city>[^,]+), ZIP: (?P<zip>\\\\d+)')\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["(?P<name>...) 定义命名捕获组", "命名组的名称会成为结果 DataFrame 的列名"],
-        "en": ["(?P<name>...) defines a named capture group", "Group names become column names in the result DataFrame"]
+        "zh": [
+          "(?P<name>...) 定义命名捕获组",
+          "命名组的名称会成为结果 DataFrame 的列名"
+        ],
+        "en": [
+          "(?P<name>...) defines a named capture group",
+          "Group names become column names in the result DataFrame"
+        ]
       },
       "explanation": {
         "zh": "命名捕获组 (?P<name>pattern) 让 extract 结果的列名直接使用组名，而不是默认的 0, 1, 2。这使代码更可读且结果更直观。[^,]+ 匹配非逗号字符，\\d+ 匹配数字。",
@@ -187,10 +234,16 @@
       "starterCode": "# Split and get last name\ndf['last_name'] = df['full_name'].str.split(' ').str.get(___)",
       "solutionCode": "df['last_name'] = df['full_name'].str.split(' ').str.get(1)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = list(df['last_name']) == ['Smith', 'Johnson', 'Brown']\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'full_name': ['Alice Smith', 'Bob Johnson', 'Charlie Brown']})\", _expected_ns)\nexec(\"df['last_name'] = df['full_name'].str.split(' ').str.get(1)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["split 返回列表，str.get 按索引访问列表元素", "索引从 0 开始，第二个元素是 1"],
-        "en": ["split returns lists, str.get accesses list elements by index", "Index starts at 0, second element is at index 1"]
+        "zh": [
+          "split 返回列表，str.get 按索引访问列表元素",
+          "索引从 0 开始，第二个元素是 1"
+        ],
+        "en": [
+          "split returns lists, str.get accesses list elements by index",
+          "Index starts at 0, second element is at index 1"
+        ]
       },
       "explanation": {
         "zh": "str.split() 将每个字符串分割为列表，str.get(n) 从列表中按索引取值。这比 str[n] 更安全，因为索引越界时返回 NaN 而不是报错。也可以用 str.split(expand=True) 直接展开为多列。",
@@ -225,8 +278,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["encode/decode 用于字符串和字节之间的转换"],
-        "en": ["encode/decode converts between strings and bytes"]
+        "zh": [
+          "encode/decode 用于字符串和字节之间的转换"
+        ],
+        "en": [
+          "encode/decode converts between strings and bytes"
+        ]
       },
       "explanation": {
         "zh": "str.encode('utf-8') 将 Unicode 字符串编码为 UTF-8 字节序列，str.decode('utf-8') 执行反向操作。在处理多语言数据或与外部系统交互时常用。pandas 的 str 访问器提供了与 Python 原生字符串方法对应的向量化版本。",
@@ -249,10 +306,14 @@
       "starterCode": "# Normalize full-width characters\ndf['normalized'] = df['text'].str.normalize(___)",
       "solutionCode": "df['normalized'] = df['text'].str.normalize('NFKC')",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = list(df['normalized']) == ['Hello', 'Python', 'pandas']\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'text': ['Ｈｅｌｌｏ', 'Ｐｙｔｈｏｎ', 'pandas']})\", _expected_ns)\nexec(\"df['normalized'] = df['text'].str.normalize('NFKC')\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["NFKC 会将兼容字符（如全角字母）标准化为标准形式"],
-        "en": ["NFKC normalizes compatibility characters (like full-width letters) to their standard forms"]
+        "zh": [
+          "NFKC 会将兼容字符（如全角字母）标准化为标准形式"
+        ],
+        "en": [
+          "NFKC normalizes compatibility characters (like full-width letters) to their standard forms"
+        ]
       },
       "explanation": {
         "zh": "str.normalize() 支持 NFC、NFKC、NFD、NFKD 四种 Unicode 标准化形式。NFKC 最常用，它会将全角字符、罗马数字等兼容字符转换为标准形式。在处理中日韩文本数据时特别有用。",
@@ -275,10 +336,16 @@
       "starterCode": "# Case-insensitive search\nmask = df['text'].str.contains('python', case=___)\nresult = df[mask]",
       "solutionCode": "mask = df['text'].str.contains('python', case=False)\nresult = df[mask]",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = len(result) == 4 and 'Java developer' not in result['text'].values\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'text': ['I love Python', 'PYTHON is great', 'use python daily', 'Java developer', 'python3 rocks']})\", _expected_ns)\nexec(\"mask = df['text'].str.contains('python', case=False)\\nresult = df[mask]\", _expected_ns)\ntry:\n    result = _expected_ns.get('mask') is not None and hasattr(_expected_ns['mask'], 'equals') and _expected_ns['mask'].equals(mask) and _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["case=False 忽略大小写", "等价于使用 flags=re.IGNORECASE"],
-        "en": ["case=False ignores case", "Equivalent to using flags=re.IGNORECASE"]
+        "zh": [
+          "case=False 忽略大小写",
+          "等价于使用 flags=re.IGNORECASE"
+        ],
+        "en": [
+          "case=False ignores case",
+          "Equivalent to using flags=re.IGNORECASE"
+        ]
       },
       "explanation": {
         "zh": "str.contains() 的 case 参数控制大小写敏感性。也可以通过 flags 参数传入 re 模块的标志：flags=re.IGNORECASE（大小写不敏感）、re.MULTILINE（多行模式）、re.DOTALL（点号匹配换行）。这些标志也适用于 str.extract、str.replace 等。",
@@ -301,10 +368,16 @@
       "starterCode": "# Count vowels in each string\ndf['vowel_count'] = df['word'].str.count(r'[aeiou]')",
       "solutionCode": "df['vowel_count'] = df['word'].str.count(r'[aeiou]')",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = list(df['vowel_count']) == [2, 1, 2, 5]\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'word': ['hello', 'python', 'pandas', 'aeiou']})\", _expected_ns)\nexec(\"df['vowel_count'] = df['word'].str.count(r'[aeiou]')\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["str.count 接受正则表达式", "[aeiou] 匹配任意一个元音字母"],
-        "en": ["str.count accepts regular expressions", "[aeiou] matches any single vowel"]
+        "zh": [
+          "str.count 接受正则表达式",
+          "[aeiou] 匹配任意一个元音字母"
+        ],
+        "en": [
+          "str.count accepts regular expressions",
+          "[aeiou] matches any single vowel"
+        ]
       },
       "explanation": {
         "zh": "str.count(pattern) 返回每个字符串中正则表达式匹配的次数。与 Python 的 str.count 不同，pandas 版本支持正则表达式。字符类 [aeiou] 匹配其中任意一个字符。",
@@ -327,10 +400,16 @@
       "starterCode": "# Bug: the regex should have 2 capture groups for year and month\n# but only has 1 group capturing everything\nresult = df['date_str'].str.extract(r'(\\d{4})-(\\d{2})')\nresult.columns = ['year', 'month']",
       "solutionCode": "result = df['date_str'].str.extract(r'(\\d{4})-(\\d{2})')\nresult.columns = ['year', 'month']",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = list(result.columns) == ['year', 'month'] and result.iloc[0]['year'] == '2024' and result.iloc[0]['month'] == '01'\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'date_str': ['2024-01-15', '2023-12-25', '2024-06-01']})\", _expected_ns)\nexec(\"result = df['date_str'].str.extract(r'(\\\\d{4})-(\\\\d{2})')\\nresult.columns = ['year', 'month']\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["每个捕获组 () 对应结果中的一列", "确保年份和月份各有一个捕获组"],
-        "en": ["Each capture group () corresponds to a column in the result", "Ensure year and month each have their own capture group"]
+        "zh": [
+          "每个捕获组 () 对应结果中的一列",
+          "确保年份和月份各有一个捕获组"
+        ],
+        "en": [
+          "Each capture group () corresponds to a column in the result",
+          "Ensure year and month each have their own capture group"
+        ]
       },
       "explanation": {
         "zh": "extract 的捕获组数量决定了结果 DataFrame 的列数。常见错误包括：1) 忘记加捕获组括号；2) 把多个部分放在一个组里；3) 组数与期望的列数不匹配。正确的做法是为每个要提取的字段使用独立的捕获组：(\\d{4}) 匹配年份，(\\d{2}) 匹配月份。",
@@ -365,8 +444,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["考虑性能和代码简洁性"],
-        "en": ["Consider performance and code simplicity"]
+        "zh": [
+          "考虑性能和代码简洁性"
+        ],
+        "en": [
+          "Consider performance and code simplicity"
+        ]
       },
       "explanation": {
         "zh": "str 访问器方法是向量化的（虽然底层仍是 Python 循环，但经过优化），代码更简洁可读。常用方法包括 str.lower()、str.upper()、str.strip()、str.contains()、str.replace()、str.extract() 等。只有当需要复杂的自定义逻辑且无对应 str 方法时，才考虑用 apply(lambda)。",
@@ -389,10 +472,18 @@
       "starterCode": "# Step 1: Extract timestamp, level, and message\nparsed = df['log'].str.extract(\n    r'(?P<timestamp>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}) \\[(?P<level>\\w+)\\] (?P<message>.+)'\n)\n\n# Step 2: Count each log level\nlevel_counts = parsed['level'].value_counts()\n\n# Step 3: Find error-related messages (case-insensitive)\nerrors = parsed[parsed['message'].str.contains('error', case=___)]",
       "solutionCode": "parsed = df['log'].str.extract(\n    r'(?P<timestamp>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}) \\[(?P<level>\\w+)\\] (?P<message>.+)'\n)\nlevel_counts = parsed['level'].value_counts()\nerrors = parsed[parsed['message'].str.contains('error', case=False)]",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = list(parsed.columns) == ['timestamp', 'level', 'message'] and level_counts['INFO'] == 3 and len(errors) == 2\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'log': [\\n    '2024-01-15 10:30:00 [INFO] Server started successfully',\\n    '2024-01-15 10:31:05 [WARNING] High memory usage detected',\\n    '2024-01-15 10:32:10 [ERROR] Database connection failed',\\n    '2024-01-15 10:33:15 [INFO] Request processed in 200ms',\\n    '2024-01-15 10:34:20 [ERROR] Timeout error on API call',\\n    '2024-01-15 10:35:25 [INFO] Cache cleared',\\n    '2024-01-15 10:36:30 [WARNING] Disk space low'\\n]})\", _expected_ns)\nexec(\"parsed = df['log'].str.extract(\\n    r'(?P<timestamp>\\\\d{4}-\\\\d{2}-\\\\d{2} \\\\d{2}:\\\\d{2}:\\\\d{2}) \\\\[(?P<level>\\\\w+)\\\\] (?P<message>.+)'\\n)\\nlevel_counts = parsed['level'].value_counts()\\nerrors = parsed[parsed['message'].str.contains('error', case=False)]\", _expected_ns)\ntry:\n    result = _expected_ns.get('parsed') is not None and hasattr(_expected_ns['parsed'], 'equals') and _expected_ns['parsed'].equals(parsed) and _expected_ns.get('level_counts') is not None and hasattr(_expected_ns['level_counts'], 'equals') and _expected_ns['level_counts'].equals(level_counts) and _expected_ns.get('errors') is not None and hasattr(_expected_ns['errors'], 'equals') and _expected_ns['errors'].equals(errors)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["命名捕获组 (?P<name>) 让列名更有意义", "case=False 进行大小写不敏感搜索", "value_counts() 统计各级别的出现次数"],
-        "en": ["Named capture groups (?P<name>) give meaningful column names", "case=False for case-insensitive search", "value_counts() counts occurrences of each level"]
+        "zh": [
+          "命名捕获组 (?P<name>) 让列名更有意义",
+          "case=False 进行大小写不敏感搜索",
+          "value_counts() 统计各级别的出现次数"
+        ],
+        "en": [
+          "Named capture groups (?P<name>) give meaningful column names",
+          "case=False for case-insensitive search",
+          "value_counts() counts occurrences of each level"
+        ]
       },
       "explanation": {
         "zh": "此综合练习展示了日志分析的典型流程：1) 用命名捕获组的正则表达式解析结构化文本；2) 用 value_counts 进行频率分析；3) 用 str.contains 进行文本搜索和过滤。这种模式广泛应用于日志监控、错误分析和运维数据处理。",

@@ -28,7 +28,9 @@
     "completed": "Completed",
     "inProgress": "In Progress",
     "locked": "Locked",
-    "notStarted": "Not Started"
+    "notStarted": "Not Started",
+    "daily": "Daily Practice",
+    "reference": "Cheat Sheet"
   },
   "home": {
     "title": "Welcome to Pandas Academy",
@@ -75,6 +77,32 @@
     "wrongCount": "Times Wrong",
     "lastReview": "Last Review",
     "nextReview": "Next Review"
+  },
+  "daily": {
+    "title": "Daily Practice",
+    "subtitle": "Random exercises from all stages to keep you sharp",
+    "todayProgress": "Today's Progress",
+    "refreshTomorrow": "New exercises tomorrow",
+    "allDone": "All done for today! Come back tomorrow.",
+    "generating": "Generating today's exercises..."
+  },
+  "reference": {
+    "title": "Pandas Cheat Sheet",
+    "subtitle": "Quick lookup for APIs, patterns, and pitfalls by topic",
+    "searchPlaceholder": "Search APIs, patterns, pitfalls...",
+    "noResults": "No results found",
+    "api": "Common APIs",
+    "patterns": "Common Patterns",
+    "pitfalls": "Pitfalls & Confusion",
+    "params": "Parameters",
+    "returns": "Returns",
+    "example": "Example",
+    "output": "Output",
+    "wrong": "Wrong",
+    "right": "Correct",
+    "expandParams": "Show params",
+    "collapseParams": "Hide params",
+    "topics": "Topics"
   },
   "progress": {
     "title": "Learning Progress",

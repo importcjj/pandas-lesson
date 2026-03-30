@@ -1,0 +1,218 @@
+"use client";
+
+import { useState, useRef, useCallback, useEffect } from "react";
+import { useTranslation } from "@/lib/i18n/context";
+import { Exercise, Locale } from "@/types";
+import { saveDailyState, loadDailyState, clearDailyState } from "@/lib/daily/storage";
+import MarkdownText from "@/components/ui/MarkdownText";
+import MultipleChoice from "./MultipleChoice";
+import TrueFalse from "./TrueFalse";
+import FillInBlank from "./FillInBlank";
+import CodingExercise from "./CodingExercise";
+import OutputMatching from "./OutputMatching";
+import { SavedExerciseState } from "@/lib/storage/exercise-state";
+
+const difficultyLabels: Record<number, { zh: string; en: string }> = {
+  1: { zh: "入门", en: "Beginner" },
+  2: { zh: "简单", en: "Easy" },
+  3: { zh: "中等", en: "Medium" },
+  4: { zh: "困难", en: "Hard" },
+  5: { zh: "挑战", en: "Expert" },
+};
+
+const difficultyColors: Record<number, string> = {
+  1: "bg-green-100 text-green-700",
+  2: "bg-blue-100 text-blue-700",
+  3: "bg-yellow-100 text-yellow-700",
+  4: "bg-orange-100 text-orange-700",
+  5: "bg-red-100 text-red-700",
+};
+
+const typeLabels: Record<string, { zh: string; en: string }> = {
+  "multiple-choice": { zh: "选择题", en: "Multiple Choice" },
+  "true-false": { zh: "判断题", en: "True/False" },
+  "fill-blank": { zh: "填空题", en: "Fill in Blank" },
+  coding: { zh: "编程题", en: "Coding" },
+  "output-matching": { zh: "输出预测", en: "Output Matching" },
+};
+
+const stageLabels: Record<string, { zh: string; en: string }> = {
+  stage1: { zh: "基础入门", en: "Basics" },
+  stage2: { zh: "数据清洗", en: "Data Cleaning" },
+  stage3: { zh: "分析与聚合", en: "Analysis" },
+  stage4: { zh: "高级技巧", en: "Advanced" },
+};
+
+interface Props {
+  exercise: Exercise;
+  index: number;
+  dateStr: string;
+  onComplete?: (exerciseId: string, correct: boolean) => void;
+}
+
+export default function DailyExerciseCard({ exercise, index, dateStr, onComplete }: Props) {
+  const { locale } = useTranslation();
+
+  const [savedState, setSavedState] = useState<SavedExerciseState | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [showHints, setShowHints] = useState(0);
+  const [resetCount, setResetCount] = useState(0);
+  const [hydrated, setHydrated] = useState(false);
+  const startTimeRef = useRef(Date.now());
+
+  // Load daily state after hydration
+  useEffect(() => {
+    const saved = loadDailyState(exercise.id, dateStr);
+    if (saved !== null) {
+      setIsCorrect(saved.isCorrect);
+      setSavedState(saved);
+      if (saved.isCorrect) {
+        onComplete?.(exercise.id, true);
+      }
+    }
+    setHydrated(true);
+  }, [exercise.id, dateStr]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const hints = exercise.hints?.[locale as Locale] ?? [];
+  const maxHints = hints.length;
+
+  // Find which stage this exercise belongs to
+  const stageId = exercise.id.startsWith("s1-") ? "stage1"
+    : exercise.id.startsWith("s2-") ? "stage2"
+    : exercise.id.startsWith("s3-") ? "stage3"
+    : "stage4";
+
+  const handleResult = useCallback(
+    (correct: boolean, userAnswer?: unknown) => {
+      setIsCorrect(correct);
+      saveDailyState(exercise.id, correct, userAnswer, dateStr);
+      onComplete?.(exercise.id, correct);
+    },
+    [exercise.id, dateStr, onComplete]
+  );
+
+  function handleShowHint() {
+    if (showHints < maxHints) setShowHints(showHints + 1);
+  }
+
+  function handleReset() {
+    setIsCorrect(null);
+    setShowHints(0);
+    setSavedState(null);
+    setResetCount((c) => c + 1);
+    startTimeRef.current = Date.now();
+    clearDailyState(exercise.id, dateStr);
+  }
+
+  return (
+    <div
+      id={`daily-${exercise.id}`}
+      className={`rounded-xl border-2 bg-white p-6 transition-colors ${
+        isCorrect === true
+          ? "border-green-300 bg-green-50/30"
+          : isCorrect === false
+          ? "border-red-300 bg-red-50/30"
+          : "border-gray-200"
+      }`}
+    >
+      {/* Header */}
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700">
+            {index}
+          </span>
+          <h3 className="font-semibold text-gray-900">
+            {exercise.title[locale as Locale]}
+          </h3>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
+            {stageLabels[stageId]?.[locale as Locale]}
+          </span>
+          <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${difficultyColors[exercise.difficulty]}`}>
+            {difficultyLabels[exercise.difficulty]?.[locale as Locale]}
+          </span>
+          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+            {typeLabels[exercise.type]?.[locale as Locale]}
+          </span>
+        </div>
+      </div>
+
+      {/* Description */}
+      <div className="mb-4 text-gray-700">
+        <MarkdownText>{exercise.description[locale as Locale]}</MarkdownText>
+      </div>
+
+      {/* Exercise component */}
+      <div className="mb-4">
+        {!hydrated ? (
+          <div className="h-20 animate-pulse rounded-lg bg-gray-100" />
+        ) : (
+          <>
+            {exercise.type === "multiple-choice" && (
+              <MultipleChoice key={resetCount} exercise={exercise} onResult={handleResult} savedAnswer={resetCount === 0 ? savedState?.userAnswer as number | undefined : undefined} />
+            )}
+            {exercise.type === "true-false" && (
+              <TrueFalse key={resetCount} exercise={exercise} onResult={handleResult} savedAnswer={resetCount === 0 ? savedState?.userAnswer as boolean | undefined : undefined} />
+            )}
+            {exercise.type === "fill-blank" && (
+              <FillInBlank key={resetCount} exercise={exercise} onResult={handleResult} savedAnswers={resetCount === 0 ? savedState?.userAnswer as string[] | undefined : undefined} />
+            )}
+            {exercise.type === "coding" && (
+              <CodingExercise key={resetCount} exercise={exercise} onResult={handleResult} savedCode={resetCount === 0 ? savedState?.userAnswer as string | undefined : undefined} />
+            )}
+            {exercise.type === "output-matching" && (
+              <OutputMatching key={resetCount} exercise={exercise} onResult={handleResult} savedAnswer={resetCount === 0 ? savedState?.userAnswer as number | undefined : undefined} />
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Hints */}
+      {maxHints > 0 && isCorrect !== true && (
+        <div className="mb-4">
+          {showHints > 0 && (
+            <div className="mb-2 space-y-1">
+              {hints.slice(0, showHints).map((hint, i) => (
+                <div key={i} className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
+                  💡 {hint}
+                </div>
+              ))}
+            </div>
+          )}
+          {showHints < maxHints && (
+            <button onClick={handleShowHint} className="text-sm text-amber-600 hover:text-amber-800">
+              {showHints === 0
+                ? locale === "zh" ? "显示提示" : "Show Hint"
+                : locale === "zh" ? `下一个提示 (${showHints}/${maxHints})` : `Next Hint (${showHints}/${maxHints})`}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Result */}
+      {isCorrect !== null && (
+        <div className="flex items-center justify-between">
+          <span className={`text-sm font-medium ${isCorrect ? "text-green-600" : "text-red-600"}`}>
+            {isCorrect
+              ? locale === "zh" ? "✅ 正确！" : "✅ Correct!"
+              : locale === "zh" ? "❌ 不正确" : "❌ Incorrect"}
+          </span>
+          {!isCorrect && (
+            <button onClick={handleReset} className="rounded-md bg-gray-100 px-3 py-1 text-sm text-gray-600 hover:bg-gray-200">
+              {locale === "zh" ? "再试一次" : "Try Again"}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Explanation */}
+      {isCorrect === true && "explanation" in exercise && exercise.explanation && (
+        <div className="mt-3 rounded-md bg-blue-50 px-4 py-3 text-sm text-blue-800">
+          <span className="font-medium">{locale === "zh" ? "解析：" : "Explanation: "}</span>
+          <MarkdownText className="inline">{exercise.explanation[locale as Locale]}</MarkdownText>
+        </div>
+      )}
+    </div>
+  );
+}

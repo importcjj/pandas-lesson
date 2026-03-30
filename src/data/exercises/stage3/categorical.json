@@ -2,7 +2,13 @@
   "module": "categorical",
   "stageId": "stage3",
   "lessonId": "categorical",
-  "tags": ["categorical", "cat", "cut", "qcut", "dtype"],
+  "tags": [
+    "categorical",
+    "cat",
+    "cut",
+    "qcut",
+    "dtype"
+  ],
   "exercises": [
     {
       "id": "s3-categorical-001",
@@ -32,8 +38,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["想想当同一个字符串出现上万次时，存储方式有什么区别"],
-        "en": ["Think about the storage difference when the same string appears thousands of times"]
+        "zh": [
+          "想想当同一个字符串出现上万次时，存储方式有什么区别"
+        ],
+        "en": [
+          "Think about the storage difference when the same string appears thousands of times"
+        ]
       },
       "explanation": {
         "zh": "Categorical 类型内部使用整数编码代替重复字符串，大幅减少内存占用。对于重复率高的字符串列效果尤为明显。",
@@ -54,13 +64,27 @@
       },
       "code": "import pandas as pd\ns = pd.Categorical(['b', 'a', 'c', 'a'])\nprint(s.codes.tolist())",
       "options": {
-        "zh": ["[1, 0, 2, 0]", "[0, 1, 2, 1]", "[2, 1, 3, 1]", "[1, 0, 2, 3]"],
-        "en": ["[1, 0, 2, 0]", "[0, 1, 2, 1]", "[2, 1, 3, 1]", "[1, 0, 2, 3]"]
+        "zh": [
+          "[1, 0, 2, 0]",
+          "[0, 1, 2, 1]",
+          "[2, 1, 3, 1]",
+          "[1, 0, 2, 3]"
+        ],
+        "en": [
+          "[1, 0, 2, 0]",
+          "[0, 1, 2, 1]",
+          "[2, 1, 3, 1]",
+          "[1, 0, 2, 3]"
+        ]
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["categories 默认按字母排序：a=0, b=1, c=2"],
-        "en": ["Categories are sorted alphabetically by default: a=0, b=1, c=2"]
+        "zh": [
+          "categories 默认按字母排序：a=0, b=1, c=2"
+        ],
+        "en": [
+          "Categories are sorted alphabetically by default: a=0, b=1, c=2"
+        ]
       },
       "explanation": {
         "zh": "Categorical 默认按字母顺序排列类别 (a=0, b=1, c=2)。codes 属性返回每个元素对应的整数编码。",
@@ -84,9 +108,14 @@
       "solutionCode": "df['grade'] = pd.cut(df['score'], bins=3)",
       "validationType": "dataframe-equals",
       "expectedOutput": "",
+      "checkCode": "import pandas as pd\ntry:\n    expected_df = df.copy()\n    expected_df['grade'] = pd.cut(expected_df['score'], bins=3)\n    result = df['grade'].equals(expected_df['grade'])\nexcept:\n    result = False",
       "hints": {
-        "zh": ["pd.cut() 的 bins 参数可以是一个整数，表示等宽区间的数量"],
-        "en": ["The bins parameter of pd.cut() can be an integer specifying the number of equal-width bins"]
+        "zh": [
+          "pd.cut() 的 bins 参数可以是一个整数，表示等宽区间的数量"
+        ],
+        "en": [
+          "The bins parameter of pd.cut() can be an integer specifying the number of equal-width bins"
+        ]
       },
       "explanation": {
         "zh": "pd.cut(df['score'], bins=3) 将分数范围等分成 3 个区间，并为每个值分配对应的区间标签。返回的是 Categorical 类型。",
@@ -107,8 +136,12 @@
       },
       "correctAnswer": true,
       "hints": {
-        "zh": ["q 代表 quantile（分位数）"],
-        "en": ["q stands for quantile"]
+        "zh": [
+          "q 代表 quantile（分位数）"
+        ],
+        "en": [
+          "q stands for quantile"
+        ]
       },
       "explanation": {
         "zh": "pd.cut() 按值的范围等分（等宽），pd.qcut() 按数据的分位数等分（等频）。qcut 确保每组的数据量大致相等。",
@@ -131,10 +164,16 @@
       "starterCode": "# Convert priority to ordered categorical\ndf['priority'] = ___",
       "solutionCode": "df['priority'] = pd.Categorical(df['priority'], categories=['low', 'medium', 'high'], ordered=True)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = df['priority'].cat.ordered == True and list(df['priority'].cat.categories) == ['low', 'medium', 'high']\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'task': ['Task A', 'Task B', 'Task C', 'Task D'], 'priority': ['high', 'low', 'medium', 'high']})\", _expected_ns)\nexec(\"df['priority'] = pd.Categorical(df['priority'], categories=['low', 'medium', 'high'], ordered=True)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["pd.Categorical 的 ordered=True 参数创建有序分类", "categories 参数定义排序顺序（从小到大）"],
-        "en": ["The ordered=True parameter of pd.Categorical creates ordered categories", "The categories parameter defines the sort order (smallest to largest)"]
+        "zh": [
+          "pd.Categorical 的 ordered=True 参数创建有序分类",
+          "categories 参数定义排序顺序（从小到大）"
+        ],
+        "en": [
+          "The ordered=True parameter of pd.Categorical creates ordered categories",
+          "The categories parameter defines the sort order (smallest to largest)"
+        ]
       },
       "explanation": {
         "zh": "有序分类支持比较运算符（<, >, <=, >=）。categories 列表的顺序定义了大小关系。有序分类在排序和 min/max 操作中非常有用。",
@@ -157,10 +196,16 @@
       "starterCode": "# Add 'urgent' category and reorder\ndf['priority'] = df['priority'].cat.add_categories('urgent')\ndf['priority'] = ___",
       "solutionCode": "df['priority'] = df['priority'].cat.add_categories('urgent')\ndf['priority'] = df['priority'].cat.reorder_categories(['low', 'medium', 'high', 'urgent'])",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = 'urgent' in df['priority'].cat.categories and list(df['priority'].cat.categories) == ['low', 'medium', 'high', 'urgent']\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'priority': pd.Categorical(['low', 'medium', 'high', 'low'], categories=['low', 'medium', 'high'], ordered=True)})\", _expected_ns)\nexec(\"df['priority'] = df['priority'].cat.add_categories('urgent')\\ndf['priority'] = df['priority'].cat.reorder_categories(['low', 'medium', 'high', 'urgent'])\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["cat.add_categories() 添加新类别但不改变现有数据", "cat.reorder_categories() 重新排列类别顺序"],
-        "en": ["cat.add_categories() adds new categories without changing existing data", "cat.reorder_categories() rearranges category order"]
+        "zh": [
+          "cat.add_categories() 添加新类别但不改变现有数据",
+          "cat.reorder_categories() 重新排列类别顺序"
+        ],
+        "en": [
+          "cat.add_categories() adds new categories without changing existing data",
+          "cat.reorder_categories() rearranges category order"
+        ]
       },
       "explanation": {
         "zh": "cat 访问器提供管理类别的方法：add_categories 添加、remove_categories 删除、set_categories 设置全部、reorder_categories 重排序、rename_categories 重命名。这些操作只修改类别定义，不改变数据值。",
@@ -185,8 +230,14 @@
       "validationType": "custom-check",
       "checkCode": "try:\n    result_check = result > 0\nexcept:\n    result_check = False\nresult_check",
       "hints": {
-        "zh": ["memory_usage(deep=True) 包含字符串的实际内存", "Categorical 用整数编码替代重复字符串，节省内存"],
-        "en": ["memory_usage(deep=True) includes actual string memory", "Categorical uses integer codes instead of repeated strings, saving memory"]
+        "zh": [
+          "memory_usage(deep=True) 包含字符串的实际内存",
+          "Categorical 用整数编码替代重复字符串，节省内存"
+        ],
+        "en": [
+          "memory_usage(deep=True) includes actual string memory",
+          "Categorical uses integer codes instead of repeated strings, saving memory"
+        ]
       },
       "explanation": {
         "zh": "对于重复率高的字符串列，Categorical 类型只存储一份类别值加整数编码，大幅节省内存。1000 行 5 种城市名，转换后通常节省 50-80% 的内存。memory_usage(deep=True) 计算包含字符串实际大小的内存。",
@@ -209,10 +260,16 @@
       "starterCode": "# Bin ages with custom labels\ndf['age_group'] = ___",
       "solutionCode": "df['age_group'] = pd.cut(df['age'], bins=[0, 18, 35, 60, 100], labels=['Youth', 'Young Adult', 'Middle-aged', 'Senior'])",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = df['age_group'].iloc[0] == 'Youth' and df['age_group'].iloc[3] == 'Senior' and df['age_group'].dtype.name == 'category'\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'age': [15, 25, 42, 68, 30]})\", _expected_ns)\nexec(\"df['age_group'] = pd.cut(df['age'], bins=[0, 18, 35, 60, 100], labels=['Youth', 'Young Adult', 'Middle-aged', 'Senior'])\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["bins 参数指定分箱边界", "labels 参数指定每个区间的标签名，数量必须比 bins 少一个"],
-        "en": ["The bins parameter specifies bin edges", "The labels parameter specifies label names for each interval, must be one fewer than bins"]
+        "zh": [
+          "bins 参数指定分箱边界",
+          "labels 参数指定每个区间的标签名，数量必须比 bins 少一个"
+        ],
+        "en": [
+          "The bins parameter specifies bin edges",
+          "The labels parameter specifies label names for each interval, must be one fewer than bins"
+        ]
       },
       "explanation": {
         "zh": "pd.cut 的 labels 参数为每个区间赋予有意义的标签名。标签数量必须等于区间数（bins 长度减 1）。自定义标签让分箱结果更易理解，同时保持 Categorical 类型。",
@@ -235,10 +292,16 @@
       "starterCode": "# qcut with duplicates handling\ndf['quartile'] = ___",
       "solutionCode": "df['quartile'] = pd.qcut(df['score'], q=4, duplicates='drop')",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = df['quartile'].dtype.name == 'category' and len(df['quartile'].cat.categories) <= 4\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'name': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], 'score': [50, 50, 50, 60, 70, 80, 90, 100]})\", _expected_ns)\nexec(\"df['quartile'] = pd.qcut(df['score'], q=4, duplicates='drop')\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["当数据有很多重复值时，qcut 的分位数边界可能重复", "duplicates='drop' 自动去掉重复的边界"],
-        "en": ["When data has many duplicates, qcut quantile boundaries may overlap", "duplicates='drop' automatically removes duplicate boundaries"]
+        "zh": [
+          "当数据有很多重复值时，qcut 的分位数边界可能重复",
+          "duplicates='drop' 自动去掉重复的边界"
+        ],
+        "en": [
+          "When data has many duplicates, qcut quantile boundaries may overlap",
+          "duplicates='drop' automatically removes duplicate boundaries"
+        ]
       },
       "explanation": {
         "zh": "当数据中有大量重复值时（如 50 出现 3 次），qcut 计算的分位数边界可能重合，默认会报 ValueError。duplicates='drop' 自动合并重复边界，最终分组数可能少于指定的 q。",
@@ -261,10 +324,16 @@
       "starterCode": "# value_counts showing all categories\nresult = ___",
       "solutionCode": "result = pd.Series(s).value_counts(dropna=False)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = len(result) == 3 and 'c' in result.index and result['c'] == 0\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ns = pd.Categorical(['a', 'b', 'a', 'a'], categories=['a', 'b', 'c'])\", _expected_ns)\nexec('result = pd.Series(s).value_counts(dropna=False)', _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["Categorical 类型的 value_counts 默认显示所有类别", "未出现的类别计数为 0"],
-        "en": ["value_counts on Categorical type shows all categories by default", "Absent categories have a count of 0"]
+        "zh": [
+          "Categorical 类型的 value_counts 默认显示所有类别",
+          "未出现的类别计数为 0"
+        ],
+        "en": [
+          "value_counts on Categorical type shows all categories by default",
+          "Absent categories have a count of 0"
+        ]
       },
       "explanation": {
         "zh": "对 Categorical 列调用 value_counts() 时，结果会包含所有已定义类别，即使某些类别计数为 0。这在了解数据分布时非常有用，可以看到哪些类别完全缺失。",
@@ -287,10 +356,16 @@
       "starterCode": "# Bug: TypeError - Unordered Categoricals can not be compared\nresult = df[df['priority'] > 'medium']",
       "solutionCode": "df['priority'] = df['priority'].cat.set_categories(['low', 'medium', 'high'], ordered=True)\nresult = df[df['priority'] > 'medium']",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = len(result) == 2 and all(result['priority'] == 'high')\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'task': ['Task A', 'Task B', 'Task C', 'Task D'], 'priority': pd.Categorical(['high', 'low', 'medium', 'high'])})\", _expected_ns)\nexec(\"df['priority'] = df['priority'].cat.set_categories(['low', 'medium', 'high'], ordered=True)\\nresult = df[df['priority'] > 'medium']\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["无序 Categorical 不支持 > < 比较", "需要用 cat.set_categories 设置有序类别"],
-        "en": ["Unordered Categorical does not support > < comparisons", "Use cat.set_categories to set ordered categories"]
+        "zh": [
+          "无序 Categorical 不支持 > < 比较",
+          "需要用 cat.set_categories 设置有序类别"
+        ],
+        "en": [
+          "Unordered Categorical does not support > < comparisons",
+          "Use cat.set_categories to set ordered categories"
+        ]
       },
       "explanation": {
         "zh": "只有设置了 ordered=True 的分类列才支持大小比较（>, <, >=, <=）。用 cat.set_categories(['low', 'medium', 'high'], ordered=True) 同时定义类别顺序和启用有序。也可以用 cat.as_ordered() 将现有顺序标记为有序。",
@@ -325,8 +400,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["Categorical 的优势在于重复值多时节省内存和提高性能"],
-        "en": ["Categorical's advantage is memory savings and performance when there are many repeated values"]
+        "zh": [
+          "Categorical 的优势在于重复值多时节省内存和提高性能"
+        ],
+        "en": [
+          "Categorical's advantage is memory savings and performance when there are many repeated values"
+        ]
       },
       "explanation": {
         "zh": "Categorical 最适合：1) 有限类别的重复值列（如性别、国家）—节省内存；2) 需要自定义排序（如 low/medium/high）；3) 需要控制有效值范围。不适合唯一值多的列（如 ID），因为编码开销可能超过节省。",
@@ -349,10 +428,18 @@
       "starterCode": "# Step 1: Bin spending into segments\n# Step 2: Group and aggregate\n# Step 3: Sort by avg_spending desc\nresult = ___",
       "solutionCode": "df['segment'] = pd.cut(df['spending'], bins=[0, 100, 500, 2000], labels=['low', 'medium', 'high'])\nresult = df.groupby('segment', observed=True).agg(count=('spending', 'count'), avg_spending=('spending', 'mean')).sort_values('avg_spending', ascending=False)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = len(result) == 3 and 'count' in result.columns and 'avg_spending' in result.columns and result.iloc[0]['avg_spending'] >= result.iloc[1]['avg_spending']\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndf = pd.DataFrame({'customer_id': range(1, 21), 'spending': [50, 120, 800, 200, 90, 350, 1200, 75, 450, 600, 30, 180, 950, 280, 60, 700, 150, 1500, 85, 420]})\", _expected_ns)\nexec(\"df['segment'] = pd.cut(df['spending'], bins=[0, 100, 500, 2000], labels=['low', 'medium', 'high'])\\nresult = df.groupby('segment', observed=True).agg(count=('spending', 'count'), avg_spending=('spending', 'mean')).sort_values('avg_spending', ascending=False)\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["pd.cut(bins=[0,100,500,2000], labels=['low','medium','high'])", "groupby + 命名聚合: agg(count=('spending','count'), avg_spending=('spending','mean'))", "sort_values('avg_spending', ascending=False)"],
-        "en": ["pd.cut(bins=[0,100,500,2000], labels=['low','medium','high'])", "groupby + named aggregation: agg(count=('spending','count'), avg_spending=('spending','mean'))", "sort_values('avg_spending', ascending=False)"]
+        "zh": [
+          "pd.cut(bins=[0,100,500,2000], labels=['low','medium','high'])",
+          "groupby + 命名聚合: agg(count=('spending','count'), avg_spending=('spending','mean'))",
+          "sort_values('avg_spending', ascending=False)"
+        ],
+        "en": [
+          "pd.cut(bins=[0,100,500,2000], labels=['low','medium','high'])",
+          "groupby + named aggregation: agg(count=('spending','count'), avg_spending=('spending','mean'))",
+          "sort_values('avg_spending', ascending=False)"
+        ]
       },
       "explanation": {
         "zh": "这个综合练习展示了 Categorical 在数据分析中的典型应用：先用 cut 将连续变量离散化为有意义的分层，再用 groupby 按分层进行统计分析。这种方法在 RFM 客户分析、信用评分等场景中广泛使用。",

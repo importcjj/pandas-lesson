@@ -2,7 +2,13 @@
   "module": "boolean-indexing",
   "stageId": "stage2",
   "lessonId": "boolean-indexing",
-  "tags": ["filter", "boolean-indexing", "isin", "between", "conditions"],
+  "tags": [
+    "filter",
+    "boolean-indexing",
+    "isin",
+    "between",
+    "conditions"
+  ],
   "exercises": [
     {
       "id": "s2-boolidx-001",
@@ -64,8 +70,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["pandas 使用位运算符而非 Python 逻辑运算符"],
-        "en": ["pandas uses bitwise operators, not Python logical operators"]
+        "zh": [
+          "pandas 使用位运算符而非 Python 逻辑运算符"
+        ],
+        "en": [
+          "pandas uses bitwise operators, not Python logical operators"
+        ]
       },
       "explanation": {
         "zh": "pandas 中必须使用 &（与）和 |（或）来组合条件，而不能使用 Python 的 and/or。每个条件还需要用括号括起来。",
@@ -93,8 +103,12 @@
         }
       ],
       "hints": {
-        "zh": ["~ 运算符用于对布尔 Series 取反"],
-        "en": ["The ~ operator negates a boolean Series"]
+        "zh": [
+          "~ 运算符用于对布尔 Series 取反"
+        ],
+        "en": [
+          "The ~ operator negates a boolean Series"
+        ]
       },
       "explanation": {
         "zh": "~ 是布尔取反运算符，~(df['city'] == 'Beijing') 将 True 变为 False，False 变为 True，从而筛选出 city 不是 Beijing 的行。",
@@ -147,8 +161,12 @@
       },
       "correctAnswer": true,
       "hints": {
-        "zh": ["between() 默认包含两端边界值"],
-        "en": ["between() includes both boundary values by default"]
+        "zh": [
+          "between() 默认包含两端边界值"
+        ],
+        "en": [
+          "between() includes both boundary values by default"
+        ]
       },
       "explanation": {
         "zh": "between(left, right) 默认两端都包含（inclusive='both'），所以等价于 >= left 且 <= right。可以通过 inclusive 参数调整。",
@@ -408,7 +426,7 @@
       "solutionCode": "filtered = df[(df['region'].isin(['East', 'West'])) & (df['sales'] > 1000)]\navg_sales = filtered['sales'].mean()\nprint(round(avg_sales, 1))",
       "validationType": "custom-check",
       "expectedOutput": "",
-      "checkCode": "try:\n    filtered = df[(df['region'].isin(['East', 'West'])) & (df['sales'] > 1000)]\n    expected_avg = filtered['sales'].mean()\n    result = (round(avg_sales, 1) == round(expected_avg, 1))\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\n\\ndf = pd.DataFrame({\\n    'region': ['East', 'West', 'North', 'East', 'West', 'South'],\\n    'product': ['A', 'B', 'A', 'C', 'A', 'B'],\\n    'sales': [1500, 2000, 800, 500, 1800, 1200]\\n})\", _expected_ns)\nexec(\"filtered = df[(df['region'].isin(['East', 'West'])) & (df['sales'] > 1000)]\\navg_sales = filtered['sales'].mean()\\nprint(round(avg_sales, 1))\", _expected_ns)\ntry:\n    result = _expected_ns.get('filtered') is not None and hasattr(_expected_ns['filtered'], 'equals') and _expected_ns['filtered'].equals(filtered)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "用 isin() 检查 region 是否在列表中",

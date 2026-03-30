@@ -2,7 +2,13 @@
   "module": "best-practices",
   "stageId": "stage4",
   "lessonId": "best-practices",
-  "tags": ["SettingWithCopyWarning", "copy", "chained-indexing", "loc", "inplace"],
+  "tags": [
+    "SettingWithCopyWarning",
+    "copy",
+    "chained-indexing",
+    "loc",
+    "inplace"
+  ],
   "exercises": [
     {
       "id": "s4-best-practices-001",
@@ -32,8 +38,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["链式索引（先 [] 再 []）可能在副本上操作"],
-        "en": ["Chained indexing ([] followed by []) might operate on a copy"]
+        "zh": [
+          "链式索引（先 [] 再 []）可能在副本上操作"
+        ],
+        "en": [
+          "Chained indexing ([] followed by []) might operate on a copy"
+        ]
       },
       "explanation": {
         "zh": "df[df['a'] > 0]['b'] = 1 使用了链式索引，pandas 无法确定是在原始 DataFrame 还是副本上赋值，因此发出警告。应使用 df.loc[df['a'] > 0, 'b'] = 1。",
@@ -56,10 +66,16 @@
       "starterCode": "# Create an independent copy of filtered data\nsubset = df[df['age'] > 25].copy()\nsubset['senior'] = ___",
       "solutionCode": "subset = df[df['age'] > 25].copy()\nsubset['senior'] = True",
       "validationType": "custom-check",
-      "checkCode": "result = 'senior' in subset.columns and subset['senior'].all() and len(subset) == 3",
+      "checkCode": "try:\n    result = ('senior' in subset.columns and subset['senior'].all() and len(subset)).equals(3)\nexcept:\n    try:\n        result = ('senior' in subset.columns and subset['senior'].all() and len(subset) == 3).all() if hasattr('senior' in subset.columns and subset['senior'].all() and len(subset), 'all') else 'senior' in subset.columns and subset['senior'].all() and len(subset) == 3\n    except:\n        result = False",
       "hints": {
-        "zh": [".copy() 创建独立副本，修改不影响原始 DataFrame", "在副本上添加新列不会产生警告"],
-        "en": [".copy() creates an independent copy, modifications won't affect the original DataFrame", "Adding a new column to a copy won't produce warnings"]
+        "zh": [
+          ".copy() 创建独立副本，修改不影响原始 DataFrame",
+          "在副本上添加新列不会产生警告"
+        ],
+        "en": [
+          ".copy() creates an independent copy, modifications won't affect the original DataFrame",
+          "Adding a new column to a copy won't produce warnings"
+        ]
       },
       "explanation": {
         "zh": "切片操作可能返回视图（view），在视图上修改可能影响原始数据或触发警告。使用 .copy() 确保获得独立副本，可以安全地修改。",
@@ -80,8 +96,12 @@
       },
       "correctAnswer": true,
       "hints": {
-        "zh": ["loc 使用单次索引操作，保证在原始 DataFrame 上赋值"],
-        "en": ["loc uses a single indexing operation, guaranteeing assignment on the original DataFrame"]
+        "zh": [
+          "loc 使用单次索引操作，保证在原始 DataFrame 上赋值"
+        ],
+        "en": [
+          "loc uses a single indexing operation, guaranteeing assignment on the original DataFrame"
+        ]
       },
       "explanation": {
         "zh": "df.loc[] 是单次索引操作，确保直接在原始 DataFrame 上赋值。链式索引 df[][]= 可能操作在临时副本上，导致赋值无效且触发警告。",
@@ -116,8 +136,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["inplace=True 返回 None，无法继续链式调用"],
-        "en": ["inplace=True returns None, making further method chaining impossible"]
+        "zh": [
+          "inplace=True 返回 None，无法继续链式调用"
+        ],
+        "en": [
+          "inplace=True returns None, making further method chaining impossible"
+        ]
       },
       "explanation": {
         "zh": "inplace=True 直接修改原 DataFrame 并返回 None，破坏了方法链。现代 pandas 推荐使用赋值方式（df = df.dropna()），代码更清晰且支持链式操作。",
@@ -142,8 +166,14 @@
       "validationType": "exact-output",
       "expectedOutput": "[25, 30]",
       "hints": {
-        "zh": ["直接赋值 df_copy = df 只是创建引用，不是副本", "使用 .copy() 方法创建深拷贝"],
-        "en": ["Simple assignment df_copy = df only creates a reference, not a copy", "Use the .copy() method to create a deep copy"]
+        "zh": [
+          "直接赋值 df_copy = df 只是创建引用，不是副本",
+          "使用 .copy() 方法创建深拷贝"
+        ],
+        "en": [
+          "Simple assignment df_copy = df only creates a reference, not a copy",
+          "Use the .copy() method to create a deep copy"
+        ]
       },
       "explanation": {
         "zh": "df.copy() 创建深拷贝，修改副本不影响原 DataFrame。直接赋值 df_copy = df 只是创建引用，两者共享同一数据。切片操作（如 df[df['age'] > 20]）也可能返回视图而非副本，修改时会触发 SettingWithCopyWarning。",
@@ -178,8 +208,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["deep=False 创建的是浅拷贝，数据仍然共享"],
-        "en": ["deep=False creates a shallow copy, data is still shared"]
+        "zh": [
+          "deep=False 创建的是浅拷贝，数据仍然共享"
+        ],
+        "en": [
+          "deep=False creates a shallow copy, data is still shared"
+        ]
       },
       "explanation": {
         "zh": "deep=True（默认）创建数据和索引的完整副本，修改副本不影响原始数据。deep=False 只创建新的 DataFrame 对象但共享底层数据，对数值列的修改可能影响原始数据。注意：即使 deep=True，object 列中的可变对象（如列表）也只是浅拷贝。",
@@ -202,10 +236,16 @@
       "starterCode": "# Set display options\npd.set_option('display.max_rows', ___)\npd.set_option('display.float_format', '{:.2f}'.format)\npd.set_option('display.max_colwidth', ___)\n\n# Verify settings\nprint(pd.get_option('display.max_rows'))\nprint(pd.get_option('display.max_colwidth'))",
       "solutionCode": "pd.set_option('display.max_rows', 100)\npd.set_option('display.float_format', '{:.2f}'.format)\npd.set_option('display.max_colwidth', None)\nprint(pd.get_option('display.max_rows'))\nprint(pd.get_option('display.max_colwidth'))",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = pd.get_option('display.max_rows') == 100 and pd.get_option('display.max_colwidth') is None\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\ntry:\n    result = (pd.get_option('display.max_rows') == 100 and pd.get_option('display.max_colwidth') is None)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["max_rows 控制显示的最大行数", "max_colwidth=None 表示不截断列宽"],
-        "en": ["max_rows controls the maximum rows displayed", "max_colwidth=None means no column width truncation"]
+        "zh": [
+          "max_rows 控制显示的最大行数",
+          "max_colwidth=None 表示不截断列宽"
+        ],
+        "en": [
+          "max_rows controls the maximum rows displayed",
+          "max_colwidth=None means no column width truncation"
+        ]
       },
       "explanation": {
         "zh": "pd.set_option / pd.get_option 控制 pandas 的全局行为。常用选项：display.max_rows（最大显示行数）、display.max_columns（最大显示列数）、display.float_format（浮点格式）、display.max_colwidth（列宽限制）、mode.chained_assignment（链式赋值警告级别）。也可以用 pd.option_context 作为临时设置的上下文管理器。",
@@ -228,10 +268,16 @@
       "starterCode": "# Refactor to method chain\nresult = (\n    df\n    .dropna(subset=['value'])\n    .assign(weighted=lambda x: x['value'] * x['weight'])\n    .groupby('category')\n    .agg(total_weighted=('weighted', 'sum'))\n    .sort_values('total_weighted', ascending=False)\n)",
       "solutionCode": "result = (\n    df\n    .dropna(subset=['value'])\n    .assign(weighted=lambda x: x['value'] * x['weight'])\n    .groupby('category')\n    .agg(total_weighted=('weighted', 'sum'))\n    .sort_values('total_weighted', ascending=False)\n)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = 'total_weighted' in result.columns and len(result) == 3 and result.index[0] == 'B'\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\ndf = pd.DataFrame({'category': ['A', 'B', 'A', 'C', 'B', 'A', 'C', 'B'], 'value': [10, np.nan, 20, 30, 15, np.nan, 25, 35], 'weight': [1.0, 2.0, 1.5, 2.5, 1.0, 2.0, 1.5, 2.5]})\", _expected_ns)\nexec(\"result = (\\n    df\\n    .dropna(subset=['value'])\\n    .assign(weighted=lambda x: x['value'] * x['weight'])\\n    .groupby('category')\\n    .agg(total_weighted=('weighted', 'sum'))\\n    .sort_values('total_weighted', ascending=False)\\n)\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["assign 创建新列可以在链中使用 lambda", "括号换行让每一步一行，清晰可读"],
-        "en": ["assign creates new columns and can use lambda in chains", "Parentheses for line breaks keep each step on one line for clarity"]
+        "zh": [
+          "assign 创建新列可以在链中使用 lambda",
+          "括号换行让每一步一行，清晰可读"
+        ],
+        "en": [
+          "assign creates new columns and can use lambda in chains",
+          "Parentheses for line breaks keep each step on one line for clarity"
+        ]
       },
       "explanation": {
         "zh": "方法链风格指南：1) 用括号包裹整个链式调用；2) 每个方法调用独占一行；3) 用 assign 代替 df['new'] = 在链中创建列；4) 用 lambda 在 assign 中引用前面步骤的结果；5) 避免 inplace=True。这种风格使数据处理流程一目了然。",
@@ -266,8 +312,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["不同场景有不同的最优解"],
-        "en": ["Different scenarios have different optimal solutions"]
+        "zh": [
+          "不同场景有不同的最优解"
+        ],
+        "en": [
+          "Different scenarios have different optimal solutions"
+        ]
       },
       "explanation": {
         "zh": "替代 iterrows 的最佳实践取决于场景：1) 简单数值运算 -> 向量化（df['a'] + df['b']）；2) 条件赋值 -> np.where 或 np.select；3) 分组操作 -> groupby + transform/agg；4) 复杂逻辑 -> apply（axis=1）；5) 如果必须逐行且只读 -> itertuples（比 iterrows 快 100 倍）。几乎没有理由使用 iterrows。",
@@ -302,8 +352,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["Copy-on-Write 意为「写时复制」"],
-        "en": ["Copy-on-Write means 'copy when writing'"]
+        "zh": [
+          "Copy-on-Write 意为「写时复制」"
+        ],
+        "en": [
+          "Copy-on-Write means 'copy when writing'"
+        ]
       },
       "explanation": {
         "zh": "Copy-on-Write (CoW) 是 pandas 2.0 引入、3.0 将默认启用的机制。启用后（pd.options.mode.copy_on_write = True），任何从 DataFrame 派生的对象（切片、视图等）在被修改时会自动触发拷贝，确保修改不影响原始数据。这消除了 SettingWithCopyWarning 和相关的混淆。实际上 CoW 通过延迟拷贝反而可能减少内存使用。",
@@ -326,10 +380,16 @@
       "starterCode": "# Fixed: Use .loc instead of chained indexing\n# Bad:  df[df['age'] > 25]['dept'] = 'Senior'\n# Good:\ndf.loc[df['age'] > 25, 'dept'] = 'Senior'\n\nprint(df)",
       "solutionCode": "df.loc[df['age'] > 25, 'dept'] = 'Senior'\nprint(df)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = df.loc[1, 'dept'] == 'Senior' and df.loc[0, 'dept'] == 'Eng'\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David'], 'age': [22, 30, 28, 35], 'dept': ['Eng', 'HR', 'Eng', 'Sales']})\", _expected_ns)\nexec(\"df.loc[df['age'] > 25, 'dept'] = 'Senior'\\nprint(df)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["df.loc[条件, 列名] = 值 是单次索引操作", "避免 df[条件][列名] = 值 的链式索引"],
-        "en": ["df.loc[condition, column] = value is a single indexing operation", "Avoid df[condition][column] = value chained indexing"]
+        "zh": [
+          "df.loc[条件, 列名] = 值 是单次索引操作",
+          "避免 df[条件][列名] = 值 的链式索引"
+        ],
+        "en": [
+          "df.loc[condition, column] = value is a single indexing operation",
+          "Avoid df[condition][column] = value chained indexing"
+        ]
       },
       "explanation": {
         "zh": "SettingWithCopyWarning 的常见触发场景：1) df[mask]['col'] = value（链式索引赋值）；2) 在从切片得到的子集上赋值而没有 .copy()；3) df.iloc[n]['col'] = value。解决方案：始终用 df.loc[mask, 'col'] = value 进行单次索引赋值，或先 .copy() 创建副本再操作。",
@@ -352,10 +412,16 @@
       "starterCode": "# Use pipe to integrate custom function in method chain\nresult = (\n    df\n    .pipe(add_label, column='score', thresholds=[60, 80], labels=['Fail', 'Pass', 'Excellent'])\n    .sort_values('score', ascending=False)\n)",
       "solutionCode": "result = (\n    df\n    .pipe(add_label, column='score', thresholds=[60, 80], labels=['Fail', 'Pass', 'Excellent'])\n    .sort_values('score', ascending=False)\n)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = 'label' in result.columns and result.iloc[0]['label'] == 'Excellent' and len(result) == 5\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\ndef add_label(df, column, thresholds, labels):\\n    \"\"\"Add a label column based on thresholds.\"\"\"\\n    df = df.copy()\\n    df[\\'label\\'] = pd.cut(df[column], bins=[-np.inf] + thresholds + [np.inf], labels=labels)\\n    return df\\n\\ndf = pd.DataFrame({\\'name\\': [\\'Alice\\', \\'Bob\\', \\'Charlie\\', \\'David\\', \\'Eve\\'], \\'score\\': [45, 72, 88, 95, 60]})', _expected_ns)\nexec(\"result = (\\n    df\\n    .pipe(add_label, column='score', thresholds=[60, 80], labels=['Fail', 'Pass', 'Excellent'])\\n    .sort_values('score', ascending=False)\\n)\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["pipe 将 DataFrame 作为第一个参数传给函数", "额外参数通过关键字参数传递"],
-        "en": ["pipe passes the DataFrame as the first argument to the function", "Additional arguments are passed as keyword arguments"]
+        "zh": [
+          "pipe 将 DataFrame 作为第一个参数传给函数",
+          "额外参数通过关键字参数传递"
+        ],
+        "en": [
+          "pipe passes the DataFrame as the first argument to the function",
+          "Additional arguments are passed as keyword arguments"
+        ]
       },
       "explanation": {
         "zh": "pipe() 允许在方法链中无缝使用自定义函数：df.pipe(func, **kwargs) 等价于 func(df, **kwargs)。优点：1) 保持方法链的流畅性；2) 函数可以复用；3) 代码更模块化。特别适合将常用的数据处理逻辑封装为可复用函数。",
@@ -378,10 +444,16 @@
       "starterCode": "# Bug: In CoW mode, modifying subset doesn't affect df\n# subset = df[df['score'] < 80]\n# subset['score'] = 0  # This won't modify df in CoW mode!\n\n# Fix: modify df directly\ndf.loc[df['score'] < 80, 'score'] = 0\nprint(df)",
       "solutionCode": "df.loc[df['score'] < 80, 'score'] = 0\nprint(df)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = df.loc[1, 'score'] == 0 and df.loc[0, 'score'] == 85\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'score': [85, 72, 90]})\", _expected_ns)\nexec(\"df.loc[df['score'] < 80, 'score'] = 0\\nprint(df)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["CoW 模式下切片返回的是延迟拷贝", "要修改原 DataFrame 必须直接用 .loc"],
-        "en": ["In CoW mode, slices return lazy copies", "To modify the original DataFrame, use .loc directly"]
+        "zh": [
+          "CoW 模式下切片返回的是延迟拷贝",
+          "要修改原 DataFrame 必须直接用 .loc"
+        ],
+        "en": [
+          "In CoW mode, slices return lazy copies",
+          "To modify the original DataFrame, use .loc directly"
+        ]
       },
       "explanation": {
         "zh": "在 CoW 模式下，df[mask] 返回的子集与原 df 不再共享数据。对子集的修改不会影响原 df（也不会警告，直接静默失效）。要修改原 df 必须使用 df.loc[mask, col] = value 直接操作。这其实是更安全的行为，避免了意外修改原数据的风险。",
@@ -416,8 +488,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["pandas 的设计理念是向量化和声明式操作"],
-        "en": ["pandas is designed for vectorized and declarative operations"]
+        "zh": [
+          "pandas 的设计理念是向量化和声明式操作"
+        ],
+        "en": [
+          "pandas is designed for vectorized and declarative operations"
+        ]
       },
       "explanation": {
         "zh": "地道的 pandas 风格清单：1) 优先向量化操作（避免循环）；2) 使用方法链组织代码流程；3) 用 .loc/.iloc 进行赋值（避免链式索引）；4) 避免 inplace=True（破坏链式调用）；5) 需要独立副本时用 .copy()；6) 用 assign 在链中创建列；7) 用 pipe 集成自定义函数；8) 合理使用 category 类型优化内存。",
@@ -442,8 +518,18 @@
       "validationType": "custom-check",
       "checkCode": "try:\n    result_check = (\n        'avg_total' in result.columns and\n        'count' in result.columns and\n        result.index.names == ['product', 'tier'] and\n        len(result) > 0 and\n        result['avg_total'].is_monotonic_decreasing\n    )\nexcept:\n    result_check = False\nresult = result_check",
       "hints": {
-        "zh": ["assign 在链中创建新列", "np.where 替代 if-else 循环", "query 替代布尔索引筛选", "命名聚合替代字典 agg"],
-        "en": ["assign creates new columns in chains", "np.where replaces if-else loops", "query replaces boolean index filtering", "Named aggregation replaces dict agg"]
+        "zh": [
+          "assign 在链中创建新列",
+          "np.where 替代 if-else 循环",
+          "query 替代布尔索引筛选",
+          "命名聚合替代字典 agg"
+        ],
+        "en": [
+          "assign creates new columns in chains",
+          "np.where replaces if-else loops",
+          "query replaces boolean index filtering",
+          "Named aggregation replaces dict agg"
+        ]
       },
       "explanation": {
         "zh": "此综合练习展示了将命令式代码重构为地道 pandas 的完整过程：循环 -> 向量化，if-else -> np.where，布尔索引 -> query，手动聚合 -> groupby+agg。重构后的代码：1) 更短（约 1/3 行数）；2) 更快（向量化 vs 循环）；3) 更易读（声明式意图清晰）；4) 更易维护（每步独立可测试）。这是 pandas 编程的核心技能。",

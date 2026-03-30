@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import QuickReference from "@/components/reference/QuickReference";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -59,6 +60,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <Sidebar />
         <main className="flex-1 p-6 lg:p-8 overflow-auto">{children}</main>
       </div>
+
+      <QuickReference />
     </div>
   );
 }

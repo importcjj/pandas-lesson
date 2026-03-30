@@ -2,7 +2,13 @@
   "module": "dataframe-creation",
   "stageId": "stage1",
   "lessonId": "dataframe-creation",
-  "tags": ["dataframe", "creation", "dict", "csv", "dtypes"],
+  "tags": [
+    "dataframe",
+    "creation",
+    "dict",
+    "csv",
+    "dtypes"
+  ],
   "exercises": [
     {
       "id": "s1-dfcreate-001",
@@ -60,8 +66,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["观察字典的键和 DataFrame 的列名之间的关系"],
-        "en": ["Observe the relationship between dictionary keys and DataFrame column names"]
+        "zh": [
+          "观察字典的键和 DataFrame 的列名之间的关系"
+        ],
+        "en": [
+          "Observe the relationship between dictionary keys and DataFrame column names"
+        ]
       },
       "explanation": {
         "zh": "当传入字典列表时，每个字典代表一行数据，字典的键会成为列名。",
@@ -85,7 +95,9 @@
         {
           "placeholder": "___=___",
           "answer": "columns=['id', 'name']",
-          "alternatives": ["columns = ['id', 'name']"]
+          "alternatives": [
+            "columns = ['id', 'name']"
+          ]
         }
       ],
       "hints": {
@@ -132,8 +144,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["dtype=float 会将数据转换为 float64 类型"],
-        "en": ["dtype=float converts the data to float64 type"]
+        "zh": [
+          "dtype=float 会将数据转换为 float64 类型"
+        ],
+        "en": [
+          "dtype=float converts the data to float64 type"
+        ]
       },
       "explanation": {
         "zh": "使用 dtype=float 参数后，整数列会被转换为 float64 类型。",
@@ -212,7 +228,7 @@
       "solutionCode": "import pandas as pd\n\ndata = {'name': ['Alice', 'Bob'], 'age': [25, 30], 'city': ['Beijing', 'Shanghai']}\n\ndf = pd.DataFrame(data, columns=['city', 'name', 'age'])\nprint(df)",
       "setupCode": "",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\ntry:\n    result = list(df.columns) == ['city', 'name', 'age']\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\n\\ndata = {'name': ['Alice', 'Bob'], 'age': [25, 30], 'city': ['Beijing', 'Shanghai']}\\n\\ndf = pd.DataFrame(data, columns=['city', 'name', 'age'])\\nprint(df)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "pd.DataFrame() 有一个 columns 参数",
@@ -240,7 +256,7 @@
       "solutionCode": "import pandas as pd\n\nrecords = [(1, 'Alice', 90), (2, 'Bob', 85), (3, 'Charlie', 78)]\n\ndf = pd.DataFrame.from_records(records, columns=['id', 'name', 'score'])\nprint(df)",
       "setupCode": "",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\ntry:\n    result = list(df.columns) == ['id', 'name', 'score'] and len(df) == 3\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\n\\nrecords = [(1, 'Alice', 90), (2, 'Bob', 85), (3, 'Charlie', 78)]\\n\\ndf = pd.DataFrame.from_records(records, columns=['id', 'name', 'score'])\\nprint(df)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "from_records 是 DataFrame 的类方法",
@@ -268,7 +284,7 @@
       "solutionCode": "import pandas as pd\nfrom io import StringIO\n\ncsv_data = \"\"\"name,age,score,city\nAlice,25,90,Beijing\nBob,30,85,Shanghai\nCharlie,35,78,Guangzhou\"\"\"\n\ndf = pd.read_csv(StringIO(csv_data), usecols=['name', 'score'], nrows=2)\nprint(df)",
       "setupCode": "",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\ntry:\n    result = len(df) == 2 and 'name' in df.columns and 'score' in df.columns and 'age' not in df.columns\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec('import pandas as pd\\nfrom io import StringIO\\n\\ncsv_data = \"\"\"name,age,score,city\\nAlice,25,90,Beijing\\nBob,30,85,Shanghai\\nCharlie,35,78,Guangzhou\"\"\"\\n\\ndf = pd.read_csv(StringIO(csv_data), usecols=[\\'name\\', \\'score\\'], nrows=2)\\nprint(df)', _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "usecols 参数接受列名列表",
@@ -308,8 +324,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["想想逐行添加数据的性能问题"],
-        "en": ["Think about the performance implications of adding rows one by one"]
+        "zh": [
+          "想想逐行添加数据的性能问题"
+        ],
+        "en": [
+          "Think about the performance implications of adding rows one by one"
+        ]
       },
       "explanation": {
         "zh": "逐行 append 到空 DataFrame 是一种反模式，因为每次 append 都会复制整个 DataFrame，导致 O(n²) 的时间复杂度。最佳做法是先收集数据到列表，最后一次性创建 DataFrame。",
@@ -332,7 +352,7 @@
       "solutionCode": "import pandas as pd\n\ndata = [\n    {'name': 'Alice', 'age': 25, 'city': 'Beijing'},\n    {'name': 'Bob', 'age': 30, 'city': 'Shanghai'},\n    {'name': 'Charlie', 'age': 35, 'city': 'Guangzhou'}\n]\ndf = pd.DataFrame(data)\nprint(df)\nprint(df.isnull().sum())",
       "setupCode": "",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\ntry:\n    result = df.isnull().sum().sum() == 0 and len(df) == 3 and len(df.columns) == 3\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\n\\ndata = [\\n    {'name': 'Alice', 'age': 25, 'city': 'Beijing'},\\n    {'name': 'Bob', 'age': 30, 'city': 'Shanghai'},\\n    {'name': 'Charlie', 'age': 35, 'city': 'Guangzhou'}\\n]\\ndf = pd.DataFrame(data)\\nprint(df)\\nprint(df.isnull().sum())\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "仔细检查每个字典的键名大小写",
@@ -374,8 +394,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["考虑两种方式在内存分配上的区别"],
-        "en": ["Consider the difference in memory allocation between the two approaches"]
+        "zh": [
+          "考虑两种方式在内存分配上的区别"
+        ],
+        "en": [
+          "Consider the difference in memory allocation between the two approaches"
+        ]
       },
       "explanation": {
         "zh": "两种方式产生相同的结果，但列表字典（方式B）性能更好，因为 pandas 可以直接将每个列表转换为 Series。字典列表（方式A）更灵活，适合从 API/数据库读取的行式数据。",
@@ -398,7 +422,7 @@
       "solutionCode": "import pandas as pd\n\ndf1 = pd.DataFrame({'id': [1, 2, 3], 'name': ['Alice', 'Bob', 'Charlie']})\ndf2 = pd.DataFrame({'id': [1, 2, 3], 'score': [90, 85, 78]})\nresult = pd.merge(df1, df2, on='id')\nprint(result)",
       "setupCode": "",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\ntry:\n    result = 'name' in _output and 'score' in _output and 'Alice' in _output and '90' in _output and len(result.columns) == 3\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\n\\ndf1 = pd.DataFrame({'id': [1, 2, 3], 'name': ['Alice', 'Bob', 'Charlie']})\\ndf2 = pd.DataFrame({'id': [1, 2, 3], 'score': [90, 85, 78]})\\nresult = pd.merge(df1, df2, on='id')\\nprint(result)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df1') is not None and hasattr(_expected_ns['df1'], 'equals') and _expected_ns['df1'].equals(df1) and _expected_ns.get('df2') is not None and hasattr(_expected_ns['df2'], 'equals') and _expected_ns['df2'].equals(df2) and _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "使用 pd.DataFrame() 分别创建两个 DataFrame",

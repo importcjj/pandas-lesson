@@ -2,7 +2,13 @@
   "module": "type-conversion",
   "stageId": "stage2",
   "lessonId": "type-conversion",
-  "tags": ["astype", "to_numeric", "to_datetime", "type-conversion", "coerce"],
+  "tags": [
+    "astype",
+    "to_numeric",
+    "to_datetime",
+    "type-conversion",
+    "coerce"
+  ],
   "exercises": [
     {
       "id": "s2-typeconv-001",
@@ -26,7 +32,11 @@
         {
           "placeholder": "___2___",
           "answer": "float",
-          "alternatives": ["'float'", "'float64'", "float64"]
+          "alternatives": [
+            "'float'",
+            "'float64'",
+            "float64"
+          ]
         }
       ],
       "hints": {
@@ -92,7 +102,7 @@
       "starterCode": "# Convert 'date' column to datetime\n\n# Print df.dtypes\n",
       "solutionCode": "df['date'] = pd.to_datetime(df['date'])\nprint(df.dtypes)",
       "validationType": "exact-output",
-      "expectedOutput": "date     datetime64[ns]\nvalue             int64\ndtype: object",
+      "expectedOutput": "date     datetime64[us]\nvalue             int64\ndtype: object",
       "hints": {
         "zh": [
           "pd.to_datetime() 可以自动识别常见的日期格式",
@@ -136,8 +146,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["coerce 的英文含义是'强制转换'"],
-        "en": ["The word 'coerce' means to force or compel"]
+        "zh": [
+          "coerce 的英文含义是'强制转换'"
+        ],
+        "en": [
+          "The word 'coerce' means to force or compel"
+        ]
       },
       "explanation": {
         "zh": "errors='coerce' 会将无法转换的值替换为 NaN（数值）或 NaT（日期时间），而不是抛出错误。errors='raise'（默认）会抛出异常，errors='ignore' 则保留原值。",
@@ -224,8 +238,12 @@
       },
       "correctAnswer": true,
       "hints": {
-        "zh": ["dayfirst=True 表示日期字符串中第一个数字是\"日\""],
-        "en": ["dayfirst=True means the first number in the date string is the 'day'"]
+        "zh": [
+          "dayfirst=True 表示日期字符串中第一个数字是\"日\""
+        ],
+        "en": [
+          "dayfirst=True means the first number in the date string is the 'day'"
+        ]
       },
       "explanation": {
         "zh": "dayfirst=True 告诉 pandas 日期字符串的第一部分是'日'而非'月'。所以 05/06/2024 解析为 6月5日（日=05，月=06）。这在处理欧洲日期格式时非常有用。",
@@ -248,7 +266,7 @@
       "starterCode": "# Convert 'duration' to timedelta\n\n# Print df.dtypes\n",
       "solutionCode": "df['duration'] = pd.to_timedelta(df['duration'])\nprint(df.dtypes)",
       "validationType": "exact-output",
-      "expectedOutput": "task               object\nduration    timedelta64[ns]\ndtype: object",
+      "expectedOutput": "task                    str\nduration    timedelta64[us]\ndtype: object",
       "hints": {
         "zh": [
           "pd.to_timedelta() 可以解析如 '1 days', '2 hours' 等时间差字符串",
@@ -280,7 +298,7 @@
       "starterCode": "# Convert 'size' to ordered categorical\n\n# Print df.dtypes and sorted df\n",
       "solutionCode": "df['size'] = pd.Categorical(df['size'], categories=['S', 'M', 'L', 'XL'], ordered=True)\nprint(df.dtypes)\nprint(df.sort_values('size'))",
       "validationType": "exact-output",
-      "expectedOutput": "product      object\nsize       category\ndtype: object\n  product size\n2  Jacket    S\n0   Shirt    M\n3     Hat    L\n1   Pants   XL",
+      "expectedOutput": "product         str\nsize       category\ndtype: object\n  product size\n2  Jacket    S\n0   Shirt    M\n3     Hat    L\n1   Pants   XL",
       "hints": {
         "zh": [
           "pd.Categorical() 的 categories 参数定义有效类别",

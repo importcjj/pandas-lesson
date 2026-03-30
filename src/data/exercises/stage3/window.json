@@ -2,7 +2,13 @@
   "module": "window",
   "stageId": "stage3",
   "lessonId": "window",
-  "tags": ["rolling", "expanding", "shift", "window", "moving-average"],
+  "tags": [
+    "rolling",
+    "expanding",
+    "shift",
+    "window",
+    "moving-average"
+  ],
   "exercises": [
     {
       "id": "s3-window-001",
@@ -21,9 +27,16 @@
       "solutionCode": "result = df['price'].rolling(3).mean()",
       "validationType": "dataframe-equals",
       "expectedOutput": "",
+      "checkCode": "import pandas as pd\ntry:\n    expected = df['price'].rolling(3).mean()\n    result = result.equals(expected)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["使用 .rolling(window) 指定窗口大小", "链式调用 .mean() 计算窗口内的平均值"],
-        "en": ["Use .rolling(window) to specify window size", "Chain .mean() to calculate the mean within the window"]
+        "zh": [
+          "使用 .rolling(window) 指定窗口大小",
+          "链式调用 .mean() 计算窗口内的平均值"
+        ],
+        "en": [
+          "Use .rolling(window) to specify window size",
+          "Chain .mean() to calculate the mean within the window"
+        ]
       },
       "explanation": {
         "zh": "rolling(3).mean() 计算每个位置向前看 3 个元素的平均值。前两个位置因为窗口不满而为 NaN。",
@@ -58,8 +71,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["min_periods 控制窗口中需要多少个非 NaN 值才能产生结果"],
-        "en": ["min_periods controls how many non-NaN values are needed in the window to produce a result"]
+        "zh": [
+          "min_periods 控制窗口中需要多少个非 NaN 值才能产生结果"
+        ],
+        "en": [
+          "min_periods controls how many non-NaN values are needed in the window to produce a result"
+        ]
       },
       "explanation": {
         "zh": "min_periods 指定窗口中产生结果所需的最少非 NaN 观测值数量。设为 1 意味着只要有一个值就不会输出 NaN。",
@@ -87,8 +104,12 @@
         }
       ],
       "hints": {
-        "zh": ["expanding 创建一个从第一个元素到当前元素的不断增长的窗口"],
-        "en": ["expanding creates a growing window from the first element to the current element"]
+        "zh": [
+          "expanding 创建一个从第一个元素到当前元素的不断增长的窗口"
+        ],
+        "en": [
+          "expanding creates a growing window from the first element to the current element"
+        ]
       },
       "explanation": {
         "zh": "expanding() 创建一个从第一行到当前行不断扩展的窗口。expanding().sum() 等价于 cumsum()。",
@@ -109,8 +130,18 @@
       },
       "code": "import pandas as pd\ns = pd.Series([10, 20, 30, 40])\nprint(s.shift(1).values)",
       "options": {
-        "zh": ["[ nan  10.  20.  30.]", "[ 20.  30.  40.  nan]", "[10 20 30 40]", "[ nan  nan  10.  20.]"],
-        "en": ["[ nan  10.  20.  30.]", "[ 20.  30.  40.  nan]", "[10 20 30 40]", "[ nan  nan  10.  20.]"]
+        "zh": [
+          "[ nan  10.  20.  30.]",
+          "[ 20.  30.  40.  nan]",
+          "[10 20 30 40]",
+          "[ nan  nan  10.  20.]"
+        ],
+        "en": [
+          "[ nan  10.  20.  30.]",
+          "[ 20.  30.  40.  nan]",
+          "[10 20 30 40]",
+          "[ nan  nan  10.  20.]"
+        ]
       },
       "correctIndex": 0,
       "explanation": {
@@ -139,8 +170,14 @@
         }
       ],
       "hints": {
-        "zh": ["expanding() 创建从第一行到当前行的窗口", "对窗口调用 .max() 获取最大值"],
-        "en": ["expanding() creates a window from the first row to the current", "Call .max() on the window to get the maximum"]
+        "zh": [
+          "expanding() 创建从第一行到当前行的窗口",
+          "对窗口调用 .max() 获取最大值"
+        ],
+        "en": [
+          "expanding() creates a window from the first row to the current",
+          "Call .max() on the window to get the maximum"
+        ]
       },
       "explanation": {
         "zh": "expanding().max() 计算每个位置从开始到当前的最大值。这与 cummax() 功能相同，常用于追踪历史峰值。",
@@ -164,9 +201,16 @@
       "solutionCode": "result = df['price'].rolling(3, center=True).mean()",
       "validationType": "dataframe-equals",
       "expectedOutput": "",
+      "checkCode": "import pandas as pd\ntry:\n    expected = df['price'].rolling(3, center=True).mean()\n    result = result.equals(expected)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["center=True 让窗口以当前位置为中心", "居中窗口第一个和最后一个位置为 NaN"],
-        "en": ["center=True centers the window on the current position", "Centered window produces NaN at the first and last positions"]
+        "zh": [
+          "center=True 让窗口以当前位置为中心",
+          "居中窗口第一个和最后一个位置为 NaN"
+        ],
+        "en": [
+          "center=True centers the window on the current position",
+          "Centered window produces NaN at the first and last positions"
+        ]
       },
       "explanation": {
         "zh": "默认的 rolling 窗口向后看（包含当前和之前的值）。center=True 让窗口居中：对于 window=3，每个位置使用前一个、当前和后一个值。首尾位置因窗口不满而为 NaN。",
@@ -189,10 +233,16 @@
       "starterCode": "# Gaussian weighted rolling mean\nresult = ___",
       "solutionCode": "result = df['price'].rolling(5, win_type='gaussian').mean(std=1)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    import numpy as np\n    result_check = len(result) == 10 and np.isnan(result.iloc[0]) and not np.isnan(result.iloc[4])\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'date': pd.date_range('2024-01-01', periods=10), 'price': [100, 102, 101, 105, 107, 106, 110, 108, 112, 115]})\", _expected_ns)\nexec(\"result = df['price'].rolling(5, win_type='gaussian').mean(std=1)\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["win_type='gaussian' 使用高斯权重", "高斯窗口的 mean() 方法需要传入 std 参数"],
-        "en": ["win_type='gaussian' applies Gaussian weighting", "The mean() method on a Gaussian window requires the std parameter"]
+        "zh": [
+          "win_type='gaussian' 使用高斯权重",
+          "高斯窗口的 mean() 方法需要传入 std 参数"
+        ],
+        "en": [
+          "win_type='gaussian' applies Gaussian weighting",
+          "The mean() method on a Gaussian window requires the std parameter"
+        ]
       },
       "explanation": {
         "zh": "win_type 参数指定窗口函数类型。高斯窗口赋予中心位置更高权重，边缘权重更低。其他窗口类型包括 'triang'（三角）、'blackman' 等。加权平均可以减少噪声。",
@@ -215,10 +265,16 @@
       "starterCode": "# EWM with span=5\nresult = ___",
       "solutionCode": "result = df['price'].ewm(span=5).mean()",
       "validationType": "custom-check",
-      "checkCode": "try:\n    import numpy as np\n    result_check = len(result) == 10 and not np.isnan(result.iloc[0]) and abs(result.iloc[0] - 100.0) < 0.01\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'date': pd.date_range('2024-01-01', periods=10), 'price': [100, 102, 101, 105, 107, 106, 110, 108, 112, 115]})\", _expected_ns)\nexec(\"result = df['price'].ewm(span=5).mean()\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["ewm 不像 rolling 那样有 NaN，第一个值就有结果", "span 参数控制衰减的'跨度'"],
-        "en": ["Unlike rolling, ewm produces results from the first value (no NaN)", "The span parameter controls the decay 'span'"]
+        "zh": [
+          "ewm 不像 rolling 那样有 NaN，第一个值就有结果",
+          "span 参数控制衰减的'跨度'"
+        ],
+        "en": [
+          "Unlike rolling, ewm produces results from the first value (no NaN)",
+          "The span parameter controls the decay 'span'"
+        ]
       },
       "explanation": {
         "zh": "ewm (Exponential Weighted Moving) 给最近的数据更高权重，权重呈指数衰减。span 参数控制衰减速度：span 越大，权重衰减越慢，平滑效果越强。与 rolling 不同，ewm 从第一个值就开始计算。",
@@ -253,8 +309,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["这三个参数在数学上是可以互相转换的"],
-        "en": ["These three parameters are mathematically interconvertible"]
+        "zh": [
+          "这三个参数在数学上是可以互相转换的"
+        ],
+        "en": [
+          "These three parameters are mathematically interconvertible"
+        ]
       },
       "explanation": {
         "zh": "span、com（质心）和 halflife（半衰期）是指数衰减的三种等价表达。span=5 等价于 com=2（因为 span=1+2*com）。halflife 指权重衰减到一半所需的观测数。只需指定其中一个。",
@@ -277,10 +337,16 @@
       "starterCode": "# Rolling range (max - min) with window=3\nresult = ___",
       "solutionCode": "result = df['price'].rolling(3).apply(lambda x: x.max() - x.min())",
       "validationType": "custom-check",
-      "checkCode": "try:\n    import numpy as np\n    result_check = np.isnan(result.iloc[0]) and np.isnan(result.iloc[1]) and abs(result.iloc[2] - 2.0) < 0.01\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'price': [100, 102, 101, 105, 107, 106, 110]})\", _expected_ns)\nexec(\"result = df['price'].rolling(3).apply(lambda x: x.max() - x.min())\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["apply 接受一个函数，该函数接收窗口内的 numpy 数组", "lambda x: x.max() - x.min() 计算极差"],
-        "en": ["apply accepts a function that receives a numpy array of the window values", "lambda x: x.max() - x.min() computes the range"]
+        "zh": [
+          "apply 接受一个函数，该函数接收窗口内的 numpy 数组",
+          "lambda x: x.max() - x.min() 计算极差"
+        ],
+        "en": [
+          "apply accepts a function that receives a numpy array of the window values",
+          "lambda x: x.max() - x.min() computes the range"
+        ]
       },
       "explanation": {
         "zh": "rolling().apply() 允许使用自定义函数。函数接收窗口内的数据（numpy 数组），返回一个标量。注意 apply 比内置方法（如 mean、std）慢，因为它是逐窗口执行 Python 函数。",
@@ -303,10 +369,16 @@
       "starterCode": "# Calculate percentage change\nresult = ___",
       "solutionCode": "result = df['price'].pct_change()",
       "validationType": "custom-check",
-      "checkCode": "try:\n    import numpy as np\n    result_check = np.isnan(result.iloc[0]) and abs(result.iloc[1] - 0.05) < 0.001\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'date': pd.date_range('2024-01-01', periods=5), 'price': [100, 105, 102, 110, 108]})\", _expected_ns)\nexec(\"result = df['price'].pct_change()\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["pct_change() 计算当前值与前一个值的百分比变化", "第一个值为 NaN（没有前一个值）"],
-        "en": ["pct_change() computes the percentage change from the previous value", "The first value is NaN (no previous value)"]
+        "zh": [
+          "pct_change() 计算当前值与前一个值的百分比变化",
+          "第一个值为 NaN（没有前一个值）"
+        ],
+        "en": [
+          "pct_change() computes the percentage change from the previous value",
+          "The first value is NaN (no previous value)"
+        ]
       },
       "explanation": {
         "zh": "pct_change() 计算 (当前值 - 前一值) / 前一值。例如 105 相对 100 的变化为 0.05 (5%)。可以传入 periods 参数比较更早的值，如 pct_change(2) 比较两行前。",
@@ -329,10 +401,16 @@
       "starterCode": "# Bug: rolling on unsorted data gives wrong results\nresult = df['price'].rolling(3).mean()",
       "solutionCode": "df = df.sort_values('date')\nresult = df['price'].rolling(3).mean()",
       "validationType": "custom-check",
-      "checkCode": "try:\n    import numpy as np\n    result_check = np.isnan(result.iloc[0]) and np.isnan(result.iloc[1]) and abs(result.iloc[2] - 101.0) < 0.01\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'date': pd.to_datetime(['2024-01-03', '2024-01-01', '2024-01-05', '2024-01-02', '2024-01-04']), 'price': [101, 100, 107, 102, 105]})\", _expected_ns)\nexec(\"df = df.sort_values('date')\\nresult = df['price'].rolling(3).mean()\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["rolling 按行顺序计算，不关心日期列的值", "确保数据按日期排序后再做滚动计算"],
-        "en": ["rolling computes based on row order, not date column values", "Sort data by date before performing rolling calculations"]
+        "zh": [
+          "rolling 按行顺序计算，不关心日期列的值",
+          "确保数据按日期排序后再做滚动计算"
+        ],
+        "en": [
+          "rolling computes based on row order, not date column values",
+          "Sort data by date before performing rolling calculations"
+        ]
       },
       "explanation": {
         "zh": "rolling 按 DataFrame 的行顺序计算，不会自动按日期排序。如果数据未按时间排序，窗口内的值可能不是连续日期的值。解决方法是先 sort_values('date') 排序，再计算滚动值。",
@@ -367,8 +445,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["每种方法有不同的窗口行为：固定、增长、指数衰减"],
-        "en": ["Each method has different window behavior: fixed, growing, exponentially decaying"]
+        "zh": [
+          "每种方法有不同的窗口行为：固定、增长、指数衰减"
+        ],
+        "en": [
+          "Each method has different window behavior: fixed, growing, exponentially decaying"
+        ]
       },
       "explanation": {
         "zh": "rolling 使用固定大小的滑动窗口，适合计算 N 日均线等；expanding 窗口不断扩大（从第一行到当前），适合累积均值/总和；ewm 用指数衰减权重，最近的数据权重最大，适合金融数据平滑。",
@@ -391,10 +473,18 @@
       "starterCode": "# Step 1: 5-day moving average\n# Step 2: 5-day rolling std (volatility)\n# Step 3: signal based on price vs ma5\nresult = ___",
       "solutionCode": "df['ma5'] = df['price'].rolling(5).mean()\ndf['volatility'] = df['price'].rolling(5).std()\ndf['signal'] = np.where(df['price'] > df['ma5'], 'buy', 'sell')\nresult = df",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = 'ma5' in result.columns and 'volatility' in result.columns and 'signal' in result.columns and len(result) == 15 and result['signal'].iloc[-1] in ['buy', 'sell']\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\ndf = pd.DataFrame({'date': pd.date_range('2024-01-01', periods=15), 'price': [100, 102, 101, 105, 107, 106, 110, 108, 112, 115, 113, 118, 120, 117, 122]})\", _expected_ns)\nexec(\"df['ma5'] = df['price'].rolling(5).mean()\\ndf['volatility'] = df['price'].rolling(5).std()\\ndf['signal'] = np.where(df['price'] > df['ma5'], 'buy', 'sell')\\nresult = df\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["ma5 = df['price'].rolling(5).mean()", "volatility = df['price'].rolling(5).std()", "用 np.where(条件, 'buy', 'sell') 生成信号列"],
-        "en": ["ma5 = df['price'].rolling(5).mean()", "volatility = df['price'].rolling(5).std()", "Use np.where(condition, 'buy', 'sell') to generate the signal column"]
+        "zh": [
+          "ma5 = df['price'].rolling(5).mean()",
+          "volatility = df['price'].rolling(5).std()",
+          "用 np.where(条件, 'buy', 'sell') 生成信号列"
+        ],
+        "en": [
+          "ma5 = df['price'].rolling(5).mean()",
+          "volatility = df['price'].rolling(5).std()",
+          "Use np.where(condition, 'buy', 'sell') to generate the signal column"
+        ]
       },
       "explanation": {
         "zh": "这个综合练习模拟了股票技术分析的基本流程：移动平均线识别趋势，滚动标准差衡量波动风险，价格与均线的交叉生成买卖信号。这三个指标组合是量化分析的基础。",

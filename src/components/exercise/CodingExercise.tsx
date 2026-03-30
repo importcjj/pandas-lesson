@@ -15,13 +15,14 @@ const CodeEditor = dynamic(() => import("@/components/editor/CodeEditor"), {
 
 interface Props {
   exercise: CodingExerciseType;
-  onResult: (correct: boolean) => void;
+  onResult: (correct: boolean, userAnswer?: unknown) => void;
+  savedCode?: string;
 }
 
-export default function CodingExercise({ exercise, onResult }: Props) {
+export default function CodingExercise({ exercise, onResult, savedCode }: Props) {
   const { locale } = useTranslation();
   const { isLoading: pyodideLoading, isReady: pyodideReady, runCode } = usePyodide();
-  const [code, setCode] = useState(exercise.starterCode);
+  const [code, setCode] = useState(savedCode ?? exercise.starterCode);
   const [output, setOutput] = useState<string | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +44,7 @@ export default function CodingExercise({ exercise, onResult }: Props) {
     if (result.error) {
       setError(result.error);
     }
-    onResult(result.correct);
+    onResult(result.correct, code);
     setIsRunning(false);
   }
 
@@ -67,6 +68,18 @@ export default function CodingExercise({ exercise, onResult }: Props) {
 
   return (
     <div>
+      {/* Setup code display (read-only, shows imports and variables) */}
+      {exercise.setupCode && (
+        <div className="mb-2">
+          <div className="mb-1 text-xs font-medium text-gray-500">
+            {locale === "zh" ? "预设代码（已自动加载）" : "Setup Code (auto-loaded)"}
+          </div>
+          <pre className="overflow-x-auto rounded-lg bg-gray-100 p-3 text-xs text-gray-600 font-mono border border-gray-200">
+            {exercise.setupCode}
+          </pre>
+        </div>
+      )}
+
       {/* Code editor toolbar */}
       <div className="flex items-center justify-between rounded-t-lg bg-gray-800 px-4 py-2">
         <span className="text-xs text-gray-400">Python</span>

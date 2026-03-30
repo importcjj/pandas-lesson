@@ -6,20 +6,32 @@ import { MultipleChoiceExercise, Locale } from "@/types";
 
 interface Props {
   exercise: MultipleChoiceExercise;
-  onResult: (correct: boolean) => void;
+  onResult: (correct: boolean, userAnswer?: unknown) => void;
+  savedAnswer?: number;
 }
 
-export default function MultipleChoice({ exercise, onResult }: Props) {
+export default function MultipleChoice({ exercise, onResult, savedAnswer }: Props) {
   const { locale } = useTranslation();
-  const [selected, setSelected] = useState<number | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const restoredFromSave = savedAnswer !== undefined;
+  const [selected, setSelected] = useState<number | null>(restoredFromSave ? savedAnswer : null);
+  const [submitted, setSubmitted] = useState(restoredFromSave);
+  const [isCorrect, setIsCorrect] = useState(restoredFromSave ? savedAnswer === exercise.correctIndex : false);
 
   const options = exercise.options[locale as Locale];
+  const locked = submitted && isCorrect;
 
   function handleSubmit() {
     if (selected === null) return;
+    const correct = selected === exercise.correctIndex;
     setSubmitted(true);
-    onResult(selected === exercise.correctIndex);
+    setIsCorrect(correct);
+    onResult(correct, selected);
+  }
+
+  function handleRetry() {
+    setSelected(null);
+    setSubmitted(false);
+    setIsCorrect(false);
   }
 
   return (
@@ -29,9 +41,12 @@ export default function MultipleChoice({ exercise, onResult }: Props) {
           <button
             key={index}
             onClick={() => {
-              if (!submitted) setSelected(index);
+              if (!locked) {
+                setSelected(index);
+                if (submitted) setSubmitted(false);
+              }
             }}
-            disabled={submitted}
+            disabled={locked}
             className={`w-full rounded-lg border-2 px-4 py-3 text-left text-sm transition-colors ${
               submitted
                 ? index === exercise.correctIndex
@@ -51,14 +66,24 @@ export default function MultipleChoice({ exercise, onResult }: Props) {
           </button>
         ))}
       </div>
-      {!submitted && (
-        <button
-          onClick={handleSubmit}
-          disabled={selected === null}
-          className="mt-4 rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
-        >
-          {locale === "zh" ? "提交" : "Submit"}
-        </button>
+      {!locked && (
+        <div className="mt-4 flex items-center gap-3">
+          <button
+            onClick={handleSubmit}
+            disabled={selected === null}
+            className="rounded-lg bg-indigo-600 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            {locale === "zh" ? "提交" : "Submit"}
+          </button>
+          {submitted && !isCorrect && (
+            <button
+              onClick={handleRetry}
+              className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
+            >
+              {locale === "zh" ? "重新选择" : "Try Again"}
+            </button>
+          )}
+        </div>
       )}
     </div>
   );

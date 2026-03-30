@@ -27,19 +27,6 @@ export default function Sidebar({ mobile = false }: { mobile?: boolean }) {
     load();
   }, [pathname]); // Reload when navigating
 
-  function isStageUnlocked(stageIndex: number): boolean {
-    if (stageIndex === 0) return true;
-    const prevStage = curriculum.stages[stageIndex - 1];
-    const prevLessons = prevStage.lessons;
-    const completedCount = prevLessons.filter((lesson) => {
-      const p = progressData.find(
-        (pd) => pd.stageId === prevStage.id && pd.lessonId === lesson.id
-      );
-      return p && p.status === "completed";
-    }).length;
-    const rate = prevLessons.length > 0 ? completedCount / prevLessons.length : 0;
-    return rate >= prevStage.requiredCompletionRate;
-  }
 
   const containerClass = mobile
     ? "p-4"
@@ -56,14 +43,11 @@ export default function Sidebar({ mobile = false }: { mobile?: boolean }) {
       >
         <div className="space-y-6">
           {curriculum.stages.map((stage, stageIndex) => {
-            const unlocked = isStageUnlocked(stageIndex);
-
             return (
               <div key={stage.id}>
                 <h3 className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
                   <span>{stageIcons[stageIndex]}</span>
                   <span>{stage.title[locale as Locale]}</span>
-                  {!unlocked && <span className="text-gray-300">🔒</span>}
                 </h3>
                 <ul className="space-y-1">
                   {stage.lessons.map((lesson) => {
@@ -73,16 +57,6 @@ export default function Sidebar({ mobile = false }: { mobile?: boolean }) {
                       (pd) =>
                         pd.stageId === stage.id && pd.lessonId === lesson.id
                     );
-
-                    if (!unlocked) {
-                      return (
-                        <li key={lesson.id}>
-                          <span className="block cursor-not-allowed rounded-md px-3 py-2 text-sm text-gray-400">
-                            {lesson.title[locale as Locale]}
-                          </span>
-                        </li>
-                      );
-                    }
 
                     return (
                       <li key={lesson.id}>

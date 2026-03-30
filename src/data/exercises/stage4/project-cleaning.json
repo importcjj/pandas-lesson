@@ -2,7 +2,14 @@
   "module": "project-cleaning",
   "stageId": "stage4",
   "lessonId": "project-cleaning",
-  "tags": ["cleaning", "pipeline", "duplicates", "fillna", "outliers", "column-names"],
+  "tags": [
+    "cleaning",
+    "pipeline",
+    "duplicates",
+    "fillna",
+    "outliers",
+    "column-names"
+  ],
   "exercises": [
     {
       "id": "s4-project-cleaning-001",
@@ -21,9 +28,16 @@
       "solutionCode": "result = df.drop_duplicates().dropna(axis=1, how='all').reset_index(drop=True)",
       "validationType": "dataframe-equals",
       "expectedOutput": "",
+      "checkCode": "import pandas as pd\ntry:\n    expected = df.drop_duplicates().dropna(axis=1, how='all').reset_index(drop=True)\n    result = result.equals(expected)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["dropna(axis=1, how='all') 删除全为 NaN 的列", "reset_index(drop=True) 避免将旧索引变为列"],
-        "en": ["dropna(axis=1, how='all') drops columns where all values are NaN", "reset_index(drop=True) avoids turning the old index into a column"]
+        "zh": [
+          "dropna(axis=1, how='all') 删除全为 NaN 的列",
+          "reset_index(drop=True) 避免将旧索引变为列"
+        ],
+        "en": [
+          "dropna(axis=1, how='all') drops columns where all values are NaN",
+          "reset_index(drop=True) avoids turning the old index into a column"
+        ]
       },
       "explanation": {
         "zh": "方法链将多个清洗步骤串联起来，代码更简洁。每个方法返回新 DataFrame，不修改原始数据。",
@@ -47,12 +61,21 @@
         {
           "placeholder": "___",
           "answer": "int",
-          "alternatives": ["'int'", "\"int\"", "'int64'", "\"int64\""]
+          "alternatives": [
+            "'int'",
+            "\"int\"",
+            "'int64'",
+            "\"int64\""
+          ]
         }
       ],
       "hints": {
-        "zh": ["填充 NaN 后才能安全转为整数类型"],
-        "en": ["NaN must be filled before safely converting to integer type"]
+        "zh": [
+          "填充 NaN 后才能安全转为整数类型"
+        ],
+        "en": [
+          "NaN must be filled before safely converting to integer type"
+        ]
       },
       "explanation": {
         "zh": "先用 fillna 处理缺失值，再用 astype 转换类型。如果列中有 NaN 直接转 int 会报错，必须先填充。",
@@ -87,8 +110,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["IQR = Q3 - Q1，1.5 倍是常用的阈值"],
-        "en": ["IQR = Q3 - Q1, 1.5 times is the commonly used threshold"]
+        "zh": [
+          "IQR = Q3 - Q1，1.5 倍是常用的阈值"
+        ],
+        "en": [
+          "IQR = Q3 - Q1, 1.5 times is the commonly used threshold"
+        ]
       },
       "explanation": {
         "zh": "IQR 方法中，Q1 和 Q3 分别是第 25 和第 75 百分位数，IQR = Q3 - Q1。超出 [Q1 - 1.5*IQR, Q3 + 1.5*IQR] 范围的值被视为异常值。",
@@ -111,10 +138,16 @@
       "starterCode": "# Standardize column names\ndf.columns = ___",
       "solutionCode": "df.columns = df.columns.str.lower().str.replace(' ', '_')",
       "validationType": "custom-check",
-      "checkCode": "result = list(df.columns) == ['first_name', 'last_name', 'age_group']",
+      "checkCode": "try:\n    result = (list(df.columns)).equals(['first_name', 'last_name', 'age_group'])\nexcept:\n    try:\n        result = (list(df.columns) == ['first_name', 'last_name', 'age_group']).all() if hasattr(list(df.columns), 'all') else list(df.columns) == ['first_name', 'last_name', 'age_group']\n    except:\n        result = False",
       "hints": {
-        "zh": ["df.columns 是一个 Index 对象，支持 .str 访问器", "可以链式调用 .str.lower() 和 .str.replace()"],
-        "en": ["df.columns is an Index object that supports the .str accessor", "You can chain .str.lower() and .str.replace()"]
+        "zh": [
+          "df.columns 是一个 Index 对象，支持 .str 访问器",
+          "可以链式调用 .str.lower() 和 .str.replace()"
+        ],
+        "en": [
+          "df.columns is an Index object that supports the .str accessor",
+          "You can chain .str.lower() and .str.replace()"
+        ]
       },
       "explanation": {
         "zh": "df.columns.str.lower().str.replace(' ', '_') 先将列名转为小写，再将空格替换为下划线。这是数据清洗中标准化列名的常见做法。",
@@ -134,13 +167,19 @@
         "en": "Use method chaining for a cleaning pipeline: lowercase column names -> drop duplicates -> fill missing values -> reset index. Use .pipe() for column name conversion."
       },
       "setupCode": "import pandas as pd\nimport numpy as np\ndef lowercase_columns(df):\n    df = df.copy()\n    df.columns = df.columns.str.lower().str.replace(' ', '_')\n    return df\n\ndf = pd.DataFrame({'Name': ['Alice', 'Bob', 'Alice', 'Charlie'], 'Age': [25, np.nan, 25, 30], 'Score': [85, 90, 85, np.nan]})",
-      "starterCode": "# Method chain: pipe -> drop_duplicates -> fillna -> reset_index\nresult = (\n    df\n    .pipe(lowercase_columns)\n    .drop_duplicates()\n    .fillna(method='ffill')\n    .reset_index(drop=True)\n)",
-      "solutionCode": "result = (\n    df\n    .pipe(lowercase_columns)\n    .drop_duplicates()\n    .fillna(method='ffill')\n    .reset_index(drop=True)\n)",
+      "starterCode": "# Method chain: pipe -> drop_duplicates -> fillna -> reset_index\nresult = (\n    df\n    .pipe(lowercase_columns)\n    .drop_duplicates()\n    .ffill()\n    .reset_index(drop=True)\n)",
+      "solutionCode": "result = (\n    df\n    .pipe(lowercase_columns)\n    .drop_duplicates()\n    .ffill()\n    .reset_index(drop=True)\n)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = all(c.islower() or c == '_' for c in ''.join(result.columns)) and len(result) == 3 and result.isna().sum().sum() == 0\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\ndef lowercase_columns(df):\\n    df = df.copy()\\n    df.columns = df.columns.str.lower().str.replace(' ', '_')\\n    return df\\n\\ndf = pd.DataFrame({'Name': ['Alice', 'Bob', 'Alice', 'Charlie'], 'Age': [25, np.nan, 25, 30], 'Score': [85, 90, 85, np.nan]})\", _expected_ns)\nexec('result = (\\n    df\\n    .pipe(lowercase_columns)\\n    .drop_duplicates()\\n    .ffill()\\n    .reset_index(drop=True)\\n)', _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["pipe() 可以在方法链中插入自定义函数", "每步操作返回新 DataFrame，不修改原始数据"],
-        "en": ["pipe() inserts custom functions into method chains", "Each step returns a new DataFrame without modifying the original"]
+        "zh": [
+          "pipe() 可以在方法链中插入自定义函数",
+          "每步操作返回新 DataFrame，不修改原始数据"
+        ],
+        "en": [
+          "pipe() inserts custom functions into method chains",
+          "Each step returns a new DataFrame without modifying the original"
+        ]
       },
       "explanation": {
         "zh": "方法链的最佳实践：1) 用括号换行提高可读性；2) pipe() 插入自定义函数；3) 每步返回 DataFrame，支持继续链式调用；4) 不使用 inplace=True。这种风格使数据清洗流程清晰可审查。",
@@ -163,10 +202,16 @@
       "starterCode": "# Keep only the last record for each email\nresult = df.drop_duplicates(subset=___, keep=___)",
       "solutionCode": "result = df.drop_duplicates(subset='email', keep='last')",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = len(result) == 3 and result[result['email'] == 'alice@test.com']['name'].iloc[0] == 'Alice_new'\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'name': ['Alice', 'Alice_new', 'Bob', 'Charlie', 'Bob_updated'], 'email': ['alice@test.com', 'alice@test.com', 'bob@test.com', 'charlie@test.com', 'bob@test.com'], 'score': [80, 95, 70, 85, 90]})\", _expected_ns)\nexec(\"result = df.drop_duplicates(subset='email', keep='last')\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["subset 指定用哪些列判断重复", "keep='last' 保留每组重复中的最后一行"],
-        "en": ["subset specifies which columns to check for duplicates", "keep='last' keeps the last row among duplicates"]
+        "zh": [
+          "subset 指定用哪些列判断重复",
+          "keep='last' 保留每组重复中的最后一行"
+        ],
+        "en": [
+          "subset specifies which columns to check for duplicates",
+          "keep='last' keeps the last row among duplicates"
+        ]
       },
       "explanation": {
         "zh": "drop_duplicates 的 subset 参数指定判断重复的列（默认为所有列）。keep 参数控制保留哪条记录：'first'（默认）、'last'、False（全部删除）。当数据有多个版本时，keep='last' 通常用于保留最新的记录。",
@@ -191,8 +236,14 @@
       "validationType": "custom-check",
       "checkCode": "try:\n    result = df['salary_clean'].min() >= lower and df['salary_clean'].max() <= upper and 'salary_clean' in df.columns\nexcept:\n    result = False\nresult",
       "hints": {
-        "zh": ["quantile(0.25) 计算第一四分位数", "clip() 将超出范围的值裁剪到边界"],
-        "en": ["quantile(0.25) computes the first quartile", "clip() trims values outside the range to boundaries"]
+        "zh": [
+          "quantile(0.25) 计算第一四分位数",
+          "clip() 将超出范围的值裁剪到边界"
+        ],
+        "en": [
+          "quantile(0.25) computes the first quartile",
+          "clip() trims values outside the range to boundaries"
+        ]
       },
       "explanation": {
         "zh": "IQR 异常值处理步骤：1) 计算 Q1、Q3 和 IQR；2) 定义边界 [Q1-1.5*IQR, Q3+1.5*IQR]；3) clip() 将异常值裁剪到边界。clip 比直接删除更保守，保留了数据行数。也可以用布尔索引直接删除异常值行。",
@@ -212,13 +263,21 @@
         "en": "Unify different date formats to 'YYYY-MM-DD' format, and standardize phone numbers to digits-only format."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'date': ['01/15/2024', '2024-02-20', 'March 10, 2024', '2024.04.05'], 'phone': ['(555) 123-4567', '555.234.5678', '555-345-6789', '5554567890']})",
-      "starterCode": "# Standardize dates\ndf['date_clean'] = pd.to_datetime(df['date']).dt.strftime('___')\n\n# Standardize phones - remove non-digit characters\ndf['phone_clean'] = df['phone'].str.replace(r'\\D', '', regex=True)",
-      "solutionCode": "df['date_clean'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')\ndf['phone_clean'] = df['phone'].str.replace(r'\\D', '', regex=True)",
+      "starterCode": "# Standardize dates\ndf['date_clean'] = pd.to_datetime(df['date'], format='mixed').dt.strftime('___')\n\n# Standardize phones - remove non-digit characters\ndf['phone_clean'] = df['phone'].str.replace(r'\\D', '', regex=True)",
+      "solutionCode": "df['date_clean'] = pd.to_datetime(df['date'], format='mixed').dt.strftime('%Y-%m-%d')\ndf['phone_clean'] = df['phone'].str.replace(r'\\D', '', regex=True)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = df['date_clean'].iloc[0] == '2024-01-15' and len(df['phone_clean'].iloc[0]) == 10 and df['phone_clean'].iloc[0].isdigit()\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'date': ['01/15/2024', '2024-02-20', 'March 10, 2024', '2024.04.05'], 'phone': ['(555) 123-4567', '555.234.5678', '555-345-6789', '5554567890']})\", _expected_ns)\nexec(\"df['date_clean'] = pd.to_datetime(df['date'], format='mixed').dt.strftime('%Y-%m-%d')\\ndf['phone_clean'] = df['phone'].str.replace(r'\\\\D', '', regex=True)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["pd.to_datetime 可以自动识别多种日期格式", "strftime('%Y-%m-%d') 输出标准格式", "\\D 匹配非数字字符"],
-        "en": ["pd.to_datetime can auto-detect various date formats", "strftime('%Y-%m-%d') outputs standard format", "\\D matches non-digit characters"]
+        "zh": [
+          "pd.to_datetime 可以自动识别多种日期格式",
+          "strftime('%Y-%m-%d') 输出标准格式",
+          "\\D 匹配非数字字符"
+        ],
+        "en": [
+          "pd.to_datetime can auto-detect various date formats",
+          "strftime('%Y-%m-%d') outputs standard format",
+          "\\D matches non-digit characters"
+        ]
       },
       "explanation": {
         "zh": "格式标准化是数据清洗的关键步骤。pd.to_datetime() 可以自动识别多种日期格式，然后用 strftime 输出统一格式。电话号码清洗常用 str.replace(r'\\D', '') 去除所有非数字字符。类似的方法也可用于邮箱验证、地址格式化等。",
@@ -243,8 +302,14 @@
       "validationType": "exact-output",
       "expectedOutput": "All validations passed!",
       "hints": {
-        "zh": ["assert 条件为 False 时抛出 AssertionError", "is_unique 检查 Series 是否所有值唯一"],
-        "en": ["assert raises AssertionError when condition is False", "is_unique checks if all values in a Series are unique"]
+        "zh": [
+          "assert 条件为 False 时抛出 AssertionError",
+          "is_unique 检查 Series 是否所有值唯一"
+        ],
+        "en": [
+          "assert raises AssertionError when condition is False",
+          "is_unique checks if all values in a Series are unique"
+        ]
       },
       "explanation": {
         "zh": "数据验证是清洗流程的最后一步，确保清洗后的数据满足预期。常用验证：1) isna().sum() 检查缺失值；2) is_unique 或 duplicated().sum() 检查重复；3) 范围检查用比较运算符 + .all()；4) dtype 检查。assert 在条件不满足时会立即报错。",
@@ -267,10 +332,16 @@
       "starterCode": "# Find records only in source1\nonly_s1 = source1[~source1['id'].isin(source2['id'])]\n\n# Find records only in source2\nonly_s2 = source2[~source2['id'].isin(source1['id'])]\n\n# Find records with different values\nmerged = source1.merge(source2, on='id', suffixes=('_s1', '_s2'))\ndiff = merged[merged['amount_s1'] != merged['amount_s2']]",
       "solutionCode": "only_s1 = source1[~source1['id'].isin(source2['id'])]\nonly_s2 = source2[~source2['id'].isin(source1['id'])]\nmerged = source1.merge(source2, on='id', suffixes=('_s1', '_s2'))\ndiff = merged[merged['amount_s1'] != merged['amount_s2']]",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = len(only_s1) == 1 and only_s1['id'].iloc[0] == 1 and len(only_s2) == 1 and only_s2['id'].iloc[0] == 5 and len(diff) == 1 and diff['id'].iloc[0] == 3\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nsource1 = pd.DataFrame({'id': [1, 2, 3, 4], 'amount': [100, 200, 300, 400]})\\nsource2 = pd.DataFrame({'id': [2, 3, 4, 5], 'amount': [200, 350, 400, 500]})\", _expected_ns)\nexec(\"only_s1 = source1[~source1['id'].isin(source2['id'])]\\nonly_s2 = source2[~source2['id'].isin(source1['id'])]\\nmerged = source1.merge(source2, on='id', suffixes=('_s1', '_s2'))\\ndiff = merged[merged['amount_s1'] != merged['amount_s2']]\", _expected_ns)\ntry:\n    result = _expected_ns.get('only_s1') is not None and hasattr(_expected_ns['only_s1'], 'equals') and _expected_ns['only_s1'].equals(only_s1) and _expected_ns.get('only_s2') is not None and hasattr(_expected_ns['only_s2'], 'equals') and _expected_ns['only_s2'].equals(only_s2) and _expected_ns.get('merged') is not None and hasattr(_expected_ns['merged'], 'equals') and _expected_ns['merged'].equals(merged) and _expected_ns.get('diff') is not None and hasattr(_expected_ns['diff'], 'equals') and _expected_ns['diff'].equals(diff)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["isin + 取反可以找到不在另一个集合中的记录", "merge 后比较同名列可以找到值不同的记录"],
-        "en": ["isin + negation finds records not in the other set", "After merge, comparing same-named columns finds value differences"]
+        "zh": [
+          "isin + 取反可以找到不在另一个集合中的记录",
+          "merge 后比较同名列可以找到值不同的记录"
+        ],
+        "en": [
+          "isin + negation finds records not in the other set",
+          "After merge, comparing same-named columns finds value differences"
+        ]
       },
       "explanation": {
         "zh": "数据对账是实际工作中常见的需求。步骤：1) 用 isin + ~ 找出独有记录；2) 用 merge 匹配共有记录；3) 比较匹配记录的值。suffixes 参数避免列名冲突。也可以用 pd.concat + indicator 或 DataFrame.compare() 方法。",
@@ -293,10 +364,16 @@
       "starterCode": "# Standardize column names\ndef clean_columns(df):\n    df = df.copy()\n    df.columns = (\n        df.columns\n        .str.strip()\n        .str.lower()\n        .str.replace(r'[^a-z0-9_\\s]', '', regex=True)\n        .str.replace(r'\\s+', '_', regex=True)\n    )\n    return df\n\nresult = clean_columns(df)\nprint(result.columns.tolist())",
       "solutionCode": "def clean_columns(df):\n    df = df.copy()\n    df.columns = (\n        df.columns\n        .str.strip()\n        .str.lower()\n        .str.replace(r'[^a-z0-9_\\s]', '', regex=True)\n        .str.replace(r'\\s+', '_', regex=True)\n    )\n    return df\n\nresult = clean_columns(df)\nprint(result.columns.tolist())",
       "validationType": "custom-check",
-      "checkCode": "try:\n    cols = result.columns.tolist()\n    result = all(c.islower() or c == '_' or c.isdigit() for c in ''.join(cols)) and ' ' not in ''.join(cols)\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nimport re\\ndf = pd.DataFrame({' First Name ': ['Alice'], 'Last-Name': ['Smith'], 'Age (years)': [25], 'Score%': [95]})\", _expected_ns)\nexec(\"def clean_columns(df):\\n    df = df.copy()\\n    df.columns = (\\n        df.columns\\n        .str.strip()\\n        .str.lower()\\n        .str.replace(r'[^a-z0-9_\\\\s]', '', regex=True)\\n        .str.replace(r'\\\\s+', '_', regex=True)\\n    )\\n    return df\\n\\nresult = clean_columns(df)\\nprint(result.columns.tolist())\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["先 strip 去空白，再 lower 小写化", "用正则去除特殊字符后再替换空格"],
-        "en": ["Strip whitespace first, then lowercase", "Remove special chars with regex, then replace spaces"]
+        "zh": [
+          "先 strip 去空白，再 lower 小写化",
+          "用正则去除特殊字符后再替换空格"
+        ],
+        "en": [
+          "Strip whitespace first, then lowercase",
+          "Remove special chars with regex, then replace spaces"
+        ]
       },
       "explanation": {
         "zh": "列名标准化函数是可复用的清洗工具。标准化步骤：1) strip() 去除前后空白；2) lower() 转小写；3) 正则去除特殊字符（保留字母数字下划线和空格）；4) 将空格替换为下划线。这使列名统一为 snake_case 格式，便于后续代码引用。",
@@ -319,10 +396,16 @@
       "starterCode": "# Bug: dropna() removes rows where ANY column is NaN (too aggressive)\n# Fix: only drop rows where key columns have NaN\nresult = df.dropna(subset=['id', 'name']).reset_index(drop=True)",
       "solutionCode": "result = df.dropna(subset=['id', 'name']).reset_index(drop=True)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = len(result) == 3 and result.isna().any().any()\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\ndf = pd.DataFrame({'id': [1, 2, np.nan, 4, 5], 'name': ['Alice', 'Bob', 'Charlie', np.nan, 'Eve'], 'score': [85, np.nan, 90, 88, np.nan], 'grade': ['A', 'B', np.nan, 'A', 'B']})\", _expected_ns)\nexec(\"result = df.dropna(subset=['id', 'name']).reset_index(drop=True)\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["dropna() 不带参数会删除任何列有 NaN 的行", "subset 参数指定只检查哪些列的缺失值"],
-        "en": ["dropna() without parameters drops rows with NaN in any column", "subset parameter specifies which columns to check for missing values"]
+        "zh": [
+          "dropna() 不带参数会删除任何列有 NaN 的行",
+          "subset 参数指定只检查哪些列的缺失值"
+        ],
+        "en": [
+          "dropna() without parameters drops rows with NaN in any column",
+          "subset parameter specifies which columns to check for missing values"
+        ]
       },
       "explanation": {
         "zh": "这是一个常见的 bug：dropna() 默认对所有列检查 NaN，可能导致大量数据被删除。使用 subset 参数限定只对关键列检查。其他非关键列的 NaN 可以后续用 fillna 处理。这种 bug 特别危险，因为代码不报错但数据量悄悄减少。",
@@ -347,8 +430,16 @@
       "validationType": "custom-check",
       "checkCode": "try:\n    result = (\n        all(c.islower() or c == '_' for c in ''.join(df_clean.columns)) and\n        df_clean.isna().sum().sum() == 0 and\n        df_clean['department'].dtype.name == 'category' and\n        df_clean['salary'].max() < 500000 and\n        len(df_clean) >= 7\n    )\nexcept:\n    result = False\nresult",
       "hints": {
-        "zh": ["按顺序执行每一步", "每步处理一个清洗问题", "最后验证数据质量"],
-        "en": ["Execute each step in order", "Each step handles one cleaning issue", "Validate data quality at the end"]
+        "zh": [
+          "按顺序执行每一步",
+          "每步处理一个清洗问题",
+          "最后验证数据质量"
+        ],
+        "en": [
+          "Execute each step in order",
+          "Each step handles one cleaning issue",
+          "Validate data quality at the end"
+        ]
       },
       "explanation": {
         "zh": "这个完整的清洗管道展示了实际项目中的标准流程：1) 列名标准化确保一致性；2) 去重避免重复计算；3) 关键列缺失值必须删除行；4) 数值列缺失值用中位数填充（比均值对异常值更鲁棒）；5) 类型优化节省内存；6) 异常值处理避免分析偏差。每个步骤的顺序很重要。",

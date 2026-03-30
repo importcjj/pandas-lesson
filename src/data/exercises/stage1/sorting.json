@@ -2,7 +2,13 @@
   "module": "sorting",
   "stageId": "stage1",
   "lessonId": "sorting",
-  "tags": ["dataframe", "sort_values", "sort_index", "ascending", "descending"],
+  "tags": [
+    "dataframe",
+    "sort_values",
+    "sort_index",
+    "ascending",
+    "descending"
+  ],
   "exercises": [
     {
       "id": "s1-sorting-001",
@@ -95,8 +101,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["ascending 列表中的值与列名列表一一对应"],
-        "en": ["The values in the ascending list correspond to the column names list one-to-one"]
+        "zh": [
+          "ascending 列表中的值与列名列表一一对应"
+        ],
+        "en": [
+          "The values in the ascending list correspond to the column names list one-to-one"
+        ]
       },
       "explanation": {
         "zh": "当 sort_values 传入列名列表时，ascending 也可以传入布尔值列表，分别控制每列的排序方向。True 表示升序，False 表示降序。",
@@ -132,8 +142,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["sort_index 按索引标签排序，默认升序"],
-        "en": ["sort_index sorts by index labels, ascending by default"]
+        "zh": [
+          "sort_index 按索引标签排序，默认升序"
+        ],
+        "en": [
+          "sort_index sorts by index labels, ascending by default"
+        ]
       },
       "explanation": {
         "zh": "sort_index() 按索引标签排序。原始索引为 ['c', 'a', 'b']，按字母升序排列后为 ['a', 'b', 'c']，对应值为 20, 30, 10。",
@@ -228,8 +242,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["想想获取前 N 个最大值是否需要对所有数据排序"],
-        "en": ["Think about whether getting the top N values requires sorting all data"]
+        "zh": [
+          "想想获取前 N 个最大值是否需要对所有数据排序"
+        ],
+        "en": [
+          "Think about whether getting the top N values requires sorting all data"
+        ]
       },
       "explanation": {
         "zh": "nlargest 使用部分排序（类似堆排序），时间复杂度为 O(n + k*log(n))，而 sort_values 需要完整排序 O(n*log(n))。当 k 远小于 n 时，nlargest 明显更快。",
@@ -282,7 +300,7 @@
       "solutionCode": "import pandas as pd\n\narrays = [['B', 'A', 'B', 'A'], ['two', 'one', 'one', 'two']]\nindex = pd.MultiIndex.from_arrays(arrays, names=['first', 'second'])\ndf = pd.DataFrame({'value': [10, 20, 30, 40]}, index=index)\n\nprint(df.sort_index(level=0))",
       "setupCode": "",
       "validationType": "custom-check",
-      "checkCode": "try:\n    lines = [l.strip() for l in _output.strip().split('\\n') if l.strip() and 'value' not in l and 'first' not in l]\n    result = lines[0].startswith('A') and lines[-1].startswith('B')\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\n\\narrays = [['B', 'A', 'B', 'A'], ['two', 'one', 'one', 'two']]\\nindex = pd.MultiIndex.from_arrays(arrays, names=['first', 'second'])\\ndf = pd.DataFrame({'value': [10, 20, 30, 40]}, index=index)\\n\\nprint(df.sort_index(level=0))\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "sort_index() 的 level 参数指定排序的层级",

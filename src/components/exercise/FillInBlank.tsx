@@ -6,15 +6,40 @@ import { FillBlankExercise } from "@/types";
 
 interface Props {
   exercise: FillBlankExercise;
-  onResult: (correct: boolean) => void;
+  onResult: (correct: boolean, userAnswer?: unknown) => void;
+  savedAnswers?: string[];
 }
 
-export default function FillInBlank({ exercise, onResult }: Props) {
+export default function FillInBlank({ exercise, onResult, savedAnswers }: Props) {
   const { locale } = useTranslation();
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [submitted, setSubmitted] = useState(false);
-  const [allCorrect, setAllCorrect] = useState(false);
-  const [results, setResults] = useState<Record<string, boolean>>({});
+
+  // Restore saved answers into the answers record
+  const initialAnswers: Record<string, string> = {};
+  let restoredFromSave = false;
+  if (savedAnswers && savedAnswers.length === exercise.blanks.length) {
+    restoredFromSave = true;
+    exercise.blanks.forEach((blank, i) => {
+      initialAnswers[blank.placeholder] = savedAnswers[i];
+    });
+  }
+
+  // Check if restored answers are all correct
+  let restoredCorrect = false;
+  const restoredResults: Record<string, boolean> = {};
+  if (restoredFromSave) {
+    restoredCorrect = true;
+    for (const blank of exercise.blanks) {
+      const userAnswer = (initialAnswers[blank.placeholder] ?? "").trim();
+      const isCorrect = userAnswer === blank.answer || (blank.alternatives?.includes(userAnswer) ?? false);
+      restoredResults[blank.placeholder] = isCorrect;
+      if (!isCorrect) restoredCorrect = false;
+    }
+  }
+
+  const [answers, setAnswers] = useState<Record<string, string>>(initialAnswers);
+  const [submitted, setSubmitted] = useState(restoredFromSave);
+  const [allCorrect, setAllCorrect] = useState(restoredCorrect);
+  const [results, setResults] = useState<Record<string, boolean>>(restoredFromSave ? restoredResults : {});
 
   function handleChange(placeholder: string, value: string) {
     setAnswers((prev) => ({ ...prev, [placeholder]: value }));
@@ -36,7 +61,10 @@ export default function FillInBlank({ exercise, onResult }: Props) {
     setResults(newResults);
     setSubmitted(true);
     setAllCorrect(correct);
-    onResult(correct);
+
+    // Save the ordered answers array
+    const answerArray = exercise.blanks.map((b) => answers[b.placeholder] ?? "");
+    onResult(correct, answerArray);
   }
 
   function handleRetry() {

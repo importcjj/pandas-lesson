@@ -2,7 +2,12 @@
   "module": "pivot",
   "stageId": "stage3",
   "lessonId": "pivot",
-  "tags": ["pivot_table", "crosstab", "pivot", "reshaping"],
+  "tags": [
+    "pivot_table",
+    "crosstab",
+    "pivot",
+    "reshaping"
+  ],
   "exercises": [
     {
       "id": "s3-pivot-001",
@@ -21,9 +26,16 @@
       "solutionCode": "result = df.pivot_table(index='department', values='salary', aggfunc='mean')",
       "validationType": "dataframe-equals",
       "expectedOutput": "",
+      "checkCode": "import pandas as pd\ntry:\n    expected = df.pivot_table(index='department', values='salary', aggfunc='mean')\n    result = result.equals(expected)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["pivot_table 的 index 参数指定行索引", "values 参数指定要聚合的列"],
-        "en": ["The index parameter specifies row labels", "The values parameter specifies which column to aggregate"]
+        "zh": [
+          "pivot_table 的 index 参数指定行索引",
+          "values 参数指定要聚合的列"
+        ],
+        "en": [
+          "The index parameter specifies row labels",
+          "The values parameter specifies which column to aggregate"
+        ]
       },
       "explanation": {
         "zh": "pivot_table 默认使用 mean 作为聚合函数。通过 index 和 values 参数可以快速创建汇总表。",
@@ -47,12 +59,18 @@
         {
           "placeholder": "___",
           "answer": "'sum'",
-          "alternatives": ["\"sum\""]
+          "alternatives": [
+            "\"sum\""
+          ]
         }
       ],
       "hints": {
-        "zh": ["aggfunc 参数指定聚合函数，如 'sum', 'mean', 'count' 等"],
-        "en": ["The aggfunc parameter specifies the aggregation function, such as 'sum', 'mean', 'count', etc."]
+        "zh": [
+          "aggfunc 参数指定聚合函数，如 'sum', 'mean', 'count' 等"
+        ],
+        "en": [
+          "The aggfunc parameter specifies the aggregation function, such as 'sum', 'mean', 'count', etc."
+        ]
       },
       "explanation": {
         "zh": "aggfunc='sum' 将对每个分组计算总和。pivot_table 的 columns 参数决定透视后的列。",
@@ -87,8 +105,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["crosstab 最常用于计算两个分类变量的交叉频次"],
-        "en": ["crosstab is most commonly used to compute cross-tabulation of two categorical variables"]
+        "zh": [
+          "crosstab 最常用于计算两个分类变量的交叉频次"
+        ],
+        "en": [
+          "crosstab is most commonly used to compute cross-tabulation of two categorical variables"
+        ]
       },
       "explanation": {
         "zh": "pd.crosstab() 默认使用 aggfunc='count'（或更准确地说是 size），非常适合计算交叉频次。它也支持 aggfunc 参数来做其他聚合。",
@@ -109,8 +131,12 @@
       },
       "correctAnswer": false,
       "hints": {
-        "zh": ["当有重复的 index/columns 组合时，pivot 会怎样？"],
-        "en": ["What happens when there are duplicate index/column combinations with pivot?"]
+        "zh": [
+          "当有重复的 index/columns 组合时，pivot 会怎样？"
+        ],
+        "en": [
+          "What happens when there are duplicate index/column combinations with pivot?"
+        ]
       },
       "explanation": {
         "zh": "df.pivot() 不能处理重复值，遇到重复会报 ValueError。需要使用 df.pivot_table() 并指定 aggfunc 来聚合重复值。",
@@ -145,8 +171,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["当 index 和 columns 的组合有重复值时，两者行为不同"],
-        "en": ["They behave differently when the index and columns combination has duplicates"]
+        "zh": [
+          "当 index 和 columns 的组合有重复值时，两者行为不同"
+        ],
+        "en": [
+          "They behave differently when the index and columns combination has duplicates"
+        ]
       },
       "explanation": {
         "zh": "pivot 是简单的重塑操作，要求 index/columns 组合唯一，否则报 ValueError。pivot_table 通过 aggfunc 参数（默认 mean）处理重复值，功能更强大。",
@@ -169,10 +199,16 @@
       "starterCode": "# Create pivot table with margins\nresult = ___",
       "solutionCode": "result = df.pivot_table(index='department', columns='quarter', values='salary', aggfunc='sum', margins=True)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = 'All' in result.index and 'All' in result.columns\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'department': ['HR', 'Engineering', 'HR', 'Engineering', 'Marketing'], 'quarter': ['Q1', 'Q1', 'Q2', 'Q2', 'Q1'], 'salary': [50000, 80000, 55000, 75000, 60000]})\", _expected_ns)\nexec(\"result = df.pivot_table(index='department', columns='quarter', values='salary', aggfunc='sum', margins=True)\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["margins=True 在透视表底部和右侧添加合计行/列", "合计行/列的标签默认为 'All'"],
-        "en": ["margins=True adds total row/column at the bottom and right", "The total row/column label defaults to 'All'"]
+        "zh": [
+          "margins=True 在透视表底部和右侧添加合计行/列",
+          "合计行/列的标签默认为 'All'"
+        ],
+        "en": [
+          "margins=True adds total row/column at the bottom and right",
+          "The total row/column label defaults to 'All'"
+        ]
       },
       "explanation": {
         "zh": "margins=True 添加 'All' 行和列，分别显示每行的合计和每列的合计，右下角是总计。类似 Excel 透视表的总计功能。",
@@ -200,8 +236,12 @@
         }
       ],
       "hints": {
-        "zh": ["透视表中某些 index/columns 组合可能没有数据，默认显示 NaN"],
-        "en": ["Some index/column combinations may have no data, showing NaN by default"]
+        "zh": [
+          "透视表中某些 index/columns 组合可能没有数据，默认显示 NaN"
+        ],
+        "en": [
+          "Some index/column combinations may have no data, showing NaN by default"
+        ]
       },
       "explanation": {
         "zh": "fill_value=0 将透视表中因为没有对应数据而产生的 NaN 替换为 0。这对于后续计算（如求和）很有用，避免 NaN 传播。",
@@ -224,10 +264,16 @@
       "starterCode": "# Pivot table with multiple aggfuncs\nresult = ___",
       "solutionCode": "result = df.pivot_table(index='department', values='salary', aggfunc=['mean', 'sum'])",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = len(result.columns) == 2 and result.columns.nlevels == 2\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'department': ['HR', 'Engineering', 'HR', 'Engineering', 'Marketing'], 'salary': [50000, 80000, 55000, 75000, 60000]})\", _expected_ns)\nexec(\"result = df.pivot_table(index='department', values='salary', aggfunc=['mean', 'sum'])\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["aggfunc 可以接受一个函数列表", "结果会有多层列索引"],
-        "en": ["aggfunc can accept a list of functions", "The result will have multi-level column index"]
+        "zh": [
+          "aggfunc 可以接受一个函数列表",
+          "结果会有多层列索引"
+        ],
+        "en": [
+          "aggfunc can accept a list of functions",
+          "The result will have multi-level column index"
+        ]
       },
       "explanation": {
         "zh": "aggfunc 传入列表时，结果的列会变成 MultiIndex，第一层是函数名，第二层是值列名。可以通过 result['mean'] 或 result['sum'] 选择特定聚合结果。",
@@ -250,10 +296,16 @@
       "starterCode": "# groupby then unstack\nresult = ___",
       "solutionCode": "result = df.groupby(['department', 'quarter'])['salary'].sum().unstack()",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = result.shape == (3, 2) and 'Q1' in result.columns and 'Q2' in result.columns\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'department': ['HR', 'Engineering', 'HR', 'Engineering', 'Marketing'], 'quarter': ['Q1', 'Q1', 'Q2', 'Q2', 'Q1'], 'salary': [50000, 80000, 55000, 75000, 60000]})\", _expected_ns)\nexec(\"result = df.groupby(['department', 'quarter'])['salary'].sum().unstack()\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["先用 groupby 创建 MultiIndex，再用 unstack 将内层索引转为列", "unstack 默认将最内层索引转为列"],
-        "en": ["First create a MultiIndex with groupby, then use unstack to pivot the inner level to columns", "unstack converts the innermost level to columns by default"]
+        "zh": [
+          "先用 groupby 创建 MultiIndex，再用 unstack 将内层索引转为列",
+          "unstack 默认将最内层索引转为列"
+        ],
+        "en": [
+          "First create a MultiIndex with groupby, then use unstack to pivot the inner level to columns",
+          "unstack converts the innermost level to columns by default"
+        ]
       },
       "explanation": {
         "zh": "groupby + unstack 是 pivot_table 的替代方案。groupby 创建 MultiIndex Series，unstack 将指定层级从行转为列。效果类似 pivot_table，但分两步操作更灵活。",
@@ -276,10 +328,16 @@
       "starterCode": "# Melt wide to long format\nresult = ___",
       "solutionCode": "result = pd.melt(df_wide, id_vars='name', value_vars=['Q1', 'Q2'], var_name='quarter', value_name='sales')",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = len(result) == 6 and 'quarter' in result.columns and 'sales' in result.columns and 'name' in result.columns\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf_wide = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'Q1': [100, 200, 150], 'Q2': [120, 180, 160]})\", _expected_ns)\nexec(\"result = pd.melt(df_wide, id_vars='name', value_vars=['Q1', 'Q2'], var_name='quarter', value_name='sales')\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["id_vars 指定要保留的标识列", "var_name 和 value_name 分别指定新的变量列名和值列名"],
-        "en": ["id_vars specifies the identifier columns to keep", "var_name and value_name specify the new variable column name and value column name"]
+        "zh": [
+          "id_vars 指定要保留的标识列",
+          "var_name 和 value_name 分别指定新的变量列名和值列名"
+        ],
+        "en": [
+          "id_vars specifies the identifier columns to keep",
+          "var_name and value_name specify the new variable column name and value column name"
+        ]
       },
       "explanation": {
         "zh": "melt 是 pivot 的逆操作，将宽格式转为长格式。id_vars 保留的列不变，value_vars 的列被'熔化'为两列：变量名列和值列。这在数据清洗中非常常见。",
@@ -302,10 +360,16 @@
       "starterCode": "# Bug: ValueError due to duplicate entries\nresult = df.pivot(index='department', columns='quarter', values='salary')",
       "solutionCode": "result = df.pivot_table(index='department', columns='quarter', values='salary', aggfunc='mean')",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = result.shape == (2, 2) and not result.isnull().all().any()\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'department': ['HR', 'HR', 'Engineering', 'Engineering', 'HR'], 'quarter': ['Q1', 'Q1', 'Q1', 'Q2', 'Q2'], 'salary': [50000, 55000, 80000, 75000, 60000]})\", _expected_ns)\nexec(\"result = df.pivot_table(index='department', columns='quarter', values='salary', aggfunc='mean')\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["df.pivot() 不能处理重复的 index/columns 组合", "需要一个能聚合重复值的函数"],
-        "en": ["df.pivot() cannot handle duplicate index/columns combinations", "You need a function that can aggregate duplicates"]
+        "zh": [
+          "df.pivot() 不能处理重复的 index/columns 组合",
+          "需要一个能聚合重复值的函数"
+        ],
+        "en": [
+          "df.pivot() cannot handle duplicate index/columns combinations",
+          "You need a function that can aggregate duplicates"
+        ]
       },
       "explanation": {
         "zh": "pivot 要求每个 (index, columns) 组合唯一。当有重复时（如 HR-Q1 出现两次），需要用 pivot_table 并指定 aggfunc 来聚合。pivot_table 默认使用 mean 聚合。",
@@ -340,8 +404,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["考虑在聚合和重塑之间是否需要额外操作"],
-        "en": ["Consider whether you need extra operations between aggregation and reshaping"]
+        "zh": [
+          "考虑在聚合和重塑之间是否需要额外操作"
+        ],
+        "en": [
+          "Consider whether you need extra operations between aggregation and reshaping"
+        ]
       },
       "explanation": {
         "zh": "pivot_table 一步完成分组+聚合+重塑，代码简洁适合快速分析。groupby+unstack 分两步，中间可以插入筛选、排序等操作，更灵活。unstack 也支持 fill_value 参数。",
@@ -364,10 +432,18 @@
       "starterCode": "# Step 1-4: pivot, fill, compute growth, sort\nresult = ___",
       "solutionCode": "result = df.pivot_table(index='product', columns='quarter', values='revenue', aggfunc='sum', fill_value=0)\nresult['growth'] = (result['Q2'] - result['Q1']) / result['Q1']\nresult = result.sort_values('growth', ascending=False)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = 'growth' in result.columns and result.index[0] == 'Gadget' and len(result) == 3 and result.iloc[0]['growth'] >= result.iloc[1]['growth']\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'product': ['Widget', 'Widget', 'Gadget', 'Gadget', 'Widget', 'Gadget', 'Doohickey', 'Doohickey'], 'quarter': ['Q1', 'Q2', 'Q1', 'Q2', 'Q1', 'Q2', 'Q1', 'Q2'], 'revenue': [100, 150, 200, 220, 120, 180, 80, 60]})\", _expected_ns)\nexec(\"result = df.pivot_table(index='product', columns='quarter', values='revenue', aggfunc='sum', fill_value=0)\\nresult['growth'] = (result['Q2'] - result['Q1']) / result['Q1']\\nresult = result.sort_values('growth', ascending=False)\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["先用 pivot_table + fill_value=0 创建宽格式表", "增长率公式: (Q2 - Q1) / Q1", "最后用 sort_values('growth', ascending=False) 排序"],
-        "en": ["First create wide-format table with pivot_table + fill_value=0", "Growth formula: (Q2 - Q1) / Q1", "Finally sort with sort_values('growth', ascending=False)"]
+        "zh": [
+          "先用 pivot_table + fill_value=0 创建宽格式表",
+          "增长率公式: (Q2 - Q1) / Q1",
+          "最后用 sort_values('growth', ascending=False) 排序"
+        ],
+        "en": [
+          "First create wide-format table with pivot_table + fill_value=0",
+          "Growth formula: (Q2 - Q1) / Q1",
+          "Finally sort with sort_values('growth', ascending=False)"
+        ]
       },
       "explanation": {
         "zh": "此综合练习展示了数据重塑的典型应用：先用 pivot_table 将长格式转为宽格式便于对比，再基于宽格式列进行计算。Gadget 增长 10%，Widget 增长约 50%（(330-220)/220），Doohickey 下降 25%。",

@@ -2,7 +2,13 @@
   "module": "large-datasets",
   "stageId": "stage4",
   "lessonId": "large-datasets",
-  "tags": ["chunksize", "category", "downcast", "sparse", "memory-optimization"],
+  "tags": [
+    "chunksize",
+    "category",
+    "downcast",
+    "sparse",
+    "memory-optimization"
+  ],
   "exercises": [
     {
       "id": "s4-large-datasets-001",
@@ -32,8 +38,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["chunksize 让你可以分批处理大文件"],
-        "en": ["chunksize lets you process large files in batches"]
+        "zh": [
+          "chunksize 让你可以分批处理大文件"
+        ],
+        "en": [
+          "chunksize lets you process large files in batches"
+        ]
       },
       "explanation": {
         "zh": "指定 chunksize 后，read_csv 返回一个迭代器。可以用 for chunk in reader 逐块处理，避免一次性将整个文件加载到内存。",
@@ -56,10 +66,14 @@
       "starterCode": "# Convert status to category type\ndf['status'] = ___",
       "solutionCode": "df['status'] = df['status'].astype('category')",
       "validationType": "custom-check",
-      "checkCode": "result = df['status'].dtype.name == 'category'",
+      "checkCode": "try:\n    result = (df['status'].dtype.name).equals('category')\nexcept:\n    try:\n        result = (df['status'].dtype.name == 'category').all() if hasattr(df['status'].dtype.name, 'all') else df['status'].dtype.name == 'category'\n    except:\n        result = False",
       "hints": {
-        "zh": ["使用 .astype('category') 进行类型转换"],
-        "en": ["Use .astype('category') for type conversion"]
+        "zh": [
+          "使用 .astype('category') 进行类型转换"
+        ],
+        "en": [
+          "Use .astype('category') for type conversion"
+        ]
       },
       "explanation": {
         "zh": "将重复率高的字符串列转为 category 类型可以大幅减少内存占用。内部使用整数编码代替字符串存储。",
@@ -83,12 +97,18 @@
         {
           "placeholder": "___",
           "answer": "'integer'",
-          "alternatives": ["\"integer\""]
+          "alternatives": [
+            "\"integer\""
+          ]
         }
       ],
       "hints": {
-        "zh": ["downcast 可以是 'integer'、'signed'、'unsigned' 或 'float'"],
-        "en": ["downcast can be 'integer', 'signed', 'unsigned', or 'float'"]
+        "zh": [
+          "downcast 可以是 'integer'、'signed'、'unsigned' 或 'float'"
+        ],
+        "en": [
+          "downcast can be 'integer', 'signed', 'unsigned', or 'float'"
+        ]
       },
       "explanation": {
         "zh": "downcast='integer' 会自动选择最小的整数类型（如 int8、int16）来存储数据。对大数据集可以显著减少内存占用。",
@@ -109,8 +129,12 @@
       },
       "correctAnswer": true,
       "hints": {
-        "zh": ["稀疏数据结构只存储非默认值及其位置"],
-        "en": ["Sparse data structures store only non-default values and their positions"]
+        "zh": [
+          "稀疏数据结构只存储非默认值及其位置"
+        ],
+        "en": [
+          "Sparse data structures store only non-default values and their positions"
+        ]
       },
       "explanation": {
         "zh": "SparseArray 只存储非填充值（默认为 NaN 或 0）及其位置索引。当数据的稀疏率高时（大量相同的填充值），内存节省非常可观。",
@@ -131,8 +155,12 @@
       },
       "correctAnswer": true,
       "hints": {
-        "zh": ["Parquet 是列式存储格式，原生支持数据类型"],
-        "en": ["Parquet is a columnar storage format with native type support"]
+        "zh": [
+          "Parquet 是列式存储格式，原生支持数据类型"
+        ],
+        "en": [
+          "Parquet is a columnar storage format with native type support"
+        ]
       },
       "explanation": {
         "zh": "Parquet 是列式存储格式，支持高效压缩和编码。与 CSV 相比：1) 保留 dtypes（不需要每次读取时推断）；2) 列式存储支持只读取需要的列；3) 内置压缩，文件更小；4) 读写速度通常快 5-10 倍。使用 df.to_parquet('file.parquet') 和 pd.read_parquet('file.parquet')。",
@@ -157,8 +185,14 @@
       "validationType": "exact-output",
       "expectedOutput": "450",
       "hints": {
-        "zh": ["每个 chunk 是一个 DataFrame", "使用 .sum() 对每个 chunk 的列求和"],
-        "en": ["Each chunk is a DataFrame", "Use .sum() to sum a column of each chunk"]
+        "zh": [
+          "每个 chunk 是一个 DataFrame",
+          "使用 .sum() 对每个 chunk 的列求和"
+        ],
+        "en": [
+          "Each chunk is a DataFrame",
+          "Use .sum() to sum a column of each chunk"
+        ]
       },
       "explanation": {
         "zh": "chunksize 模式的关键是在循环中逐块处理数据：for chunk in pd.read_csv('file.csv', chunksize=N)。每个 chunk 是一个 DataFrame，可以独立处理后汇总结果。这样即使文件很大也不会耗尽内存。",
@@ -183,8 +217,14 @@
       "validationType": "custom-check",
       "checkCode": "try:\n    result = df_loaded.equals(df) and os.path.exists(output_path)\nexcept:\n    result = False\nresult",
       "hints": {
-        "zh": ["engine 参数可选 'pyarrow' 或 'fastparquet'", "compression 常用 'snappy'（快速）或 'gzip'（高压缩率）"],
-        "en": ["engine can be 'pyarrow' or 'fastparquet'", "compression commonly uses 'snappy' (fast) or 'gzip' (high ratio)"]
+        "zh": [
+          "engine 参数可选 'pyarrow' 或 'fastparquet'",
+          "compression 常用 'snappy'（快速）或 'gzip'（高压缩率）"
+        ],
+        "en": [
+          "engine can be 'pyarrow' or 'fastparquet'",
+          "compression commonly uses 'snappy' (fast) or 'gzip' (high ratio)"
+        ]
       },
       "explanation": {
         "zh": "Parquet 的 engine 参数选择底层库：pyarrow（推荐，功能全面）或 fastparquet。compression 参数选择压缩算法：snappy（速度优先）、gzip（压缩率优先）、brotli、zstd 等。snappy 是默认值，适合大多数场景。",
@@ -219,8 +259,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["read_sql 是 read_sql_query 和 read_sql_table 的统一接口"],
-        "en": ["read_sql is a unified interface for read_sql_query and read_sql_table"]
+        "zh": [
+          "read_sql 是 read_sql_query 和 read_sql_table 的统一接口"
+        ],
+        "en": [
+          "read_sql is a unified interface for read_sql_query and read_sql_table"
+        ]
       },
       "explanation": {
         "zh": "pd.read_sql(sql, con) 接受 SQL 查询字符串或表名，con 参数为 SQLAlchemy 引擎或连接。它是 read_sql_query 和 read_sql_table 的便捷接口，支持 MySQL、PostgreSQL、SQLite 等多种数据库。还可以通过 chunksize 参数分批读取。",
@@ -255,8 +299,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["Modin 的目标是 'import modin.pandas as pd' 就能加速现有代码"],
-        "en": ["Modin aims for 'import modin.pandas as pd' to speed up existing code"]
+        "zh": [
+          "Modin 的目标是 'import modin.pandas as pd' 就能加速现有代码"
+        ],
+        "en": [
+          "Modin aims for 'import modin.pandas as pd' to speed up existing code"
+        ]
       },
       "explanation": {
         "zh": "Modin：只需 import modin.pandas as pd 即可替换，利用多核并行加速 pandas 操作，API 兼容度约 90%。Dask：提供 dask.dataframe，支持惰性计算和分布式计算，适合超大数据集（TB 级），但 API 与 pandas 有一定差异。",
@@ -281,8 +329,12 @@
       "validationType": "custom-check",
       "checkCode": "try:\n    result = mem_obj > mem_cat and mem_cat > 0\nexcept:\n    result = False\nresult",
       "hints": {
-        "zh": ["memory_usage(deep=True) 返回包含字符串实际大小的精确字节数"],
-        "en": ["memory_usage(deep=True) returns exact bytes including actual string sizes"]
+        "zh": [
+          "memory_usage(deep=True) 返回包含字符串实际大小的精确字节数"
+        ],
+        "en": [
+          "memory_usage(deep=True) returns exact bytes including actual string sizes"
+        ]
       },
       "explanation": {
         "zh": "对于重复率高的字符串列，转换为 category 类型通常可以节省 90%+ 的内存。memory_usage(deep=True) 是分析列内存占用的最准确方式。sys.getsizeof 也可用于分析 Python 对象大小。",
@@ -305,10 +357,16 @@
       "starterCode": "# Downcast integer columns\nfor col in df.select_dtypes(include=['int64']).columns:\n    df[col] = pd.to_numeric(df[col], downcast='integer')\n\n# Convert object columns to category\nfor col in df.select_dtypes(include=['object']).columns:\n    df[col] = df[col].astype(___)\n\nprint(df.dtypes)",
       "solutionCode": "for col in df.select_dtypes(include=['int64']).columns:\n    df[col] = pd.to_numeric(df[col], downcast='integer')\nfor col in df.select_dtypes(include=['object']).columns:\n    df[col] = df[col].astype('category')\nprint(df.dtypes)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = df['city'].dtype.name == 'category' and df['age'].dtype != 'int64'\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\ndf = pd.DataFrame({'age': [25, 30, 22, 45, 38], 'city': ['NYC', 'LA', 'NYC', 'LA', 'NYC'], 'score': [100, 200, 150, 300, 250]})\", _expected_ns)\nexec(\"for col in df.select_dtypes(include=['int64']).columns:\\n    df[col] = pd.to_numeric(df[col], downcast='integer')\\nfor col in df.select_dtypes(include=['object']).columns:\\n    df[col] = df[col].astype('category')\\nprint(df.dtypes)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["select_dtypes 可以按类型筛选列", "object 类型通常是字符串，可转为 category"],
-        "en": ["select_dtypes filters columns by type", "object type is usually strings that can be converted to category"]
+        "zh": [
+          "select_dtypes 可以按类型筛选列",
+          "object 类型通常是字符串，可转为 category"
+        ],
+        "en": [
+          "select_dtypes filters columns by type",
+          "object type is usually strings that can be converted to category"
+        ]
       },
       "explanation": {
         "zh": "dtype 优化策略：1) 整数列用 pd.to_numeric(downcast='integer') 降级（int64->int8/16/32）；2) 浮点列用 downcast='float'；3) 重复率高的字符串列转 category；4) 布尔列用 bool 类型。这套策略可以将内存减少 50-80%。",
@@ -333,8 +391,14 @@
       "validationType": "custom-check",
       "checkCode": "try:\n    result = df_loaded.equals(df) and df_loaded['grade'].dtype.name == 'category'\nexcept:\n    result = False\nresult",
       "hints": {
-        "zh": ["pd.read_pickle() 读取 pickle 文件", "pickle 格式会保留 category 等特殊 dtype"],
-        "en": ["pd.read_pickle() reads pickle files", "pickle format preserves special dtypes like category"]
+        "zh": [
+          "pd.read_pickle() 读取 pickle 文件",
+          "pickle 格式会保留 category 等特殊 dtype"
+        ],
+        "en": [
+          "pd.read_pickle() reads pickle files",
+          "pickle format preserves special dtypes like category"
+        ]
       },
       "explanation": {
         "zh": "pickle 序列化的优势：1) 完整保留 dtypes（包括 category、datetime 等）；2) 读写速度通常最快。缺点：1) 不能跨 pandas 版本保证兼容性；2) 不安全（不要加载不信任的 pickle 文件）；3) 文件不可人类阅读。适合临时缓存中间结果。",
@@ -357,10 +421,16 @@
       "starterCode": "# Bug: fix the chunk processing loop\nresults = []\nfor chunk in chunks:\n    filtered = chunk[chunk['value'] > 50]\n    results = filtered  # <-- Bug is here\n\nfinal = pd.concat(results).reset_index(drop=True)",
       "solutionCode": "results = []\nfor chunk in chunks:\n    filtered = chunk[chunk['value'] > 50]\n    results.append(filtered)\n\nfinal = pd.concat(results).reset_index(drop=True)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = len(final) == 5 and (final['value'] > 50).all()\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nchunk1 = pd.DataFrame({'id': [1, 2, 3], 'value': [10, 60, 30]})\\nchunk2 = pd.DataFrame({'id': [4, 5, 6], 'value': [70, 50, 80]})\\nchunk3 = pd.DataFrame({'id': [7, 8, 9], 'value': [90, 20, 55]})\\nchunks = [chunk1, chunk2, chunk3]\", _expected_ns)\nexec(\"results = []\\nfor chunk in chunks:\\n    filtered = chunk[chunk['value'] > 50]\\n    results.append(filtered)\\n\\nfinal = pd.concat(results).reset_index(drop=True)\", _expected_ns)\ntry:\n    result = _expected_ns.get('chunk') is not None and hasattr(_expected_ns['chunk'], 'equals') and _expected_ns['chunk'].equals(chunk) and _expected_ns.get('filtered') is not None and hasattr(_expected_ns['filtered'], 'equals') and _expected_ns['filtered'].equals(filtered) and _expected_ns.get('final') is not None and hasattr(_expected_ns['final'], 'equals') and _expected_ns['final'].equals(final)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["注意 results = filtered 和 results.append(filtered) 的区别", "每次循环应该是追加而不是覆盖"],
-        "en": ["Notice the difference between results = filtered and results.append(filtered)", "Each iteration should append, not overwrite"]
+        "zh": [
+          "注意 results = filtered 和 results.append(filtered) 的区别",
+          "每次循环应该是追加而不是覆盖"
+        ],
+        "en": [
+          "Notice the difference between results = filtered and results.append(filtered)",
+          "Each iteration should append, not overwrite"
+        ]
       },
       "explanation": {
         "zh": "bug 在于 results = filtered 每次循环都覆盖了之前的结果，应该用 results.append(filtered) 将每个 chunk 的结果追加到列表中。这是 chunksize 处理中最常见的错误之一。正确模式：初始化空列表 -> 循环中 append -> 最后 pd.concat。",
@@ -395,8 +465,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["考虑哪种格式同时满足保留类型、压缩和性能三个需求"],
-        "en": ["Consider which format simultaneously meets type preservation, compression, and performance needs"]
+        "zh": [
+          "考虑哪种格式同时满足保留类型、压缩和性能三个需求"
+        ],
+        "en": [
+          "Consider which format simultaneously meets type preservation, compression, and performance needs"
+        ]
       },
       "explanation": {
         "zh": "格式对比：CSV 通用但不保留 dtype，无压缩，读写慢。Feather（Arrow IPC）读写最快但文件较大。Parquet 列式存储 + 内置压缩，文件最小，保留 dtype，读取时可只加载需要的列。JSON 适合嵌套数据但效率低。对于分析场景，Parquet 是最佳选择。",
@@ -419,10 +493,18 @@
       "starterCode": "# Step 1: Record original memory\nmem_before = df.memory_usage(deep=True).sum()\n\n# Step 2: Convert string columns to category\ndf['city'] = df['city'].astype(___)\ndf['status'] = df['status'].astype(___)\n\n# Step 3: Downcast float column\ndf['amount'] = df['amount'].astype(___)\n\n# Step 4: Record optimized memory\nmem_after = df.memory_usage(deep=True).sum()\nprint(f'Memory reduced: {round((1 - mem_after/mem_before) * 100)}%')\n\n# Step 5: Group by city and sum amount\nsummary = df.groupby('city')['amount'].___",
       "solutionCode": "mem_before = df.memory_usage(deep=True).sum()\ndf['city'] = df['city'].astype('category')\ndf['status'] = df['status'].astype('category')\ndf['amount'] = df['amount'].astype('float32')\nmem_after = df.memory_usage(deep=True).sum()\nprint(f'Memory reduced: {round((1 - mem_after/mem_before) * 100)}%')\nsummary = df.groupby('city')['amount'].sum()",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = df['city'].dtype.name == 'category' and df['amount'].dtype == 'float32' and len(summary) == 5 and mem_after < mem_before\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nn = 100000\\ndf = pd.DataFrame({'id': range(n), 'city': np.random.choice(['NYC', 'LA', 'Chicago', 'Houston', 'Phoenix'], n), 'amount': np.random.uniform(10, 1000, n), 'status': np.random.choice(['active', 'inactive'], n)})\", _expected_ns)\nexec(\"mem_before = df.memory_usage(deep=True).sum()\\ndf['city'] = df['city'].astype('category')\\ndf['status'] = df['status'].astype('category')\\ndf['amount'] = df['amount'].astype('float32')\\nmem_after = df.memory_usage(deep=True).sum()\\nprint(f'Memory reduced: {round((1 - mem_after/mem_before) * 100)}%')\\nsummary = df.groupby('city')['amount'].sum()\", _expected_ns)\ntry:\n    result = _expected_ns.get('summary') is not None and hasattr(_expected_ns['summary'], 'equals') and _expected_ns['summary'].equals(summary)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["astype('category') 转换字符串列", "astype('float32') 降级浮点数", "groupby 后用 .sum() 聚合"],
-        "en": ["astype('category') converts string columns", "astype('float32') downcasts floats", "Use .sum() after groupby to aggregate"]
+        "zh": [
+          "astype('category') 转换字符串列",
+          "astype('float32') 降级浮点数",
+          "groupby 后用 .sum() 聚合"
+        ],
+        "en": [
+          "astype('category') converts string columns",
+          "astype('float32') downcasts floats",
+          "Use .sum() after groupby to aggregate"
+        ]
       },
       "explanation": {
         "zh": "这个综合练习展示了完整的大数据集内存优化流程：1) 先测量基线内存；2) 高重复率字符串列转 category（节省约 90%）；3) 浮点列降精度（float64->float32 节省 50%）；4) 优化后再进行分析。在实际项目中，这种优化可以让原本无法放入内存的数据集变得可处理。",

@@ -2,7 +2,13 @@
   "module": "groupby",
   "stageId": "stage3",
   "lessonId": "groupby",
-  "tags": ["groupby", "aggregation", "transform", "size", "count"],
+  "tags": [
+    "groupby",
+    "aggregation",
+    "transform",
+    "size",
+    "count"
+  ],
   "exercises": [
     {
       "id": "s3-groupby-001",
@@ -21,9 +27,16 @@
       "solutionCode": "result = df.groupby('department')['salary'].mean()",
       "validationType": "dataframe-equals",
       "expectedOutput": "",
+      "checkCode": "import pandas as pd\ntry:\n    expected = df.groupby('department')['salary'].mean()\n    result = result.equals(expected)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["使用 df.groupby() 方法按列分组", "在 groupby 后选择特定列再调用 .mean()"],
-        "en": ["Use df.groupby() to group by a column", "Select the specific column after groupby then call .mean()"]
+        "zh": [
+          "使用 df.groupby() 方法按列分组",
+          "在 groupby 后选择特定列再调用 .mean()"
+        ],
+        "en": [
+          "Use df.groupby() to group by a column",
+          "Select the specific column after groupby then call .mean()"
+        ]
       },
       "explanation": {
         "zh": "df.groupby('department')['salary'].mean() 先按 department 分组，然后计算每组 salary 的均值。",
@@ -47,12 +60,18 @@
         {
           "placeholder": "___",
           "answer": "'mean', 'max'",
-          "alternatives": ["\"mean\", \"max\""]
+          "alternatives": [
+            "\"mean\", \"max\""
+          ]
         }
       ],
       "hints": {
-        "zh": ["agg() 可以接受一个函数名列表"],
-        "en": ["agg() can accept a list of function names"]
+        "zh": [
+          "agg() 可以接受一个函数名列表"
+        ],
+        "en": [
+          "agg() can accept a list of function names"
+        ]
       },
       "explanation": {
         "zh": "agg() 方法接受函数名列表，可以同时计算多种聚合结果，返回一个多列 DataFrame。",
@@ -76,9 +95,16 @@
       "solutionCode": "df['dept_mean'] = df.groupby('department')['salary'].transform('mean')",
       "validationType": "dataframe-equals",
       "expectedOutput": "",
+      "checkCode": "import pandas as pd\ntry:\n    expected = df.groupby('department')['salary'].transform('mean')\n    result = df['dept_mean'].equals(expected)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["transform 返回与原始数据相同长度的结果", "transform('mean') 会将每组的均值广播回原始索引"],
-        "en": ["transform returns results with the same length as the original data", "transform('mean') broadcasts each group's mean back to the original index"]
+        "zh": [
+          "transform 返回与原始数据相同长度的结果",
+          "transform('mean') 会将每组的均值广播回原始索引"
+        ],
+        "en": [
+          "transform returns results with the same length as the original data",
+          "transform('mean') broadcasts each group's mean back to the original index"
+        ]
       },
       "explanation": {
         "zh": "transform 与 agg 不同，它返回与原 DataFrame 行数相同的 Series，适合用来创建新列。",
@@ -113,8 +139,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["命名聚合使用 关键字参数=('列名', '函数') 的形式"],
-        "en": ["Named aggregation uses keyword_arg=('column', 'function') syntax"]
+        "zh": [
+          "命名聚合使用 关键字参数=('列名', '函数') 的形式"
+        ],
+        "en": [
+          "Named aggregation uses keyword_arg=('column', 'function') syntax"
+        ]
       },
       "explanation": {
         "zh": "命名聚合语法是 .agg(新列名=('原列名', '聚合函数'))，它避免了多层列名，结果更整洁。",
@@ -135,8 +165,18 @@
       },
       "code": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'g': ['a', 'a', 'b'], 'v': [1, np.nan, 3]})\nprint(df.groupby('g')['v'].count().tolist())",
       "options": {
-        "zh": ["[1, 1]", "[2, 1]", "[1, 3]", "[2, 3]"],
-        "en": ["[1, 1]", "[2, 1]", "[1, 3]", "[2, 3]"]
+        "zh": [
+          "[1, 1]",
+          "[2, 1]",
+          "[1, 3]",
+          "[2, 3]"
+        ],
+        "en": [
+          "[1, 1]",
+          "[2, 1]",
+          "[1, 3]",
+          "[2, 3]"
+        ]
       },
       "correctIndex": 0,
       "explanation": {
@@ -161,9 +201,16 @@
       "solutionCode": "result = df.groupby('department', as_index=False)['salary'].mean()",
       "validationType": "dataframe-equals",
       "expectedOutput": "",
+      "checkCode": "import pandas as pd\ntry:\n    expected = df.groupby('department', as_index=False)['salary'].mean()\n    result = result.equals(expected)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["as_index=False 让分组键成为普通列而非索引", "结果是一个带有默认整数索引的 DataFrame"],
-        "en": ["as_index=False keeps the group key as a regular column", "The result is a DataFrame with default integer index"]
+        "zh": [
+          "as_index=False 让分组键成为普通列而非索引",
+          "结果是一个带有默认整数索引的 DataFrame"
+        ],
+        "en": [
+          "as_index=False keeps the group key as a regular column",
+          "The result is a DataFrame with default integer index"
+        ]
       },
       "explanation": {
         "zh": "as_index=False 让 groupby 结果保持分组列为普通列，等价于 groupby(...).mean().reset_index()。在需要后续合并时很方便。",
@@ -198,8 +245,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["Categorical 可能定义了比实际数据更多的类别"],
-        "en": ["A Categorical may define more categories than are present in the data"]
+        "zh": [
+          "Categorical 可能定义了比实际数据更多的类别"
+        ],
+        "en": [
+          "A Categorical may define more categories than are present in the data"
+        ]
       },
       "explanation": {
         "zh": "当分组列是 Categorical 类型时，observed=False（默认值在 pandas<2.2 中）会为所有已定义类别生成行，即使某些类别没有数据。observed=True 则只显示有数据的类别。pandas 2.2+ 默认为 True。",
@@ -223,9 +274,16 @@
       "solutionCode": "result = df.groupby('department').agg(avg_salary=('salary', 'mean'), max_salary=('salary', 'max'))",
       "validationType": "dataframe-equals",
       "expectedOutput": "",
+      "checkCode": "import pandas as pd\ntry:\n    expected = df.groupby('department').agg(avg_salary=('salary', 'mean'), max_salary=('salary', 'max'))\n    result = result.equals(expected)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["命名聚合语法: 新列名=('原列名', '聚合函数')", "也可以使用 pd.NamedAgg(column='salary', aggfunc='mean')"],
-        "en": ["Named aggregation syntax: new_col=('original_col', 'agg_func')", "You can also use pd.NamedAgg(column='salary', aggfunc='mean')"]
+        "zh": [
+          "命名聚合语法: 新列名=('原列名', '聚合函数')",
+          "也可以使用 pd.NamedAgg(column='salary', aggfunc='mean')"
+        ],
+        "en": [
+          "Named aggregation syntax: new_col=('original_col', 'agg_func')",
+          "You can also use pd.NamedAgg(column='salary', aggfunc='mean')"
+        ]
       },
       "explanation": {
         "zh": "命名聚合语法 agg(新列名=('原列名', '函数')) 生成扁平的列名，避免了多级列索引。等价于 agg(avg_salary=pd.NamedAgg('salary', 'mean'))。",
@@ -260,8 +318,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["想想每个方法输出的形状（shape）有什么不同"],
-        "en": ["Think about how the output shape differs for each method"]
+        "zh": [
+          "想想每个方法输出的形状（shape）有什么不同"
+        ],
+        "en": [
+          "Think about how the output shape differs for each method"
+        ]
       },
       "explanation": {
         "zh": "agg 将每组缩减为一个值（如 mean, sum）；transform 对每组计算后将结果广播回原始形状（如组内标准化）；apply 最灵活，可以返回任意形状，但较慢。优先使用 agg/transform，只在必要时使用 apply。",
@@ -285,9 +347,16 @@
       "solutionCode": "result = df.groupby(['department', 'level'])['salary'].mean()",
       "validationType": "dataframe-equals",
       "expectedOutput": "",
+      "checkCode": "import pandas as pd\ntry:\n    expected = df.groupby(['department', 'level'])['salary'].mean()\n    result = result.equals(expected)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["groupby 可以接受列名列表来进行多列分组", "多列分组的结果会产生 MultiIndex"],
-        "en": ["groupby accepts a list of column names for multi-column grouping", "Multi-column grouping produces a MultiIndex"]
+        "zh": [
+          "groupby 可以接受列名列表来进行多列分组",
+          "多列分组的结果会产生 MultiIndex"
+        ],
+        "en": [
+          "groupby accepts a list of column names for multi-column grouping",
+          "Multi-column grouping produces a MultiIndex"
+        ]
       },
       "explanation": {
         "zh": "groupby(['department', 'level']) 按两列的组合进行分组。结果具有 MultiIndex，每个唯一的 (department, level) 组合对应一行。",
@@ -311,9 +380,16 @@
       "solutionCode": "result = df.groupby('department')['salary'].mean().sort_values(ascending=False)",
       "validationType": "dataframe-equals",
       "expectedOutput": "",
+      "checkCode": "import pandas as pd\ntry:\n    expected = df.groupby('department')['salary'].mean().sort_values(ascending=False)\n    result = result.equals(expected)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["先 groupby + mean，再链式调用 sort_values()", "ascending=False 表示降序"],
-        "en": ["Chain groupby + mean, then sort_values()", "ascending=False means descending order"]
+        "zh": [
+          "先 groupby + mean，再链式调用 sort_values()",
+          "ascending=False 表示降序"
+        ],
+        "en": [
+          "Chain groupby + mean, then sort_values()",
+          "ascending=False means descending order"
+        ]
       },
       "explanation": {
         "zh": "groupby 聚合后返回 Series/DataFrame，可以继续链式调用 sort_values() 排序。ascending=False 使结果按降序排列。",
@@ -337,9 +413,16 @@
       "solutionCode": "result = df.groupby('department')['salary'].agg(lambda x: x.max() - x.min())",
       "validationType": "dataframe-equals",
       "expectedOutput": "",
+      "checkCode": "import pandas as pd\ntry:\n    expected = df.groupby('department')['salary'].agg(lambda x: x.max() - x.min())\n    result = result.equals(expected)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["agg 可以接受 lambda 函数", "lambda x: x.max() - x.min() 计算极差"],
-        "en": ["agg can accept a lambda function", "lambda x: x.max() - x.min() computes the range"]
+        "zh": [
+          "agg 可以接受 lambda 函数",
+          "lambda x: x.max() - x.min() 计算极差"
+        ],
+        "en": [
+          "agg can accept a lambda function",
+          "lambda x: x.max() - x.min() computes the range"
+        ]
       },
       "explanation": {
         "zh": "agg() 不仅接受内置函数名字符串，还可以接受自定义函数或 lambda。传入的函数接收一个 Series（即每组的数据），需返回一个标量。",
@@ -362,10 +445,16 @@
       "starterCode": "# Bug: NaN group is missing from results\nresult = df.groupby('department')['salary'].mean()",
       "solutionCode": "result = df.groupby('department', dropna=False)['salary'].mean()",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = len(result) == 3 and result.index.isna().any()\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\ndf = pd.DataFrame({'department': ['HR', 'Engineering', np.nan, 'HR', np.nan], 'salary': [50000, 80000, 55000, 60000, 70000]})\", _expected_ns)\nexec(\"result = df.groupby('department', dropna=False)['salary'].mean()\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["groupby 默认会丢弃分组键中的 NaN 值", "查看 groupby 的 dropna 参数"],
-        "en": ["groupby drops NaN values in the grouping key by default", "Check the dropna parameter of groupby"]
+        "zh": [
+          "groupby 默认会丢弃分组键中的 NaN 值",
+          "查看 groupby 的 dropna 参数"
+        ],
+        "en": [
+          "groupby drops NaN values in the grouping key by default",
+          "Check the dropna parameter of groupby"
+        ]
       },
       "explanation": {
         "zh": "groupby 默认 dropna=True，会丢弃分组键为 NaN 的行。设置 dropna=False 可以保留 NaN 作为一个单独的组。",
@@ -388,10 +477,18 @@
       "starterCode": "# Step 1-4: group, aggregate, sort, filter\nresult = ___",
       "solutionCode": "result = df.groupby('region').agg(total_sales=('sales', 'sum'), order_count=('sales', 'count')).sort_values('total_sales', ascending=False)\nresult = result[result['total_sales'] > 500]",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = list(result.columns) == ['total_sales', 'order_count'] and len(result) == 2 and result.iloc[0]['total_sales'] >= result.iloc[1]['total_sales'] and all(result['total_sales'] > 500)\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'region': ['East', 'West', 'East', 'North', 'West', 'East', 'North', 'West', 'East', 'North'], 'product': ['A', 'B', 'A', 'C', 'A', 'B', 'A', 'C', 'C', 'B'], 'sales': [200, 150, 300, 100, 250, 180, 120, 200, 160, 80]})\", _expected_ns)\nexec(\"result = df.groupby('region').agg(total_sales=('sales', 'sum'), order_count=('sales', 'count')).sort_values('total_sales', ascending=False)\\nresult = result[result['total_sales'] > 500]\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["使用命名聚合: agg(total_sales=('sales', 'sum'), order_count=('sales', 'count'))", "聚合后链式调用 sort_values 和布尔索引筛选", "总销售额 > 500 的筛选用 result[result['total_sales'] > 500]"],
-        "en": ["Use named aggregation: agg(total_sales=('sales', 'sum'), order_count=('sales', 'count'))", "Chain sort_values and boolean indexing after aggregation", "Filter with result[result['total_sales'] > 500]"]
+        "zh": [
+          "使用命名聚合: agg(total_sales=('sales', 'sum'), order_count=('sales', 'count'))",
+          "聚合后链式调用 sort_values 和布尔索引筛选",
+          "总销售额 > 500 的筛选用 result[result['total_sales'] > 500]"
+        ],
+        "en": [
+          "Use named aggregation: agg(total_sales=('sales', 'sum'), order_count=('sales', 'count'))",
+          "Chain sort_values and boolean indexing after aggregation",
+          "Filter with result[result['total_sales'] > 500]"
+        ]
       },
       "explanation": {
         "zh": "这个综合练习展示了数据分析的典型流程：分组 -> 聚合 -> 排序 -> 筛选。命名聚合让结果列名更清晰，链式操作让代码更简洁。East (840) 和 West (600) 总销售额超过 500，North (300) 被过滤掉。",

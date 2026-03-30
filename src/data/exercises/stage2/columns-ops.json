@@ -2,7 +2,13 @@
   "module": "columns-ops",
   "stageId": "stage2",
   "lessonId": "columns-ops",
-  "tags": ["add-column", "drop", "assign", "rename", "columns"],
+  "tags": [
+    "add-column",
+    "drop",
+    "assign",
+    "rename",
+    "columns"
+  ],
   "exercises": [
     {
       "id": "s2-colops-001",
@@ -64,8 +70,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["drop() 方法可以通过 columns 参数指定要删除的列"],
-        "en": ["The drop() method uses the columns parameter to specify columns to remove"]
+        "zh": [
+          "drop() 方法可以通过 columns 参数指定要删除的列"
+        ],
+        "en": [
+          "The drop() method uses the columns parameter to specify columns to remove"
+        ]
       },
       "explanation": {
         "zh": "df.drop(columns=['col1']) 是删除列的标准方式。也可以用 df.drop('col1', axis=1) 达到同样效果。",
@@ -94,7 +104,10 @@
         {
           "placeholder": "___2___",
           "answer": "df['value'] * 2",
-          "alternatives": ["df.value * 2", "df[\"value\"] * 2"]
+          "alternatives": [
+            "df.value * 2",
+            "df[\"value\"] * 2"
+          ]
         }
       ],
       "hints": {
@@ -161,7 +174,7 @@
       "solutionCode": "result = df.assign(\n    total=df['math'] + df['english'],\n    average=lambda x: x['total'] / 2\n)\nprint(result)",
       "validationType": "custom-check",
       "expectedOutput": "",
-      "checkCode": "try:\n    checks = []\n    checks.append('total' in result.columns)\n    checks.append('average' in result.columns)\n    checks.append(result['total'].tolist() == [175, 175, 145])\n    checks.append(result['average'].tolist() == [87.5, 87.5, 72.5])\n    result_val = all(checks)\nexcept:\n    result_val = False\nresult_val",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\n\\ndf = pd.DataFrame({\\n    'name': ['Alice', 'Bob', 'Charlie'],\\n    'math': [90, 80, 70],\\n    'english': [85, 95, 75]\\n})\", _expected_ns)\nexec(\"result = df.assign(\\n    total=df['math'] + df['english'],\\n    average=lambda x: x['total'] / 2\\n)\\nprint(result)\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "assign() 中可以用 lambda 引用在同一次调用中创建的列",
@@ -225,7 +238,7 @@
       "starterCode": "# Pop 'temp' column and print\n",
       "solutionCode": "temp_col = df.pop('temp')\nprint(temp_col)\nprint(df)",
       "validationType": "exact-output",
-      "expectedOutput": "0    25\n1    30\n2    28\nName: temp, dtype: int64\n       city  humidity\n0   Beijing        40\n1  Shanghai        55\n2  Guangzhou        65",
+      "expectedOutput": "0    25\n1    30\n2    28\nName: temp, dtype: int64\n        city  humidity\n0    Beijing        40\n1   Shanghai        55\n2  Guangzhou        65",
       "hints": {
         "zh": [
           "pop() 类似字典的 pop 操作，提取并移除",

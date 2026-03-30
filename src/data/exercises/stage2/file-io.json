@@ -2,7 +2,13 @@
   "module": "file-io",
   "stageId": "stage2",
   "lessonId": "file-io",
-  "tags": ["read_csv", "to_csv", "read_json", "file-io", "encoding"],
+  "tags": [
+    "read_csv",
+    "to_csv",
+    "read_json",
+    "file-io",
+    "encoding"
+  ],
   "exercises": [
     {
       "id": "s2-fileio-001",
@@ -32,8 +38,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["pandas 中读取文件的函数通常以 read_ 开头"],
-        "en": ["Functions for reading files in pandas typically start with read_"]
+        "zh": [
+          "pandas 中读取文件的函数通常以 read_ 开头"
+        ],
+        "en": [
+          "Functions for reading files in pandas typically start with read_"
+        ]
       },
       "explanation": {
         "zh": "pd.read_csv() 是 pandas 中读取 CSV 文件的标准函数，返回一个 DataFrame。",
@@ -55,8 +65,8 @@
       "setupCode": "import pandas as pd\nimport io\n\ncsv_text = \"name,age,city\\nAlice,25,Beijing\\nBob,30,Shanghai\\nCharlie,35,Guangzhou\"",
       "starterCode": "# Read csv_text into a DataFrame named df\n\n# Print df\n",
       "solutionCode": "df = pd.read_csv(io.StringIO(csv_text))\nprint(df)",
-      "validationType": "dataframe-equals",
-      "expectedOutput": "     name  age       city\n0   Alice   25    Beijing\n1     Bob   30   Shanghai\n2  Charlie   35  Guangzhou",
+      "validationType": "exact-output",
+      "expectedOutput": "name  age       city\n0    Alice   25    Beijing\n1      Bob   30   Shanghai\n2  Charlie   35  Guangzhou",
       "hints": {
         "zh": [
           "使用 io.StringIO() 将字符串转为文件对象",
@@ -94,7 +104,9 @@
         {
           "placeholder": "___2___",
           "answer": "index=False",
-          "alternatives": ["index = False"]
+          "alternatives": [
+            "index = False"
+          ]
         }
       ],
       "hints": {
@@ -126,8 +138,12 @@
       },
       "correctAnswer": true,
       "hints": {
-        "zh": ["不同编码方式适用于不同场景，中文文件常见的编码有 UTF-8 和 GBK"],
-        "en": ["Different encodings are suitable for different scenarios; common encodings for Chinese files are UTF-8 and GBK"]
+        "zh": [
+          "不同编码方式适用于不同场景，中文文件常见的编码有 UTF-8 和 GBK"
+        ],
+        "en": [
+          "Different encodings are suitable for different scenarios; common encodings for Chinese files are UTF-8 and GBK"
+        ]
       },
       "explanation": {
         "zh": "read_csv 的 encoding 参数允许指定文件的字符编码。中文 CSV 文件常用 UTF-8 或 GBK 编码，设置正确的编码可以解决乱码问题。",
@@ -162,8 +178,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["read_excel 和 read_csv 有很多相似的参数"],
-        "en": ["read_excel shares many similar parameters with read_csv"]
+        "zh": [
+          "read_excel 和 read_csv 有很多相似的参数"
+        ],
+        "en": [
+          "read_excel shares many similar parameters with read_csv"
+        ]
       },
       "explanation": {
         "zh": "pd.read_excel() 支持通过 sheet_name 指定工作表（名称或索引），同时支持 .xls 和 .xlsx 格式，也支持 dtype、skiprows 等参数。sheet_name=None 可读取所有工作表。",
@@ -186,7 +206,7 @@
       "starterCode": "# Read csv_text with dtype={'id': str} and parse_dates=['date']\n\n# Print df.dtypes\n",
       "solutionCode": "df = pd.read_csv(io.StringIO(csv_text), dtype={'id': str}, parse_dates=['date'])\nprint(df.dtypes)",
       "validationType": "exact-output",
-      "expectedOutput": "id               object\ndate    datetime64[ns]\nvalue            int64\ndtype: object",
+      "expectedOutput": "id                  str\ndate     datetime64[us]\nvalue             int64\ndtype: object",
       "hints": {
         "zh": [
           "dtype 参数接收一个字典，键为列名，值为数据类型",
@@ -348,7 +368,7 @@
       "starterCode": "# Bug: wrong encoding causes UnicodeDecodeError\ndf = pd.read_csv(io.BytesIO(csv_bytes), encoding='utf-8')\nprint(df)",
       "solutionCode": "df = pd.read_csv(io.BytesIO(csv_bytes), encoding='gbk')\nprint(df)",
       "validationType": "exact-output",
-      "expectedOutput": "   姓名  年龄  城市\n0  张三   25  北京\n1  李四   30  上海",
+      "expectedOutput": "姓名  年龄  城市\n0  张三  25  北京\n1  李四  30  上海",
       "hints": {
         "zh": [
           "数据是 GBK 编码的，但读取时用了 utf-8 编码",
@@ -423,7 +443,7 @@
       "solutionCode": "df = pd.read_csv(io.StringIO(csv_text), sep=';', na_values=['NA', '-'], dtype={'id': str})\ndf = df.dropna(how='all')\ndf['date'] = pd.to_datetime(df['date'])\nprint(df)",
       "validationType": "custom-check",
       "expectedOutput": "",
-      "checkCode": "try:\n    import pandas as pd\n    checks = []\n    checks.append(len(df) == 3)\n    checks.append(df['id'].dtype == object)\n    checks.append(str(df['date'].dtype).startswith('datetime64'))\n    checks.append(pd.isna(df.iloc[1]['score']))\n    checks.append(df.iloc[0]['id'] == '001')\n    result = all(checks)\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec('import pandas as pd\\nimport io\\n\\ncsv_text = \"id;name;date;score\\\\n001;Alice;2024-01-15;90\\\\n002;Bob;2024-02-20;-\\\\nNA;NA;NA;NA\\\\n004;David;2024-04-10;85\"', _expected_ns)\nexec(\"df = pd.read_csv(io.StringIO(csv_text), sep=';', na_values=['NA', '-'], dtype={'id': str})\\ndf = df.dropna(how='all')\\ndf['date'] = pd.to_datetime(df['date'])\\nprint(df)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "使用 sep=';' 指定分号分隔",

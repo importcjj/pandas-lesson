@@ -2,7 +2,13 @@
   "module": "multiindex",
   "stageId": "stage3",
   "lessonId": "multiindex",
-  "tags": ["multiindex", "xs", "level", "reset_index", "hierarchical"],
+  "tags": [
+    "multiindex",
+    "xs",
+    "level",
+    "reset_index",
+    "hierarchical"
+  ],
   "exercises": [
     {
       "id": "s3-multiindex-001",
@@ -21,9 +27,14 @@
       "solutionCode": "result = df.groupby(['department', 'year'])['revenue'].sum()",
       "validationType": "dataframe-equals",
       "expectedOutput": "",
+      "checkCode": "import pandas as pd\ntry:\n    expected = df.groupby(['department', 'year'])['revenue'].sum()\n    result = result.equals(expected)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["groupby 传入多个列名会自动创建 MultiIndex"],
-        "en": ["Passing multiple column names to groupby automatically creates a MultiIndex"]
+        "zh": [
+          "groupby 传入多个列名会自动创建 MultiIndex"
+        ],
+        "en": [
+          "Passing multiple column names to groupby automatically creates a MultiIndex"
+        ]
       },
       "explanation": {
         "zh": "当 groupby 接收多列时，结果会自动生成 MultiIndex（多层索引）。这是创建 MultiIndex 最常见的方式之一。",
@@ -47,12 +58,20 @@
         {
           "placeholder": "___",
           "answer": "'Sales'",
-          "alternatives": ["\"Sales\""]
+          "alternatives": [
+            "\"Sales\""
+          ]
         }
       ],
       "hints": {
-        "zh": ["xs 的第一个参数是要选择的键值", "level 参数指定在哪个层级上选择"],
-        "en": ["The first argument to xs is the key value to select", "The level parameter specifies which level to select on"]
+        "zh": [
+          "xs 的第一个参数是要选择的键值",
+          "level 参数指定在哪个层级上选择"
+        ],
+        "en": [
+          "The first argument to xs is the key value to select",
+          "The level parameter specifies which level to select on"
+        ]
       },
       "explanation": {
         "zh": "xs() 方法允许在 MultiIndex 的特定层级上进行截面选择。xs('Sales', level='department') 选取 department 为 Sales 的所有行。",
@@ -87,8 +106,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["level 参数指定按哪个索引层级进行聚合"],
-        "en": ["The level parameter specifies which index level to aggregate on"]
+        "zh": [
+          "level 参数指定按哪个索引层级进行聚合"
+        ],
+        "en": [
+          "The level parameter specifies which index level to aggregate on"
+        ]
       },
       "explanation": {
         "zh": "在新版 pandas 中，推荐使用 s.groupby(level='department').sum() 替代已弃用的 s.sum(level=...) 语法。两者效果相同。",
@@ -109,8 +132,12 @@
       },
       "correctAnswer": true,
       "hints": {
-        "zh": ["可以使用 level 参数只重置特定层级"],
-        "en": ["You can use the level parameter to reset only specific levels"]
+        "zh": [
+          "可以使用 level 参数只重置特定层级"
+        ],
+        "en": [
+          "You can use the level parameter to reset only specific levels"
+        ]
       },
       "explanation": {
         "zh": "reset_index() 默认将所有索引层级转为普通列。如果只想重置某一层，可以传入 level 参数，如 reset_index(level='year')。",
@@ -133,10 +160,16 @@
       "starterCode": "# Use xs() to select all rows where year=2024\nresult = ___",
       "solutionCode": "result = df.xs(2024, level='year')",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = len(result) == 2 and list(result['sales']) == [150, 250]\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'sales': [100, 200, 150, 250]}, index=pd.MultiIndex.from_tuples([(2023, 'Q1'), (2023, 'Q2'), (2024, 'Q1'), (2024, 'Q2')], names=['year', 'quarter']))\", _expected_ns)\nexec(\"result = df.xs(2024, level='year')\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["xs() 的第一个参数是要选择的键值", "使用 level 参数指定在哪个层级上选择"],
-        "en": ["The first argument to xs() is the key to select", "Use the level parameter to specify which level to select on"]
+        "zh": [
+          "xs() 的第一个参数是要选择的键值",
+          "使用 level 参数指定在哪个层级上选择"
+        ],
+        "en": [
+          "The first argument to xs() is the key to select",
+          "Use the level parameter to specify which level to select on"
+        ]
       },
       "explanation": {
         "zh": "xs(key, level) 从 MultiIndex 中选取指定层级等于 key 的所有行。返回的 DataFrame 不再包含该层级索引。这比用 .loc 更简洁。",
@@ -159,10 +192,16 @@
       "starterCode": "# Create MultiIndex from product of lists\nidx = ___",
       "solutionCode": "idx = pd.MultiIndex.from_product([['Sales', 'HR'], [2023, 2024]], names=['department', 'year'])",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = len(idx) == 4 and idx.names == ['department', 'year'] and ('Sales', 2023) in idx and ('HR', 2024) in idx\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nexpected = pd.MultiIndex.from_product([['Sales', 'HR'], [2023, 2024]], names=['department', 'year'])\ntry:\n    result = expected.equals(idx)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["from_product 计算输入列表的笛卡尔积", "names 参数为每个层级命名"],
-        "en": ["from_product computes the Cartesian product of input lists", "The names parameter assigns names to each level"]
+        "zh": [
+          "from_product 计算输入列表的笛卡尔积",
+          "names 参数为每个层级命名"
+        ],
+        "en": [
+          "from_product computes the Cartesian product of input lists",
+          "The names parameter assigns names to each level"
+        ]
       },
       "explanation": {
         "zh": "from_product 从多个列表的笛卡尔积创建 MultiIndex。2 个 department x 2 个 year = 4 个组合。适合创建完整的网格索引，确保所有组合都有对应的行。",
@@ -185,10 +224,16 @@
       "starterCode": "# Create MultiIndex from arrays\nidx = pd.MultiIndex.from_arrays(\n    [['Sales', 'Sales', 'HR', 'HR'], [2023, 2024, 2023, 2024]],\n    names=___\n)",
       "solutionCode": "idx = pd.MultiIndex.from_arrays(\n    [['Sales', 'Sales', 'HR', 'HR'], [2023, 2024, 2023, 2024]],\n    names=['department', 'year']\n)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = len(idx) == 4 and idx.names[0] == 'department' and idx.names[1] == 'year'\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nexpected = pd.MultiIndex.from_arrays([['Sales', 'Sales', 'HR', 'HR'], [2023, 2024, 2023, 2024]], names=['department', 'year'])\ntry:\n    result = expected.equals(idx)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["names 接受一个列名列表", "每个数组对应一个索引层级"],
-        "en": ["names accepts a list of level names", "Each array corresponds to one index level"]
+        "zh": [
+          "names 接受一个列名列表",
+          "每个数组对应一个索引层级"
+        ],
+        "en": [
+          "names accepts a list of level names",
+          "Each array corresponds to one index level"
+        ]
       },
       "explanation": {
         "zh": "from_arrays 直接从对应位置的数组值创建 MultiIndex，每个数组是一个层级。与 from_product 不同，from_arrays 不会生成笛卡尔积，数组长度必须相同。也可以用 from_tuples 从元组列表创建。",
@@ -211,10 +256,16 @@
       "starterCode": "# Swap levels so year becomes first\nresult = ___",
       "solutionCode": "result = df.swaplevel()",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = result.index.names[0] == 'year' and result.index.names[1] == 'department'\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'revenue': [100, 120, 50, 55]}, index=pd.MultiIndex.from_tuples([('Sales', 2023), ('Sales', 2024), ('HR', 2023), ('HR', 2024)], names=['department', 'year']))\", _expected_ns)\nexec('result = df.swaplevel()', _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["swaplevel() 交换两个索引层级", "对于两层 MultiIndex，默认交换两个层级"],
-        "en": ["swaplevel() swaps two index levels", "For a two-level MultiIndex, it swaps both levels by default"]
+        "zh": [
+          "swaplevel() 交换两个索引层级",
+          "对于两层 MultiIndex，默认交换两个层级"
+        ],
+        "en": [
+          "swaplevel() swaps two index levels",
+          "For a two-level MultiIndex, it swaps both levels by default"
+        ]
       },
       "explanation": {
         "zh": "swaplevel() 交换 MultiIndex 的两个层级。对于多层索引，可以指定要交换的层级：swaplevel(0, 2)。交换层级后通常需要 sort_index() 重新排序以确保正确的查询性能。",
@@ -237,10 +288,16 @@
       "starterCode": "# Get year level values\nyears = df.index.get_level_values('year')\n# Drop year level\nresult = ___",
       "solutionCode": "years = df.index.get_level_values('year')\nresult = df.droplevel('year')",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = result.index.nlevels == 1 and result.index.name == 'department' and list(years) == [2023, 2024, 2023, 2024]\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'revenue': [100, 120, 50, 55]}, index=pd.MultiIndex.from_tuples([('Sales', 2023), ('Sales', 2024), ('HR', 2023), ('HR', 2024)], names=['department', 'year']))\", _expected_ns)\nexec(\"years = df.index.get_level_values('year')\\nresult = df.droplevel('year')\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["get_level_values 返回指定层级的 Index", "droplevel 删除指定层级，返回新的 DataFrame"],
-        "en": ["get_level_values returns an Index for the specified level", "droplevel removes the specified level and returns a new DataFrame"]
+        "zh": [
+          "get_level_values 返回指定层级的 Index",
+          "droplevel 删除指定层级，返回新的 DataFrame"
+        ],
+        "en": [
+          "get_level_values returns an Index for the specified level",
+          "droplevel removes the specified level and returns a new DataFrame"
+        ]
       },
       "explanation": {
         "zh": "get_level_values('level') 提取 MultiIndex 中指定层级的值，返回 Index。droplevel('level') 从 MultiIndex 中删除指定层级。如果只剩一个层级，结果变为普通 Index。",
@@ -263,10 +320,16 @@
       "starterCode": "# Use pd.IndexSlice for MultiIndex selection\nidx = pd.IndexSlice\nresult = ___",
       "solutionCode": "idx = pd.IndexSlice\nresult = df.loc[idx['Sales', 2024], :]",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = result['revenue'] == 120 if isinstance(result, pd.Series) else (len(result) == 1 and result.iloc[0]['revenue'] == 120)\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'revenue': [100, 120, 50, 55]}, index=pd.MultiIndex.from_tuples([('HR', 2023), ('HR', 2024), ('Sales', 2023), ('Sales', 2024)], names=['department', 'year']))\", _expected_ns)\nexec(\"idx = pd.IndexSlice\\nresult = df.loc[idx['Sales', 2024], :]\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["pd.IndexSlice 允许对 MultiIndex 使用切片语法", "df.loc[idx['Sales', 2024], :] 选取特定行"],
-        "en": ["pd.IndexSlice enables slice syntax for MultiIndex", "df.loc[idx['Sales', 2024], :] selects specific rows"]
+        "zh": [
+          "pd.IndexSlice 允许对 MultiIndex 使用切片语法",
+          "df.loc[idx['Sales', 2024], :] 选取特定行"
+        ],
+        "en": [
+          "pd.IndexSlice enables slice syntax for MultiIndex",
+          "df.loc[idx['Sales', 2024], :] selects specific rows"
+        ]
       },
       "explanation": {
         "zh": "pd.IndexSlice 让 MultiIndex 的 loc 切片更简洁。idx['Sales', 2024] 精确选择特定组合。也支持切片：idx['HR':'Sales', :] 选择范围。注意 MultiIndex 必须先 sort_index() 才能进行切片操作。",
@@ -289,10 +352,16 @@
       "starterCode": "# Sort the MultiIndex\nresult = ___",
       "solutionCode": "result = df.sort_index()",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = result.index[0] == ('HR', 2023) and result.index[-1] == ('Sales', 2024) and result.index.is_monotonic_increasing\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'revenue': [120, 100, 55, 50]}, index=pd.MultiIndex.from_tuples([('Sales', 2024), ('Sales', 2023), ('HR', 2024), ('HR', 2023)], names=['department', 'year']))\", _expected_ns)\nexec('result = df.sort_index()', _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["sort_index() 按索引值排序", "对 MultiIndex 默认按所有层级从外到内排序"],
-        "en": ["sort_index() sorts by index values", "For MultiIndex, default sorts by all levels from outer to inner"]
+        "zh": [
+          "sort_index() 按索引值排序",
+          "对 MultiIndex 默认按所有层级从外到内排序"
+        ],
+        "en": [
+          "sort_index() sorts by index values",
+          "For MultiIndex, default sorts by all levels from outer to inner"
+        ]
       },
       "explanation": {
         "zh": "sort_index() 对 MultiIndex 按层级排序。可以用 level 参数指定排序层级，ascending 参数控制升降序。排序后的 MultiIndex 支持切片操作（.loc 切片要求索引有序）。",
@@ -315,10 +384,16 @@
       "starterCode": "# Bug: KeyError - cannot select inner level directly with .loc\nresult = df.loc[2024]",
       "solutionCode": "result = df.xs(2024, level='year')",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = len(result) == 2 and list(result['revenue']) == [120, 55]\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'revenue': [100, 120, 50, 55]}, index=pd.MultiIndex.from_tuples([('HR', 2023), ('HR', 2024), ('Sales', 2023), ('Sales', 2024)], names=['department', 'year']))\", _expected_ns)\nexec(\"result = df.xs(2024, level='year')\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": [".loc 直接传值默认在第一层级查找", "xs() 可以通过 level 参数指定在任意层级查找"],
-        "en": [".loc with a direct value searches the first level by default", "xs() can search any level via the level parameter"]
+        "zh": [
+          ".loc 直接传值默认在第一层级查找",
+          "xs() 可以通过 level 参数指定在任意层级查找"
+        ],
+        "en": [
+          ".loc with a direct value searches the first level by default",
+          "xs() can search any level via the level parameter"
+        ]
       },
       "explanation": {
         "zh": "df.loc[2024] 会在第一层级（department）中查找 2024，找不到就报 KeyError。要选取内层级的值，应使用 xs(2024, level='year')，或 df.loc[pd.IndexSlice[:, 2024], :]。xs 更简洁直观。",
@@ -353,8 +428,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["不同的使用场景适合不同的数据结构"],
-        "en": ["Different use cases call for different data structures"]
+        "zh": [
+          "不同的使用场景适合不同的数据结构"
+        ],
+        "en": [
+          "Different use cases call for different data structures"
+        ]
       },
       "explanation": {
         "zh": "MultiIndex 适合层级分析（如按地区-城市汇总）和 xs/unstack 操作。但 merge、机器学习库（sklearn）等通常需要扁平结构。实践中根据需要在两者之间灵活切换：groupby 产生 MultiIndex，reset_index 转回扁平。",
@@ -377,10 +456,18 @@
       "starterCode": "# Step 1-5: group, unstack, fill, total, sort\nresult = ___",
       "solutionCode": "result = df.groupby(['region', 'product'])['sales'].sum().unstack('product', fill_value=0)\nresult['total'] = result.sum(axis=1)\nresult = result.sort_values('total', ascending=False)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = 'total' in result.columns and result.index[0] == 'West' and result.iloc[0]['total'] >= result.iloc[1]['total'] and 0 in result.values\nexcept:\n    result_check = False\nresult_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'region': ['East', 'East', 'West', 'West', 'North', 'East', 'West', 'North'], 'product': ['A', 'B', 'A', 'C', 'A', 'A', 'B', 'B'], 'sales': [100, 200, 150, 300, 120, 180, 250, 90]})\", _expected_ns)\nexec(\"result = df.groupby(['region', 'product'])['sales'].sum().unstack('product', fill_value=0)\\nresult['total'] = result.sum(axis=1)\\nresult = result.sort_values('total', ascending=False)\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
-        "zh": ["groupby 后用 unstack('product') 将行转为列", "fill_value=0 或 fillna(0) 处理缺失值", "result.sum(axis=1) 计算每行的合计"],
-        "en": ["After groupby, use unstack('product') to pivot rows to columns", "fill_value=0 or fillna(0) handles missing values", "result.sum(axis=1) computes row totals"]
+        "zh": [
+          "groupby 后用 unstack('product') 将行转为列",
+          "fill_value=0 或 fillna(0) 处理缺失值",
+          "result.sum(axis=1) 计算每行的合计"
+        ],
+        "en": [
+          "After groupby, use unstack('product') to pivot rows to columns",
+          "fill_value=0 or fillna(0) handles missing values",
+          "result.sum(axis=1) computes row totals"
+        ]
       },
       "explanation": {
         "zh": "这个综合练习展示了 MultiIndex 在报表生成中的典型应用：groupby 创建层级索引 -> unstack 透视 -> 补全缺失值 -> 计算汇总 -> 排序。最终得到一个整洁的交叉表格式销售报告。",

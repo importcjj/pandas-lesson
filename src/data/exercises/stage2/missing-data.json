@@ -2,7 +2,14 @@
   "module": "missing-data",
   "stageId": "stage2",
   "lessonId": "missing-data",
-  "tags": ["isna", "isnull", "fillna", "dropna", "missing-data", "ffill"],
+  "tags": [
+    "isna",
+    "isnull",
+    "fillna",
+    "dropna",
+    "missing-data",
+    "ffill"
+  ],
   "exercises": [
     {
       "id": "s2-missing-001",
@@ -32,8 +39,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["pandas 中 isna() 和 isnull() 是等价的"],
-        "en": ["In pandas, isna() and isnull() are equivalent"]
+        "zh": [
+          "pandas 中 isna() 和 isnull() 是等价的"
+        ],
+        "en": [
+          "In pandas, isna() and isnull() are equivalent"
+        ]
       },
       "explanation": {
         "zh": "df.isna() 返回一个同形状的布尔 DataFrame，缺失值位置为 True。isna() 和 isnull() 功能完全相同。",
@@ -94,7 +105,9 @@
         {
           "placeholder": "___2___",
           "answer": "0",
-          "alternatives": ["0.0"]
+          "alternatives": [
+            "0.0"
+          ]
         }
       ],
       "hints": {
@@ -158,8 +171,12 @@
       },
       "correctAnswer": true,
       "hints": {
-        "zh": ["ffill 是 forward fill 的缩写，表示用前面的值向前填充"],
-        "en": ["ffill stands for forward fill, meaning it fills with the preceding value"]
+        "zh": [
+          "ffill 是 forward fill 的缩写，表示用前面的值向前填充"
+        ],
+        "en": [
+          "ffill stands for forward fill, meaning it fills with the preceding value"
+        ]
       },
       "explanation": {
         "zh": "df.ffill() 执行前向填充，即用每个 NaN 前面最近的非缺失值来替换它。这在时间序列数据中非常常用。",
@@ -180,8 +197,12 @@
       },
       "correctAnswer": true,
       "hints": {
-        "zh": ["查看 pandas 源码可以发现 isnull 就是 isna 的别名"],
-        "en": ["Looking at pandas source code reveals that isnull is just an alias for isna"]
+        "zh": [
+          "查看 pandas 源码可以发现 isnull 就是 isna 的别名"
+        ],
+        "en": [
+          "Looking at pandas source code reveals that isnull is just an alias for isna"
+        ]
       },
       "explanation": {
         "zh": "isna() 和 isnull() 完全等价，isnull 是 isna 的别名。同理，notna() 和 notnull() 也完全等价。推荐统一使用 isna()/notna()，因为它们与 pd.NA 的命名更一致。",
@@ -300,7 +321,7 @@
       "starterCode": "# Keep rows with at least 3 non-NaN values and print\n",
       "solutionCode": "print(df.dropna(thresh=3))",
       "validationType": "exact-output",
-      "expectedOutput": "     A    B  C     D\n0  1.0  NaN  7  10.0\n2  3.0  6.0  9  12.0",
+      "expectedOutput": "A    B    C     D\n0  1.0  NaN  7.0  10.0\n2  3.0  6.0  9.0  12.0",
       "hints": {
         "zh": [
           "thresh 表示保留一行所需的最少非缺失值数量",

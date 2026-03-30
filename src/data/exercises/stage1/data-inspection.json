@@ -2,7 +2,15 @@
   "module": "data-inspection",
   "stageId": "stage1",
   "lessonId": "data-inspection",
-  "tags": ["dataframe", "inspection", "head", "tail", "info", "describe", "shape"],
+  "tags": [
+    "dataframe",
+    "inspection",
+    "head",
+    "tail",
+    "info",
+    "describe",
+    "shape"
+  ],
   "exercises": [
     {
       "id": "s1-inspect-001",
@@ -17,13 +25,27 @@
         "en": "How many rows does df.head() return by default when called without arguments?"
       },
       "options": {
-        "zh": ["5 行", "3 行", "10 行", "全部行"],
-        "en": ["5 rows", "3 rows", "10 rows", "All rows"]
+        "zh": [
+          "5 行",
+          "3 行",
+          "10 行",
+          "全部行"
+        ],
+        "en": [
+          "5 rows",
+          "3 rows",
+          "10 rows",
+          "All rows"
+        ]
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["head() 和 tail() 有相同的默认参数"],
-        "en": ["head() and tail() share the same default parameter"]
+        "zh": [
+          "head() 和 tail() 有相同的默认参数"
+        ],
+        "en": [
+          "head() and tail() share the same default parameter"
+        ]
       },
       "explanation": {
         "zh": "df.head() 默认返回前 5 行数据。可以传入参数指定行数，如 df.head(10)。",
@@ -72,8 +94,12 @@
       },
       "correctAnswer": true,
       "hints": {
-        "zh": ["info() 是查看 DataFrame 元数据的常用方法"],
-        "en": ["info() is a common method for viewing DataFrame metadata"]
+        "zh": [
+          "info() 是查看 DataFrame 元数据的常用方法"
+        ],
+        "en": [
+          "info() is a common method for viewing DataFrame metadata"
+        ]
       },
       "explanation": {
         "zh": "df.info() 会输出每列的名称、非空值数量、数据类型，以及内存使用情况。",
@@ -129,13 +155,27 @@
       },
       "code": "import pandas as pd\n\ndf = pd.DataFrame({'a': [1, 2, 3], 'b': [4, 5, 6], 'c': [7, 8, 9]})\nprint(df.shape)",
       "options": {
-        "zh": ["(3, 3)", "(3, 2)", "(9,)", "(2, 3)"],
-        "en": ["(3, 3)", "(3, 2)", "(9,)", "(2, 3)"]
+        "zh": [
+          "(3, 3)",
+          "(3, 2)",
+          "(9,)",
+          "(2, 3)"
+        ],
+        "en": [
+          "(3, 3)",
+          "(3, 2)",
+          "(9,)",
+          "(2, 3)"
+        ]
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["shape 返回 (行数, 列数) 的元组"],
-        "en": ["shape returns a tuple of (rows, columns)"]
+        "zh": [
+          "shape 返回 (行数, 列数) 的元组"
+        ],
+        "en": [
+          "shape returns a tuple of (rows, columns)"
+        ]
       },
       "explanation": {
         "zh": "df.shape 返回一个元组 (行数, 列数)。该 DataFrame 有 3 行 3 列，所以结果是 (3, 3)。",
@@ -242,7 +282,7 @@
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'id': range(1, 11),\n    'value': [23, 45, 12, 67, 89, 34, 56, 78, 90, 11]\n})\n\nprint(df.sample(n=3, random_state=42))",
       "setupCode": "",
       "validationType": "custom-check",
-      "checkCode": "try:\n    lines = [l for l in _output.strip().split('\\n') if l.strip() and not l.strip().startswith('id')]\n    result = len(lines) == 3 or (len(lines) == 4 and 'id' in lines[0])\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\n\\ndf = pd.DataFrame({\\n    'id': range(1, 11),\\n    'value': [23, 45, 12, 67, 89, 34, 56, 78, 90, 11]\\n})\\n\\nprint(df.sample(n=3, random_state=42))\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "sample() 的 n 参数指定抽取的行数",
@@ -340,8 +380,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["想想哪个组合能最全面地了解数据的结构、类型和分布"],
-        "en": ["Think about which combination provides the most comprehensive view of data structure, types, and distribution"]
+        "zh": [
+          "想想哪个组合能最全面地了解数据的结构、类型和分布"
+        ],
+        "en": [
+          "Think about which combination provides the most comprehensive view of data structure, types, and distribution"
+        ]
       },
       "explanation": {
         "zh": "head() 让你看到数据的实际样貌，info() 显示数据类型和缺失值信息，describe() 提供数值统计摘要。这三个方法组合是 EDA 的经典起手式。",

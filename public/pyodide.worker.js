@@ -15,7 +15,7 @@ async function initPyodide() {
   });
 
   self.postMessage({ type: "status", message: "Loading pandas..." });
-  await pyodide.loadPackage("pandas");
+  await pyodide.loadPackage(["pandas", "scipy"]);
 
   isReady = true;
   self.postMessage({ type: "ready" });
@@ -54,24 +54,11 @@ sys.stdout = __stdout_capture
       const expected = (expectedOutput || "").trim();
       const actual = (output || "").trim();
       correct = actual === expected;
-    } else if (validationType === "dataframe-equals") {
-      // Run solution code in a separate namespace and compare
+    } else if (validationType === "dataframe-equals" || validationType === "custom-check") {
       try {
-        correct = pyodide.runPython(`
-try:
-    ${checkCode || "result = False"}
-    result
-except:
-    False
-`);
-      } catch {
-        correct = false;
-      }
-    } else if (validationType === "custom-check") {
-      try {
-        const _output = output;
-        pyodide.globals.set("_output", _output);
-        correct = pyodide.runPython(checkCode || "False");
+        pyodide.globals.set("_output", output || "");
+        pyodide.runPython(checkCode || "result = False");
+        correct = pyodide.globals.get("result");
       } catch {
         correct = false;
       }

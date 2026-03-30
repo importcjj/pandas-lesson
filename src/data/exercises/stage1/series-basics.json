@@ -2,7 +2,12 @@
   "module": "series-basics",
   "stageId": "stage1",
   "lessonId": "series-basics",
-  "tags": ["Series", "creation", "indexing", "operations"],
+  "tags": [
+    "Series",
+    "creation",
+    "indexing",
+    "operations"
+  ],
   "exercises": [
     {
       "id": "s1-series-001",
@@ -71,8 +76,18 @@
         "en": "Given s = pd.Series([10, 20, 30], index=['a', 'b', 'c']), what is the value of s['b']?"
       },
       "options": {
-        "zh": ["20", "10", "30", "报错"],
-        "en": ["20", "10", "30", "Error"]
+        "zh": [
+          "20",
+          "10",
+          "30",
+          "报错"
+        ],
+        "en": [
+          "20",
+          "10",
+          "30",
+          "Error"
+        ]
       },
       "correctIndex": 0,
       "explanation": {
@@ -209,7 +224,7 @@
       "solutionCode": "import pandas as pd\n\ns = pd.Series([100, 200, 300], name='prices')\nprint(s)",
       "setupCode": "",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\ntry:\n    result = s.name == 'prices' and list(s) == [100, 200, 300]\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\n\\ns = pd.Series([100, 200, 300], name='prices')\\nprint(s)\", _expected_ns)\ntry:\n    result = _expected_ns.get('s') is not None and hasattr(_expected_ns['s'], 'equals') and _expected_ns['s'].equals(s)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "pd.Series() 有一个 name 参数",
@@ -250,8 +265,14 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["Series 运算会按索引标签自动对齐", "没有匹配到的索引会产生 NaN"],
-        "en": ["Series operations automatically align by index labels", "Unmatched indices produce NaN"]
+        "zh": [
+          "Series 运算会按索引标签自动对齐",
+          "没有匹配到的索引会产生 NaN"
+        ],
+        "en": [
+          "Series operations automatically align by index labels",
+          "Unmatched indices produce NaN"
+        ]
       },
       "explanation": {
         "zh": "pandas 的 Series 运算按索引标签对齐。a 和 d 只在一个 Series 中存在，因此结果为 NaN。b=2+10=12, c=3+20=23。存在 NaN 时，dtype 变为 float64。",
@@ -374,8 +395,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["考虑当 Series 的索引本身就是整数时，s[0] 可能产生歧义"],
-        "en": ["Consider that s[0] can be ambiguous when the Series has an integer index"]
+        "zh": [
+          "考虑当 Series 的索引本身就是整数时，s[0] 可能产生歧义"
+        ],
+        "en": [
+          "Consider that s[0] can be ambiguous when the Series has an integer index"
+        ]
       },
       "explanation": {
         "zh": "s.iloc[0] 是最佳实践，因为它明确表示「按位置取第一个元素」。s[0] 在整数索引时可能与 loc 行为混淆，s.values[0] 会创建不必要的 NumPy 数组副本。",

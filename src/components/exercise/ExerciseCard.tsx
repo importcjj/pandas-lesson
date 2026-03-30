@@ -1,10 +1,18 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslation } from "@/lib/i18n/context";
 import { Exercise, Locale } from "@/types";
 import { saveAttempt, getReviewCard, saveReviewCard } from "@/lib/storage/db";
 import { createReviewCard } from "@/lib/spaced-repetition/sm2";
+import {
+  getExerciseHash,
+  saveExerciseState,
+  loadExerciseState,
+  clearExerciseState,
+  SavedExerciseState,
+} from "@/lib/storage/exercise-state";
+import MarkdownText from "@/components/ui/MarkdownText";
 import MultipleChoice from "./MultipleChoice";
 import TrueFalse from "./TrueFalse";
 import FillInBlank from "./FillInBlank";
@@ -47,20 +55,38 @@ export default function ExerciseCard({
   onExerciseComplete,
 }: ExerciseCardProps) {
   const { locale } = useTranslation();
+  const exerciseHash = getExerciseHash(exercise);
+
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [savedState, setSavedState] = useState<SavedExerciseState | null>(null);
   const [showHints, setShowHints] = useState(0);
+  const [resetCount, setResetCount] = useState(0);
+  const [hydrated, setHydrated] = useState(false);
   const startTimeRef = useRef(Date.now());
+
+  // Read localStorage after hydration to avoid SSR mismatch
+  useEffect(() => {
+    const saved = loadExerciseState(exerciseHash);
+    if (saved !== null) {
+      setIsCorrect(saved.isCorrect);
+      setSavedState(saved);
+      if (saved.isCorrect) {
+        onExerciseComplete?.(exercise.id, true);
+      }
+    }
+    setHydrated(true);
+  }, [exerciseHash, exercise.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const hints = exercise.hints?.[locale as Locale] ?? [];
   const maxHints = hints.length;
 
   const handleResult = useCallback(
-    async (correct: boolean) => {
+    async (correct: boolean, userAnswer?: unknown) => {
       setIsCorrect(correct);
+      saveExerciseState(exerciseHash, correct, userAnswer);
 
       const timeSpent = Math.round((Date.now() - startTimeRef.current) / 1000);
 
-      // Save attempt to IndexedDB
       try {
         await saveAttempt({
           exerciseId: exercise.id,
@@ -71,7 +97,6 @@ export default function ExerciseCard({
           hintsUsed: showHints,
         });
 
-        // If wrong, create/update review card
         if (!correct) {
           const existing = await getReviewCard(exercise.id);
           if (existing) {
@@ -81,7 +106,7 @@ export default function ExerciseCard({
               lastWrongAnswer: "",
               repetitions: 0,
               interval: 1,
-              nextReviewDate: Date.now(), // immediately available for review
+              nextReviewDate: Date.now(),
             });
           } else {
             const card = createReviewCard(exercise.id, "");
@@ -89,12 +114,12 @@ export default function ExerciseCard({
           }
         }
       } catch {
-        // IndexedDB may not be available (e.g. private browsing)
+        // IndexedDB may not be available
       }
 
       onExerciseComplete?.(exercise.id, correct);
     },
-    [exercise.id, showHints, onExerciseComplete]
+    [exercise.id, exerciseHash, showHints, onExerciseComplete]
   );
 
   function handleShowHint() {
@@ -106,11 +131,15 @@ export default function ExerciseCard({
   function handleReset() {
     setIsCorrect(null);
     setShowHints(0);
+    setSavedState(null);
+    setResetCount((c) => c + 1);
     startTimeRef.current = Date.now();
+    clearExerciseState(exerciseHash);
   }
 
   return (
     <div
+      id={`exercise-${exercise.id}`}
       className={`rounded-xl border-2 bg-white p-6 transition-colors ${
         isCorrect === true
           ? "border-green-300 bg-green-50/30"
@@ -143,27 +172,33 @@ export default function ExerciseCard({
         </div>
       </div>
 
-      {/* Description */}
-      <p className="mb-4 text-gray-700">
-        {exercise.description[locale as Locale]}
-      </p>
+      {/* Description - now with markdown rendering */}
+      <div className="mb-4 text-gray-700">
+        <MarkdownText>{exercise.description[locale as Locale]}</MarkdownText>
+      </div>
 
-      {/* Exercise component */}
+      {/* Exercise component - wait for hydration, key forces remount on reset */}
       <div className="mb-4">
-        {exercise.type === "multiple-choice" && (
-          <MultipleChoice exercise={exercise} onResult={handleResult} />
-        )}
-        {exercise.type === "true-false" && (
-          <TrueFalse exercise={exercise} onResult={handleResult} />
-        )}
-        {exercise.type === "fill-blank" && (
-          <FillInBlank exercise={exercise} onResult={handleResult} />
-        )}
-        {exercise.type === "coding" && (
-          <CodingExercise exercise={exercise} onResult={handleResult} />
-        )}
-        {exercise.type === "output-matching" && (
-          <OutputMatching exercise={exercise} onResult={handleResult} />
+        {!hydrated ? (
+          <div className="h-20 animate-pulse rounded-lg bg-gray-100" />
+        ) : (
+          <>
+            {exercise.type === "multiple-choice" && (
+              <MultipleChoice key={resetCount} exercise={exercise} onResult={handleResult} savedAnswer={resetCount === 0 ? savedState?.userAnswer as number | undefined : undefined} />
+            )}
+            {exercise.type === "true-false" && (
+              <TrueFalse key={resetCount} exercise={exercise} onResult={handleResult} savedAnswer={resetCount === 0 ? savedState?.userAnswer as boolean | undefined : undefined} />
+            )}
+            {exercise.type === "fill-blank" && (
+              <FillInBlank key={resetCount} exercise={exercise} onResult={handleResult} savedAnswers={resetCount === 0 ? savedState?.userAnswer as string[] | undefined : undefined} />
+            )}
+            {exercise.type === "coding" && (
+              <CodingExercise key={resetCount} exercise={exercise} onResult={handleResult} savedCode={resetCount === 0 ? savedState?.userAnswer as string | undefined : undefined} />
+            )}
+            {exercise.type === "output-matching" && (
+              <OutputMatching key={resetCount} exercise={exercise} onResult={handleResult} savedAnswer={resetCount === 0 ? savedState?.userAnswer as number | undefined : undefined} />
+            )}
+          </>
         )}
       </div>
 
@@ -234,7 +269,9 @@ export default function ExerciseCard({
             <span className="font-medium">
               {locale === "zh" ? "解析：" : "Explanation: "}
             </span>
-            {exercise.explanation[locale as Locale]}
+            <MarkdownText className="inline">
+              {exercise.explanation[locale as Locale]}
+            </MarkdownText>
           </div>
         )}
     </div>

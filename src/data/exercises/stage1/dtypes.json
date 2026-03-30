@@ -2,7 +2,14 @@
   "module": "dtypes",
   "stageId": "stage1",
   "lessonId": "dtypes",
-  "tags": ["dataframe", "dtypes", "int64", "float64", "object", "select_dtypes"],
+  "tags": [
+    "dataframe",
+    "dtypes",
+    "int64",
+    "float64",
+    "object",
+    "select_dtypes"
+  ],
   "exercises": [
     {
       "id": "s1-dtypes-001",
@@ -20,7 +27,7 @@
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'age': [25, 30], 'score': [88.5, 92.0]})\n\nprint(df.dtypes)",
       "setupCode": "",
       "validationType": "exact-output",
-      "expectedOutput": "name      object\nage        int64\nscore    float64\ndtype: object",
+      "expectedOutput": "name         str\nage        int64\nscore    float64\ndtype: object",
       "hints": {
         "zh": [
           "使用 DataFrame 的 dtypes 属性",
@@ -46,13 +53,27 @@
       },
       "code": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'age': [25, 30]})\nprint(df['age'].dtype)",
       "options": {
-        "zh": ["int64", "float64", "object", "int32"],
-        "en": ["int64", "float64", "object", "int32"]
+        "zh": [
+          "int64",
+          "float64",
+          "object",
+          "int32"
+        ],
+        "en": [
+          "int64",
+          "float64",
+          "object",
+          "int32"
+        ]
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["Python 整数列表在 pandas 中默认会被推断为 int64 类型"],
-        "en": ["A Python list of integers is inferred as int64 by default in pandas"]
+        "zh": [
+          "Python 整数列表在 pandas 中默认会被推断为 int64 类型"
+        ],
+        "en": [
+          "A Python list of integers is inferred as int64 by default in pandas"
+        ]
       },
       "explanation": {
         "zh": "整数数据在 pandas 中默认存储为 int64 类型。可以使用 .dtype 属性查看单列的数据类型。",
@@ -72,13 +93,27 @@
         "en": "In pandas, what is the default dtype for string data?"
       },
       "options": {
-        "zh": ["object", "string", "str", "text"],
-        "en": ["object", "string", "str", "text"]
+        "zh": [
+          "object",
+          "string",
+          "str",
+          "text"
+        ],
+        "en": [
+          "object",
+          "string",
+          "str",
+          "text"
+        ]
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["pandas 中字符串的默认类型不是 'string'，而是一个更通用的类型"],
-        "en": ["The default type for strings in pandas is not 'string', but a more general type"]
+        "zh": [
+          "pandas 中字符串的默认类型不是 'string'，而是一个更通用的类型"
+        ],
+        "en": [
+          "The default type for strings in pandas is not 'string', but a more general type"
+        ]
       },
       "explanation": {
         "zh": "在 pandas 中，字符串默认以 object 类型存储。虽然 pandas 1.0+ 引入了专门的 StringDtype，但默认仍然是 object。",
@@ -141,8 +176,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["想想哪些是 Python/NumPy 的数据类型"],
-        "en": ["Think about which ones are Python/NumPy data types"]
+        "zh": [
+          "想想哪些是 Python/NumPy 的数据类型"
+        ],
+        "en": [
+          "Think about which ones are Python/NumPy data types"
+        ]
       },
       "explanation": {
         "zh": "pandas 支持的常见 dtype 包括：int64、float64、bool、object、datetime64、timedelta64、category。varchar 是 SQL 数据库的数据类型，在 pandas 中不存在。",
@@ -177,8 +216,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["注意大写的 Int64 和小写的 int64 是不同的类型"],
-        "en": ["Note that uppercase Int64 and lowercase int64 are different types"]
+        "zh": [
+          "注意大写的 Int64 和小写的 int64 是不同的类型"
+        ],
+        "en": [
+          "Note that uppercase Int64 and lowercase int64 are different types"
+        ]
       },
       "explanation": {
         "zh": "大写的 Int64 是 pandas 的可空整数类型，可以包含缺失值（显示为 <NA>）。小写的 int64 是 NumPy 类型，不能直接包含缺失值（会自动转为 float64）。",
@@ -257,8 +300,12 @@
       },
       "correctAnswer": true,
       "hints": {
-        "zh": ["想想 object 类型存储每个字符串的方式"],
-        "en": ["Think about how object type stores each string"]
+        "zh": [
+          "想想 object 类型存储每个字符串的方式"
+        ],
+        "en": [
+          "Think about how object type stores each string"
+        ]
       },
       "explanation": {
         "zh": "object 类型为每个字符串存储独立的 Python 对象，而 category 类型使用整数编码来引用唯一值表。对于重复值较多的列，转换为 category 可以大幅减少内存使用。",

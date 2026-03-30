@@ -102,7 +102,54 @@ export default function LessonContent({ stageId, lessonId }: Props) {
     exercises.length > 0 ? completedSet.size / exercises.length : 0;
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="relative mx-auto max-w-3xl">
+      {/* Right-side fixed exercise nav */}
+      {exercises.length > 0 && (
+        <div className="hidden xl:block fixed right-4 top-20 z-20 w-48">
+          <div className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
+            <div className="mb-2 flex items-center justify-between text-xs text-gray-500">
+              <span className="font-medium">{locale === "zh" ? "题目导航" : "Exercises"}</span>
+              <span>{completedSet.size}/{exercises.length}</span>
+            </div>
+            <div className="mb-3 h-1.5 overflow-hidden rounded-full bg-gray-200">
+              <div
+                className="h-full rounded-full bg-indigo-500 transition-all duration-500"
+                style={{ width: `${completionRate * 100}%` }}
+              />
+            </div>
+            <div className="max-h-[calc(100vh-10rem)] space-y-1 overflow-y-auto">
+              {exercises.map((ex, i) => {
+                const done = completedSet.has(ex.id);
+                return (
+                  <button
+                    key={ex.id}
+                    onClick={() => {
+                      const el = document.getElementById(`exercise-${ex.id}`);
+                      if (el) {
+                        const top = el.getBoundingClientRect().top + window.scrollY - 80;
+                        window.scrollTo({ top, behavior: "smooth" });
+                      }
+                    }}
+                    className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-xs transition-colors ${
+                      done
+                        ? "text-green-700 hover:bg-green-50"
+                        : "text-gray-600 hover:bg-gray-50"
+                    }`}
+                  >
+                    <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
+                      done ? "bg-green-500 text-white" : "bg-gray-200 text-gray-500"
+                    }`}>
+                      {done ? "✓" : i + 1}
+                    </span>
+                    <span className="truncate" title={ex.title[locale as Locale]}>{ex.title[locale as Locale]}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Breadcrumb */}
       <nav className="mb-6 text-sm text-gray-500">
         <Link href={`/${locale}`} className="hover:text-gray-700">

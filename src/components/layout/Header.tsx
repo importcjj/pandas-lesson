@@ -70,6 +70,18 @@ export default function Header({
             {t("common.home")}
           </Link>
           <Link
+            href={`/${locale}/daily`}
+            className="text-sm font-medium text-gray-600 hover:text-gray-900"
+          >
+            {t("common.daily")}
+          </Link>
+          <Link
+            href={`/${locale}/reference`}
+            className="text-sm font-medium text-gray-600 hover:text-gray-900"
+          >
+            {t("common.reference")}
+          </Link>
+          <Link
             href={`/${locale}/exercises`}
             className="text-sm font-medium text-gray-600 hover:text-gray-900"
           >
