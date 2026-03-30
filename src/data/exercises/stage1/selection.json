@@ -2,7 +2,14 @@
   "module": "selection",
   "stageId": "stage1",
   "lessonId": "selection",
-  "tags": ["dataframe", "selection", "column", "row", "slicing", "condition"],
+  "tags": [
+    "dataframe",
+    "selection",
+    "column",
+    "row",
+    "slicing",
+    "condition"
+  ],
   "exercises": [
     {
       "id": "s1-select-001",
@@ -21,7 +28,9 @@
         {
           "placeholder": "___",
           "answer": "'name'",
-          "alternatives": ["\"name\""]
+          "alternatives": [
+            "\"name\""
+          ]
         }
       ],
       "hints": {
@@ -51,9 +60,9 @@
         "zh": "从 DataFrame 中选择 'name' 和 'city' 两列，并打印结果。",
         "en": "Select the 'name' and 'city' columns from the DataFrame and print the result."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})\n\n# Select 'name' and 'city' columns and print\n",
+      "starterCode": "# Select 'name' and 'city' columns and print",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})\n\nprint(df[['name', 'city']])",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})",
       "validationType": "exact-output",
       "expectedOutput": "      name       city\n0    Alice    Beijing\n1      Bob   Shanghai\n2  Charlie  Guangzhou",
       "hints": {
@@ -96,8 +105,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["DataFrame 的行切片与 Python 列表切片规则相同，左闭右开"],
-        "en": ["DataFrame row slicing follows the same rules as Python list slicing: start inclusive, end exclusive"]
+        "zh": [
+          "DataFrame 的行切片与 Python 列表切片规则相同，左闭右开"
+        ],
+        "en": [
+          "DataFrame row slicing follows the same rules as Python list slicing: start inclusive, end exclusive"
+        ]
       },
       "explanation": {
         "zh": "df[1:3] 返回索引 1 和 2 的行（左闭右开），即第 2 行和第 3 行。",
@@ -118,8 +131,12 @@
       },
       "correctAnswer": true,
       "hints": {
-        "zh": ["pandas 底层使用 NumPy 存储数据"],
-        "en": ["pandas uses NumPy internally to store data"]
+        "zh": [
+          "pandas 底层使用 NumPy 存储数据"
+        ],
+        "en": [
+          "pandas uses NumPy internally to store data"
+        ]
       },
       "explanation": {
         "zh": ".values 属性将 Series 或 DataFrame 的数据以 NumPy ndarray 的形式返回。",
@@ -138,9 +155,9 @@
         "zh": "从 DataFrame 中选择 age 大于 28 的所有行，并打印结果。",
         "en": "Select all rows from the DataFrame where age is greater than 28 and print the result."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'age': [25, 30, 35, 22]\n})\n\n# Select rows where age > 28 and print\n",
+      "starterCode": "# Select rows where age > 28 and print",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'age': [25, 30, 35, 22]\n})\n\nprint(df[df['age'] > 28])",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'age': [25, 30, 35, 22]\n})",
       "validationType": "exact-output",
       "expectedOutput": "      name  age\n1      Bob   30\n2  Charlie   35",
       "hints": {
@@ -182,8 +199,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["单个列名用字符串，返回 Series；列名列表返回 DataFrame"],
-        "en": ["A single column name string returns Series; a list of column names returns DataFrame"]
+        "zh": [
+          "单个列名用字符串，返回 Series；列名列表返回 DataFrame"
+        ],
+        "en": [
+          "A single column name string returns Series; a list of column names returns DataFrame"
+        ]
       },
       "explanation": {
         "zh": "df['name'] 传入字符串返回 Series，df[['name']] 传入列表返回 DataFrame（即使只有一列）。这是一个重要的区别。",
@@ -202,9 +223,9 @@
         "zh": "使用 df.filter() 的 like 参数选择列名中包含 'score' 的所有列，打印结果。",
         "en": "Use the like parameter of df.filter() to select all columns containing 'score' in their name, and print the result."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'math_score': [90, 85, 78],\n    'english_score': [88, 92, 80],\n    'age': [25, 30, 35]\n})\n\n# Use filter(like=...) to select columns containing 'score'\n",
+      "starterCode": "# Use filter(like=...) to select columns containing 'score'",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'math_score': [90, 85, 78],\n    'english_score': [88, 92, 80],\n    'age': [25, 30, 35]\n})\n\nprint(df.filter(like='score'))",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'math_score': [90, 85, 78],\n    'english_score': [88, 92, 80],\n    'age': [25, 30, 35]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'math_score' in _output and 'english_score' in _output and 'age' not in _output and 'name' not in _output\nexcept:\n    result = False\nresult",
       "hints": {
@@ -230,9 +251,9 @@
         "zh": "使用 df.query() 方法筛选 age > 25 且 score > 80 的行，打印结果。",
         "en": "Use the df.query() method to filter rows where age > 25 and score > 80, and print the result."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'age': [25, 30, 35, 22],\n    'score': [88, 75, 92, 85]\n})\n\n# Use query() to filter age > 25 and score > 80\n",
+      "starterCode": "# Use query() to filter age > 25 and score > 80",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'age': [25, 30, 35, 22],\n    'score': [88, 75, 92, 85]\n})\n\nprint(df.query('age > 25 and score > 80'))",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'age': [25, 30, 35, 22],\n    'score': [88, 75, 92, 85]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'Charlie' in _output and '92' in _output and 'Alice' not in _output\nexcept:\n    result = False\nresult",
       "hints": {
@@ -274,8 +295,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["pandas 中链式索引赋值会产生 SettingWithCopyWarning"],
-        "en": ["Chained indexing assignment in pandas triggers SettingWithCopyWarning"]
+        "zh": [
+          "pandas 中链式索引赋值会产生 SettingWithCopyWarning"
+        ],
+        "en": [
+          "Chained indexing assignment in pandas triggers SettingWithCopyWarning"
+        ]
       },
       "explanation": {
         "zh": "df[df['age'] > 25]['score'] = 100 是链式索引赋值，中间结果可能是副本而非视图，赋值不会生效。正确写法是 df.loc[df['age'] > 25, 'score'] = 100。",
@@ -324,9 +349,9 @@
         "zh": "以下代码尝试选择两列，但写法有误导致报错。修复代码使其正确选择 'name' 和 'age' 两列。",
         "en": "The following code tries to select two columns but has incorrect syntax causing an error. Fix it to correctly select the 'name' and 'age' columns."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})\n\n# Bug: incorrect syntax for selecting multiple columns\nresult = df['name', 'age']\nprint(result)",
+      "starterCode": "# Bug: incorrect syntax for selecting multiple columns\nresult = df['name', 'age']\nprint(result)",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})\n\nresult = df[['name', 'age']]\nprint(result)",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\ntry:\n    result = 'Alice' in _output and '25' in _output and 'Guangzhou' not in _output\nexcept:\n    result = False\nresult",
       "hints": {
@@ -370,8 +395,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["比较三种方式的代码长度和可读性"],
-        "en": ["Compare the code length and readability of the three approaches"]
+        "zh": [
+          "比较三种方式的代码长度和可读性"
+        ],
+        "en": [
+          "Compare the code length and readability of the three approaches"
+        ]
       },
       "explanation": {
         "zh": "对于多条件筛选，query() 的字符串表达式最简洁、可读性最好，尤其是条件多的时候。布尔索引和 loc 在简单条件下也很好用，但条件复杂时括号过多降低可读性。",
@@ -390,9 +419,9 @@
         "zh": "完成以下任务：\n1. 筛选出 department 为 'IT' 或 'Finance' 的员工\n2. 在筛选结果中，只选择 salary > 55000 的行\n3. 只保留 'name' 和 'salary' 两列\n4. 打印最终结果",
         "en": "Complete the following tasks:\n1. Filter employees in 'IT' or 'Finance' departments\n2. From the filtered result, select only rows where salary > 55000\n3. Keep only the 'name' and 'salary' columns\n4. Print the final result"
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'],\n    'department': ['IT', 'HR', 'Finance', 'IT', 'Finance', 'HR'],\n    'salary': [60000, 50000, 58000, 52000, 62000, 48000]\n})\n\n# Step 1-4: Filter, condition, select columns, and print\n",
+      "starterCode": "# Step 1-4: Filter, condition, select columns, and print",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'],\n    'department': ['IT', 'HR', 'Finance', 'IT', 'Finance', 'HR'],\n    'salary': [60000, 50000, 58000, 52000, 62000, 48000]\n})\n\nresult = df.loc[(df['department'].isin(['IT', 'Finance'])) & (df['salary'] > 55000), ['name', 'salary']]\nprint(result)",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'],\n    'department': ['IT', 'HR', 'Finance', 'IT', 'Finance', 'HR'],\n    'salary': [60000, 50000, 58000, 52000, 62000, 48000]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'Alice' in _output and '60000' in _output and 'Eve' in _output and 'Bob' not in _output and 'Diana' not in _output\nexcept:\n    result = False\nresult",
       "hints": {

@@ -165,7 +165,7 @@
         "zh": "给定 Series s = pd.Series([15, 22, 8, 35, 12, 28])，筛选出所有大于 20 的值并打印。",
         "en": "Given Series s = pd.Series([15, 22, 8, 35, 12, 28]), filter and print all values greater than 20."
       },
-      "starterCode": "import pandas as pd\n\ns = pd.Series([15, 22, 8, 35, 12, 28])\n\n# Filter values greater than 20\n",
+      "starterCode": "# Filter values greater than 20",
       "solutionCode": "import pandas as pd\n\ns = pd.Series([15, 22, 8, 35, 12, 28])\nprint(s[s > 20])",
       "validationType": "exact-output",
       "expectedOutput": "1    22\n3    35\n5    28\ndtype: int64",
@@ -178,7 +178,8 @@
           "Use comparison operator to create boolean Series: s > 20",
           "Pass the boolean Series as index: s[s > 20]"
         ]
-      }
+      },
+      "setupCode": "import pandas as pd\ns = pd.Series([15, 22, 8, 35, 12, 28])"
     },
     {
       "id": "s1-series-007",
@@ -291,9 +292,9 @@
         "zh": "给定一个 Series，使用 value_counts() 并设置 normalize=True 来查看各值的占比，按索引排序后打印。",
         "en": "Given a Series, use value_counts() with normalize=True to see the proportion of each value, sort by index and print."
       },
-      "starterCode": "import pandas as pd\n\ns = pd.Series(['A', 'B', 'A', 'C', 'B', 'A', 'B', 'C', 'A', 'A'])\n\n# Use value_counts with normalize=True, then sort by index\n",
+      "starterCode": "# Use value_counts with normalize=True, then sort by index",
       "solutionCode": "import pandas as pd\n\ns = pd.Series(['A', 'B', 'A', 'C', 'B', 'A', 'B', 'C', 'A', 'A'])\n\nprint(s.value_counts(normalize=True).sort_index())",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ns = pd.Series(['A', 'B', 'A', 'C', 'B', 'A', 'B', 'C', 'A', 'A'])",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = '0.5' in _output and '0.3' in _output and '0.2' in _output\nexcept:\n    result = False\nresult",
       "hints": {
@@ -321,9 +322,9 @@
         "zh": "给定一个 Series，先打印不重复的值（unique），再打印不重复值的数量（nunique）。",
         "en": "Given a Series, first print the unique values, then print the count of unique values."
       },
-      "starterCode": "import pandas as pd\n\ns = pd.Series(['cat', 'dog', 'cat', 'bird', 'dog', 'fish'])\n\n# Print unique values\n\n# Print count of unique values\n",
+      "starterCode": "# Print unique values\n\n# Print count of unique values",
       "solutionCode": "import pandas as pd\n\ns = pd.Series(['cat', 'dog', 'cat', 'bird', 'dog', 'fish'])\n\nprint(s.unique())\nprint(s.nunique())",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ns = pd.Series(['cat', 'dog', 'cat', 'bird', 'dog', 'fish'])",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = '4' in _output and 'cat' in _output and 'bird' in _output\nexcept:\n    result = False\nresult",
       "hints": {
@@ -349,9 +350,9 @@
         "zh": "以下代码试图将两个 Series 相加得到 [11, 22, 33]，但结果全是 NaN。找到并修复 bug。",
         "en": "The following code tries to add two Series to get [11, 22, 33], but the result is all NaN. Find and fix the bug."
       },
-      "starterCode": "import pandas as pd\n\ns1 = pd.Series([1, 2, 3], index=['a', 'b', 'c'])\ns2 = pd.Series([10, 20, 30], index=['x', 'y', 'z'])\nresult = s1 + s2\nprint(result)",
+      "starterCode": "s2 = pd.Series([10, 20, 30], index=['x', 'y', 'z'])\nresult = s1 + s2\nprint(result)",
       "solutionCode": "import pandas as pd\n\ns1 = pd.Series([1, 2, 3], index=['a', 'b', 'c'])\ns2 = pd.Series([10, 20, 30], index=['a', 'b', 'c'])\nresult = s1 + s2\nprint(result)",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ns1 = pd.Series([1, 2, 3], index=['a', 'b', 'c'])",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = '11' in _output and '22' in _output and '33' in _output and 'NaN' not in _output\nexcept:\n    result = False\nresult",
       "hints": {

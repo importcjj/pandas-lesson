@@ -23,9 +23,9 @@
         "zh": "打印 DataFrame 中所有列的数据类型。",
         "en": "Print the data types of all columns in the DataFrame."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'age': [25, 30], 'score': [88.5, 92.0]})\n\n# Print the data types of all columns\n",
+      "starterCode": "# Print the data types of all columns",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'age': [25, 30], 'score': [88.5, 92.0]})\n\nprint(df.dtypes)",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob'], 'age': [25, 30], 'score': [88.5, 92.0]})",
       "validationType": "exact-output",
       "expectedOutput": "name         str\nage        int64\nscore    float64\ndtype: object",
       "hints": {
@@ -132,9 +132,9 @@
         "zh": "使用 select_dtypes 方法仅选择数值类型（number）的列，并打印结果。",
         "en": "Use the select_dtypes method to select only numeric columns and print the result."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'score': [88.5, 92.0, 76.5],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})\n\n# Select only numeric columns and print\n",
+      "starterCode": "# Select only numeric columns and print",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'score': [88.5, 92.0, 76.5],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})\n\nprint(df.select_dtypes(include='number'))",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'score': [88.5, 92.0, 76.5],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou']\n})",
       "validationType": "exact-output",
       "expectedOutput": "   age  score\n0   25   88.5\n1   30   92.0\n2   35   76.5",
       "hints": {
@@ -240,9 +240,9 @@
         "zh": "使用 pd.to_numeric 将包含非数字字符串的 Series 转换为数值类型，设置 errors='coerce' 将无法转换的值变为 NaN，打印结果。",
         "en": "Use pd.to_numeric to convert a Series containing non-numeric strings to numeric type, setting errors='coerce' to convert unconvertible values to NaN. Print the result."
       },
-      "starterCode": "import pandas as pd\n\ns = pd.Series(['1', '2', 'three', '4', 'N/A', '6'])\n\n# Convert to numeric with errors='coerce'\n",
+      "starterCode": "# Convert to numeric with errors='coerce'",
       "solutionCode": "import pandas as pd\n\ns = pd.Series(['1', '2', 'three', '4', 'N/A', '6'])\n\nprint(pd.to_numeric(s, errors='coerce'))",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ns = pd.Series(['1', '2', 'three', '4', 'N/A', '6'])",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'NaN' in _output and '1.0' in _output and '6.0' in _output\nexcept:\n    result = False\nresult",
       "hints": {
@@ -270,9 +270,9 @@
         "zh": "将 DataFrame 的 'age' 列从 float64 转换为 int64，'score' 列从 int64 转换为 float64，打印转换后的 dtypes。",
         "en": "Convert the 'age' column from float64 to int64, and the 'score' column from int64 to float64. Print the dtypes after conversion."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25.0, 30.0, 35.0],\n    'score': [88, 92, 76]\n})\n\n# Convert age to int64 and score to float64\n\n# Print dtypes\n",
+      "starterCode": "# Convert age to int64 and score to float64\n\n# Print dtypes",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25.0, 30.0, 35.0],\n    'score': [88, 92, 76]\n})\n\ndf['age'] = df['age'].astype('int64')\ndf['score'] = df['score'].astype('float64')\nprint(df.dtypes)",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25.0, 30.0, 35.0],\n    'score': [88, 92, 76]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'int64' in _output and 'float64' in _output\nexcept:\n    result = False\nresult",
       "hints": {
@@ -324,9 +324,9 @@
         "zh": "使用 convert_dtypes() 方法自动将 DataFrame 的列转换为最佳类型，打印转换前后的 dtypes 进行对比。",
         "en": "Use the convert_dtypes() method to automatically convert DataFrame columns to the best types. Print dtypes before and after for comparison."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'active': [True, False, True]\n})\n\n# Print original dtypes\nprint(df.dtypes)\nprint('---')\n\n# Convert to best types and print new dtypes\n",
+      "starterCode": "# Print original dtypes\nprint(df.dtypes)\nprint('---')\n\n# Convert to best types and print new dtypes",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'active': [True, False, True]\n})\n\nprint(df.dtypes)\nprint('---')\ndf2 = df.convert_dtypes()\nprint(df2.dtypes)",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'active': [True, False, True]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'object' in _output and ('string' in _output.lower() or 'String' in _output or 'Int' in _output)\nexcept:\n    result = False\nresult",
       "hints": {
@@ -352,9 +352,9 @@
         "zh": "以下代码中，age 列应该是整数类型，但由于包含 NaN 自动变成了 float64。使用 pandas 的可空整数类型 'Int64' 修复此问题。",
         "en": "In the following code, the age column should be integer type, but NaN auto-converts it to float64. Fix this using pandas nullable integer type 'Int64'."
       },
-      "starterCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, np.nan, 35]\n})\n\n# Bug: age is float64 because of NaN\nprint(df.dtypes)\nprint(df)",
+      "starterCode": "# Bug: age is float64 because of NaN\nprint(df.dtypes)\nprint(df)",
       "solutionCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': pd.array([25, pd.NA, 35], dtype='Int64')\n})\n\nprint(df.dtypes)\nprint(df)",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, np.nan, 35]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'Int64' in _output and 'float' not in _output.lower().replace('float64', '')\nexcept:\n    result = False\nresult",
       "hints": {
@@ -382,9 +382,9 @@
         "zh": "完成以下任务来优化 DataFrame 的内存使用：\n1. 打印优化前的内存使用量（df.memory_usage(deep=True).sum()）\n2. 将 'category' 列转换为 category 类型\n3. 将 'price' 列从 float64 转换为 float32\n4. 打印优化后的内存使用量",
         "en": "Complete the following tasks to optimize DataFrame memory usage:\n1. Print memory usage before optimization (df.memory_usage(deep=True).sum())\n2. Convert the 'category' column to category type\n3. Convert the 'price' column from float64 to float32\n4. Print memory usage after optimization"
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'product': [f'item_{i}' for i in range(1000)],\n    'category': ['electronics', 'clothing', 'food', 'electronics', 'clothing'] * 200,\n    'price': [float(i) * 1.5 for i in range(1000)]\n})\n\n# Step 1: Print memory before optimization\n\n# Step 2: Convert 'category' column to category type\n\n# Step 3: Convert 'price' to float32\n\n# Step 4: Print memory after optimization\n",
+      "starterCode": "# Step 1: Print memory before optimization\n\n# Step 2: Convert 'category' column to category type\n\n# Step 3: Convert 'price' to float32\n\n# Step 4: Print memory after optimization",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'product': [f'item_{i}' for i in range(1000)],\n    'category': ['electronics', 'clothing', 'food', 'electronics', 'clothing'] * 200,\n    'price': [float(i) * 1.5 for i in range(1000)]\n})\n\nprint(df.memory_usage(deep=True).sum())\ndf['category'] = df['category'].astype('category')\ndf['price'] = df['price'].astype('float32')\nprint(df.memory_usage(deep=True).sum())",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'product': [f'item_{i}' for i in range(1000)],\n    'category': ['electronics', 'clothing', 'food', 'electronics', 'clothing'] * 200,\n    'price': [float(i) * 1.5 for i in range(1000)]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    lines = _output.strip().split('\\n')\n    before = int(lines[0])\n    after = int(lines[-1])\n    result = after < before\nexcept:\n    result = False\nresult",
       "hints": {

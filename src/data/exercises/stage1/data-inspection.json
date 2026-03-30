@@ -64,9 +64,9 @@
         "zh": "给定一个 DataFrame，使用 tail() 方法打印最后 3 行数据。",
         "en": "Given a DataFrame, use the tail() method to print the last 3 rows."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({'x': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]})\n\n# Print the last 3 rows\n",
+      "starterCode": "# Print the last 3 rows",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({'x': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]})\n\nprint(df.tail(3))",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({'x': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]})",
       "validationType": "exact-output",
       "expectedOutput": "    x\n7   8\n8   9\n9  10",
       "hints": {
@@ -194,9 +194,9 @@
         "zh": "使用 df.info(memory_usage='deep') 查看 DataFrame 的详细内存使用情况并观察输出。",
         "en": "Use df.info(memory_usage='deep') to view the detailed memory usage of the DataFrame and observe the output."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'] * 100,\n    'age': [25, 30, 35] * 100,\n    'score': [88.5, 92.0, 76.5] * 100\n})\n\n# Use info with deep memory usage\n",
+      "starterCode": "# Use info with deep memory usage",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'] * 100,\n    'age': [25, 30, 35] * 100,\n    'score': [88.5, 92.0, 76.5] * 100\n})\n\ndf.info(memory_usage='deep')",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'] * 100,\n    'age': [25, 30, 35] * 100,\n    'score': [88.5, 92.0, 76.5] * 100\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'memory' in _output.lower() and ('KB' in _output or 'bytes' in _output or 'kb' in _output.lower() or '+' in _output)\nexcept:\n    result = False\nresult",
       "hints": {
@@ -222,9 +222,9 @@
         "zh": "使用 describe(include='all') 查看所有列（包括非数值列）的统计信息，并打印结果。",
         "en": "Use describe(include='all') to view statistics for all columns (including non-numeric), and print the result."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Alice', 'Bob'],\n    'age': [25, 30, 35, 25, 30],\n    'score': [88.5, 92.0, 76.5, 90.0, 85.0]\n})\n\n# Use describe with include='all'\n",
+      "starterCode": "# Use describe with include='all'",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Alice', 'Bob'],\n    'age': [25, 30, 35, 25, 30],\n    'score': [88.5, 92.0, 76.5, 90.0, 85.0]\n})\n\nprint(df.describe(include='all'))",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Alice', 'Bob'],\n    'age': [25, 30, 35, 25, 30],\n    'score': [88.5, 92.0, 76.5, 90.0, 85.0]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'unique' in _output and 'mean' in _output\nexcept:\n    result = False\nresult",
       "hints": {
@@ -250,9 +250,9 @@
         "zh": "使用 select_dtypes(include='object') 选出所有字符串列，打印结果。",
         "en": "Use select_dtypes(include='object') to select all string columns and print the result."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou'],\n    'score': [88.5, 92.0, 76.5]\n})\n\n# Select only string (object) columns\n",
+      "starterCode": "# Select only string (object) columns",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou'],\n    'score': [88.5, 92.0, 76.5]\n})\n\nprint(df.select_dtypes(include='object'))",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 30, 35],\n    'city': ['Beijing', 'Shanghai', 'Guangzhou'],\n    'score': [88.5, 92.0, 76.5]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'name' in _output and 'city' in _output and 'age' not in _output and 'score' not in _output\nexcept:\n    result = False\nresult",
       "hints": {
@@ -278,9 +278,9 @@
         "zh": "使用 sample() 方法从 DataFrame 中随机抽取 3 行数据，设置 random_state=42 以确保结果可复现，打印结果。",
         "en": "Use the sample() method to randomly select 3 rows from the DataFrame, set random_state=42 for reproducibility, and print the result."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'id': range(1, 11),\n    'value': [23, 45, 12, 67, 89, 34, 56, 78, 90, 11]\n})\n\n# Sample 3 rows with random_state=42\n",
+      "starterCode": "# Sample 3 rows with random_state=42",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'id': range(1, 11),\n    'value': [23, 45, 12, 67, 89, 34, 56, 78, 90, 11]\n})\n\nprint(df.sample(n=3, random_state=42))",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'id': range(1, 11),\n    'value': [23, 45, 12, 67, 89, 34, 56, 78, 90, 11]\n})",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\n\\ndf = pd.DataFrame({\\n    'id': range(1, 11),\\n    'value': [23, 45, 12, 67, 89, 34, 56, 78, 90, 11]\\n})\\n\\nprint(df.sample(n=3, random_state=42))\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
@@ -306,9 +306,9 @@
         "zh": "使用 nlargest() 找出分数最高的 3 名学生，然后使用 nsmallest() 找出分数最低的 2 名学生，分别打印。",
         "en": "Use nlargest() to find the top 3 students by score, then use nsmallest() to find the bottom 2 students. Print both results."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'score': [88, 92, 76, 95, 83]\n})\n\n# Find top 3 by score\n\n# Find bottom 2 by score\n",
+      "starterCode": "# Find top 3 by score\n\n# Find bottom 2 by score",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'score': [88, 92, 76, 95, 83]\n})\n\nprint(df.nlargest(3, 'score'))\nprint(df.nsmallest(2, 'score'))",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'score': [88, 92, 76, 95, 83]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'Diana' in _output and '95' in _output and 'Charlie' in _output and '76' in _output\nexcept:\n    result = False\nresult",
       "hints": {
@@ -334,9 +334,9 @@
         "zh": "用户想用 describe() 查看所有列的统计信息，但只显示了数值列。修复代码使其同时显示字符串列的统计信息。",
         "en": "A user wants to see statistics for all columns with describe(), but only numeric columns are shown. Fix the code to also show string column statistics."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Alice', 'Bob'],\n    'department': ['HR', 'IT', 'IT', 'HR', 'Finance'],\n    'salary': [50000, 60000, 55000, 52000, 65000]\n})\n\n# Bug: only shows numeric columns\nprint(df.describe())",
+      "starterCode": "# Bug: only shows numeric columns\nprint(df.describe())",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Alice', 'Bob'],\n    'department': ['HR', 'IT', 'IT', 'HR', 'Finance'],\n    'salary': [50000, 60000, 55000, 52000, 65000]\n})\n\nprint(df.describe(include='all'))",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Alice', 'Bob'],\n    'department': ['HR', 'IT', 'IT', 'HR', 'Finance'],\n    'salary': [50000, 60000, 55000, 52000, 65000]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'unique' in _output and 'name' in _output and 'department' in _output and 'mean' in _output\nexcept:\n    result = False\nresult",
       "hints": {
@@ -404,9 +404,9 @@
         "zh": "对给定的 DataFrame 执行全面的数据质量检查：\n1. 打印形状（shape）\n2. 打印每列的缺失值数量\n3. 打印数值列的描述性统计\n4. 打印重复行的数量",
         "en": "Perform a comprehensive data quality check on the given DataFrame:\n1. Print the shape\n2. Print the count of missing values per column\n3. Print descriptive statistics for numeric columns\n4. Print the number of duplicate rows"
       },
-      "starterCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', None, 'Diana', 'Alice'],\n    'age': [25, np.nan, 35, 28, 25],\n    'score': [88.5, 92.0, 76.5, np.nan, 88.5],\n    'city': ['Beijing', 'Shanghai', 'Beijing', 'Guangzhou', 'Beijing']\n})\n\n# Step 1: Print shape\n\n# Step 2: Print missing values per column\n\n# Step 3: Print describe for numeric columns\n\n# Step 4: Print number of duplicate rows\n",
+      "starterCode": "# Step 1: Print shape\n\n# Step 2: Print missing values per column\n\n# Step 3: Print describe for numeric columns\n\n# Step 4: Print number of duplicate rows",
       "solutionCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', None, 'Diana', 'Alice'],\n    'age': [25, np.nan, 35, 28, 25],\n    'score': [88.5, 92.0, 76.5, np.nan, 88.5],\n    'city': ['Beijing', 'Shanghai', 'Beijing', 'Guangzhou', 'Beijing']\n})\n\nprint(df.shape)\nprint(df.isnull().sum())\nprint(df.describe())\nprint(df.duplicated().sum())",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', None, 'Diana', 'Alice'],\n    'age': [25, np.nan, 35, 28, 25],\n    'score': [88.5, 92.0, 76.5, np.nan, 88.5],\n    'city': ['Beijing', 'Shanghai', 'Beijing', 'Guangzhou', 'Beijing']\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = '(5, 4)' in _output and 'mean' in _output and ('0' in _output or '1' in _output)\nexcept:\n    result = False\nresult",
       "hints": {

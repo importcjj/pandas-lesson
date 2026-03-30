@@ -224,9 +224,9 @@
         "zh": "创建一个 DataFrame，包含 'name'、'age'、'city' 三列，但使用 columns 参数指定列的顺序为 ['city', 'name', 'age']，然后打印。",
         "en": "Create a DataFrame with 'name', 'age', 'city' columns, but use the columns parameter to specify the order as ['city', 'name', 'age'], then print."
       },
-      "starterCode": "import pandas as pd\n\ndata = {'name': ['Alice', 'Bob'], 'age': [25, 30], 'city': ['Beijing', 'Shanghai']}\n\n# Create DataFrame with column order: city, name, age\n",
+      "starterCode": "# Create DataFrame with column order: city, name, age",
       "solutionCode": "import pandas as pd\n\ndata = {'name': ['Alice', 'Bob'], 'age': [25, 30], 'city': ['Beijing', 'Shanghai']}\n\ndf = pd.DataFrame(data, columns=['city', 'name', 'age'])\nprint(df)",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndata = {'name': ['Alice', 'Bob'], 'age': [25, 30], 'city': ['Beijing', 'Shanghai']}",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\n\\ndata = {'name': ['Alice', 'Bob'], 'age': [25, 30], 'city': ['Beijing', 'Shanghai']}\\n\\ndf = pd.DataFrame(data, columns=['city', 'name', 'age'])\\nprint(df)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {

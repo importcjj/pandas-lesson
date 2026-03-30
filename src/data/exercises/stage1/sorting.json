@@ -22,9 +22,9 @@
         "zh": "使用 sort_values 按 'age' 列升序排序 DataFrame，并打印结果。",
         "en": "Use sort_values to sort the DataFrame by the 'age' column in ascending order and print the result."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Alice', 'Bob'],\n    'age': [35, 25, 30]\n})\n\n# Sort by 'age' in ascending order and print\n",
+      "starterCode": "# Sort by 'age' in ascending order and print",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Alice', 'Bob'],\n    'age': [35, 25, 30]\n})\n\nprint(df.sort_values('age'))",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Alice', 'Bob'],\n    'age': [35, 25, 30]\n})",
       "validationType": "exact-output",
       "expectedOutput": "      name  age\n1    Alice   25\n2      Bob   30\n0  Charlie   35",
       "hints": {
@@ -166,9 +166,9 @@
         "zh": "使用 sort_values 按 'score' 列排序，并设置 na_position='first' 将缺失值放在最前面，打印结果。",
         "en": "Use sort_values to sort by the 'score' column, setting na_position='first' to place missing values at the top. Print the result."
       },
-      "starterCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'score': [88, np.nan, 76, np.nan]\n})\n\n# Sort by score with NaN values first\n",
+      "starterCode": "# Sort by score with NaN values first",
       "solutionCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'score': [88, np.nan, 76, np.nan]\n})\n\nprint(df.sort_values('score', na_position='first'))",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'score': [88, np.nan, 76, np.nan]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    lines = _output.strip().split('\\n')\n    result = 'NaN' in lines[1] and 'NaN' in lines[2]\nexcept:\n    result = False\nresult",
       "hints": {
@@ -196,9 +196,9 @@
         "zh": "使用 sort_values 的 key 参数，按 'name' 列的字符串长度排序（从短到长），打印结果。",
         "en": "Use the key parameter of sort_values to sort by the string length of the 'name' column (shortest to longest). Print the result."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Bob', 'Alice', 'Ed'],\n    'age': [35, 30, 25, 28]\n})\n\n# Sort by name length using key parameter\n",
+      "starterCode": "# Sort by name length using key parameter",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Bob', 'Alice', 'Ed'],\n    'age': [35, 30, 25, 28]\n})\n\nprint(df.sort_values('name', key=lambda x: x.str.len()))",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Bob', 'Alice', 'Ed'],\n    'age': [35, 30, 25, 28]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    lines = [l.strip() for l in _output.strip().split('\\n') if l.strip() and 'name' not in l]\n    result = 'Ed' in lines[0] and 'Charlie' in lines[-1]\nexcept:\n    result = False\nresult",
       "hints": {
@@ -266,9 +266,9 @@
         "zh": "按 'department' 列升序、'salary' 列降序排序 DataFrame，打印结果。",
         "en": "Sort the DataFrame by 'department' ascending and 'salary' descending. Print the result."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'department': ['IT', 'HR', 'IT', 'HR', 'IT'],\n    'salary': [60000, 50000, 55000, 52000, 65000]\n})\n\n# Sort by department ascending, then salary descending\n",
+      "starterCode": "# Sort by department ascending, then salary descending",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'department': ['IT', 'HR', 'IT', 'HR', 'IT'],\n    'salary': [60000, 50000, 55000, 52000, 65000]\n})\n\nprint(df.sort_values(['department', 'salary'], ascending=[True, False]))",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'department': ['IT', 'HR', 'IT', 'HR', 'IT'],\n    'salary': [60000, 50000, 55000, 52000, 65000]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    lines = [l.strip() for l in _output.strip().split('\\n') if l.strip() and 'name' not in l]\n    result = 'HR' in lines[0] and 'IT' in lines[-1]\nexcept:\n    result = False\nresult",
       "hints": {
@@ -326,9 +326,9 @@
         "zh": "使用 rank() 方法对 'score' 列进行排名，使用 method='min' 处理并列排名（并列使用最小排名），打印结果。",
         "en": "Use the rank() method to rank the 'score' column, using method='min' for tie-breaking (ties get the minimum rank). Print the result."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'score': [90, 85, 90, 78, 85]\n})\n\n# Rank scores with method='min'\n",
+      "starterCode": "# Rank scores with method='min'",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'score': [90, 85, 90, 78, 85]\n})\n\ndf['rank'] = df['score'].rank(method='min', ascending=False)\nprint(df)",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'score': [90, 85, 90, 78, 85]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'rank' in _output and '1' in _output\nexcept:\n    result = False\nresult",
       "hints": {
@@ -356,9 +356,9 @@
         "zh": "以下代码使用了 inplace=True 排序后又链式调用 .head()，但 inplace 返回 None 导致报错。修复代码使其正确输出排序后的前 3 行。",
         "en": "The following code uses inplace=True for sorting then chains .head(), but inplace returns None causing an error. Fix the code to correctly output the first 3 sorted rows."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Alice', 'Eve', 'Bob', 'Diana'],\n    'score': [78, 90, 83, 85, 95]\n})\n\n# Bug: inplace=True returns None, cannot chain .head()\nresult = df.sort_values('score', ascending=False, inplace=True).head(3)\nprint(result)",
+      "starterCode": "# Bug: inplace=True returns None, cannot chain .head()\nresult = df.sort_values('score', ascending=False, inplace=True).head(3)\nprint(result)",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Alice', 'Eve', 'Bob', 'Diana'],\n    'score': [78, 90, 83, 85, 95]\n})\n\nresult = df.sort_values('score', ascending=False).head(3)\nprint(result)",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Charlie', 'Alice', 'Eve', 'Bob', 'Diana'],\n    'score': [78, 90, 83, 85, 95]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'Diana' in _output and '95' in _output and 'Charlie' not in _output\nexcept:\n    result = False\nresult",
       "hints": {
@@ -386,9 +386,9 @@
         "zh": "完成以下任务：\n1. 按 'region' 升序、'sales' 降序排序\n2. 添加一个 'rank' 列，按 sales 降序排名（method='dense'）\n3. 筛选出每个 region 中 sales 排名前 2 的记录\n4. 打印结果",
         "en": "Complete the following tasks:\n1. Sort by 'region' ascending, 'sales' descending\n2. Add a 'rank' column, ranking by sales descending (method='dense')\n3. Filter the top 2 sales records per region\n4. Print the result"
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'],\n    'region': ['East', 'West', 'East', 'West', 'East', 'West'],\n    'sales': [250, 300, 180, 220, 310, 280]\n})\n\n# Step 1: Sort by region ascending, sales descending\n\n# Step 2: Add rank column (dense ranking by sales, descending)\n\n# Step 3: Filter top 2 per region\n\n# Step 4: Print result\n",
+      "starterCode": "# Step 1: Sort by region ascending, sales descending\n\n# Step 2: Add rank column (dense ranking by sales, descending)\n\n# Step 3: Filter top 2 per region\n\n# Step 4: Print result",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'],\n    'region': ['East', 'West', 'East', 'West', 'East', 'West'],\n    'sales': [250, 300, 180, 220, 310, 280]\n})\n\ndf = df.sort_values(['region', 'sales'], ascending=[True, False])\ndf['rank'] = df.groupby('region')['sales'].rank(method='dense', ascending=False)\nresult = df[df['rank'] <= 2]\nprint(result)",
-      "setupCode": "",
+      "setupCode": "import pandas as pd\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'],\n    'region': ['East', 'West', 'East', 'West', 'East', 'West'],\n    'sales': [250, 300, 180, 220, 310, 280]\n})",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = 'rank' in _output and 'Eve' in _output and 'Alice' in _output and 'Bob' in _output and 'Charlie' not in _output\nexcept:\n    result = False\nresult",
       "hints": {
