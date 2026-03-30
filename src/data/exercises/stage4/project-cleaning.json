@@ -24,7 +24,7 @@
         "en": "Use method chaining to: drop fully duplicate rows, drop columns that are all NaN, and reset the index."
       },
       "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'a': [1, 2, 2, 3], 'b': [np.nan, np.nan, np.nan, np.nan], 'c': ['x', 'y', 'y', 'z']})",
-      "starterCode": "# Chain: drop_duplicates -> dropna(axis=1, how='all') -> reset_index\nresult = ___",
+      "starterCode": "# 方法链: dropna → drop_duplicates → reset_index\nresult = (\n    df\n    .___\n    .___\n    .___\n)",
       "solutionCode": "result = df.drop_duplicates().dropna(axis=1, how='all').reset_index(drop=True)",
       "validationType": "dataframe-equals",
       "expectedOutput": "",
@@ -135,7 +135,7 @@
         "en": "Convert all column names to lowercase and replace spaces with underscores."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'First Name': ['Alice'], 'Last Name': ['Smith'], 'Age Group': [25]})",
-      "starterCode": "# Standardize column names\ndf.columns = ___",
+      "starterCode": "# 将列名转为小写，空格替为下划线\n# 提示: df.columns.str.lower().str.replace(...)\ndf.columns = ___",
       "solutionCode": "df.columns = df.columns.str.lower().str.replace(' ', '_')",
       "validationType": "custom-check",
       "checkCode": "try:\n    result = (list(df.columns)).equals(['first_name', 'last_name', 'age_group'])\nexcept:\n    try:\n        result = (list(df.columns) == ['first_name', 'last_name', 'age_group']).all() if hasattr(list(df.columns), 'all') else list(df.columns) == ['first_name', 'last_name', 'age_group']\n    except:\n        result = False",
@@ -362,7 +362,7 @@
         "en": "Write a function to standardize DataFrame column names: lowercase, replace spaces with underscores, remove special characters, strip whitespace."
       },
       "setupCode": "import pandas as pd\nimport re\ndf = pd.DataFrame({' First Name ': ['Alice'], 'Last-Name': ['Smith'], 'Age (years)': [25], 'Score%': [95]})",
-      "starterCode": "# 列名标准化函数\nresult = ___",
+      "starterCode": "# 编写列名标准化: 小写 + 空格→下划线 + 去特殊字符 + strip\n# 提示: df.columns.str.lower().str.replace(' ', '_').str.replace(r'[^a-z0-9_]', '', regex=True).str.strip('_')\nresult = ___",
       "solutionCode": "def clean_columns(df):\n    df = df.copy()\n    df.columns = (\n        df.columns\n        .str.strip()\n        .str.lower()\n        .str.replace(r'[^a-z0-9_\\s]', '', regex=True)\n        .str.replace(r'\\s+', '_', regex=True)\n    )\n    return df\n\nresult = clean_columns(df)\nprint(result.columns.tolist())",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\nimport re\\ndf = pd.DataFrame({' First Name ': ['Alice'], 'Last-Name': ['Smith'], 'Age (years)': [25], 'Score%': [95]})\", _ns)\nexec(\"def clean_columns(df):\\n    df = df.copy()\\n    df.columns = (\\n        df.columns\\n        .str.strip()\\n        .str.lower()\\n        .str.replace(r'[^a-z0-9_\\\\s]', '', regex=True)\\n        .str.replace(r'\\\\s+', '_', regex=True)\\n    )\\n    return df\\n\\nresult = clean_columns(df)\\nprint(result.columns.tolist())\", _ns)\ntry:\n    result = _ns['result'].equals(result)\nexcept:\n    result = False",

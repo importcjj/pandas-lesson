@@ -253,7 +253,7 @@
         "en": "Swap the two levels of the MultiIndex (department and year), making year the first level."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'revenue': [100, 120, 50, 55]}, index=pd.MultiIndex.from_tuples([('Sales', 2023), ('Sales', 2024), ('HR', 2023), ('HR', 2024)], names=['department', 'year']))",
-      "starterCode": "# Swap levels so year becomes first\nresult = ___",
+      "starterCode": "# 使用 swaplevel() 交换 department 和 year 层级\nresult = ___",
       "solutionCode": "result = df.swaplevel()",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'revenue': [100, 120, 50, 55]}, index=pd.MultiIndex.from_tuples([('Sales', 2023), ('Sales', 2024), ('HR', 2023), ('HR', 2024)], names=['department', 'year']))\", _expected_ns)\nexec('result = df.swaplevel()', _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
@@ -349,7 +349,7 @@
         "en": "Sort a MultiIndex DataFrame by index to ensure levels are ordered."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'revenue': [120, 100, 55, 50]}, index=pd.MultiIndex.from_tuples([('Sales', 2024), ('Sales', 2023), ('HR', 2024), ('HR', 2023)], names=['department', 'year']))",
-      "starterCode": "# Sort the MultiIndex\nresult = ___",
+      "starterCode": "# 使用 sort_index() 对 MultiIndex 排序\nresult = ___",
       "solutionCode": "result = df.sort_index()",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'revenue': [120, 100, 55, 50]}, index=pd.MultiIndex.from_tuples([('Sales', 2024), ('Sales', 2023), ('HR', 2024), ('HR', 2023)], names=['department', 'year']))\", _expected_ns)\nexec('result = df.sort_index()', _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",

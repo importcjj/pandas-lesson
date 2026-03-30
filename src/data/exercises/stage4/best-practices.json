@@ -377,7 +377,7 @@
         "en": "Fix the operations that trigger SettingWithCopyWarning in the code below. Replace chained indexing with the correct .loc approach."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David'], 'age': [22, 30, 28, 35], 'dept': ['Eng', 'HR', 'Eng', 'Sales']})",
-      "starterCode": "# 常见 SettingWithCopyWarning 触发场景\ndf = ___",
+      "starterCode": "# 修复: 将 df[df['age']>25]['dept'] = 'Senior' 改为 loc 写法\n# df.loc[条件, 列名] = 值\ndf = ___",
       "solutionCode": "df.loc[df['age'] > 25, 'dept'] = 'Senior'\nprint(df)",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David'], 'age': [22, 30, 28, 35], 'dept': ['Eng', 'HR', 'Eng', 'Sales']})\", _ns)\nexec(\"df.loc[df['age'] > 25, 'dept'] = 'Senior'\\nprint(df)\", _ns)\ntry:\n    result = _ns['df'].equals(df)\nexcept:\n    result = False",
@@ -405,11 +405,11 @@
         "en": "Using .pipe() for Readable Code"
       },
       "description": {
-        "zh": "使用 .pipe() 将自定义函数插入方法链中。定义一个添加标签列的函数并在链中使用。",
-        "en": "Use .pipe() to insert a custom function into a method chain. Define a function that adds a label column and use it in the chain."
+        "zh": "使用 .pipe() 将自定义函数 add_label 插入方法链中，完成以下操作：\n1. 调用 add_label，按 score 列分为三档：≤60 为 'Fail'，61-80 为 'Pass'，>80 为 'Excellent'\n2. 按 score 降序排序\n\n提示：add_label(df, column, thresholds, labels) 已在预设代码中定义。",
+        "en": "Use .pipe() to insert the custom function add_label into a method chain:\n1. Call add_label to classify score into 3 levels: ≤60='Fail', 61-80='Pass', >80='Excellent'\n2. Sort by score descending\n\nHint: add_label(df, column, thresholds, labels) is already defined in setup code."
       },
       "setupCode": "import pandas as pd\nimport numpy as np\ndef add_label(df, column, thresholds, labels):\n    \"\"\"Add a label column based on thresholds.\"\"\"\n    df = df.copy()\n    df['label'] = pd.cut(df[column], bins=[-np.inf] + thresholds + [np.inf], labels=labels)\n    return df\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'score': [45, 72, 88, 95, 60]})",
-      "starterCode": "# 使用 .pipe() 提高代码可读性\nresult = ___",
+      "starterCode": "# 用 .pipe() 构建方法链：\n# 1. pipe(add_label, ...) 按 score 分三档: ≤60 Fail, 61-80 Pass, >80 Excellent\n# 2. sort_values('score', ascending=False)\nresult = (\n    df\n    .pipe(___)\n    .sort_values(___)\n)",
       "solutionCode": "result = (\n    df\n    .pipe(add_label, column='score', thresholds=[60, 80], labels=['Fail', 'Pass', 'Excellent'])\n    .sort_values('score', ascending=False)\n)",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\ndef add_label(df, column, thresholds, labels):\\n    \"\"\"Add a label column based on thresholds.\"\"\"\\n    df = df.copy()\\n    df[\\'label\\'] = pd.cut(df[column], bins=[-np.inf] + thresholds + [np.inf], labels=labels)\\n    return df\\n\\ndf = pd.DataFrame({\\'name\\': [\\'Alice\\', \\'Bob\\', \\'Charlie\\', \\'David\\', \\'Eve\\'], \\'score\\': [45, 72, 88, 95, 60]})', _ns)\nexec(\"result = (\\n    df\\n    .pipe(add_label, column='score', thresholds=[60, 80], labels=['Fail', 'Pass', 'Excellent'])\\n    .sort_values('score', ascending=False)\\n)\", _ns)\ntry:\n    result = _ns['result'].equals(result)\nexcept:\n    result = False",

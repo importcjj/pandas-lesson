@@ -324,7 +324,7 @@
         "en": "Compare memory usage of the same column as object type vs category type. Assign object type memory to mem_obj and category type memory to mem_cat."
       },
       "setupCode": "import pandas as pd\nimport sys\ndf = pd.DataFrame({'status': ['active', 'inactive', 'pending'] * 1000})",
-      "starterCode": "# 内存分析与 sys.getsizeof\ndf = ___",
+      "starterCode": "# 1. 计算 object 类型的内存: df['city'].memory_usage(deep=True)\nmem_obj = ___\n# 2. 转为 category 后计算内存\nmem_cat = ___\n# 3. 打印对比\nprint(f'Object: {mem_obj} bytes')\nprint(f'Category: {mem_cat} bytes')\nprint(f'Savings: {1 - mem_cat/mem_obj:.0%}')",
       "solutionCode": "mem_obj = df['status'].memory_usage(deep=True)\ndf['status'] = df['status'].astype('category')\nmem_cat = df['status'].memory_usage(deep=True)\nprint(f'Object: {mem_obj} bytes')\nprint(f'Category: {mem_cat} bytes')\nprint(f'Savings: {round((1 - mem_cat/mem_obj) * 100)}%')",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\nimport sys\\ndf = pd.DataFrame({'status': ['active', 'inactive', 'pending'] * 1000})\", _ns)\nexec(\"mem_obj = df['status'].memory_usage(deep=True)\\ndf['status'] = df['status'].astype('category')\\nmem_cat = df['status'].memory_usage(deep=True)\\nprint(f'Object: {mem_obj} bytes')\\nprint(f'Category: {mem_cat} bytes')\\nprint(f'Savings: {round((1 - mem_cat/mem_obj) * 100)}%')\", _ns)\ntry:\n    result = _ns['df'].equals(df)\nexcept:\n    result = False",

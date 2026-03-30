@@ -219,7 +219,7 @@
         "en": "Unstack a MultiIndex Series, filling missing values with 0."
       },
       "setupCode": "import pandas as pd\nindex = pd.MultiIndex.from_tuples([('A', 'x'), ('A', 'y'), ('B', 'x')], names=['group', 'sub'])\ns = pd.Series([10, 20, 30], index=index)",
-      "starterCode": "# Unstack with fill_value=0\nresult = s.unstack(fill_value=___)",
+      "starterCode": "# 对 MultiIndex Series 做 unstack，缺失值填 0\nresult = ___",
       "solutionCode": "result = s.unstack(fill_value=0)",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nindex = pd.MultiIndex.from_tuples([('A', 'x'), ('A', 'y'), ('B', 'x')], names=['group', 'sub'])\\ns = pd.Series([10, 20, 30], index=index)\", _expected_ns)\nexec('result = s.unstack(fill_value=0)', _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
