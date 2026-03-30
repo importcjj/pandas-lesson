@@ -1,0 +1,59 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "pandas-cheatsheet",
+  "title": "Pandas Cheat Sheet",
+  "description": "Quick lookup for pandas APIs, patterns, and pitfalls",
+  "icon": "icon.png",
+  "author": "importcjj",
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "index",
+      "title": "Pandas Cheat Sheet",
+      "subtitle": "pd",
+      "description": "Search pandas APIs, patterns, and pitfalls",
+      "mode": "view",
+      "keywords": ["pd", "pandas", "dataframe", "series"],
+      "arguments": [
+        {
+          "name": "query",
+          "type": "text",
+          "placeholder": "关键词 (可选)",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "preferences": [
+    {
+      "name": "language",
+      "title": "Language / 语言",
+      "description": "Display language for descriptions and notes",
+      "type": "dropdown",
+      "required": false,
+      "default": "zh",
+      "data": [
+        { "title": "中文", "value": "zh" },
+        { "title": "English", "value": "en" }
+      ]
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.93.3",
+    "@raycast/utils": "^1.19.1"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^1.0.11",
+    "@types/node": "22.13.14",
+    "@types/react": "19.0.12",
+    "eslint": "^9.23.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "ray build",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint"
+  }
+}

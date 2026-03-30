@@ -658,29 +658,29 @@
             {
               "name": "df.sample()",
               "desc": {
-                "zh": "随机抽样 N 行或比例",
-                "en": "Random sample of N rows or fraction"
+                "zh": "随机抽样 N 行或按比例抽样，支持有放回抽样和加权抽样",
+                "en": "Random sample of N rows or a fraction, supports replacement and weighted sampling"
               },
-              "signature": "df.sample(n=None, frac=None, replace=False, weights=None, random_state=None)",
-              "example": "import pandas as pd\n\ndf = pd.DataFrame({'name': ['Alice','Bob','Charlie','Diana','Eve'], 'score': [85,92,78,95,88]})\nprint(df.sample(n=3, random_state=42))",
-              "output": "      name  score\n1      Bob     92\n4      Eve     88\n0    Alice     85",
+              "signature": "df.sample(n=None, frac=None, replace=False, weights=None, random_state=None, axis=None)",
+              "example": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'score': [85, 92, 78, 95, 88],\n    'weight': [0.1, 0.1, 0.1, 0.3, 0.4]\n})\n\n# Sample 3 rows with fixed seed\nprint(df.sample(n=3, random_state=42))\nprint('---')\n# Sample 60% of rows\nprint(df.sample(frac=0.6, random_state=1))\nprint('---')\n# Weighted sampling (higher weight = more likely)\nprint(df.sample(n=3, weights='weight', random_state=0))",
+              "output": "      name  score  weight\n1      Bob     92     0.1\n4      Eve     88     0.4\n0    Alice     85     0.1\n---\n      name  score  weight\n2  Charlie     78     0.1\n4      Eve     88     0.4\n1      Bob     92     0.1\n---\n      name  score  weight\n4      Eve     88     0.4\n3    Diana     95     0.3\n0    Alice     85     0.1",
               "params": [
                 {
                   "name": "n",
-                  "type": "int",
+                  "type": "int | None",
                   "default": "None",
                   "desc": {
-                    "zh": "抽样行数",
-                    "en": "Number of rows to sample"
+                    "zh": "抽样行数；与 frac 互斥，两者都为 None 时默认 n=1",
+                    "en": "Number of rows to sample; mutually exclusive with frac, defaults to n=1 when both are None"
                   }
                 },
                 {
                   "name": "frac",
-                  "type": "float",
+                  "type": "float | None",
                   "default": "None",
                   "desc": {
-                    "zh": "抽样比例，如 0.5=50%",
-                    "en": "Fraction of rows, e.g. 0.5=50%"
+                    "zh": "抽样比例（0~1 之间），如 0.5 表示 50%；与 n 互斥",
+                    "en": "Fraction of rows to sample (0-1), e.g. 0.5 for 50%; mutually exclusive with n"
                   }
                 },
                 {
@@ -688,17 +688,26 @@
                   "type": "bool",
                   "default": "False",
                   "desc": {
-                    "zh": "True=有放回抽样",
-                    "en": "True=sample with replacement"
+                    "zh": "是否有放回抽样；True 时允许同一行被多次选中，可使 n > len(df)",
+                    "en": "Whether to sample with replacement; True allows the same row to be picked multiple times, enabling n > len(df)"
+                  }
+                },
+                {
+                  "name": "weights",
+                  "type": "str | array-like | None",
+                  "default": "None",
+                  "desc": {
+                    "zh": "抽样权重；可以是列名字符串或与 df 等长的数组，值越大越可能被选中",
+                    "en": "Sampling weights; can be a column name string or array-like of same length, higher values increase selection probability"
                   }
                 },
                 {
                   "name": "random_state",
-                  "type": "int",
+                  "type": "int | None",
                   "default": "None",
                   "desc": {
-                    "zh": "随机种子，保证可复现",
-                    "en": "Random seed for reproducibility"
+                    "zh": "随机数种子，设置后每次运行结果相同，便于复现",
+                    "en": "Random seed for reproducibility; same seed produces identical results across runs"
                   }
                 }
               ],
@@ -709,19 +718,39 @@
               ]
             },
             {
-              "name": "df.shape / len(df) / df.size",
+              "name": "df.memory_usage()",
               "desc": {
-                "zh": "获取维度信息：(行数, 列数) / 行数 / 总元素数",
-                "en": "Dimension info: (rows, cols) / row count / total elements"
+                "zh": "返回每列占用的内存字节数，deep=True 可精确测量 object 列",
+                "en": "Return memory usage in bytes per column; deep=True accurately measures object columns"
               },
-              "signature": "df.shape  # (行, 列)\nlen(df)   # 行数\ndf.size   # 行×列",
-              "example": "import pandas as pd\n\ndf = pd.DataFrame({'A': [1,2,3], 'B': [4,5,6]})\nprint(f'shape: {df.shape}')\nprint(f'rows: {len(df)}')\nprint(f'size: {df.size}')",
-              "output": "shape: (3, 2)\nrows: 3\nsize: 6",
+              "signature": "df.memory_usage(index=True, deep=False)",
+              "example": "import pandas as pd\n\ndf = pd.DataFrame({\n    'id': [1, 2, 3, 4, 5],\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'salary': [50000.0, 65000.0, 72000.0, 55000.0, 90000.0]\n})\n\nprint(df.memory_usage())\nprint('---')\nprint(df.memory_usage(deep=True))\nprint(f'Total: {df.memory_usage(deep=True).sum() / 1024:.2f} KB')",
+              "output": "Index      128\nid          40\nname        40\nsalary      40\ndtype: int64\n---\nIndex      128\nid          40\nname       310\nsalary      40\ndtype: int64\nTotal: 0.51 KB",
+              "params": [
+                {
+                  "name": "index",
+                  "type": "bool",
+                  "default": "True",
+                  "desc": {
+                    "zh": "是否包含索引的内存占用",
+                    "en": "Whether to include the index memory usage"
+                  }
+                },
+                {
+                  "name": "deep",
+                  "type": "bool",
+                  "default": "False",
+                  "desc": {
+                    "zh": "True 时深度检查 object 列的真实内存占用（较慢但更准确）",
+                    "en": "True introspects object columns for real memory usage (slower but more accurate)"
+                  }
+                }
+              ],
               "tags": [
-                "shape",
+                "memory",
                 "size",
-                "len",
-                "dimensions"
+                "inspect",
+                "performance"
               ]
             }
           ]
@@ -3484,12 +3513,23 @@
             {
               "name": "cat.categories",
               "desc": {
-                "zh": "获取类别列表",
-                "en": "Get the categories"
+                "zh": "获取或设置类别列表（Index 对象）",
+                "en": "Get or set the category list (Index object)"
               },
               "signature": "Series.cat.categories",
-              "example": "import pandas as pd\n\ns = pd.Categorical(['low', 'mid', 'high', 'mid'], categories=['low', 'mid', 'high'], ordered=True)\nprint(pd.Series(s).cat.categories)",
-              "output": "Index(['low', 'mid', 'high'], dtype='object')",
+              "example": "import pandas as pd\n\ns = pd.Series(\n    pd.Categorical(\n        ['low', 'mid', 'high', 'mid'],\n        categories=['low', 'mid', 'high'],\n        ordered=True\n    )\n)\nprint(s.cat.categories)\nprint(f'Number of categories: {len(s.cat.categories)}')\nprint(f'Ordered: {s.cat.ordered}')",
+              "output": "Index(['low', 'mid', 'high'], dtype='object')\nNumber of categories: 3\nOrdered: True",
+              "params": [
+                {
+                  "name": "categories",
+                  "type": "Index",
+                  "default": "property",
+                  "desc": {
+                    "zh": "返回类别的 Index 对象；可通过 cat.rename_categories() 修改",
+                    "en": "Returns Index of categories; modify via cat.rename_categories()"
+                  }
+                }
+              ],
               "tags": [
                 "cat",
                 "categories",
@@ -3499,12 +3539,23 @@
             {
               "name": "cat.codes",
               "desc": {
-                "zh": "获取底层整数编码（-1 表示 NaN）",
-                "en": "Get underlying integer codes (-1 for NaN)"
+                "zh": "获取底层整数编码（-1 表示 NaN），常用于机器学习特征编码",
+                "en": "Get underlying integer codes (-1 for NaN), commonly used for ML feature encoding"
               },
               "signature": "Series.cat.codes",
-              "example": "import pandas as pd\n\ns = pd.Series(pd.Categorical(['a', 'b', 'a', 'c']))\nprint(s.cat.codes)",
-              "output": "0    0\n1    1\n2    0\n3    2\ndtype: int8",
+              "example": "import pandas as pd\nimport numpy as np\n\ns = pd.Series(pd.Categorical(\n    ['a', 'b', 'a', np.nan, 'c'],\n    categories=['a', 'b', 'c']\n))\nprint(s)\nprint('---')\nprint(s.cat.codes)\nprint(f'NaN is coded as: {s.cat.codes.iloc[3]}')",
+              "output": "0      a\n1      b\n2      a\n3    NaN\n4      c\ndtype: category\nCategories (3, object): ['a', 'b', 'c']\n---\n0    0\n1    1\n2    0\n3   -1\n4    2\ndtype: int8\nNaN is coded as: -1",
+              "params": [
+                {
+                  "name": "codes",
+                  "type": "Series[int8]",
+                  "default": "property",
+                  "desc": {
+                    "zh": "返回整数编码 Series；-1 表示缺失值，其他值为类别在 categories 中的位置索引",
+                    "en": "Returns integer-coded Series; -1 indicates missing, other values are positional indices in categories"
+                  }
+                }
+              ],
               "tags": [
                 "cat",
                 "codes",
@@ -3655,12 +3706,23 @@
             {
               "name": "cat.remove_unused_categories()",
               "desc": {
-                "zh": "删除数据中未出现的类别",
-                "en": "Remove categories not present in data"
+                "zh": "删除数据中未实际出现的类别，常用于筛选后清理多余类别",
+                "en": "Remove categories not actually present in data, commonly used to clean up after filtering"
               },
               "signature": "Series.cat.remove_unused_categories()",
-              "example": "import pandas as pd\n\ns = pd.Series(pd.Categorical(['a', 'b'], categories=['a', 'b', 'c', 'd']))\ns = s.cat.remove_unused_categories()\nprint(s.cat.categories)",
-              "output": "Index(['a', 'b'], dtype='object')",
+              "example": "import pandas as pd\n\ns = pd.Series(pd.Categorical(\n    ['a', 'b'],\n    categories=['a', 'b', 'c', 'd']\n))\nprint('Before:', s.cat.categories.tolist())\ns = s.cat.remove_unused_categories()\nprint('After:', s.cat.categories.tolist())",
+              "output": "Before: ['a', 'b', 'c', 'd']\nAfter: ['a', 'b']",
+              "params": [
+                {
+                  "name": "(no parameters)",
+                  "type": "-",
+                  "default": "-",
+                  "desc": {
+                    "zh": "该方法不接受参数；返回新 Series，不修改原对象",
+                    "en": "Takes no arguments; returns a new Series, does not modify the original"
+                  }
+                }
+              ],
               "tags": [
                 "cat",
                 "remove",
@@ -3671,12 +3733,23 @@
             {
               "name": "cat.as_ordered() / cat.as_unordered()",
               "desc": {
-                "zh": "设置类别为有序/无序",
-                "en": "Set categories as ordered/unordered"
+                "zh": "设置类别为有序/无序；有序类别支持比较运算符（<, >, min, max）",
+                "en": "Set categories as ordered/unordered; ordered categories support comparison operators (<, >, min, max)"
               },
               "signature": "Series.cat.as_ordered() / Series.cat.as_unordered()",
-              "example": "import pandas as pd\n\ns = pd.Series(pd.Categorical(['low', 'mid', 'high']))\ns = s.cat.as_ordered()  # 变为有序\nprint(s.cat.ordered)\ns = s.cat.as_unordered()  # 变回无序\nprint(s.cat.ordered)",
-              "output": "True\nFalse",
+              "example": "import pandas as pd\n\ns = pd.Series(pd.Categorical(\n    ['low', 'mid', 'high', 'low'],\n    categories=['low', 'mid', 'high']\n))\nprint(f'Initially ordered: {s.cat.ordered}')\n\ns = s.cat.as_ordered()\nprint(f'After as_ordered: {s.cat.ordered}')\nprint(f'Min: {s.min()}, Max: {s.max()}')\n\ns = s.cat.as_unordered()\nprint(f'After as_unordered: {s.cat.ordered}')",
+              "output": "Initially ordered: False\nAfter as_ordered: True\nMin: low, Max: high\nAfter as_unordered: False",
+              "params": [
+                {
+                  "name": "(no parameters)",
+                  "type": "-",
+                  "default": "-",
+                  "desc": {
+                    "zh": "两个方法都不接受参数；返回新 Series，不修改原对象",
+                    "en": "Neither method takes arguments; returns a new Series, does not modify the original"
+                  }
+                }
+              ],
               "tags": [
                 "cat",
                 "ordered",
@@ -4469,8 +4542,17 @@
                   "type": "str",
                   "default": "required",
                   "desc": {
-                    "zh": "带捕获组的正则，提取所有匹配",
-                    "en": "Regex with capture groups, extracts all matches"
+                    "zh": "带捕获组的正则表达式，提取所有匹配项",
+                    "en": "Regex pattern with capture groups, extracts all matches"
+                  }
+                },
+                {
+                  "name": "flags",
+                  "type": "int",
+                  "default": "0",
+                  "desc": {
+                    "zh": "正则标志位，如 re.IGNORECASE；与正则内联标志 (?i) 等价",
+                    "en": "Regex flags, e.g. re.IGNORECASE; equivalent to inline flags (?i)"
                   }
                 }
               ],
@@ -4484,12 +4566,23 @@
             {
               "name": "str.isdigit() / str.isalpha() / str.isnumeric()",
               "desc": {
-                "zh": "检查字符串类型（数字/字母/数值）",
-                "en": "Check string type (digit/alpha/numeric)"
+                "zh": "检查字符串是否为纯数字/纯字母/数值字符，返回布尔 Series",
+                "en": "Check if strings are pure digits/alpha/numeric characters, returns boolean Series"
               },
-              "signature": "Series.str.isdigit() / Series.str.isalpha() / Series.str.isnumeric()",
-              "example": "import pandas as pd\n\ns = pd.Series(['123', 'abc', '12a', '①②'])\nprint(s.str.isdigit())\nprint('---')\nprint(s.str.isnumeric())",
-              "output": "0     True\n1    False\n2    False\n3    False\n---\n0     True\n1    False\n2    False\n3     True",
+              "signature": "Series.str.isdigit() / Series.str.isalpha() / Series.str.isnumeric() / Series.str.isalnum() / Series.str.isspace()",
+              "example": "import pandas as pd\n\ns = pd.Series(['123', 'abc', '12a', '①②', '  ', ''])\nresults = pd.DataFrame({\n    'value': s,\n    'isdigit': s.str.isdigit(),\n    'isalpha': s.str.isalpha(),\n    'isnumeric': s.str.isnumeric(),\n    'isalnum': s.str.isalnum()\n})\nprint(results)",
+              "output": "  value  isdigit  isalpha  isnumeric  isalnum\n0   123     True    False       True     True\n1   abc    False     True      False     True\n2   12a    False    False      False     True\n3    ①②    False    False       True    False\n4          False    False      False    False\n5          False    False      False    False",
+              "params": [
+                {
+                  "name": "(no parameters)",
+                  "type": "-",
+                  "default": "-",
+                  "desc": {
+                    "zh": "这些方法不接受参数；isdigit 检查 ASCII 数字，isnumeric 还包含 Unicode 数字字符（如 ①②），isalpha 检查纯字母，isalnum 检查字母或数字",
+                    "en": "These methods take no arguments; isdigit checks ASCII digits, isnumeric also includes Unicode numeric chars (e.g. ①②), isalpha checks pure letters, isalnum checks letters or digits"
+                  }
+                }
+              ],
               "tags": [
                 "str",
                 "isdigit",
@@ -4524,6 +4617,24 @@
                   "desc": {
                     "zh": "结束位置（不含）",
                     "en": "End position (exclusive)"
+                  }
+                },
+                {
+                  "name": "step",
+                  "type": "int",
+                  "default": "None",
+                  "desc": {
+                    "zh": "步长，如 2 表示每隔一个字符取一个",
+                    "en": "Step size, e.g. 2 takes every other character"
+                  }
+                },
+                {
+                  "name": "i (for str.get)",
+                  "type": "int",
+                  "default": "required",
+                  "desc": {
+                    "zh": "str.get(i) 取第 i 个字符，支持负数索引",
+                    "en": "str.get(i) gets the i-th character, supports negative indexing"
                   }
                 }
               ],
@@ -5052,12 +5163,23 @@
             {
               "name": "dt.date / dt.time",
               "desc": {
-                "zh": "提取日期部分 / 时间部分",
-                "en": "Extract date part / time part"
+                "zh": "提取日期部分（datetime.date 对象）或时间部分（datetime.time 对象）",
+                "en": "Extract date part (datetime.date objects) or time part (datetime.time objects)"
               },
               "signature": "Series.dt.date / Series.dt.time",
-              "example": "import pandas as pd\n\ns = pd.Series(pd.to_datetime(['2024-03-15 14:30:00', '2024-06-20 09:15:00']))\nprint(s.dt.date)\nprint('---')\nprint(s.dt.time)",
-              "output": "0    2024-03-15\n1    2024-06-20\ndtype: object\n---\n0    14:30:00\n1    09:15:00\ndtype: object",
+              "example": "import pandas as pd\n\ns = pd.Series(pd.to_datetime([\n    '2024-03-15 14:30:00',\n    '2024-06-20 09:15:00'\n]))\nprint('Date part:')\nprint(s.dt.date)\nprint('---')\nprint('Time part:')\nprint(s.dt.time)\nprint(f'Type: {type(s.dt.date.iloc[0])}')",
+              "output": "Date part:\n0    2024-03-15\n1    2024-06-20\ndtype: object\n---\nTime part:\n0    14:30:00\n1    09:15:00\ndtype: object\nType: <class 'datetime.date'>",
+              "params": [
+                {
+                  "name": "date / time",
+                  "type": "Series[object]",
+                  "default": "property",
+                  "desc": {
+                    "zh": "返回 Python datetime.date/datetime.time 对象的 Series（dtype=object，非 datetime64）",
+                    "en": "Returns Series of Python datetime.date/datetime.time objects (dtype=object, not datetime64)"
+                  }
+                }
+              ],
               "tags": [
                 "dt",
                 "date",
@@ -5068,12 +5190,23 @@
             {
               "name": "dt.day_name() / dt.month_name()",
               "desc": {
-                "zh": "获取星期/月份名称（支持多语言）",
-                "en": "Get weekday/month name (supports locale)"
+                "zh": "获取星期/月份的英文名称（支持 locale 参数切换语言）",
+                "en": "Get weekday/month name in English (supports locale parameter for other languages)"
               },
               "signature": "Series.dt.day_name(locale=None) / Series.dt.month_name(locale=None)",
-              "example": "import pandas as pd\n\ns = pd.Series(pd.to_datetime(['2024-01-15', '2024-03-20']))\nprint(s.dt.day_name())\nprint(s.dt.month_name())",
-              "output": "0      Monday\n1    Wednesday\ndtype: object\n0    January\n1      March\ndtype: object",
+              "example": "import pandas as pd\n\ns = pd.Series(pd.to_datetime(['2024-01-15', '2024-03-20', '2024-12-25']))\nprint('Day names:')\nprint(s.dt.day_name())\nprint('---')\nprint('Month names:')\nprint(s.dt.month_name())",
+              "output": "Day names:\n0       Monday\n1    Wednesday\n2    Wednesday\ndtype: object\n---\nMonth names:\n0      January\n1        March\n2     December\ndtype: object",
+              "params": [
+                {
+                  "name": "locale",
+                  "type": "str | None",
+                  "default": "None",
+                  "desc": {
+                    "zh": "语言区域设置（如 'zh_CN.UTF-8'）；None 使用默认英文",
+                    "en": "Locale string (e.g. 'zh_CN.UTF-8'); None uses default English"
+                  }
+                }
+              ],
               "tags": [
                 "dt",
                 "day_name",
@@ -5084,12 +5217,23 @@
             {
               "name": "dt.is_month_start / dt.is_month_end / dt.is_quarter_end",
               "desc": {
-                "zh": "判断是否月初/月末/季末等",
-                "en": "Check if month start/end, quarter end, etc."
+                "zh": "判断日期是否处于月初/月末/季末/年末等位置，返回布尔 Series",
+                "en": "Check if dates fall on month start/end, quarter end, year end, etc., returns boolean Series"
               },
               "signature": "Series.dt.is_month_start / Series.dt.is_month_end / Series.dt.is_quarter_end / Series.dt.is_year_end",
-              "example": "import pandas as pd\n\ns = pd.Series(pd.to_datetime(['2024-01-01', '2024-01-31', '2024-03-31']))\nprint('月初:', s.dt.is_month_start.tolist())\nprint('月末:', s.dt.is_month_end.tolist())\nprint('季末:', s.dt.is_quarter_end.tolist())",
-              "output": "月初: [True, False, False]\n月末: [False, True, True]\n季末: [False, False, True]",
+              "example": "import pandas as pd\n\ns = pd.Series(pd.to_datetime([\n    '2024-01-01', '2024-01-31',\n    '2024-03-31', '2024-12-31'\n]))\nprint('Month start:', s.dt.is_month_start.tolist())\nprint('Month end:  ', s.dt.is_month_end.tolist())\nprint('Quarter end:', s.dt.is_quarter_end.tolist())\nprint('Year end:   ', s.dt.is_year_end.tolist())",
+              "output": "Month start: [True, False, False, False]\nMonth end:   [False, True, True, True]\nQuarter end: [False, False, True, True]\nYear end:    [False, False, False, True]",
+              "params": [
+                {
+                  "name": "is_month_start / is_month_end / ...",
+                  "type": "Series[bool]",
+                  "default": "property",
+                  "desc": {
+                    "zh": "布尔属性，不接受参数；对应的属性还有 is_quarter_start、is_year_start 等",
+                    "en": "Boolean properties, take no arguments; related properties include is_quarter_start, is_year_start, etc."
+                  }
+                }
+              ],
               "tags": [
                 "dt",
                 "month_start",
@@ -5156,12 +5300,23 @@
             {
               "name": "dt.isocalendar()",
               "desc": {
-                "zh": "获取 ISO 年/周/日（返回 DataFrame）",
-                "en": "Get ISO year/week/day (returns DataFrame)"
+                "zh": "获取 ISO 8601 年/周/日（返回 DataFrame），注意 ISO 年可能与日历年不同",
+                "en": "Get ISO 8601 year/week/day (returns DataFrame); note ISO year may differ from calendar year"
               },
               "signature": "Series.dt.isocalendar()",
-              "example": "import pandas as pd\n\ns = pd.Series(pd.to_datetime(['2024-01-01', '2024-12-31']))\nprint(s.dt.isocalendar())",
-              "output": "   year  week  day\n0  2024     1    1\n1  2025     1    2",
+              "example": "import pandas as pd\n\ns = pd.Series(pd.to_datetime([\n    '2024-01-01',  # ISO: 2024-W01-1\n    '2024-12-31',  # ISO: 2025-W01-2 (next ISO year!)\n    '2024-06-15'   # ISO: 2024-W24-6\n]))\nprint(s.dt.isocalendar())",
+              "output": "   year  week  day\n0  2024     1    1\n1  2025     1    2\n2  2024    24    6",
+              "params": [
+                {
+                  "name": "(no parameters)",
+                  "type": "-",
+                  "default": "-",
+                  "desc": {
+                    "zh": "不接受参数；返回包含 year、week、day 三列的 DataFrame（UInt32 类型）",
+                    "en": "Takes no arguments; returns a DataFrame with year, week, day columns (UInt32 dtype)"
+                  }
+                }
+              ],
               "tags": [
                 "dt",
                 "isocalendar",
@@ -10448,16 +10603,17 @@
                 "zh": "沿轴对行或列应用函数，可返回任意形状",
                 "en": "Apply function along axis, can return any shape"
               },
-              "signature": "df.apply(func, axis=0, raw=False, result_type=None)",
-              "example": "df.apply(lambda col: col.max() - col.min())",
-              "output": "按列计算极差",
+              "signature": "df.apply(func, axis=0, raw=False, result_type=None, args=(), **kwargs)",
+              "example": "import pandas as pd\n\ndf = pd.DataFrame({\n    'A': [1, 2, 3],\n    'B': [10, 20, 30]\n})\n\n# Column-wise: range per column\nprint(df.apply(lambda col: col.max() - col.min()))\nprint('---')\n# Row-wise: sum per row\nprint(df.apply(lambda row: row.sum(), axis=1))",
+              "output": "A     2\nB    20\ndtype: int64\n---\n0    11\n1    22\n2    33\ndtype: int64",
               "params": [
                 {
                   "name": "func",
                   "type": "callable",
+                  "default": "required",
                   "desc": {
-                    "zh": "应用到每行/列的函数",
-                    "en": "Function to apply to each row/column"
+                    "zh": "应用到每行/列的函数，接收 Series 返回标量或 Series",
+                    "en": "Function applied to each row/column, receives Series, returns scalar or Series"
                   }
                 },
                 {
@@ -10465,17 +10621,26 @@
                   "type": "int",
                   "default": "0",
                   "desc": {
-                    "zh": "0=按列，1=按行",
-                    "en": "0=column-wise, 1=row-wise"
+                    "zh": "0=按列应用（每列是一个 Series），1=按行应用（每行是一个 Series）",
+                    "en": "0=apply per column (each column is a Series), 1=apply per row (each row is a Series)"
+                  }
+                },
+                {
+                  "name": "raw",
+                  "type": "bool",
+                  "default": "False",
+                  "desc": {
+                    "zh": "True 时传入 ndarray 而非 Series，对 NumPy 函数更快",
+                    "en": "True passes ndarray instead of Series, faster for NumPy functions"
                   }
                 },
                 {
                   "name": "result_type",
-                  "type": "str",
+                  "type": "str | None",
                   "default": "None",
                   "desc": {
-                    "zh": "'expand'/'reduce'/'broadcast' 控制返回形状",
-                    "en": "'expand'/'reduce'/'broadcast' controls return shape"
+                    "zh": "'expand' 展开列表为列，'reduce' 尽量返回 Series，'broadcast' 保持原形状",
+                    "en": "'expand' expands list into columns, 'reduce' returns Series if possible, 'broadcast' keeps original shape"
                   }
                 }
               ],
@@ -10488,28 +10653,29 @@
             {
               "name": "Series.map(arg)",
               "desc": {
-                "zh": "逐元素映射，可用字典/函数/Series",
-                "en": "Element-wise mapping with dict/function/Series"
+                "zh": "逐元素映射，可用字典/函数/Series，未匹配的键变为 NaN",
+                "en": "Element-wise mapping with dict/function/Series; unmatched keys become NaN"
               },
               "signature": "Series.map(arg, na_action=None)",
-              "example": "s.map({'cat': 1, 'dog': 2})",
-              "output": "将字符串映射为数字",
+              "example": "import pandas as pd\n\ns = pd.Series(['cat', 'dog', 'bird', 'cat'])\n\n# Dict mapping (unmapped → NaN)\nprint(s.map({'cat': 1, 'dog': 2}))\nprint('---')\n# Function mapping\nprint(s.map(str.upper))",
+              "output": "0    1.0\n1    2.0\n2    NaN\n3    1.0\ndtype: float64\n---\n0     CAT\n1     DOG\n2    BIRD\n3     CAT\ndtype: object",
               "params": [
                 {
                   "name": "arg",
                   "type": "dict | callable | Series",
+                  "default": "required",
                   "desc": {
-                    "zh": "映射关系：字典、函数或 Series",
-                    "en": "Mapping: dict, function, or Series"
+                    "zh": "映射关系：字典（键→值），函数（逐元素调用），或 Series（索引→值）",
+                    "en": "Mapping: dict (key→value), function (called per element), or Series (index→value)"
                   }
                 },
                 {
                   "name": "na_action",
-                  "type": "str",
+                  "type": "'ignore' | None",
                   "default": "None",
                   "desc": {
-                    "zh": "'ignore' 跳过 NaN 不传入函数",
-                    "en": "'ignore' to skip NaN values"
+                    "zh": "'ignore' 跳过 NaN 不传入函数，保持 NaN 不变",
+                    "en": "'ignore' skips NaN values without passing to function, keeps NaN as-is"
                   }
                 }
               ],
@@ -10522,19 +10688,20 @@
             {
               "name": "GroupBy.transform(func)",
               "desc": {
-                "zh": "分组后逐元素变换，返回与原 DataFrame 同形状",
-                "en": "Group-wise transform, returns same shape as input"
+                "zh": "分组后逐元素变换，返回与原 DataFrame 同形状，可直接赋值为新列",
+                "en": "Group-wise element transform, returns same shape as input, can be assigned directly as a new column"
               },
               "signature": "GroupBy.transform(func, *args, **kwargs)",
-              "example": "df['zscore'] = df.groupby('group')['value'].transform(lambda x: (x - x.mean()) / x.std())",
-              "output": "每组内标准化",
+              "example": "import pandas as pd\n\ndf = pd.DataFrame({\n    'group': ['A', 'A', 'B', 'B'],\n    'value': [10, 20, 30, 40]\n})\n\n# Group mean broadcast back\ndf['group_mean'] = df.groupby('group')['value'].transform('mean')\nprint(df)",
+              "output": "  group  value  group_mean\n0     A     10        15.0\n1     A     20        15.0\n2     B     30        35.0\n3     B     40        35.0",
               "params": [
                 {
                   "name": "func",
                   "type": "str | callable",
+                  "default": "required",
                   "desc": {
-                    "zh": "变换函数，必须返回与输入同形状的结果",
-                    "en": "Transform function, must return same-shaped result"
+                    "zh": "变换函数（如 'mean'、'sum'、lambda），必须返回与输入同形状的结果",
+                    "en": "Transform function (e.g. 'mean', 'sum', lambda), must return same-shaped result as input"
                   }
                 }
               ],
@@ -10547,28 +10714,29 @@
             {
               "name": "DataFrame.map(func) (原 applymap)",
               "desc": {
-                "zh": "对 DataFrame 每个元素应用函数",
-                "en": "Apply function element-wise to entire DataFrame"
+                "zh": "对 DataFrame 每个标量元素应用函数（pandas 2.1 起替代 applymap）",
+                "en": "Apply function element-wise to each scalar in DataFrame (replaces applymap since pandas 2.1)"
               },
               "signature": "df.map(func, na_action=None)",
-              "example": "df.map(lambda x: f'{x:.2f}')",
-              "output": "所有元素格式化为两位小数",
+              "example": "import pandas as pd\n\ndf = pd.DataFrame({\n    'price': [10.5, 20.333, 15.0],\n    'tax': [1.05, 2.033, 1.5]\n})\nprint(df.map(lambda x: f'{x:.2f}'))",
+              "output": "   price    tax\n0  10.50   1.05\n1  20.33   2.03\n2  15.00   1.50",
               "params": [
                 {
                   "name": "func",
                   "type": "callable",
+                  "default": "required",
                   "desc": {
-                    "zh": "应用到每个标量元素的函数",
-                    "en": "Function applied to each scalar element"
+                    "zh": "应用到每个标量元素的函数（接收标量，返回标量）",
+                    "en": "Function applied to each scalar element (receives scalar, returns scalar)"
                   }
                 },
                 {
                   "name": "na_action",
-                  "type": "str",
+                  "type": "'ignore' | None",
                   "default": "None",
                   "desc": {
-                    "zh": "'ignore' 跳过 NaN",
-                    "en": "'ignore' to skip NaN"
+                    "zh": "'ignore' 跳过 NaN 不传入函数",
+                    "en": "'ignore' skips NaN values without passing to function"
                   }
                 }
               ],
@@ -10582,19 +10750,38 @@
             {
               "name": "Series.apply(func)",
               "desc": {
-                "zh": "对 Series 每个元素应用函数，比 map 更灵活",
-                "en": "Apply function to each element, more flexible than map"
+                "zh": "对 Series 每个元素应用函数，比 map 更灵活（支持额外参数和非标量返回值）",
+                "en": "Apply function to each element, more flexible than map (supports extra args and non-scalar returns)"
               },
-              "signature": "Series.apply(func, convert_dtype=True, args=())",
-              "example": "s.apply(lambda x: x.split(',') if isinstance(x, str) else x)",
-              "output": "可返回非标量结果",
+              "signature": "Series.apply(func, convert_dtype=True, args=(), **kwargs)",
+              "example": "import pandas as pd\n\ns = pd.Series(['hello world', 'foo bar', 'test'])\n\n# Return non-scalar (list)\nprint(s.apply(lambda x: x.split()))\nprint('---')\n# With extra args\nprint(s.apply(lambda x, n: x[:n], args=(3,)))",
+              "output": "0    [hello, world]\n1        [foo, bar]\n2           [test]\ndtype: object\n---\n0    hel\n1    foo\n2    tes\ndtype: object",
               "params": [
                 {
                   "name": "func",
                   "type": "callable",
+                  "default": "required",
                   "desc": {
-                    "zh": "可接收额外参数，可返回任意类型",
-                    "en": "Can take extra args, can return any type"
+                    "zh": "应用到每个元素的函数；可通过 args 传递额外位置参数",
+                    "en": "Function applied to each element; extra positional args can be passed via args"
+                  }
+                },
+                {
+                  "name": "convert_dtype",
+                  "type": "bool",
+                  "default": "True",
+                  "desc": {
+                    "zh": "是否尝试推断更合适的返回类型",
+                    "en": "Whether to try to infer a better dtype for the result"
+                  }
+                },
+                {
+                  "name": "args",
+                  "type": "tuple",
+                  "default": "()",
+                  "desc": {
+                    "zh": "传递给 func 的额外位置参数",
+                    "en": "Extra positional arguments to pass to func"
                   }
                 }
               ],
@@ -10607,18 +10794,20 @@
             {
               "name": "df.pipe(func)",
               "desc": {
-                "zh": "将整个 DataFrame 传入函数，用于链式调用",
-                "en": "Pass entire DataFrame to function for method chaining"
+                "zh": "将整个 DataFrame 传入函数，用于构建可读的链式数据处理流水线",
+                "en": "Pass entire DataFrame to function, enabling readable method-chaining pipelines"
               },
               "signature": "df.pipe(func, *args, **kwargs)",
-              "example": "df.pipe(drop_duplicates).pipe(fill_missing).pipe(add_features)",
+              "example": "import pandas as pd\nimport numpy as np\n\ndef add_total(df, col_a, col_b):\n    return df.assign(total=df[col_a] + df[col_b])\n\ndef flag_outliers(df, col, threshold=2):\n    mean, std = df[col].mean(), df[col].std()\n    return df.assign(is_outlier=lambda x: abs(x[col] - mean) > threshold * std)\n\ndf = pd.DataFrame({'a': [1, 2, 3, 100], 'b': [10, 20, 30, 40]})\nresult = (\n    df\n    .pipe(add_total, 'a', 'b')\n    .pipe(flag_outliers, 'total')\n)\nprint(result)",
+              "output": "     a   b  total  is_outlier\n0    1  10     11       False\n1    2  20     22       False\n2    3  30     33       False\n3  100  40    140        True",
               "params": [
                 {
                   "name": "func",
-                  "type": "callable",
+                  "type": "callable | tuple",
+                  "default": "required",
                   "desc": {
-                    "zh": "接收 DataFrame 并返回 DataFrame 的函数",
-                    "en": "Function that takes and returns a DataFrame"
+                    "zh": "接收 DataFrame 作为第一个参数的函数；也可传 (func, 'arg_name') 元组指定 DataFrame 传入的参数名",
+                    "en": "Function receiving DataFrame as first argument; can also be (func, 'arg_name') tuple to specify which param receives the DataFrame"
                   }
                 }
               ],
@@ -10762,37 +10951,56 @@
             {
               "name": "df.merge(right, on=key)",
               "desc": {
-                "zh": "SQL 式合并，按列值匹配",
-                "en": "SQL-style merge on column values"
+                "zh": "SQL 式合并，按列值匹配两个 DataFrame",
+                "en": "SQL-style merge on column values between two DataFrames"
               },
-              "signature": "df.merge(right, how='inner', on=None, left_on=None, right_on=None)",
-              "example": "df1.merge(df2, on='id', how='left')",
-              "output": "左连接，保留 df1 所有行",
+              "signature": "df.merge(right, how='inner', on=None, left_on=None, right_on=None, suffixes=('_x', '_y'), indicator=False)",
+              "example": "import pandas as pd\n\ndf1 = pd.DataFrame({'id': [1, 2, 3], 'name': ['Alice', 'Bob', 'Charlie']})\ndf2 = pd.DataFrame({'id': [2, 3, 4], 'score': [85, 92, 78]})\n\nprint(df1.merge(df2, on='id', how='left'))\nprint('---')\nprint(df1.merge(df2, on='id', how='inner', indicator=True))",
+              "output": "   id     name  score\n0   1    Alice    NaN\n1   2      Bob   85.0\n2   3  Charlie   92.0\n---\n   id     name  score      _merge\n0   2      Bob     85        both\n1   3  Charlie     92        both",
               "params": [
                 {
                   "name": "how",
                   "type": "str",
                   "default": "'inner'",
                   "desc": {
-                    "zh": "'left'/'right'/'outer'/'inner'/'cross'",
-                    "en": "'left'/'right'/'outer'/'inner'/'cross'"
+                    "zh": "合并方式：'left'/'right'/'outer'/'inner'/'cross'",
+                    "en": "Merge type: 'left'/'right'/'outer'/'inner'/'cross'"
                   }
                 },
                 {
                   "name": "on",
-                  "type": "str | list",
+                  "type": "str | list | None",
+                  "default": "None",
                   "desc": {
-                    "zh": "连接键，两边都必须有此列",
-                    "en": "Join key, must exist in both DataFrames"
+                    "zh": "连接键列名，两边都必须有此列；None 时使用两边共同列名",
+                    "en": "Join key column name(s), must exist in both; None uses common column names"
+                  }
+                },
+                {
+                  "name": "left_on",
+                  "type": "str | list | None",
+                  "default": "None",
+                  "desc": {
+                    "zh": "左侧 DataFrame 的连接键（当两边列名不同时使用）",
+                    "en": "Left DataFrame join key (when column names differ between sides)"
+                  }
+                },
+                {
+                  "name": "suffixes",
+                  "type": "tuple[str, str]",
+                  "default": "('_x', '_y')",
+                  "desc": {
+                    "zh": "重叠列名的后缀；如 ('_left', '_right')",
+                    "en": "Suffixes for overlapping column names; e.g. ('_left', '_right')"
                   }
                 },
                 {
                   "name": "indicator",
-                  "type": "bool",
+                  "type": "bool | str",
                   "default": "False",
                   "desc": {
-                    "zh": "True 则添加 _merge 列标记来源",
-                    "en": "True adds _merge column showing source"
+                    "zh": "True 添加 _merge 列标记每行来源（'left_only'/'right_only'/'both'）",
+                    "en": "True adds _merge column showing row source ('left_only'/'right_only'/'both')"
                   }
                 }
               ],
@@ -10955,11 +11163,41 @@
             {
               "name": "df.loc[] 赋值",
               "desc": {
-                "zh": "通过 loc 直接修改原 DataFrame 中的值",
-                "en": "Directly modify values in original DataFrame via loc"
+                "zh": "通过 loc 直接修改原 DataFrame 中的值，避免 SettingWithCopyWarning",
+                "en": "Directly modify values in original DataFrame via loc, avoids SettingWithCopyWarning"
               },
               "signature": "df.loc[condition, 'col'] = value",
-              "example": "df.loc[df['age'] > 30, 'group'] = 'senior'",
+              "example": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'age': [25, 35, 28],\n    'group': ['', '', '']\n})\n\ndf.loc[df['age'] > 30, 'group'] = 'senior'\ndf.loc[df['age'] <= 30, 'group'] = 'junior'\nprint(df)",
+              "output": "      name  age   group\n0    Alice   25  junior\n1      Bob   35  senior\n2  Charlie   28  junior",
+              "params": [
+                {
+                  "name": "condition",
+                  "type": "bool Series | slice | label",
+                  "default": "required",
+                  "desc": {
+                    "zh": "行选择器：布尔 Series、标签切片或单个标签",
+                    "en": "Row selector: boolean Series, label slice, or single label"
+                  }
+                },
+                {
+                  "name": "col",
+                  "type": "str | list[str]",
+                  "default": "required",
+                  "desc": {
+                    "zh": "要修改的列名",
+                    "en": "Column name(s) to modify"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": "scalar | Series | array-like",
+                  "default": "required",
+                  "desc": {
+                    "zh": "新值：标量广播到所有匹配行，或与匹配行等长的数组",
+                    "en": "New value: scalar broadcasts to all matched rows, or array matching row count"
+                  }
+                }
+              ],
               "tags": [
                 "loc",
                 "assignment",
@@ -10969,11 +11207,23 @@
             {
               "name": "pd.options.mode.copy_on_write",
               "desc": {
-                "zh": "pandas 3.0 默认启用 CoW，切片返回懒拷贝",
-                "en": "CoW enabled by default in pandas 3.0, slices return lazy copies"
+                "zh": "pandas 3.0 默认启用 Copy-on-Write（CoW），切片返回懒拷贝，修改时自动复制",
+                "en": "Copy-on-Write (CoW) enabled by default in pandas 3.0; slices return lazy copies, auto-copy on modification"
               },
               "signature": "pd.options.mode.copy_on_write = True",
-              "example": "pd.set_option('mode.copy_on_write', True)\nsubset = df[df['age'] > 30]  # 懒拷贝\nsubset['col'] = 1  # 不影响 df",
+              "example": "import pandas as pd\n\npd.set_option('mode.copy_on_write', True)\n\ndf = pd.DataFrame({'a': [1, 2, 3], 'b': [4, 5, 6]})\nsubset = df[df['a'] > 1]  # lazy copy\nsubset['b'] = 99          # does NOT modify df\nprint('Original df unchanged:')\nprint(df)",
+              "output": "Original df unchanged:\n   a  b\n0  1  4\n1  2  5\n2  3  6",
+              "params": [
+                {
+                  "name": "copy_on_write",
+                  "type": "bool",
+                  "default": "False (True in pandas 3.0+)",
+                  "desc": {
+                    "zh": "启用后所有索引操作返回懒拷贝，写入时自动触发实际复制，消除 SettingWithCopyWarning",
+                    "en": "When enabled, all indexing returns lazy copies; actual copy is triggered on write, eliminating SettingWithCopyWarning"
+                  }
+                }
+              ],
               "tags": [
                 "cow",
                 "copy-on-write",
