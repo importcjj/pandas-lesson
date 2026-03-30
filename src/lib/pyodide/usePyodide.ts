@@ -28,7 +28,8 @@ const readyListeners: Array<() => void> = [];
 function getWorker(): Worker {
   if (workerInstance) return workerInstance;
 
-  workerInstance = new Worker("/pyodide.worker.js");
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+  workerInstance = new Worker(`${basePath}/pyodide.worker.js`);
   workerInstance.onmessage = (event) => {
     const { type, id, output, correct, error } = event.data;
 
