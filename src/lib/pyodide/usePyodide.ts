@@ -13,6 +13,7 @@ interface RunCodeResult {
   output: string;
   correct: boolean;
   error: string | null;
+  images: string[];
 }
 
 // Singleton worker instance shared across all components
@@ -31,7 +32,7 @@ function getWorker(): Worker {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
   workerInstance = new Worker(`${basePath}/pyodide.worker.js`);
   workerInstance.onmessage = (event) => {
-    const { type, id, output, correct, error } = event.data;
+    const { type, id, output, correct, error, images } = event.data;
 
     if (type === "ready") {
       workerReady = true;
@@ -42,7 +43,7 @@ function getWorker(): Worker {
       const callback = pendingCallbacks.get(id);
       if (callback) {
         pendingCallbacks.delete(id);
-        callback.resolve({ output: output ?? "", correct: Boolean(correct), error: error ?? null });
+        callback.resolve({ output: output ?? "", correct: Boolean(correct), error: error ?? null, images: images ?? [] });
       }
     } else if (type === "error") {
       workerInitializing = false;
@@ -136,7 +137,7 @@ export function usePyodide() {
       } catch (err) {
         const message = err instanceof Error ? err.message : "Unknown error";
         if (mountedRef.current) setError(message);
-        return { output: "", correct: false, error: message };
+        return { output: "", correct: false, error: message, images: [] };
       } finally {
         if (mountedRef.current) setIsLoading(false);
       }

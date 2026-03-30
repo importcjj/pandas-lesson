@@ -24,6 +24,7 @@ export default function CodingExercise({ exercise, onResult, savedCode }: Props)
   const { isLoading: pyodideLoading, isReady: pyodideReady, runCode } = usePyodide();
   const [code, setCode] = useState(savedCode ?? exercise.starterCode);
   const [output, setOutput] = useState<string | null>(null);
+  const [images, setImages] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showSolution, setShowSolution] = useState(false);
@@ -32,6 +33,7 @@ export default function CodingExercise({ exercise, onResult, savedCode }: Props)
     setIsRunning(true);
     setError(null);
     setOutput(null);
+    setImages([]);
 
     const result = await runCode(code, {
       setupCode: exercise.setupCode,
@@ -41,6 +43,7 @@ export default function CodingExercise({ exercise, onResult, savedCode }: Props)
     });
 
     setOutput(result.output);
+    setImages(result.images || []);
     if (result.error) {
       setError(result.error);
     }
@@ -136,6 +139,21 @@ export default function CodingExercise({ exercise, onResult, savedCode }: Props)
           >
             {error ?? output}
           </pre>
+        </div>
+      )}
+
+      {/* Plot images */}
+      {images.length > 0 && (
+        <div className="mt-3 space-y-2">
+          {images.map((base64, i) => (
+            <div key={i} className="overflow-hidden rounded-lg border border-gray-200 bg-white">
+              <img
+                src={`data:image/png;base64,${base64}`}
+                alt={`Plot ${i + 1}`}
+                className="w-full"
+              />
+            </div>
+          ))}
         </div>
       )}
 

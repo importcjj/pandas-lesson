@@ -17,6 +17,26 @@ async function initPyodide() {
   self.postMessage({ type: "status", message: "Loading pandas..." });
   await pyodide.loadPackage(["pandas", "scipy", "matplotlib"]);
 
+  // Set up matplotlib to use non-interactive Agg backend
+  pyodide.runPython(`
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import base64, io as _io
+
+def _capture_plot():
+    """Capture current matplotlib figure as base64 PNG, then close it."""
+    figs = [plt.figure(n) for n in plt.get_fignums()]
+    images = []
+    for fig in figs:
+        buf = _io.BytesIO()
+        fig.savefig(buf, format='png', dpi=100, bbox_inches='tight')
+        buf.seek(0)
+        images.append(base64.b64encode(buf.read()).decode('utf-8'))
+        plt.close(fig)
+    return images
+  `);
+
   isReady = true;
   self.postMessage({ type: "ready" });
 }
@@ -28,11 +48,13 @@ async function executeCode(data) {
     await initPyodide();
   }
 
-  // Set up stdout capture
+  // Set up stdout capture and clear any previous plots
   pyodide.runPython(`
 import sys, io
 __stdout_capture = io.StringIO()
 sys.stdout = __stdout_capture
+import matplotlib.pyplot as plt
+plt.close('all')
   `);
 
   try {
@@ -46,6 +68,10 @@ sys.stdout = __stdout_capture
 
     // Capture output
     const output = pyodide.runPython("__stdout_capture.getvalue()");
+
+    // Capture any plots as base64 images
+    const plotImages = pyodide.runPython("_capture_plot()");
+    const images = plotImages ? plotImages.toJs() : [];
 
     // Validate
     let correct = false;
@@ -70,6 +96,7 @@ sys.stdout = __stdout_capture
       output: output || "",
       correct: Boolean(correct),
       error: null,
+      images: images || [],
     });
   } catch (err) {
     // Capture any output before the error
@@ -86,6 +113,7 @@ sys.stdout = __stdout_capture
       output,
       correct: false,
       error: err.message || String(err),
+      images: [],
     });
   } finally {
     // Restore stdout
@@ -118,6 +146,7 @@ self.onmessage = async function (event) {
         output: "",
         correct: false,
         error: "Code execution timed out (30 seconds)",
+        images: [],
       });
     }, 30000);
 
