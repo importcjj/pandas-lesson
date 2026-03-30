@@ -394,7 +394,7 @@
         "en": "The cleaning pipeline below has a bug: dropna() removes too many rows because it drops rows with NaN in any column by default. Fix it to only drop rows where key columns ('name', 'id') have missing values."
       },
       "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'id': [1, 2, np.nan, 4, 5], 'name': ['Alice', 'Bob', 'Charlie', np.nan, 'Eve'], 'score': [85, np.nan, 90, 88, np.nan], 'grade': ['A', 'B', np.nan, 'A', 'B']})",
-      "starterCode": "# [调试] 链式操作悄悄丢失数据\n# 以下清洗管道有一个 bug：dropna() 删除了太多行，因为它默认删除任何列有 NaN 的行。请修复为只删除关键列 ('name', 'id') 有缺失值的...\n# 请找到并修复以下代码中的 bug：\nresult = df.dropna(subset=['id', 'name']).reset_index(drop=True)",
+      "starterCode": "# Bug: dropna() 默认删除任何列有 NaN 的行，删太多了\nresult = (\n    df\n    .dropna()  # Bug: 应该是 dropna(subset=['name', 'age']) 只检查关键列\n    .reset_index(drop=True)\n)\nprint(f'剩余行数: {len(result)}')",
       "solutionCode": "result = df.dropna(subset=['id', 'name']).reset_index(drop=True)",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\ndf = pd.DataFrame({'id': [1, 2, np.nan, 4, 5], 'name': ['Alice', 'Bob', 'Charlie', np.nan, 'Eve'], 'score': [85, np.nan, 90, 88, np.nan], 'grade': ['A', 'B', np.nan, 'A', 'B']})\", _ns)\nexec(\"result = df.dropna(subset=['id', 'name']).reset_index(drop=True)\", _ns)\ntry:\n    result = _ns['result'].equals(result)\nexcept:\n    result = False",

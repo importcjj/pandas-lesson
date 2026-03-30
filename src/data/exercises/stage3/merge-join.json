@@ -398,7 +398,7 @@
         "en": "The following code merges two DataFrames, but the 'id' column has mismatched dtypes (one is int, one is str), causing empty or incorrect results. Fix the code."
       },
       "setupCode": "import pandas as pd\ndf1 = pd.DataFrame({'id': [1, 2, 3], 'value_a': [10, 20, 30]})\ndf2 = pd.DataFrame({'id': ['1', '2', '4'], 'value_b': [100, 200, 400]})",
-      "starterCode": "# Bug: merge produces empty result due to dtype mismatch\nresult = pd.merge(df1, df2, on='id')",
+      "starterCode": "# Bug: 两个 DataFrame 的 key 列类型不一致（int vs str），merge 后行数为 0\ndf1 = pd.DataFrame({'key': [1, 2, 3], 'val1': ['a', 'b', 'c']})\ndf2 = pd.DataFrame({'key': ['1', '2', '3'], 'val2': ['x', 'y', 'z']})\nresult = df1.merge(df2, on='key')  # Bug: int vs str, 匹配不到\nprint(result)",
       "solutionCode": "df2['id'] = df2['id'].astype(int)\nresult = pd.merge(df1, df2, on='id')",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf1 = pd.DataFrame({'id': [1, 2, 3], 'value_a': [10, 20, 30]})\\ndf2 = pd.DataFrame({'id': ['1', '2', '4'], 'value_b': [100, 200, 400]})\", _expected_ns)\nexec(\"df2['id'] = df2['id'].astype(int)\\nresult = pd.merge(df1, df2, on='id')\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",

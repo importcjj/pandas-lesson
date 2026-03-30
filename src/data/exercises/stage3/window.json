@@ -398,7 +398,7 @@
         "en": "The following code computes a 3-day rolling mean by date, but the data is not sorted by date, causing incorrect results. Fix the code."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'date': pd.to_datetime(['2024-01-03', '2024-01-01', '2024-01-05', '2024-01-02', '2024-01-04']), 'price': [101, 100, 107, 102, 105]})",
-      "starterCode": "# Bug: rolling on unsorted data gives wrong results\nresult = df['price'].rolling(3).mean()",
+      "starterCode": "# Bug: 数据未按时间排序就做 rolling，结果不正确\nresult = df['value'].rolling(3).mean()  # Bug: 应该先 sort_values('date')\nprint(result)",
       "solutionCode": "df = df.sort_values('date')\nresult = df['price'].rolling(3).mean()",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'date': pd.to_datetime(['2024-01-03', '2024-01-01', '2024-01-05', '2024-01-02', '2024-01-04']), 'price': [101, 100, 107, 102, 105]})\", _expected_ns)\nexec(\"df = df.sort_values('date')\\nresult = df['price'].rolling(3).mean()\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",

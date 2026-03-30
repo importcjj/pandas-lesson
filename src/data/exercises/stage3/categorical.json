@@ -353,7 +353,7 @@
         "en": "The following code tries to filter tasks with priority higher than 'medium', but fails because the categorical column is not ordered. Fix the code."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'task': ['Task A', 'Task B', 'Task C', 'Task D'], 'priority': pd.Categorical(['high', 'low', 'medium', 'high'])})",
-      "starterCode": "# Bug: TypeError - Unordered Categoricals can not be compared\nresult = df[df['priority'] > 'medium']",
+      "starterCode": "# Bug: 无序分类不能用 > < 比较\ns = pd.Categorical(['low', 'mid', 'high'], categories=['low', 'mid', 'high'], ordered=False)\nresult = s > 'low'  # TypeError: Unordered Categoricals can only compare equality\nprint(result)",
       "solutionCode": "df['priority'] = df['priority'].cat.set_categories(['low', 'medium', 'high'], ordered=True)\nresult = df[df['priority'] > 'medium']",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'task': ['Task A', 'Task B', 'Task C', 'Task D'], 'priority': pd.Categorical(['high', 'low', 'medium', 'high'])})\", _expected_ns)\nexec(\"df['priority'] = df['priority'].cat.set_categories(['low', 'medium', 'high'], ordered=True)\\nresult = df[df['priority'] > 'medium']\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",

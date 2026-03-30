@@ -393,7 +393,7 @@
         "en": "The code below uses transform to try to get the top 2 rows per group, but transform requires results with the same shape as input. Fix the bug by using the correct method."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'group': ['A', 'A', 'A', 'B', 'B', 'B'], 'score': [85, 92, 78, 90, 88, 95]})",
-      "starterCode": "# [调试] transform 形状不匹配\n# 以下代码使用 transform 尝试获取每组的前 2 行，但 transform 要求返回与输入相同形状的结果。请修复 bug，使用正确的方法实现需求。...\n# 请找到并修复以下代码中的 bug：\nresult = df.groupby('group').apply(\n    lambda x: x.nlargest(2, 'score')\n).reset_index(drop=True)",
+      "starterCode": "# Bug: transform 要求返回与输入相同形状，但 head(2) 改变了形状\nresult = df.groupby('dept')['salary'].transform(lambda x: x.head(2))\nprint(result)",
       "solutionCode": "result = df.groupby('group').apply(\n    lambda x: x.nlargest(2, 'score')\n).reset_index(drop=True)",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'group': ['A', 'A', 'A', 'B', 'B', 'B'], 'score': [85, 92, 78, 90, 88, 95]})\", _ns)\nexec(\"result = df.groupby('group').apply(\\n    lambda x: x.nlargest(2, 'score')\\n).reset_index(drop=True)\", _ns)\ntry:\n    result = _ns['result'].equals(result)\nexcept:\n    result = False",
