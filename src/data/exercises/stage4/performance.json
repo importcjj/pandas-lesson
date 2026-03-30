@@ -457,7 +457,7 @@
         "en": "The analysis pipeline below uses iterrows and apply with poor performance. Rewrite it using vectorized operations and query/eval for the same result but better performance. Steps: 1) Vectorize total = price * quantity, 2) Use eval to calculate profit = total - cost, 3) Use query to filter rows where profit > 100, 4) Assign the result to result."
       },
       "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nn = 1000\ndf = pd.DataFrame({'price': np.random.uniform(10, 100, n), 'quantity': np.random.randint(1, 20, n), 'cost': np.random.uniform(50, 500, n)})",
-      "starterCode": "# Step 1: Vectorize total calculation\ndf['total'] = ___\n\n# Step 2: Use eval to calculate profit\ndf = df.eval(___)\n\n# Step 3: Use query to filter profitable items\nresult = df.query(___)",
+      "starterCode": "# [综合] 优化慢速分析管道\n# 下面的分析管道使用了 iterrows 和 apply，性能很差。请用向量化操作和 query/eval 重写，实现相同的结果但性能更好。步骤：1) 用向量化计\n# 原始代码（需要重构）：\n# df['total'] = df['price'] * df['quantity']\n# df = df.eval('profit = total - cost')\n# result = df.query('profit > 100')\n\n# 请重构为更好的写法：\nresult = ___",
       "solutionCode": "df['total'] = df['price'] * df['quantity']\ndf = df.eval('profit = total - cost')\nresult = df.query('profit > 100')",
       "validationType": "custom-check",
       "checkCode": "try:\n    result_check = 'profit' in result.columns and 'total' in result.columns and (result['profit'] > 100).all() and len(result) > 0\nexcept:\n    result_check = False\nresult = result_check",

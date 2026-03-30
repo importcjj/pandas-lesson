@@ -419,7 +419,7 @@
         "en": "The code below tries to unstack but fails due to duplicate index values. Fix it by aggregating duplicates before unstacking."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'city': ['NYC', 'NYC', 'LA', 'LA', 'NYC'], 'quarter': ['Q1', 'Q1', 'Q1', 'Q2', 'Q2'], 'revenue': [100, 150, 200, 300, 250]})",
-      "starterCode": "# [调试] unstack 时索引重复\nresult = ___",
+      "starterCode": "# [调试] unstack 时索引重复\n# 以下代码尝试 unstack，但由于索引有重复值导致错误。请在 unstack 之前先聚合重复值来修复。...\n# 请找到并修复以下代码中的 bug：\nresult = df.groupby(['city', 'quarter'])['revenue'].sum().unstack(fill_value=0)",
       "solutionCode": "result = df.groupby(['city', 'quarter'])['revenue'].sum().unstack(fill_value=0)",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'city': ['NYC', 'NYC', 'LA', 'LA', 'NYC'], 'quarter': ['Q1', 'Q1', 'Q1', 'Q2', 'Q2'], 'revenue': [100, 150, 200, 300, 250]})\", _ns)\nexec(\"result = df.groupby(['city', 'quarter'])['revenue'].sum().unstack(fill_value=0)\", _ns)\ntry:\n    result = _ns['result'].equals(result)\nexcept:\n    result = False",

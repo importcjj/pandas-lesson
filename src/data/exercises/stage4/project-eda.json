@@ -381,7 +381,7 @@
         "en": "The code below calls corr() on a DataFrame with non-numeric columns, which produces warnings or ignores columns. Fix: select numeric columns first, then compute correlation."
       },
       "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'age': [25, 30, 35, 28, 32], 'salary': [50000, 60000, 75000, 55000, 70000], 'department': ['Eng', 'HR', 'Eng', 'Sales', 'HR']})",
-      "starterCode": "# [调试] 在非数值列上计算相关性\ncorr_matrix = ___",
+      "starterCode": "# [调试] 在非数值列上计算相关性\n# 以下代码直接对包含非数值列的 DataFrame 调用 corr()，会产生警告或忽略列。请修复：先选择数值列再计算相关性。...\n# 请找到并修复以下代码中的 bug：\ncorr_matrix = df.select_dtypes(include='number').corr()\nprint(corr_matrix)",
       "solutionCode": "corr_matrix = df.select_dtypes(include='number').corr()\nprint(corr_matrix)",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'age': [25, 30, 35, 28, 32], 'salary': [50000, 60000, 75000, 55000, 70000], 'department': ['Eng', 'HR', 'Eng', 'Sales', 'HR']})\", _ns)\nexec(\"corr_matrix = df.select_dtypes(include='number').corr()\\nprint(corr_matrix)\", _ns)\ntry:\n    result = _ns['corr_matrix'].equals(corr_matrix)\nexcept:\n    result = False",

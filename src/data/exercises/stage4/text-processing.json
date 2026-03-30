@@ -397,7 +397,7 @@
         "en": "The code below tries to extract year and month from date strings, but the regex has an issue. Fix the bug."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'date_str': ['2024-01-15', '2023-12-25', '2024-06-01']})",
-      "starterCode": "# [调试] extract 捕获组数量错误\nresult = ___",
+      "starterCode": "# [调试] extract 捕获组数量错误\n# 以下代码尝试从日期字符串中提取年份和月份，但正则表达式有问题。请修复 bug。...\n# 请找到并修复以下代码中的 bug：\nresult = df['date_str'].str.extract(r'(\\d{4})-(\\d{2})')\nresult.columns = ['year', 'month']",
       "solutionCode": "result = df['date_str'].str.extract(r'(\\d{4})-(\\d{2})')\nresult.columns = ['year', 'month']",
       "validationType": "custom-check",
       "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'date_str': ['2024-01-15', '2023-12-25', '2024-06-01']})\", _ns)\nexec(\"result = df['date_str'].str.extract(r'(\\\\d{4})-(\\\\d{2})')\\nresult.columns = ['year', 'month']\", _ns)\ntry:\n    result = _ns['result'].equals(result)\nexcept:\n    result = False",
