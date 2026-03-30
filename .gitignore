@@ -42,3 +42,10 @@ next-env.d.ts
 
 # Local Netlify folder
 .netlify
+
+# Python/uv
+.python-version
+main.py
+pyproject.toml
+uv.lock
+.venv/
