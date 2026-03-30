@@ -8891,6 +8891,52 @@
                 "panel",
                 "longitudinal"
               ]
+            },
+            {
+              "name": "pd.from_dummies()",
+              "desc": {
+                "zh": "将独热编码还原为分类列（get_dummies 的逆操作）",
+                "en": "Convert one-hot encoded columns back to categorical (inverse of get_dummies)"
+              },
+              "signature": "pd.from_dummies(data, sep=None, default_category=None)",
+              "example": "import pandas as pd\n\n# 先用 get_dummies 编码\ndf = pd.DataFrame({'color': ['red', 'blue', 'green', 'red']})\ndummies = pd.get_dummies(df['color'])\nprint('独热编码:')\nprint(dummies)\n\n# 用 from_dummies 还原\noriginal = pd.from_dummies(dummies)\nprint('\\n还原:')\nprint(original)",
+              "output": "独热编码:\n    blue  green   red\n0  False  False  True\n1   True  False  False\n2  False   True  False\n3  False  False  True\n\n还原:\n  0\n0  red\n1  blue\n2  green\n3  red",
+              "params": [
+                {
+                  "name": "data",
+                  "type": "DataFrame",
+                  "default": "required",
+                  "desc": {
+                    "zh": "独热编码的 DataFrame",
+                    "en": "One-hot encoded DataFrame"
+                  }
+                },
+                {
+                  "name": "sep",
+                  "type": "str",
+                  "default": "None",
+                  "desc": {
+                    "zh": "列名中前缀和类别的分隔符（如 get_dummies 用了 prefix_sep）",
+                    "en": "Separator in column names between prefix and category"
+                  }
+                },
+                {
+                  "name": "default_category",
+                  "type": "dict | scalar",
+                  "default": "None",
+                  "desc": {
+                    "zh": "全为 0 时的默认类别",
+                    "en": "Default category when all values are 0"
+                  }
+                }
+              ],
+              "tags": [
+                "from_dummies",
+                "one-hot",
+                "decode",
+                "inverse",
+                "categorical"
+              ]
             }
           ]
         },
