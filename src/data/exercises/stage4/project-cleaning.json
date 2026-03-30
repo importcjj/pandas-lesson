@@ -297,9 +297,9 @@
         "en": "After cleaning, use assert statements to validate data quality: 1) No missing values, 2) No duplicate IDs, 3) Age within reasonable range."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'id': [1, 2, 3, 4, 5], 'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'age': [25, 30, 22, 45, 28]})",
-      "starterCode": "# Validate: no missing values\nassert df.isna().sum().sum() == 0, 'Found missing values!'\n\n# Validate: no duplicate IDs\nassert df['id'].is_unique, 'Found duplicate IDs!'\n\n# Validate: age in reasonable range\nassert (df['age'] >= 0).all() and (df['age'] <= 120).all(), 'Age out of range!'\n\nprint('All validations passed!')",
+      "starterCode": "# Validate: no missing values\n___\n\n# Validate: no duplicate IDs\n___\n\n# Validate: age in reasonable range\n___\n\nprint('All validations passed!')",
       "solutionCode": "assert df.isna().sum().sum() == 0, 'Found missing values!'\nassert df['id'].is_unique, 'Found duplicate IDs!'\nassert (df['age'] >= 0).all() and (df['age'] <= 120).all(), 'Age out of range!'\nprint('All validations passed!')",
-      "validationType": "exact-output",
+      "validationType": "dataframe-equals",
       "expectedOutput": "All validations passed!",
       "hints": {
         "zh": [
@@ -314,7 +314,8 @@
       "explanation": {
         "zh": "数据验证是清洗流程的最后一步，确保清洗后的数据满足预期。常用验证：1) isna().sum() 检查缺失值；2) is_unique 或 duplicated().sum() 检查重复；3) 范围检查用比较运算符 + .all()；4) dtype 检查。assert 在条件不满足时会立即报错。",
         "en": "Data validation is the final step in cleaning, ensuring cleaned data meets expectations. Common validations: 1) isna().sum() for missing values; 2) is_unique or duplicated().sum() for duplicates; 3) Range checks with comparison operators + .all(); 4) dtype checks. assert raises an error immediately when conditions are not met."
-      }
+      },
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'id': [1, 2, 3, 4, 5], 'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'age': [25, 30, 22, 45, 28]})\", _ns)\nexec(\"assert df.isna().sum().sum() == 0, 'Found missing values!'\\nassert df['id'].is_unique, 'Found duplicate IDs!'\\nassert (df['age'] >= 0).all() and (df['age'] <= 120).all(), 'Age out of range!'\\nprint('All validations passed!')\", _ns)\ntry:\n    result = _ns['df'].equals(df)\nexcept:\n    result = False"
     },
     {
       "id": "s4-project-cleaning-010",

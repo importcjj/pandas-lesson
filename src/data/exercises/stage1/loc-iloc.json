@@ -298,11 +298,11 @@
         "zh": "使用 loc 选择索引为 'b' 到 'd' 的行，且只选择 'name' 和 'score' 两列，打印结果。",
         "en": "Use loc to select rows from index 'b' to 'd', and only the 'name' and 'score' columns. Print the result."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'age': [25, 30, 35, 28, 22],\n    'score': [88, 92, 76, 95, 83]\n}, index=['a', 'b', 'c', 'd', 'e'])\n\n# Use loc to select rows 'b' to 'd', columns 'name' and 'score'\n",
+      "starterCode": "___\n\ndf = ___\n    ___\n    ___\n    ___\n___\n\n# Use loc to select rows 'b' to 'd', columns 'name' and 'score'\n",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\n    'age': [25, 30, 35, 28, 22],\n    'score': [88, 92, 76, 95, 83]\n}, index=['a', 'b', 'c', 'd', 'e'])\n\nprint(df.loc['b':'d', ['name', 'score']])",
       "setupCode": "",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = 'Bob' in _output and 'Diana' in _output and 'Charlie' in _output and 'age' not in _output and 'Alice' not in _output\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('', _ns)\nexec(\"import pandas as pd\\n\\ndf = pd.DataFrame({\\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],\\n    'age': [25, 30, 35, 28, 22],\\n    'score': [88, 92, 76, 95, 83]\\n}, index=['a', 'b', 'c', 'd', 'e'])\\n\\nprint(df.loc['b':'d', ['name', 'score']])\", _ns)\ntry:\n    result = _ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "loc 的行选择使用标签范围 'b':'d'（闭区间）",
@@ -358,11 +358,11 @@
         "zh": "以下代码使用 loc[0] 想取第一行，但由于自定义索引不包含 0 导致报错。修复代码使其正确获取第一行数据。",
         "en": "The following code uses loc[0] to get the first row, but the custom index doesn't contain 0 causing an error. Fix the code to correctly get the first row."
       },
-      "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'score': [90, 85, 78]\n}, index=[10, 20, 30])\n\n# Bug: KeyError because index doesn't have label 0\nprint(df.loc[0])",
+      "starterCode": "___\n\ndf = ___\n    ___\n    ___\n___\n\n# Bug: KeyError because index doesn't have label 0\nprint(df.loc[0])",
       "solutionCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie'],\n    'score': [90, 85, 78]\n}, index=[10, 20, 30])\n\nprint(df.iloc[0])",
       "setupCode": "",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = 'Alice' in _output and '90' in _output\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('', _ns)\nexec(\"import pandas as pd\\n\\ndf = pd.DataFrame({\\n    'name': ['Alice', 'Bob', 'Charlie'],\\n    'score': [90, 85, 78]\\n}, index=[10, 20, 30])\\n\\nprint(df.iloc[0])\", _ns)\ntry:\n    result = _ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "loc 使用标签索引，索引中没有标签 0",

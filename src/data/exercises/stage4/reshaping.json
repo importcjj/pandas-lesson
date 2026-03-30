@@ -355,10 +355,10 @@
         "en": "Use pd.factorize() to encode the 'city' column as integer codes and get the unique value mapping."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'city': ['NYC', 'LA', 'NYC', 'Chicago', 'LA', 'NYC']})",
-      "starterCode": "# Factorize the city column\ncodes, uniques = pd.factorize(df['city'])\ndf['city_code'] = codes\nprint('Codes:', codes)\nprint('Uniques:', uniques)",
+      "starterCode": "# Factorize the city column\n___\n___\nprint('Codes:', codes)\nprint('Uniques:', uniques)",
       "solutionCode": "codes, uniques = pd.factorize(df['city'])\ndf['city_code'] = codes\nprint('Codes:', codes)\nprint('Uniques:', uniques)",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'city': ['NYC', 'LA', 'NYC', 'Chicago', 'LA', 'NYC']})\", _expected_ns)\nexec(\"codes, uniques = pd.factorize(df['city'])\\ndf['city_code'] = codes\\nprint('Codes:', codes)\\nprint('Uniques:', uniques)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'city': ['NYC', 'LA', 'NYC', 'Chicago', 'LA', 'NYC']})\", _ns)\nexec(\"codes, uniques = pd.factorize(df['city'])\\ndf['city_code'] = codes\\nprint('Codes:', codes)\\nprint('Uniques:', uniques)\", _ns)\ntry:\n    result = _ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "factorize 返回 (codes, uniques) 元组",
@@ -387,10 +387,10 @@
         "en": "Post-process a pivot_table result: flatten MultiIndex column names and reset the index."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'date': ['2024-01', '2024-01', '2024-02', '2024-02'], 'product': ['A', 'B', 'A', 'B'], 'sales': [100, 200, 150, 250], 'quantity': [10, 20, 15, 25]})\npivoted = df.pivot_table(index='date', columns='product', values=['sales', 'quantity'], aggfunc='sum')",
-      "starterCode": "# Flatten MultiIndex columns\npivoted.columns = ['_'.join(col).strip() for col in pivoted.columns.values]\n\n# Reset index\nresult = pivoted.reset_index()\nprint(result.columns.tolist())",
+      "starterCode": "# Flatten MultiIndex columns\n___\n\n# Reset index\nresult = ___\nprint(result.columns.tolist())",
       "solutionCode": "pivoted.columns = ['_'.join(col).strip() for col in pivoted.columns.values]\nresult = pivoted.reset_index()\nprint(result.columns.tolist())",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'date': ['2024-01', '2024-01', '2024-02', '2024-02'], 'product': ['A', 'B', 'A', 'B'], 'sales': [100, 200, 150, 250], 'quantity': [10, 20, 15, 25]})\\npivoted = df.pivot_table(index='date', columns='product', values=['sales', 'quantity'], aggfunc='sum')\", _expected_ns)\nexec(\"pivoted.columns = ['_'.join(col).strip() for col in pivoted.columns.values]\\nresult = pivoted.reset_index()\\nprint(result.columns.tolist())\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'date': ['2024-01', '2024-01', '2024-02', '2024-02'], 'product': ['A', 'B', 'A', 'B'], 'sales': [100, 200, 150, 250], 'quantity': [10, 20, 15, 25]})\\npivoted = df.pivot_table(index='date', columns='product', values=['sales', 'quantity'], aggfunc='sum')\", _ns)\nexec(\"pivoted.columns = ['_'.join(col).strip() for col in pivoted.columns.values]\\nresult = pivoted.reset_index()\\nprint(result.columns.tolist())\", _ns)\ntry:\n    result = _ns['df'].equals(df) and _ns['pivoted'].equals(pivoted) and _ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "pivot_table 多值聚合会产生 MultiIndex 列",

@@ -296,11 +296,11 @@
         "zh": "对具有 MultiIndex 的 DataFrame 按第一层级（level=0）排序，打印结果。",
         "en": "Sort a DataFrame with MultiIndex by the first level (level=0), and print the result."
       },
-      "starterCode": "import pandas as pd\n\narrays = [['B', 'A', 'B', 'A'], ['two', 'one', 'one', 'two']]\nindex = pd.MultiIndex.from_arrays(arrays, names=['first', 'second'])\ndf = pd.DataFrame({'value': [10, 20, 30, 40]}, index=index)\n\n# Sort by first level of MultiIndex\n",
+      "starterCode": "___\n\narrays = ___\nindex = ___\ndf = ___\n\n# Sort by first level of MultiIndex\n",
       "solutionCode": "import pandas as pd\n\narrays = [['B', 'A', 'B', 'A'], ['two', 'one', 'one', 'two']]\nindex = pd.MultiIndex.from_arrays(arrays, names=['first', 'second'])\ndf = pd.DataFrame({'value': [10, 20, 30, 40]}, index=index)\n\nprint(df.sort_index(level=0))",
       "setupCode": "",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\n\\narrays = [['B', 'A', 'B', 'A'], ['two', 'one', 'one', 'two']]\\nindex = pd.MultiIndex.from_arrays(arrays, names=['first', 'second'])\\ndf = pd.DataFrame({'value': [10, 20, 30, 40]}, index=index)\\n\\nprint(df.sort_index(level=0))\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('', _ns)\nexec(\"import pandas as pd\\n\\narrays = [['B', 'A', 'B', 'A'], ['two', 'one', 'one', 'two']]\\nindex = pd.MultiIndex.from_arrays(arrays, names=['first', 'second'])\\ndf = pd.DataFrame({'value': [10, 20, 30, 40]}, index=index)\\n\\nprint(df.sort_index(level=0))\", _ns)\ntry:\n    result = _ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "sort_index() 的 level 参数指定排序的层级",
