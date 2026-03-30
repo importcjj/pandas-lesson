@@ -381,10 +381,10 @@
         "en": "The code below calls corr() on a DataFrame with non-numeric columns, which produces warnings or ignores columns. Fix: select numeric columns first, then compute correlation."
       },
       "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'age': [25, 30, 35, 28, 32], 'salary': [50000, 60000, 75000, 55000, 70000], 'department': ['Eng', 'HR', 'Eng', 'Sales', 'HR']})",
-      "starterCode": "# Bug: corr() on DataFrame with non-numeric columns\n# Fix: select numeric columns first\ncorr_matrix = df.select_dtypes(include='number').corr()\nprint(corr_matrix)",
+      "starterCode": "# [调试] 在非数值列上计算相关性\ncorr_matrix = ___",
       "solutionCode": "corr_matrix = df.select_dtypes(include='number').corr()\nprint(corr_matrix)",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'age': [25, 30, 35, 28, 32], 'salary': [50000, 60000, 75000, 55000, 70000], 'department': ['Eng', 'HR', 'Eng', 'Sales', 'HR']})\", _expected_ns)\nexec(\"corr_matrix = df.select_dtypes(include='number').corr()\\nprint(corr_matrix)\", _expected_ns)\ntry:\n    result = _expected_ns.get('corr_matrix') is not None and hasattr(_expected_ns['corr_matrix'], 'equals') and _expected_ns['corr_matrix'].equals(corr_matrix)\nexcept:\n    result = False",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'age': [25, 30, 35, 28, 32], 'salary': [50000, 60000, 75000, 55000, 70000], 'department': ['Eng', 'HR', 'Eng', 'Sales', 'HR']})\", _ns)\nexec(\"corr_matrix = df.select_dtypes(include='number').corr()\\nprint(corr_matrix)\", _ns)\ntry:\n    result = _ns['corr_matrix'].equals(corr_matrix)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "select_dtypes(include='number') 只选择数值列",

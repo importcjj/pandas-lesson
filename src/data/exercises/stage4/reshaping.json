@@ -419,10 +419,10 @@
         "en": "The code below tries to unstack but fails due to duplicate index values. Fix it by aggregating duplicates before unstacking."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'city': ['NYC', 'NYC', 'LA', 'LA', 'NYC'], 'quarter': ['Q1', 'Q1', 'Q1', 'Q2', 'Q2'], 'revenue': [100, 150, 200, 300, 250]})",
-      "starterCode": "# Bug: duplicate (city, quarter) pairs cause unstack to fail\n# Fix: aggregate first, then unstack\nresult = df.groupby(['city', 'quarter'])['revenue'].sum().unstack(fill_value=0)",
+      "starterCode": "# [调试] unstack 时索引重复\nresult = ___",
       "solutionCode": "result = df.groupby(['city', 'quarter'])['revenue'].sum().unstack(fill_value=0)",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'city': ['NYC', 'NYC', 'LA', 'LA', 'NYC'], 'quarter': ['Q1', 'Q1', 'Q1', 'Q2', 'Q2'], 'revenue': [100, 150, 200, 300, 250]})\", _expected_ns)\nexec(\"result = df.groupby(['city', 'quarter'])['revenue'].sum().unstack(fill_value=0)\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'city': ['NYC', 'NYC', 'LA', 'LA', 'NYC'], 'quarter': ['Q1', 'Q1', 'Q1', 'Q2', 'Q2'], 'revenue': [100, 150, 200, 300, 250]})\", _ns)\nexec(\"result = df.groupby(['city', 'quarter'])['revenue'].sum().unstack(fill_value=0)\", _ns)\ntry:\n    result = _ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "先 groupby 聚合消除重复索引",

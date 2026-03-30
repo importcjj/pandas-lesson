@@ -265,10 +265,10 @@
         "en": "Refactor the step-by-step operations below into an elegant method chain (using parentheses for line breaks)."
       },
       "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'category': ['A', 'B', 'A', 'C', 'B', 'A', 'C', 'B'], 'value': [10, np.nan, 20, 30, 15, np.nan, 25, 35], 'weight': [1.0, 2.0, 1.5, 2.5, 1.0, 2.0, 1.5, 2.5]})",
-      "starterCode": "# Refactor to method chain\nresult = (\n    df\n    .dropna(subset=['value'])\n    .assign(weighted=lambda x: x['value'] * x['weight'])\n    .groupby('category')\n    .agg(total_weighted=('weighted', 'sum'))\n    .sort_values('total_weighted', ascending=False)\n)",
+      "starterCode": "# 方法链风格指南\nresult = ___",
       "solutionCode": "result = (\n    df\n    .dropna(subset=['value'])\n    .assign(weighted=lambda x: x['value'] * x['weight'])\n    .groupby('category')\n    .agg(total_weighted=('weighted', 'sum'))\n    .sort_values('total_weighted', ascending=False)\n)",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\ndf = pd.DataFrame({'category': ['A', 'B', 'A', 'C', 'B', 'A', 'C', 'B'], 'value': [10, np.nan, 20, 30, 15, np.nan, 25, 35], 'weight': [1.0, 2.0, 1.5, 2.5, 1.0, 2.0, 1.5, 2.5]})\", _expected_ns)\nexec(\"result = (\\n    df\\n    .dropna(subset=['value'])\\n    .assign(weighted=lambda x: x['value'] * x['weight'])\\n    .groupby('category')\\n    .agg(total_weighted=('weighted', 'sum'))\\n    .sort_values('total_weighted', ascending=False)\\n)\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\ndf = pd.DataFrame({'category': ['A', 'B', 'A', 'C', 'B', 'A', 'C', 'B'], 'value': [10, np.nan, 20, 30, 15, np.nan, 25, 35], 'weight': [1.0, 2.0, 1.5, 2.5, 1.0, 2.0, 1.5, 2.5]})\", _ns)\nexec(\"result = (\\n    df\\n    .dropna(subset=['value'])\\n    .assign(weighted=lambda x: x['value'] * x['weight'])\\n    .groupby('category')\\n    .agg(total_weighted=('weighted', 'sum'))\\n    .sort_values('total_weighted', ascending=False)\\n)\", _ns)\ntry:\n    result = _ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "assign 创建新列可以在链中使用 lambda",
@@ -377,10 +377,10 @@
         "en": "Fix the operations that trigger SettingWithCopyWarning in the code below. Replace chained indexing with the correct .loc approach."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David'], 'age': [22, 30, 28, 35], 'dept': ['Eng', 'HR', 'Eng', 'Sales']})",
-      "starterCode": "# Fixed: Use .loc instead of chained indexing\n# Bad:  df[df['age'] > 25]['dept'] = 'Senior'\n# Good:\ndf.loc[df['age'] > 25, 'dept'] = 'Senior'\n\nprint(df)",
+      "starterCode": "# 常见 SettingWithCopyWarning 触发场景\ndf = ___",
       "solutionCode": "df.loc[df['age'] > 25, 'dept'] = 'Senior'\nprint(df)",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David'], 'age': [22, 30, 28, 35], 'dept': ['Eng', 'HR', 'Eng', 'Sales']})\", _expected_ns)\nexec(\"df.loc[df['age'] > 25, 'dept'] = 'Senior'\\nprint(df)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David'], 'age': [22, 30, 28, 35], 'dept': ['Eng', 'HR', 'Eng', 'Sales']})\", _ns)\nexec(\"df.loc[df['age'] > 25, 'dept'] = 'Senior'\\nprint(df)\", _ns)\ntry:\n    result = _ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "df.loc[条件, 列名] = 值 是单次索引操作",
@@ -409,10 +409,10 @@
         "en": "Use .pipe() to insert a custom function into a method chain. Define a function that adds a label column and use it in the chain."
       },
       "setupCode": "import pandas as pd\nimport numpy as np\ndef add_label(df, column, thresholds, labels):\n    \"\"\"Add a label column based on thresholds.\"\"\"\n    df = df.copy()\n    df['label'] = pd.cut(df[column], bins=[-np.inf] + thresholds + [np.inf], labels=labels)\n    return df\n\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'score': [45, 72, 88, 95, 60]})",
-      "starterCode": "# Use pipe to integrate custom function in method chain\nresult = (\n    df\n    .pipe(add_label, column='score', thresholds=[60, 80], labels=['Fail', 'Pass', 'Excellent'])\n    .sort_values('score', ascending=False)\n)",
+      "starterCode": "# 使用 .pipe() 提高代码可读性\nresult = ___",
       "solutionCode": "result = (\n    df\n    .pipe(add_label, column='score', thresholds=[60, 80], labels=['Fail', 'Pass', 'Excellent'])\n    .sort_values('score', ascending=False)\n)",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\ndef add_label(df, column, thresholds, labels):\\n    \"\"\"Add a label column based on thresholds.\"\"\"\\n    df = df.copy()\\n    df[\\'label\\'] = pd.cut(df[column], bins=[-np.inf] + thresholds + [np.inf], labels=labels)\\n    return df\\n\\ndf = pd.DataFrame({\\'name\\': [\\'Alice\\', \\'Bob\\', \\'Charlie\\', \\'David\\', \\'Eve\\'], \\'score\\': [45, 72, 88, 95, 60]})', _expected_ns)\nexec(\"result = (\\n    df\\n    .pipe(add_label, column='score', thresholds=[60, 80], labels=['Fail', 'Pass', 'Excellent'])\\n    .sort_values('score', ascending=False)\\n)\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\ndef add_label(df, column, thresholds, labels):\\n    \"\"\"Add a label column based on thresholds.\"\"\"\\n    df = df.copy()\\n    df[\\'label\\'] = pd.cut(df[column], bins=[-np.inf] + thresholds + [np.inf], labels=labels)\\n    return df\\n\\ndf = pd.DataFrame({\\'name\\': [\\'Alice\\', \\'Bob\\', \\'Charlie\\', \\'David\\', \\'Eve\\'], \\'score\\': [45, 72, 88, 95, 60]})', _ns)\nexec(\"result = (\\n    df\\n    .pipe(add_label, column='score', thresholds=[60, 80], labels=['Fail', 'Pass', 'Excellent'])\\n    .sort_values('score', ascending=False)\\n)\", _ns)\ntry:\n    result = _ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "pipe 将 DataFrame 作为第一个参数传给函数",
@@ -441,10 +441,10 @@
         "en": "The code below expects modifying subset to affect the original df, but CoW prevents this. Fix: modify df directly using .loc."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'score': [85, 72, 90]})",
-      "starterCode": "# Bug: In CoW mode, modifying subset doesn't affect df\n# subset = df[df['score'] < 80]\n# subset['score'] = 0  # This won't modify df in CoW mode!\n\n# Fix: modify df directly\ndf.loc[df['score'] < 80, 'score'] = 0\nprint(df)",
+      "starterCode": "# [调试] CoW 行为引起的意外\ndf = ___",
       "solutionCode": "df.loc[df['score'] < 80, 'score'] = 0\nprint(df)",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'score': [85, 72, 90]})\", _expected_ns)\nexec(\"df.loc[df['score'] < 80, 'score'] = 0\\nprint(df)\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie'], 'score': [85, 72, 90]})\", _ns)\nexec(\"df.loc[df['score'] < 80, 'score'] = 0\\nprint(df)\", _ns)\ntry:\n    result = _ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "CoW 模式下切片返回的是延迟拷贝",
@@ -513,10 +513,10 @@
         "en": "Refactor the imperative code with loops and row-by-row operations into idiomatic pandas method chains. Goals: 1) Vectorize total calculation, 2) Replace loop conditionals with np.where, 3) Filter with query, 4) Summarize with groupby + agg, 5) Sort result. Assign to result."
       },
       "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'product': np.random.choice(['Widget', 'Gadget', 'Doohickey'], 100), 'price': np.random.uniform(10, 100, 100).round(2), 'quantity': np.random.randint(1, 20, 100), 'discount': np.random.choice([0, 0.1, 0.2], 100)})",
-      "starterCode": "# Idiomatic pandas: method chain\nresult = (\n    df\n    .assign(\n        total=lambda x: x['price'] * x['quantity'] * (1 - x['discount']),\n        tier=lambda x: np.where(x['price'] > 50, 'Premium', 'Standard')\n    )\n    .query('total > 100')\n    .groupby(['product', 'tier'])\n    .agg(\n        avg_total=('total', 'mean'),\n        count=('total', 'count')\n    )\n    .sort_values('avg_total', ascending=False)\n)",
+      "starterCode": "# [综合] 将命令式代码重构为地道的 pandas 风格\nresult = ___",
       "solutionCode": "result = (\n    df\n    .assign(\n        total=lambda x: x['price'] * x['quantity'] * (1 - x['discount']),\n        tier=lambda x: np.where(x['price'] > 50, 'Premium', 'Standard')\n    )\n    .query('total > 100')\n    .groupby(['product', 'tier'])\n    .agg(\n        avg_total=('total', 'mean'),\n        count=('total', 'count')\n    )\n    .sort_values('avg_total', ascending=False)\n)",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result_check = (\n        'avg_total' in result.columns and\n        'count' in result.columns and\n        result.index.names == ['product', 'tier'] and\n        len(result) > 0 and\n        result['avg_total'].is_monotonic_decreasing\n    )\nexcept:\n    result_check = False\nresult = result_check",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndf = pd.DataFrame({'product': np.random.choice(['Widget', 'Gadget', 'Doohickey'], 100), 'price': np.random.uniform(10, 100, 100).round(2), 'quantity': np.random.randint(1, 20, 100), 'discount': np.random.choice([0, 0.1, 0.2], 100)})\", _ns)\nexec(\"result = (\\n    df\\n    .assign(\\n        total=lambda x: x['price'] * x['quantity'] * (1 - x['discount']),\\n        tier=lambda x: np.where(x['price'] > 50, 'Premium', 'Standard')\\n    )\\n    .query('total > 100')\\n    .groupby(['product', 'tier'])\\n    .agg(\\n        avg_total=('total', 'mean'),\\n        count=('total', 'count')\\n    )\\n    .sort_values('avg_total', ascending=False)\\n)\", _ns)\ntry:\n    result = _ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "assign 在链中创建新列",

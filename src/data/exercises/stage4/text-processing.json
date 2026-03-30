@@ -167,10 +167,10 @@
         "en": "Use str.extractall() to extract all numbers (\\d+) from each string. Note that extractall returns a MultiIndex DataFrame with a 'match' level."
       },
       "setupCode": "import pandas as pd\ns = pd.Series(['order-123-item-456', 'ref-789', 'id-10-code-20-val-30'])",
-      "starterCode": "# Extract all numbers from each string\nresult = s.str.extractall(r'(\\d+)')",
+      "starterCode": "# extractall vs extract\nresult = ___",
       "solutionCode": "result = s.str.extractall(r'(\\d+)')",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ns = pd.Series(['order-123-item-456', 'ref-789', 'id-10-code-20-val-30'])\", _expected_ns)\nexec(\"result = s.str.extractall(r'(\\\\d+)')\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\ns = pd.Series(['order-123-item-456', 'ref-789', 'id-10-code-20-val-30'])\", _ns)\nexec(\"result = s.str.extractall(r'(\\\\d+)')\", _ns)\ntry:\n    result = _ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "extractall 返回所有匹配，而 extract 只返回第一个匹配",
@@ -199,10 +199,10 @@
         "en": "Use named capture groups to extract city and zip code from address strings. Pattern: 'City: <city>, ZIP: <zip>'."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'address': ['City: New York, ZIP: 10001', 'City: Los Angeles, ZIP: 90001', 'City: Chicago, ZIP: 60601']})",
-      "starterCode": "# Extract using named groups\nresult = df['address'].str.extract(r'City: (?P<city>[^,]+), ZIP: (?P<zip>\\d+)')",
+      "starterCode": "# 使用命名捕获组 (?P<name>)\nresult = ___",
       "solutionCode": "result = df['address'].str.extract(r'City: (?P<city>[^,]+), ZIP: (?P<zip>\\d+)')",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'address': ['City: New York, ZIP: 10001', 'City: Los Angeles, ZIP: 90001', 'City: Chicago, ZIP: 60601']})\", _expected_ns)\nexec(\"result = df['address'].str.extract(r'City: (?P<city>[^,]+), ZIP: (?P<zip>\\\\d+)')\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'address': ['City: New York, ZIP: 10001', 'City: Los Angeles, ZIP: 90001', 'City: Chicago, ZIP: 60601']})\", _ns)\nexec(\"result = df['address'].str.extract(r'City: (?P<city>[^,]+), ZIP: (?P<zip>\\\\d+)')\", _ns)\ntry:\n    result = _ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "(?P<name>...) 定义命名捕获组",
@@ -365,10 +365,10 @@
         "en": "Use str.count() to count the number of vowels (aeiou) in each string."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'word': ['hello', 'python', 'pandas', 'aeiou']})",
-      "starterCode": "# Count vowels in each string\ndf['vowel_count'] = df['word'].str.count(r'[aeiou]')",
+      "starterCode": "# str.count 计数匹配\ndf = ___",
       "solutionCode": "df['vowel_count'] = df['word'].str.count(r'[aeiou]')",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'word': ['hello', 'python', 'pandas', 'aeiou']})\", _expected_ns)\nexec(\"df['vowel_count'] = df['word'].str.count(r'[aeiou]')\", _expected_ns)\ntry:\n    result = _expected_ns.get('df') is not None and hasattr(_expected_ns['df'], 'equals') and _expected_ns['df'].equals(df)\nexcept:\n    result = False",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'word': ['hello', 'python', 'pandas', 'aeiou']})\", _ns)\nexec(\"df['vowel_count'] = df['word'].str.count(r'[aeiou]')\", _ns)\ntry:\n    result = _ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "str.count 接受正则表达式",
@@ -397,10 +397,10 @@
         "en": "The code below tries to extract year and month from date strings, but the regex has an issue. Fix the bug."
       },
       "setupCode": "import pandas as pd\ndf = pd.DataFrame({'date_str': ['2024-01-15', '2023-12-25', '2024-06-01']})",
-      "starterCode": "# Bug: the regex should have 2 capture groups for year and month\n# but only has 1 group capturing everything\nresult = df['date_str'].str.extract(r'(\\d{4})-(\\d{2})')\nresult.columns = ['year', 'month']",
+      "starterCode": "# [调试] extract 捕获组数量错误\nresult = ___",
       "solutionCode": "result = df['date_str'].str.extract(r'(\\d{4})-(\\d{2})')\nresult.columns = ['year', 'month']",
       "validationType": "custom-check",
-      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'date_str': ['2024-01-15', '2023-12-25', '2024-06-01']})\", _expected_ns)\nexec(\"result = df['date_str'].str.extract(r'(\\\\d{4})-(\\\\d{2})')\\nresult.columns = ['year', 'month']\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\ndf = pd.DataFrame({'date_str': ['2024-01-15', '2023-12-25', '2024-06-01']})\", _ns)\nexec(\"result = df['date_str'].str.extract(r'(\\\\d{4})-(\\\\d{2})')\\nresult.columns = ['year', 'month']\", _ns)\ntry:\n    result = _ns['result'].equals(result)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "每个捕获组 () 对应结果中的一列",

@@ -324,10 +324,10 @@
         "en": "Compare memory usage of the same column as object type vs category type. Assign object type memory to mem_obj and category type memory to mem_cat."
       },
       "setupCode": "import pandas as pd\nimport sys\ndf = pd.DataFrame({'status': ['active', 'inactive', 'pending'] * 1000})",
-      "starterCode": "# Get memory of object type column\nmem_obj = df['status'].memory_usage(deep=True)\n\n# Convert to category and get memory\ndf['status'] = df['status'].astype('category')\nmem_cat = df['status'].memory_usage(deep=True)\n\n# Print comparison\nprint(f'Object: {mem_obj} bytes')\nprint(f'Category: {mem_cat} bytes')\nprint(f'Savings: {round((1 - mem_cat/mem_obj) * 100)}%')",
+      "starterCode": "# 内存分析与 sys.getsizeof\ndf = ___",
       "solutionCode": "mem_obj = df['status'].memory_usage(deep=True)\ndf['status'] = df['status'].astype('category')\nmem_cat = df['status'].memory_usage(deep=True)\nprint(f'Object: {mem_obj} bytes')\nprint(f'Category: {mem_cat} bytes')\nprint(f'Savings: {round((1 - mem_cat/mem_obj) * 100)}%')",
       "validationType": "custom-check",
-      "checkCode": "try:\n    result = mem_obj > mem_cat and mem_cat > 0\nexcept:\n    result = False\nresult",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec(\"import pandas as pd\\nimport sys\\ndf = pd.DataFrame({'status': ['active', 'inactive', 'pending'] * 1000})\", _ns)\nexec(\"mem_obj = df['status'].memory_usage(deep=True)\\ndf['status'] = df['status'].astype('category')\\nmem_cat = df['status'].memory_usage(deep=True)\\nprint(f'Object: {mem_obj} bytes')\\nprint(f'Category: {mem_cat} bytes')\\nprint(f'Savings: {round((1 - mem_cat/mem_obj) * 100)}%')\", _ns)\ntry:\n    result = _ns['df'].equals(df)\nexcept:\n    result = False",
       "hints": {
         "zh": [
           "memory_usage(deep=True) 返回包含字符串实际大小的精确字节数"
