@@ -344,6 +344,24 @@
                 "structured",
                 "array"
               ]
+            },
+            {
+              "name": "Series.to_list() / Index.to_list()",
+              "desc": {
+                "zh": "转为 Python 列表",
+                "en": "Convert to Python list"
+              },
+              "signature": "Series.to_list() / Series.tolist()",
+              "example": "import pandas as pd\n\ns = pd.Series([1, 2, 3])\nprint(s.to_list())\nprint(type(s.to_list()))\n\n# 也可用于 Index\nprint(df.columns.to_list())",
+              "output": "[1, 2, 3]\n<class 'list'>",
+              "params": [],
+              "tags": [
+                "to_list",
+                "tolist",
+                "python",
+                "list",
+                "convert"
+              ]
             }
           ]
         },
@@ -959,6 +977,78 @@
                 "compare",
                 "equal",
                 "debug"
+              ]
+            },
+            {
+              "name": "df.empty / Series.empty",
+              "desc": {
+                "zh": "检查是否为空（无行数据）",
+                "en": "Check if DataFrame/Series is empty (no rows)"
+              },
+              "signature": "df.empty  # 返回 bool",
+              "example": "import pandas as pd\n\ndf = pd.DataFrame()\nprint(df.empty)  # True\n\ndf2 = pd.DataFrame({'a': [1]})\nprint(df2.empty)  # False",
+              "output": "True\nFalse",
+              "params": [],
+              "tags": [
+                "empty",
+                "check",
+                "boolean",
+                "validation"
+              ]
+            },
+            {
+              "name": "Series.is_unique / Index.is_unique",
+              "desc": {
+                "zh": "检查所有值是否唯一（无重复）",
+                "en": "Check if all values are unique (no duplicates)"
+              },
+              "signature": "Series.is_unique  # 返回 bool\nIndex.is_unique",
+              "example": "import pandas as pd\n\ns1 = pd.Series([1, 2, 3])\nprint(s1.is_unique)  # True\n\ns2 = pd.Series([1, 2, 2])\nprint(s2.is_unique)  # False\n\n# 常用于检查索引是否可做主键\nprint(df.index.is_unique)",
+              "output": "True\nFalse",
+              "params": [],
+              "tags": [
+                "is_unique",
+                "unique",
+                "duplicate",
+                "check",
+                "index"
+              ]
+            },
+            {
+              "name": "Series.is_monotonic_increasing / is_monotonic_decreasing",
+              "desc": {
+                "zh": "检查是否单调递增/递减（判断是否已排序）",
+                "en": "Check if monotonically increasing/decreasing (is sorted?)"
+              },
+              "signature": "Series.is_monotonic_increasing\nSeries.is_monotonic_decreasing",
+              "example": "import pandas as pd\n\ns = pd.Series([1, 2, 3, 4])\nprint(s.is_monotonic_increasing)  # True\nprint(s.is_monotonic_decreasing)  # False\n\n# 检查索引是否有序（MultiIndex 切片需要）\nprint(df.index.is_monotonic_increasing)",
+              "output": "True\nFalse",
+              "params": [],
+              "tags": [
+                "monotonic",
+                "sorted",
+                "increasing",
+                "decreasing",
+                "check",
+                "index"
+              ]
+            },
+            {
+              "name": "Series.hasnans / Index.hasnans",
+              "desc": {
+                "zh": "快速检查是否包含 NaN（比 isna().any() 快）",
+                "en": "Quick check for NaN (faster than isna().any())"
+              },
+              "signature": "Series.hasnans  # 返回 bool",
+              "example": "import pandas as pd\nimport numpy as np\n\ns1 = pd.Series([1, 2, 3])\nprint(s1.hasnans)  # False\n\ns2 = pd.Series([1, np.nan, 3])\nprint(s2.hasnans)  # True",
+              "output": "False\nTrue",
+              "params": [],
+              "tags": [
+                "hasnans",
+                "nan",
+                "missing",
+                "check",
+                "fast"
               ]
             }
           ]
@@ -2169,6 +2259,43 @@
                 "index",
                 "max"
               ]
+            },
+            {
+              "name": "Series.searchsorted()",
+              "desc": {
+                "zh": "在有序 Series 中查找插入位置（二分查找）",
+                "en": "Find insertion point in sorted Series (binary search)"
+              },
+              "signature": "Series.searchsorted(value, side='left')",
+              "example": "import pandas as pd\n\ns = pd.Series([10, 20, 30, 40, 50])\nprint(s.searchsorted(25))  # 2，应插入位置2\nprint(s.searchsorted([15, 35]))  # [1, 3]",
+              "output": "2\n[1 3]",
+              "params": [
+                {
+                  "name": "value",
+                  "type": "scalar | array",
+                  "default": "required",
+                  "desc": {
+                    "zh": "要查找插入位置的值",
+                    "en": "Value(s) to find insertion point for"
+                  }
+                },
+                {
+                  "name": "side",
+                  "type": "str",
+                  "default": "'left'",
+                  "desc": {
+                    "zh": "'left'=插在相等值左边，'right'=右边",
+                    "en": "'left'=insert before equal values, 'right'=after"
+                  }
+                }
+              ],
+              "tags": [
+                "searchsorted",
+                "binary",
+                "search",
+                "sorted",
+                "insert"
+              ]
             }
           ]
         },
@@ -2786,6 +2913,25 @@
                 "argmax",
                 "argmin",
                 "index"
+              ]
+            },
+            {
+              "name": "Series.argmax() / Series.argmin()",
+              "desc": {
+                "zh": "返回最大/最小值的位置索引（整数位置，非标签）",
+                "en": "Return position (integer) of max/min value"
+              },
+              "signature": "Series.argmax() / Series.argmin()",
+              "example": "import pandas as pd\n\ns = pd.Series([30, 10, 50, 20], index=['a', 'b', 'c', 'd'])\nprint(f'argmax={s.argmax()} (位置{s.argmax()}处值最大)')  # 2\nprint(f'argmin={s.argmin()} (位置{s.argmin()}处值最小)')  # 1\n\n# 对比 idxmax/idxmin 返回的是标签\nprint(f'idxmax={s.idxmax()}')  # 'c'",
+              "output": "argmax=2 (位置2处值最大)\nargmin=1 (位置1处值最小)\nidxmax=c",
+              "params": [],
+              "tags": [
+                "argmax",
+                "argmin",
+                "position",
+                "index",
+                "max",
+                "min"
               ]
             }
           ]
