@@ -7655,12 +7655,12 @@
             {
               "name": "df.groupby()",
               "desc": {
-                "zh": "按列或索引对 DataFrame 进行分组",
-                "en": "Group DataFrame by column(s) or index level(s)"
+                "zh": "分组聚合的核心方法，支持按列名、函数、字典、Series 分组",
+                "en": "Core groupby method, supports grouping by column, function, dict, or Series"
               },
               "signature": "df.groupby(by=None, axis=0, level=None, as_index=True, sort=True, group_keys=True, observed=no_default, dropna=True)",
-              "example": "import pandas as pd\n\ndf = pd.DataFrame({\n    'dept': ['Sales', 'Sales', 'Eng', 'Eng', 'Eng'],\n    'name': ['Alice', 'Bob', 'Carol', 'Dave', 'Eve'],\n    'salary': [70, 80, 90, 85, 95]\n})\n\nresult = df.groupby('dept')['salary'].mean()\nprint(result)",
-              "output": "dept\nEng      90.0\nSales    75.0\nName: salary, dtype: float64",
+              "example": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Carol', 'Dave', 'Eve', 'Frank'],\n    'age': [25, 30, 35, 28, 42, 38],\n    'salary': [50, 80, 90, 60, 95, 70]\n})\n\n# 1. 按列名分组\nprint(df.groupby('name')['salary'].sum().head(3))\n\n# 2. 按函数分组（年龄分段）\nprint(df.groupby(lambda i: 'young' if df.loc[i,'age'] < 30 else 'senior')['salary'].mean())\n\n# 3. 按 Series/字典映射分组\nage_group = pd.cut(df['age'], bins=[0,30,40,100], labels=['青年','中年','资深'])\nprint(df.groupby(age_group)['salary'].mean())\n\n# 4. 按多列分组\ndept = pd.Series(['A','A','B','B','A','B'])\nprint(df.groupby([dept, age_group])['salary'].count())",
+              "output": "name\nAlice    50\nBob      80\nCarol    90\nName: salary\n---\nsenior    78.75\nyoung     55.00\nName: salary\n---\nage\n青年    65.0\n中年    80.0\n资深    95.0\nName: salary",
               "params": [
                 {
                   "name": "by",
@@ -8338,6 +8338,39 @@
               "note": {
                 "zh": "使用 apply + nlargest 实现分组内取前 N，group_keys=False 避免重复索引",
                 "en": "Use apply + nlargest for top-N per group; group_keys=False avoids duplicate index levels"
+              }
+            },
+            {
+              "title": {
+                "zh": "按函数分组（自定义分箱）",
+                "en": "Group by function (custom binning)"
+              },
+              "code": "# 方法1：lambda + 行索引\ndf.groupby(lambda i: '高薪' if df.loc[i, 'salary'] > 80 else '普通')['name'].count()\n\n# 方法2：pd.cut 分箱后分组（更推荐）\nbins = pd.cut(df['salary'], bins=[0, 60, 80, 100], labels=['低', '中', '高'])\ndf.groupby(bins)['name'].count()\n\n# 方法3：np.where 二分组\ndf.groupby(np.where(df['age'] > 30, '资深', '新人'))['salary'].mean()",
+              "note": {
+                "zh": "pd.cut 分箱比 lambda 更清晰高效；np.where 适合二分类",
+                "en": "pd.cut is cleaner than lambda; np.where for binary grouping"
+              }
+            },
+            {
+              "title": {
+                "zh": "按字典/Series 映射分组",
+                "en": "Group by dict/Series mapping"
+              },
+              "code": "# 用字典将列值映射为分组键\nregion_map = {'Beijing': '北方', 'Shanghai': '东部', 'Guangzhou': '南方', 'Shenzhen': '南方'}\ndf.groupby(df['city'].map(region_map))['sales'].sum()\n\n# 用 Series 分组（长度须与 DataFrame 行数一致）\nteam = pd.Series(['A', 'A', 'B', 'B', 'A'], index=df.index)\ndf.groupby(team)['score'].mean()\n\n# 按列的某个属性分组\ndf.groupby(df['date'].dt.quarter)['revenue'].sum()  # 按季度分组",
+              "note": {
+                "zh": "map 字典适合类别映射；Series 适合外部分组标签；dt/str 访问器适合按属性分组",
+                "en": "dict for category mapping; Series for external labels; dt/str accessor for attribute grouping"
+              }
+            },
+            {
+              "title": {
+                "zh": "多种分组键混合使用",
+                "en": "Mix different grouping keys"
+              },
+              "code": "# 列名 + 函数 + Series 可以混合\ndf.groupby([\n    'department',                        # 按列名\n    pd.cut(df['age'], bins=3),           # 按分箱\n    df['hire_date'].dt.year              # 按年份\n])['salary'].mean()",
+              "note": {
+                "zh": "groupby 的 by 参数接受列表，列表元素可以是列名、Series、函数的任意组合",
+                "en": "by parameter accepts a list mixing column names, Series, and functions"
               }
             }
           ]
