@@ -494,6 +494,102 @@
         "zh": "这个综合练习展示了数据分析的典型流程：分组 -> 聚合 -> 排序 -> 筛选。命名聚合让结果列名更清晰，链式操作让代码更简洁。East (840) 和 West (600) 总销售额超过 500，North (300) 被过滤掉。",
         "en": "This challenge demonstrates a typical data analysis workflow: group -> aggregate -> sort -> filter. Named aggregation produces cleaner column names, and method chaining keeps the code concise. East (840) and West (600) exceed 500 in total sales, while North (300) is filtered out."
       }
+    },
+    {
+      "id": "s3-groupby-015",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "按函数分组（自定义分箱）",
+        "en": "Group by Function (Custom Binning)"
+      },
+      "description": {
+        "zh": "使用 pd.cut 将 salary 分为三档：≤60000 为 '初级'，60001-90000 为 '中级'，>90000 为 '高级'。然后按这个分档分组，计算每档的人数和平均年龄。",
+        "en": "Use pd.cut to bin salary into 3 levels: ≤60000='Junior', 60001-90000='Mid', >90000='Senior'. Group by this binning and calculate count and average age per level."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Carol', 'Dave', 'Eve', 'Frank'],\n    'age': [25, 30, 35, 28, 42, 38],\n    'salary': [50000, 80000, 95000, 60000, 120000, 72000]\n})",
+      "starterCode": "# 1. 用 pd.cut 将 salary 分为三档\n# bins: [0, 60000, 90000, 无穷], labels: ['初级', '中级', '高级']\nsalary_level = ___\n\n# 2. 按 salary_level 分组，计算人数和平均年龄\nresult = ___\nprint(result)",
+      "solutionCode": "salary_level = pd.cut(df['salary'], bins=[0, 60000, 90000, float('inf')], labels=['初级', '中级', '高级'])\nresult = df.groupby(salary_level).agg(count=('name', 'count'), avg_age=('age', 'mean')).round(1)\nprint(result)",
+      "validationType": "dataframe-equals",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\n\\ndf = pd.DataFrame({\\n    'name': ['Alice', 'Bob', 'Carol', 'Dave', 'Eve', 'Frank'],\\n    'age': [25, 30, 35, 28, 42, 38],\\n    'salary': [50000, 80000, 95000, 60000, 120000, 72000]\\n})\", _expected_ns)\nexec(\"salary_level = pd.cut(df['salary'], bins=[0, 60000, 90000, float('inf')], labels=['初级', '中级', '高级'])\\nresult = df.groupby(salary_level).agg(count=('name', 'count'), avg_age=('age', 'mean')).round(1)\\nprint(result)\", _expected_ns)\ntry:\n    result = _expected_ns.get('salary_level') is not None and hasattr(_expected_ns['salary_level'], 'equals') and _expected_ns['salary_level'].equals(salary_level) and _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "pd.cut(df['salary'], bins=[0, 60000, 90000, float('inf')], labels=[...])",
+          "分组后用 .agg() 同时计算 count 和 mean"
+        ],
+        "en": [
+          "pd.cut(df['salary'], bins=[0, 60000, 90000, float('inf')], labels=[...])",
+          "Use .agg() after groupby for count and mean"
+        ]
+      },
+      "explanation": {
+        "zh": "groupby 的 by 参数不仅可以是列名，也可以是 Series。pd.cut 返回的 Categorical Series 可以直接用于分组，实现自定义分箱聚合。",
+        "en": "groupby's by parameter accepts not only column names but also Series. pd.cut returns a Categorical Series that can be used directly for grouping."
+      }
+    },
+    {
+      "id": "s3-groupby-016",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "按字典映射分组",
+        "en": "Group by Dictionary Mapping"
+      },
+      "description": {
+        "zh": "将城市映射为区域后分组：region_map = {'Beijing': '北方', 'Shanghai': '东部', 'Guangzhou': '南方', 'Shenzhen': '南方'}。按区域计算总销售额并降序排序。",
+        "en": "Map cities to regions then group: region_map = {'Beijing':'North', 'Shanghai':'East', 'Guangzhou':'South', 'Shenzhen':'South'}. Calculate total sales per region, sorted descending."
+      },
+      "setupCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    'city': ['Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen', 'Beijing', 'Shanghai'],\n    'sales': [100, 200, 150, 180, 120, 250]\n})\n\nregion_map = {'Beijing': '北方', 'Shanghai': '东部', 'Guangzhou': '南方', 'Shenzhen': '南方'}",
+      "starterCode": "# 用 df['city'].map(region_map) 映射城市到区域\n# 然后 groupby 映射后的 Series，计算 sales 总和，降序排序\nresult = ___\nprint(result)",
+      "solutionCode": "result = df.groupby(df['city'].map(region_map))['sales'].sum().sort_values(ascending=False)\nprint(result)",
+      "validationType": "dataframe-equals",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\n\\ndf = pd.DataFrame({\\n    'city': ['Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen', 'Beijing', 'Shanghai'],\\n    'sales': [100, 200, 150, 180, 120, 250]\\n})\\n\\nregion_map = {'Beijing': '北方', 'Shanghai': '东部', 'Guangzhou': '南方', 'Shenzhen': '南方'}\", _expected_ns)\nexec(\"result = df.groupby(df['city'].map(region_map))['sales'].sum().sort_values(ascending=False)\\nprint(result)\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "df['city'].map(region_map) 返回映射后的 Series",
+          "这个 Series 可以直接传给 groupby()"
+        ],
+        "en": [
+          "df['city'].map(region_map) returns a mapped Series",
+          "This Series can be passed directly to groupby()"
+        ]
+      },
+      "explanation": {
+        "zh": "df['col'].map(dict) 将列值映射为新值，返回的 Series 可以直接作为 groupby 的分组键。这是按字典分组的标准写法。",
+        "en": "df['col'].map(dict) maps column values, and the resulting Series can be used directly as groupby key."
+      }
+    },
+    {
+      "id": "s3-groupby-017",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "按 dt 访问器属性分组",
+        "en": "Group by dt Accessor Property"
+      },
+      "description": {
+        "zh": "按日期的月份分组，计算每月的总收入和订单数。提示：用 df['date'].dt.month 作为分组键。",
+        "en": "Group by month from date column, calculate total revenue and order count per month. Hint: use df['date'].dt.month as groupby key."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\nnp.random.seed(42)\ndf = pd.DataFrame({\n    'date': pd.date_range('2024-01-01', periods=60, freq='D'),\n    'revenue': np.random.randint(100, 500, 60)\n})",
+      "starterCode": "# 按月份分组（df['date'].dt.month）\n# 计算每月总收入和订单数\nresult = df.groupby(___).agg(\n    total_revenue=___,\n    order_count=___\n)\nprint(result)",
+      "solutionCode": "result = df.groupby(df['date'].dt.month).agg(\n    total_revenue=('revenue', 'sum'),\n    order_count=('revenue', 'count')\n)\nprint(result)",
+      "validationType": "dataframe-equals",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_expected_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\n\\nnp.random.seed(42)\\ndf = pd.DataFrame({\\n    'date': pd.date_range('2024-01-01', periods=60, freq='D'),\\n    'revenue': np.random.randint(100, 500, 60)\\n})\", _expected_ns)\nexec(\"result = df.groupby(df['date'].dt.month).agg(\\n    total_revenue=('revenue', 'sum'),\\n    order_count=('revenue', 'count')\\n)\\nprint(result)\", _expected_ns)\ntry:\n    result = _expected_ns.get('result') is not None and hasattr(_expected_ns['result'], 'equals') and _expected_ns['result'].equals(result)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "df['date'].dt.month 返回月份的 Series（1-12）",
+          "agg 中用 ('revenue', 'sum') 和 ('revenue', 'count')"
+        ],
+        "en": [
+          "df['date'].dt.month returns month Series (1-12)",
+          "Use ('revenue', 'sum') and ('revenue', 'count') in agg"
+        ]
+      },
+      "explanation": {
+        "zh": "dt 访问器的属性（year, month, quarter, dayofweek 等）返回 Series，可以直接作为 groupby 键。这是时间序列分组分析的常见模式。",
+        "en": "dt accessor properties (year, month, quarter, dayofweek, etc.) return Series that can be used directly as groupby keys."
+      }
     }
   ]
 }
