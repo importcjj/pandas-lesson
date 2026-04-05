@@ -2,7 +2,12 @@
   "module": "numpy-pandas",
   "stageId": "stage2",
   "lessonId": "numpy-pandas",
-  "tags": ["numpy", "pandas", "interop", "vectorize"],
+  "tags": [
+    "numpy",
+    "pandas",
+    "interop",
+    "vectorize"
+  ],
   "exercises": [
     {
       "id": "s2-nppd-001",
@@ -118,8 +123,12 @@
       },
       "correctIndex": 0,
       "hints": {
-        "zh": ["查看 pandas 文档中关于 .values 的说明"],
-        "en": ["Check the pandas documentation about .values"]
+        "zh": [
+          "查看 pandas 文档中关于 .values 的说明"
+        ],
+        "en": [
+          "Check the pandas documentation about .values"
+        ]
       },
       "explanation": {
         "zh": "df.to_numpy() 是 pandas 推荐的方式，它支持 dtype 和 copy 参数，且始终返回 NumPy 数组。df.values 是较旧的接口，对于含有扩展类型（如 Categorical、Sparse）的 DataFrame 可能返回非标准的数组类型。",
@@ -168,15 +177,15 @@
         "zh": "补全代码，分别用 np.nanmean 和 Series.mean() 计算含 NaN 数据的平均值。",
         "en": "Complete the code to calculate the mean of data containing NaN using both np.nanmean and Series.mean()."
       },
-      "codeTemplate": "import pandas as pd\nimport numpy as np\n\narr = np.array([1, 2, np.nan, 4, 5])\ns = pd.Series(arr)\n\n# NumPy: use nanmean to ignore NaN\nnp_mean = np._____(arr)\nprint(f'np.nanmean: {np_mean}')\n\n# pandas: Series.mean() ignores NaN by default\npd_mean = s._____()\nprint(f'Series.mean: {pd_mean}')",
+      "codeTemplate": "import pandas as pd\nimport numpy as np\n\narr = np.array([1, 2, np.nan, 4, 5])\ns = pd.Series(arr)\n\n# NumPy: use nanmean to ignore NaN\nnp_mean = np.___1___(arr)\nprint(f'np.nanmean: {np_mean}')\n\n# pandas: Series.mean() ignores NaN by default\npd_mean = s.___2___()\nprint(f'Series.mean: {pd_mean}')",
       "blanks": [
         {
-          "placeholder": "np._____(arr)",
+          "placeholder": "___1___",
           "answer": "nanmean",
           "alternatives": []
         },
         {
-          "placeholder": "s._____()",
+          "placeholder": "___2___",
           "answer": "mean",
           "alternatives": []
         }
@@ -258,8 +267,12 @@
       },
       "correctAnswer": false,
       "hints": {
-        "zh": ["to_numpy() 的 copy 参数默认行为是什么？不同的 dtype 会影响结果吗？"],
-        "en": ["What is the default behavior of to_numpy()'s copy parameter? Do different dtypes affect the result?"]
+        "zh": [
+          "to_numpy() 的 copy 参数默认行为是什么？不同的 dtype 会影响结果吗？"
+        ],
+        "en": [
+          "What is the default behavior of to_numpy()'s copy parameter? Do different dtypes affect the result?"
+        ]
       },
       "explanation": {
         "zh": "不一定。如果 DataFrame 包含混合类型数据，to_numpy() 会创建副本，修改数组不会影响原 DataFrame。即使是单一类型，pandas 也不保证返回的是视图（view）。可以使用 to_numpy(copy=True) 确保获得副本，或 to_numpy(copy=False) 尝试获得视图。",

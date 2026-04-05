@@ -116,20 +116,20 @@
         "zh": "补全代码，分别用 np.zeros、np.ones 和 np.full 创建指定的数组。",
         "en": "Complete the code to create specified arrays using np.zeros, np.ones, and np.full."
       },
-      "codeTemplate": "import numpy as np\n\n# Create a 3-element array of zeros\na = np._____(3)\nprint(a)\n\n# Create a 2x3 array of ones\nb = np._____((2, 3))\nprint(b)\n\n# Create a 4-element array filled with 7\nc = np._____(4, 7)\nprint(c)",
+      "codeTemplate": "import numpy as np\n\n# Create a 3-element array of zeros\na = np.___1___(3)\nprint(a)\n\n# Create a 2x3 array of ones\nb = np.___2___((2, 3))\nprint(b)\n\n# Create a 4-element array filled with 7\nc = np.___3___(4, 7)\nprint(c)",
       "blanks": [
         {
-          "placeholder": "np._____(3)",
+          "placeholder": "___1___",
           "answer": "zeros",
           "alternatives": []
         },
         {
-          "placeholder": "np._____((2, 3))",
+          "placeholder": "___2___",
           "answer": "ones",
           "alternatives": []
         },
         {
-          "placeholder": "np._____(4, 7)",
+          "placeholder": "___3___",
           "answer": "full",
           "alternatives": []
         }
