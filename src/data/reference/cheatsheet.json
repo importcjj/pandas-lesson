@@ -13287,6 +13287,1337 @@
       ]
     },
     {
+      "id": "numpy-basics",
+      "title": {
+        "zh": "NumPy 基础",
+        "en": "NumPy Basics"
+      },
+      "icon": "🔢",
+      "sections": [
+        {
+          "type": "api-table",
+          "title": {
+            "zh": "NumPy 核心 API",
+            "en": "NumPy Core APIs"
+          },
+          "items": [
+            {
+              "name": "np.array()",
+              "desc": {
+                "zh": "从列表、元组等创建 NumPy 数组，是最基础的数组创建方式",
+                "en": "Create a NumPy array from list, tuple, or other sequence — the most fundamental array creation"
+              },
+              "signature": "np.array(object, dtype=None, copy=True, order='K', subok=False, ndmin=0)",
+              "example": "import numpy as np\n\n# 一维数组\na = np.array([1, 2, 3])\nprint(a, a.dtype)\n\n# 二维数组 + 指定类型\nb = np.array([[1, 2], [3, 4]], dtype='float64')\nprint(b)\n\n# ndmin 控制最小维度\nc = np.array([1, 2, 3], ndmin=2)\nprint(c, c.shape)",
+              "output": "[1 2 3] int64\n[[1. 2.]\n [3. 4.]]\n[[1 2 3]] (1, 3)",
+              "params": [
+                {
+                  "name": "object",
+                  "type": "array-like",
+                  "default": "—",
+                  "desc": {
+                    "zh": "输入数据：列表、元组、嵌套序列、另一个 ndarray 等",
+                    "en": "Input data: list, tuple, nested sequence, another ndarray, etc."
+                  }
+                },
+                {
+                  "name": "dtype",
+                  "type": "str | dtype | None",
+                  "default": "None",
+                  "desc": {
+                    "zh": "目标数据类型，如 'float64', 'int32'；None 时自动推断",
+                    "en": "Desired data type such as 'float64', 'int32'; None for auto-inference"
+                  }
+                },
+                {
+                  "name": "copy",
+                  "type": "bool",
+                  "default": "True",
+                  "desc": {
+                    "zh": "是否强制复制数据；True 保证返回新副本",
+                    "en": "Whether to force a copy; True guarantees a new copy is returned"
+                  }
+                },
+                {
+                  "name": "ndmin",
+                  "type": "int",
+                  "default": "0",
+                  "desc": {
+                    "zh": "结果数组的最小维度，不足时会在前面补维度",
+                    "en": "Minimum number of dimensions; pads with extra dimensions on the left"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "create",
+                "basic",
+                "core"
+              ]
+            },
+            {
+              "name": "np.arange()",
+              "desc": {
+                "zh": "生成等差数列数组，类似 Python range 但返回 ndarray",
+                "en": "Generate evenly spaced values (like Python range but returns ndarray)"
+              },
+              "signature": "np.arange(start=0, stop, step=1, dtype=None)",
+              "example": "import numpy as np\n\nprint(np.arange(5))\nprint(np.arange(2, 10, 2))\nprint(np.arange(0, 1, 0.3))",
+              "output": "[0 1 2 3 4]\n[2 4 6 8]\n[0.  0.3 0.6 0.9]",
+              "params": [
+                {
+                  "name": "start",
+                  "type": "number",
+                  "default": "0",
+                  "desc": {
+                    "zh": "起始值（包含）",
+                    "en": "Start value (inclusive)"
+                  }
+                },
+                {
+                  "name": "stop",
+                  "type": "number",
+                  "default": "—",
+                  "desc": {
+                    "zh": "终止值（不包含）",
+                    "en": "End value (exclusive)"
+                  }
+                },
+                {
+                  "name": "step",
+                  "type": "number",
+                  "default": "1",
+                  "desc": {
+                    "zh": "步长；可为浮点数，但建议浮点等分用 linspace",
+                    "en": "Step size; may be float, but prefer linspace for float spacing"
+                  }
+                },
+                {
+                  "name": "dtype",
+                  "type": "dtype | None",
+                  "default": "None",
+                  "desc": {
+                    "zh": "输出数组类型；None 时从输入推断",
+                    "en": "Output array dtype; None infers from inputs"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "create",
+                "sequence"
+              ]
+            },
+            {
+              "name": "np.linspace()",
+              "desc": {
+                "zh": "生成等分数列，指定元素个数而非步长，适合浮点等分",
+                "en": "Generate evenly spaced values by specifying count (not step), ideal for float ranges"
+              },
+              "signature": "np.linspace(start, stop, num=50, endpoint=True, retstep=False, dtype=None)",
+              "example": "import numpy as np\n\n# 0 到 1 之间等分 5 个点（含端点）\nprint(np.linspace(0, 1, 5))\n\n# 不含端点\nprint(np.linspace(0, 1, 5, endpoint=False))",
+              "output": "[0.   0.25 0.5  0.75 1.  ]\n[0.  0.2 0.4 0.6 0.8]",
+              "params": [
+                {
+                  "name": "start",
+                  "type": "number",
+                  "default": "—",
+                  "desc": {
+                    "zh": "序列起始值",
+                    "en": "Start of the sequence"
+                  }
+                },
+                {
+                  "name": "stop",
+                  "type": "number",
+                  "default": "—",
+                  "desc": {
+                    "zh": "序列终止值",
+                    "en": "End of the sequence"
+                  }
+                },
+                {
+                  "name": "num",
+                  "type": "int",
+                  "default": "50",
+                  "desc": {
+                    "zh": "要生成的样本数量",
+                    "en": "Number of samples to generate"
+                  }
+                },
+                {
+                  "name": "endpoint",
+                  "type": "bool",
+                  "default": "True",
+                  "desc": {
+                    "zh": "是否包含 stop 值；True 时最后一个元素恰好等于 stop",
+                    "en": "Whether to include stop; True means last element equals stop exactly"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "create",
+                "sequence",
+                "float"
+              ]
+            },
+            {
+              "name": "np.zeros() / np.ones() / np.full()",
+              "desc": {
+                "zh": "创建指定形状的全零、全一或指定值填充的数组",
+                "en": "Create arrays filled with zeros, ones, or a specified constant value"
+              },
+              "signature": "np.zeros(shape, dtype=float)\nnp.ones(shape, dtype=float)\nnp.full(shape, fill_value, dtype=None)",
+              "example": "import numpy as np\n\nprint(np.zeros((2, 3)))\nprint(np.ones(4, dtype='int32'))\nprint(np.full((2, 2), 7))",
+              "output": "[[0. 0. 0.]\n [0. 0. 0.]]\n[1 1 1 1]\n[[7 7]\n [7 7]]",
+              "params": [
+                {
+                  "name": "shape",
+                  "type": "int | tuple[int]",
+                  "default": "—",
+                  "desc": {
+                    "zh": "数组形状，如 5 表示一维长度 5，(2,3) 表示 2 行 3 列",
+                    "en": "Array shape: int for 1D, tuple like (2,3) for 2D"
+                  }
+                },
+                {
+                  "name": "fill_value",
+                  "type": "scalar",
+                  "default": "—",
+                  "desc": {
+                    "zh": "np.full 专用：填充值",
+                    "en": "For np.full: the constant fill value"
+                  }
+                },
+                {
+                  "name": "dtype",
+                  "type": "dtype",
+                  "default": "float64",
+                  "desc": {
+                    "zh": "数据类型；zeros/ones 默认 float64，full 从 fill_value 推断",
+                    "en": "Data type; zeros/ones default to float64, full infers from fill_value"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "create",
+                "initialize"
+              ]
+            },
+            {
+              "name": "np.random.seed() / np.random.default_rng()",
+              "desc": {
+                "zh": "设置随机种子以确保结果可复现；推荐新代码用 default_rng",
+                "en": "Set random seed for reproducibility; prefer default_rng for new code"
+              },
+              "signature": "np.random.seed(seed)\nnp.random.default_rng(seed=None)",
+              "example": "import numpy as np\n\n# 旧式（全局状态）\nnp.random.seed(42)\nprint(np.random.rand(3))\n\n# 新式（推荐）\nrng = np.random.default_rng(42)\nprint(rng.random(3))",
+              "output": "[0.37454012 0.95071431 0.73199394]\n[0.77395605 0.43887844 0.85859792]",
+              "params": [
+                {
+                  "name": "seed",
+                  "type": "int | None",
+                  "default": "None",
+                  "desc": {
+                    "zh": "随机种子；相同种子产生相同随机序列",
+                    "en": "Random seed; same seed produces same random sequence"
+                  }
+                },
+                {
+                  "name": "rng.random(size)",
+                  "type": "method",
+                  "default": "—",
+                  "desc": {
+                    "zh": "default_rng 返回 Generator 对象，通过 .random()/.integers() 等方法生成随机数",
+                    "en": "default_rng returns a Generator object; use .random()/.integers() etc. to draw samples"
+                  }
+                },
+                {
+                  "name": "全局 vs 局部",
+                  "type": "concept",
+                  "default": "—",
+                  "desc": {
+                    "zh": "np.random.seed() 设置全局状态（不推荐），default_rng() 创建独立生成器（推荐）",
+                    "en": "np.random.seed() sets global state (discouraged), default_rng() creates isolated generator (preferred)"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "random",
+                "reproducibility"
+              ]
+            },
+            {
+              "name": "np.random.normal() / uniform() / randint() / choice()",
+              "desc": {
+                "zh": "生成服从特定分布的随机数组：正态、均匀、整数、随机选取",
+                "en": "Generate random arrays from various distributions: normal, uniform, integer, and random choice"
+              },
+              "signature": "np.random.normal(loc=0.0, scale=1.0, size=None)\nnp.random.uniform(low=0.0, high=1.0, size=None)\nnp.random.randint(low, high=None, size=None)\nnp.random.choice(a, size=None, replace=True, p=None)",
+              "example": "import numpy as np\nnp.random.seed(42)\n\nprint('normal:', np.random.normal(0, 1, 5).round(2))\nprint('uniform:', np.random.uniform(10, 20, 4).round(2))\nprint('randint:', np.random.randint(1, 100, 5))\nprint('choice:', np.random.choice(['A', 'B', 'C'], 6))",
+              "output": "normal: [ 0.5  -0.14  0.65  1.52 -0.23]\nuniform: [13.75 19.51 17.32 15.99]\nrandint: [52 93 15 72 61]\nchoice: ['C' 'A' 'C' 'B' 'B' 'A']",
+              "params": [
+                {
+                  "name": "loc / low",
+                  "type": "float",
+                  "default": "0.0",
+                  "desc": {
+                    "zh": "分布中心（normal）或下界（uniform/randint）",
+                    "en": "Distribution center (normal) or lower bound (uniform/randint)"
+                  }
+                },
+                {
+                  "name": "scale / high",
+                  "type": "float",
+                  "default": "1.0",
+                  "desc": {
+                    "zh": "标准差（normal）或上界（uniform/randint）",
+                    "en": "Standard deviation (normal) or upper bound (uniform/randint)"
+                  }
+                },
+                {
+                  "name": "size",
+                  "type": "int | tuple",
+                  "default": "None",
+                  "desc": {
+                    "zh": "输出形状；None 返回标量",
+                    "en": "Output shape; None returns a scalar"
+                  }
+                },
+                {
+                  "name": "a / p / replace",
+                  "type": "various",
+                  "default": "—",
+                  "desc": {
+                    "zh": "choice 专用：a=候选数组, p=概率权重, replace=是否有放回",
+                    "en": "For choice: a=candidate array, p=probability weights, replace=with replacement"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "random",
+                "distribution",
+                "generate"
+              ]
+            },
+            {
+              "name": "np.reshape() / np.ravel() / np.flatten()",
+              "desc": {
+                "zh": "改变数组形状：reshape 任意变形，ravel/flatten 展平为一维",
+                "en": "Change array shape: reshape for arbitrary reshaping, ravel/flatten to 1D"
+              },
+              "signature": "np.reshape(a, newshape, order='C')\nndarray.ravel(order='C')\nndarray.flatten(order='C')",
+              "example": "import numpy as np\n\na = np.arange(12)\nprint(a.reshape(3, 4))\nprint(a.reshape(3, 4).ravel())\n# flatten 返回副本，ravel 返回视图\nprint(a.reshape(3, 4).flatten())",
+              "output": "[[ 0  1  2  3]\n [ 4  5  6  7]\n [ 8  9 10 11]]\n[ 0  1  2  3  4  5  6  7  8  9 10 11]\n[ 0  1  2  3  4  5  6  7  8  9 10 11]",
+              "params": [
+                {
+                  "name": "newshape",
+                  "type": "int | tuple[int]",
+                  "default": "—",
+                  "desc": {
+                    "zh": "新形状；可用 -1 表示自动推断该维度，如 reshape(3, -1)",
+                    "en": "New shape; use -1 for auto-inferred dimension, e.g. reshape(3, -1)"
+                  }
+                },
+                {
+                  "name": "order",
+                  "type": "str",
+                  "default": "'C'",
+                  "desc": {
+                    "zh": "读写顺序：'C' 行优先（默认），'F' 列优先",
+                    "en": "Read/write order: 'C' row-major (default), 'F' column-major"
+                  }
+                },
+                {
+                  "name": "ravel vs flatten",
+                  "type": "concept",
+                  "default": "—",
+                  "desc": {
+                    "zh": "ravel 返回视图（共享内存，更快），flatten 返回副本（独立，更安全）",
+                    "en": "ravel returns a view (shared memory, faster), flatten returns a copy (independent, safer)"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "shape",
+                "transform"
+              ]
+            },
+            {
+              "name": "np.concatenate() / np.vstack() / np.hstack()",
+              "desc": {
+                "zh": "沿指定轴拼接多个数组：concatenate 通用，vstack/hstack 便捷",
+                "en": "Join arrays along an axis: concatenate is general, vstack/hstack are shortcuts"
+              },
+              "signature": "np.concatenate((a1, a2, ...), axis=0)\nnp.vstack(tup)\nnp.hstack(tup)",
+              "example": "import numpy as np\n\na = np.array([[1, 2], [3, 4]])\nb = np.array([[5, 6]])\n\nprint(np.concatenate([a, b], axis=0))  # 纵向\nprint(np.vstack([a, b]))               # 等价\nprint(np.hstack([a, a]))               # 横向",
+              "output": "[[1 2]\n [3 4]\n [5 6]]\n[[1 2]\n [3 4]\n [5 6]]\n[[1 2 1 2]\n [3 4 3 4]]",
+              "params": [
+                {
+                  "name": "(a1, a2, ...)",
+                  "type": "sequence of arrays",
+                  "default": "—",
+                  "desc": {
+                    "zh": "要拼接的数组序列；除拼接轴外，其他维度必须一致",
+                    "en": "Sequence of arrays to join; all dimensions except the join axis must match"
+                  }
+                },
+                {
+                  "name": "axis",
+                  "type": "int | None",
+                  "default": "0",
+                  "desc": {
+                    "zh": "拼接轴：0=纵向（行方向），1=横向（列方向），None=先展平再拼接",
+                    "en": "Join axis: 0=vertical (rows), 1=horizontal (cols), None=flatten first"
+                  }
+                },
+                {
+                  "name": "vstack / hstack",
+                  "type": "shortcut",
+                  "default": "—",
+                  "desc": {
+                    "zh": "vstack = concatenate(axis=0) + 自动扩维，hstack = concatenate(axis=1)",
+                    "en": "vstack = concatenate(axis=0) with auto-dim expansion, hstack = concatenate(axis=1)"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "combine",
+                "join"
+              ]
+            },
+            {
+              "name": "np.sort() / np.argsort() / np.argmax() / np.argmin()",
+              "desc": {
+                "zh": "排序与索引查找：sort 排序，argsort 返回排序索引，argmax/argmin 返回极值索引",
+                "en": "Sorting and index lookup: sort for ordering, argsort for sort indices, argmax/argmin for extrema indices"
+              },
+              "signature": "np.sort(a, axis=-1, kind=None)\nnp.argsort(a, axis=-1, kind=None)\nnp.argmax(a, axis=None)\nnp.argmin(a, axis=None)",
+              "example": "import numpy as np\n\na = np.array([30, 10, 50, 20, 40])\nprint('sorted:', np.sort(a))\nprint('argsort:', np.argsort(a))\nprint('argmax:', np.argmax(a), '→ value:', a[np.argmax(a)])\nprint('argmin:', np.argmin(a), '→ value:', a[np.argmin(a)])",
+              "output": "sorted: [10 20 30 40 50]\nargsort: [1 3 0 4 2]\nargmax: 2 → value: 50\nargmin: 1 → value: 10",
+              "params": [
+                {
+                  "name": "a",
+                  "type": "array-like",
+                  "default": "—",
+                  "desc": {
+                    "zh": "待排序/查找的数组",
+                    "en": "Array to sort or search"
+                  }
+                },
+                {
+                  "name": "axis",
+                  "type": "int | None",
+                  "default": "-1 / None",
+                  "desc": {
+                    "zh": "排序轴：sort/argsort 默认最后一轴，argmax/argmin 默认 None（展平后查找）",
+                    "en": "Axis: sort/argsort default to last axis, argmax/argmin default to None (flattened)"
+                  }
+                },
+                {
+                  "name": "kind",
+                  "type": "str",
+                  "default": "'quicksort'",
+                  "desc": {
+                    "zh": "排序算法：'quicksort', 'mergesort', 'heapsort', 'stable'",
+                    "en": "Sorting algorithm: 'quicksort', 'mergesort', 'heapsort', 'stable'"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "sort",
+                "search",
+                "index"
+              ]
+            },
+            {
+              "name": "np.unique()",
+              "desc": {
+                "zh": "返回数组中的唯一值，可同时返回计数、索引等附加信息",
+                "en": "Return unique values in an array, optionally with counts, indices, and inverse"
+              },
+              "signature": "np.unique(ar, return_index=False, return_inverse=False, return_counts=False, axis=None)",
+              "example": "import numpy as np\n\na = np.array([3, 1, 2, 3, 2, 1, 1])\nvalues, counts = np.unique(a, return_counts=True)\nfor v, c in zip(values, counts):\n    print(f'{v}: {c} times')",
+              "output": "1: 3 times\n2: 2 times\n3: 2 times",
+              "params": [
+                {
+                  "name": "ar",
+                  "type": "array-like",
+                  "default": "—",
+                  "desc": {
+                    "zh": "输入数组",
+                    "en": "Input array"
+                  }
+                },
+                {
+                  "name": "return_counts",
+                  "type": "bool",
+                  "default": "False",
+                  "desc": {
+                    "zh": "是否返回每个唯一值的出现次数",
+                    "en": "Whether to return the count of each unique value"
+                  }
+                },
+                {
+                  "name": "return_index",
+                  "type": "bool",
+                  "default": "False",
+                  "desc": {
+                    "zh": "是否返回每个唯一值在原数组中首次出现的索引",
+                    "en": "Whether to return the index of first occurrence of each unique value"
+                  }
+                },
+                {
+                  "name": "return_inverse",
+                  "type": "bool",
+                  "default": "False",
+                  "desc": {
+                    "zh": "是否返回从唯一值数组重建原数组的索引",
+                    "en": "Whether to return indices to reconstruct the original array from unique values"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "unique",
+                "count",
+                "deduplicate"
+              ]
+            },
+            {
+              "name": "np.where()",
+              "desc": {
+                "zh": "条件选择：满足条件取 x，不满足取 y；pandas 中最常用的 NumPy 函数之一",
+                "en": "Conditional selection: pick x where condition is true, y otherwise — one of the most used NumPy functions in pandas"
+              },
+              "signature": "np.where(condition, x, y)",
+              "example": "import numpy as np\n\na = np.array([1, -2, 3, -4, 5])\nresult = np.where(a > 0, a, 0)\nprint(result)\n\n# 嵌套 np.where 实现多条件\nlabel = np.where(a > 0, 'pos',\n            np.where(a < 0, 'neg', 'zero'))\nprint(label)",
+              "output": "[1 0 3 0 5]\n['pos' 'neg' 'pos' 'neg' 'pos']",
+              "params": [
+                {
+                  "name": "condition",
+                  "type": "array-like[bool]",
+                  "default": "—",
+                  "desc": {
+                    "zh": "布尔条件数组；逐元素判断",
+                    "en": "Boolean condition array; evaluated element-wise"
+                  }
+                },
+                {
+                  "name": "x",
+                  "type": "array-like | scalar",
+                  "default": "—",
+                  "desc": {
+                    "zh": "条件为 True 时的取值",
+                    "en": "Value(s) where condition is True"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": "array-like | scalar",
+                  "default": "—",
+                  "desc": {
+                    "zh": "条件为 False 时的取值",
+                    "en": "Value(s) where condition is False"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "conditional",
+                "important",
+                "pandas-integration"
+              ]
+            },
+            {
+              "name": "np.select()",
+              "desc": {
+                "zh": "多条件选择：比嵌套 np.where 更清晰的多分支逻辑",
+                "en": "Multi-condition selection: cleaner alternative to nested np.where for multiple branches"
+              },
+              "signature": "np.select(condlist, choicelist, default=0)",
+              "example": "import numpy as np\n\nscores = np.array([95, 82, 67, 45, 88])\nconditions = [\n    scores >= 90,\n    scores >= 80,\n    scores >= 60\n]\nchoices = ['A', 'B', 'C']\n\ngrades = np.select(conditions, choices, default='F')\nprint(grades)",
+              "output": "['A' 'B' 'C' 'F' 'B']",
+              "params": [
+                {
+                  "name": "condlist",
+                  "type": "list[array-like[bool]]",
+                  "default": "—",
+                  "desc": {
+                    "zh": "条件列表；按顺序匹配，第一个为 True 的条件生效",
+                    "en": "List of conditions; matched in order, first True condition wins"
+                  }
+                },
+                {
+                  "name": "choicelist",
+                  "type": "list[array-like]",
+                  "default": "—",
+                  "desc": {
+                    "zh": "对应每个条件的取值列表，长度必须与 condlist 相同",
+                    "en": "Values for each condition; must have same length as condlist"
+                  }
+                },
+                {
+                  "name": "default",
+                  "type": "scalar",
+                  "default": "0",
+                  "desc": {
+                    "zh": "所有条件均不满足时的默认值",
+                    "en": "Default value when no condition is met"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "conditional",
+                "multi-branch",
+                "pandas-integration"
+              ]
+            },
+            {
+              "name": "np.clip()",
+              "desc": {
+                "zh": "将数组值裁剪到指定范围 [min, max]，超出部分截断",
+                "en": "Clip array values to a specified range [min, max], truncating outliers"
+              },
+              "signature": "np.clip(a, a_min, a_max, out=None)",
+              "example": "import numpy as np\n\na = np.array([1, 5, 10, 15, 20])\nprint(np.clip(a, 3, 12))\n\n# 只设下限或上限\nprint(np.clip(a, 5, None))  # 下限 5，无上限",
+              "output": "[ 3  5 10 12 12]\n[ 5  5 10 15 20]",
+              "params": [
+                {
+                  "name": "a",
+                  "type": "array-like",
+                  "default": "—",
+                  "desc": {
+                    "zh": "输入数组",
+                    "en": "Input array"
+                  }
+                },
+                {
+                  "name": "a_min",
+                  "type": "scalar | array-like | None",
+                  "default": "—",
+                  "desc": {
+                    "zh": "下界；None 表示不设下限",
+                    "en": "Lower bound; None means no lower clipping"
+                  }
+                },
+                {
+                  "name": "a_max",
+                  "type": "scalar | array-like | None",
+                  "default": "—",
+                  "desc": {
+                    "zh": "上界；None 表示不设上限",
+                    "en": "Upper bound; None means no upper clipping"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "clip",
+                "range",
+                "outlier"
+              ]
+            },
+            {
+              "name": "np.nan / np.inf / np.isnan() / np.isinf()",
+              "desc": {
+                "zh": "特殊浮点值与检测函数：NaN（非数）和 Inf（无穷大）",
+                "en": "Special float values and detection: NaN (not-a-number) and Inf (infinity)"
+              },
+              "signature": "np.nan\nnp.inf\nnp.isnan(x)\nnp.isinf(x)",
+              "example": "import numpy as np\n\na = np.array([1.0, np.nan, np.inf, -np.inf, 0.0])\nprint('isnan:', np.isnan(a))\nprint('isinf:', np.isinf(a))\nprint('isfinite:', np.isfinite(a))\n\n# NaN 的特殊性质\nprint('nan == nan:', np.nan == np.nan)",
+              "output": "isnan: [False  True False False False]\nisinf: [False False  True  True False]\nisfinite: [ True False False False  True]\nnan == nan: False",
+              "params": [
+                {
+                  "name": "np.nan",
+                  "type": "float",
+                  "default": "—",
+                  "desc": {
+                    "zh": "IEEE 754 的 NaN 值；注意 nan != nan（永远为 False）",
+                    "en": "IEEE 754 NaN value; note that nan != nan (always False)"
+                  }
+                },
+                {
+                  "name": "np.inf",
+                  "type": "float",
+                  "default": "—",
+                  "desc": {
+                    "zh": "正无穷大；-np.inf 表示负无穷大",
+                    "en": "Positive infinity; -np.inf for negative infinity"
+                  }
+                },
+                {
+                  "name": "x",
+                  "type": "array-like",
+                  "default": "—",
+                  "desc": {
+                    "zh": "isnan/isinf 的输入数组，逐元素检测",
+                    "en": "Input for isnan/isinf, checked element-wise"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "nan",
+                "inf",
+                "special",
+                "missing"
+              ]
+            },
+            {
+              "name": "np.vectorize()",
+              "desc": {
+                "zh": "将普通 Python 函数包装为可逐元素作用于数组的向量化函数",
+                "en": "Wrap a plain Python function to operate element-wise on arrays (vectorized interface)"
+              },
+              "signature": "np.vectorize(pyfunc, otypes=None, excluded=None, signature=None)",
+              "example": "import numpy as np\n\ndef grade(score):\n    if score >= 90: return 'A'\n    elif score >= 80: return 'B'\n    elif score >= 60: return 'C'\n    else: return 'F'\n\nvgrade = np.vectorize(grade)\nscores = np.array([95, 82, 67, 45, 88])\nprint(vgrade(scores))",
+              "output": "['A' 'B' 'C' 'F' 'B']",
+              "params": [
+                {
+                  "name": "pyfunc",
+                  "type": "callable",
+                  "default": "—",
+                  "desc": {
+                    "zh": "接受标量输入的普通 Python 函数",
+                    "en": "A regular Python function that accepts scalar input"
+                  }
+                },
+                {
+                  "name": "otypes",
+                  "type": "str | list[dtype]",
+                  "default": "None",
+                  "desc": {
+                    "zh": "输出数据类型；None 时通过调用一次函数来推断",
+                    "en": "Output dtype(s); None infers by calling the function once"
+                  }
+                },
+                {
+                  "name": "excluded",
+                  "type": "set",
+                  "default": "None",
+                  "desc": {
+                    "zh": "不进行向量化的参数名或位置集合",
+                    "en": "Set of parameter names or positions to exclude from vectorization"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "vectorize",
+                "function",
+                "element-wise"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "patterns",
+          "title": {
+            "zh": "常见模式",
+            "en": "Common Patterns"
+          },
+          "items": [
+            {
+              "title": {
+                "zh": "广播机制 (Broadcasting)",
+                "en": "Broadcasting"
+              },
+              "code": "import numpy as np\n\n# 标量广播\na = np.array([1, 2, 3])\nprint(a * 10)  # [10, 20, 30]\n\n# 不同形状广播\nmatrix = np.array([[1, 2, 3],\n                   [4, 5, 6]])\nrow = np.array([10, 20, 30])\nprint(matrix + row)  # 行向量自动广播到每一行\n\n# 广播规则：从右向左对齐维度，1 可广播到 N",
+              "note": {
+                "zh": "广播让不同形状的数组进行运算时自动扩展维度，避免手动复制数据",
+                "en": "Broadcasting auto-expands dimensions for operations between differently shaped arrays, avoiding manual data copying"
+              }
+            },
+            {
+              "title": {
+                "zh": "布尔索引",
+                "en": "Boolean Indexing"
+              },
+              "code": "import numpy as np\n\na = np.array([10, 25, 3, 48, 17, 6])\n\n# 单条件\nprint(a[a > 10])  # [25, 48, 17]\n\n# 多条件（必须用 & | ~，不能用 and or not）\nprint(a[(a > 5) & (a < 30)])  # [10, 25, 17, 6]\n\n# 计数\nprint(np.sum(a > 10))  # 3",
+              "note": {
+                "zh": "布尔数组可直接作为索引筛选元素；多条件必须用 &, |, ~ 且加括号",
+                "en": "Boolean arrays can directly index to filter elements; use &, |, ~ (not and/or/not) with parentheses for multi-conditions"
+              }
+            },
+            {
+              "title": {
+                "zh": "向量化替代循环",
+                "en": "Vectorization over Loops"
+              },
+              "code": "import numpy as np\n\n# 反面：Python 循环（慢）\na = list(range(100000))\nresult = [x ** 2 + 2 * x + 1 for x in a]\n\n# 正面：向量化运算（快 50-100x）\na = np.arange(100000)\nresult = a ** 2 + 2 * a + 1\n\n# 条件向量化也可以\nresult = np.where(a > 50000, a * 2, a * 0.5)",
+              "note": {
+                "zh": "NumPy 的核心优势在于向量化运算；尽量用数组运算替代 Python for 循环",
+                "en": "NumPy's core advantage is vectorized operations; always prefer array operations over Python for-loops"
+              }
+            }
+          ]
+        },
+        {
+          "type": "pitfalls",
+          "title": {
+            "zh": "常见陷阱",
+            "en": "Common Pitfalls"
+          },
+          "items": [
+            {
+              "title": {
+                "zh": "np.nan 的比较陷阱（nan != nan）",
+                "en": "np.nan comparison trap (nan != nan)"
+              },
+              "wrong": {
+                "code": "import numpy as np\n\na = np.array([1.0, np.nan, 3.0])\n\n# 错误：直接比较 nan\nprint(a == np.nan)   # [False, False, False] — 全是 False！\nprint(a != np.nan)   # [True, True, True]\n\n# nan 与自身不相等是 IEEE 754 标准\nif np.nan == np.nan:\n    print('equal')  # 永远不会执行",
+                "note": {
+                  "zh": "np.nan == np.nan 返回 False，这是 IEEE 754 标准规定的，不能用 == 检测 NaN",
+                  "en": "np.nan == np.nan returns False per IEEE 754; you cannot use == to detect NaN"
+                }
+              },
+              "right": {
+                "code": "import numpy as np\n\na = np.array([1.0, np.nan, 3.0])\n\n# 正确：用 np.isnan() 检测\nprint(np.isnan(a))    # [False, True, False]\n\n# pandas 中用 pd.isna() / pd.notna()\nimport pandas as pd\ns = pd.Series(a)\nprint(s.isna())       # 0 False, 1 True, 2 False\nprint(s.dropna())     # 0 1.0, 2 3.0",
+                "note": {
+                  "zh": "始终用 np.isnan() 或 pd.isna() 检测缺失值，不要用 == 比较",
+                  "en": "Always use np.isnan() or pd.isna() to detect missing values, never use =="
+                }
+              }
+            },
+            {
+              "title": {
+                "zh": "浅拷贝 vs 深拷贝（view vs copy）",
+                "en": "Shallow vs deep copy (view vs copy)"
+              },
+              "wrong": {
+                "code": "import numpy as np\n\na = np.array([1, 2, 3, 4, 5])\n\n# 切片是视图（view），修改会影响原数组！\nb = a[1:4]\nb[0] = 99\nprint(a)  # [1, 99, 3, 4, 5] — 原数组被修改了！\n\n# reshape 也通常返回视图\nc = a.reshape(1, -1)\nc[0, 0] = 100\nprint(a)  # [100, 99, 3, 4, 5] — 又被改了！",
+                "note": {
+                  "zh": "NumPy 切片和 reshape 通常返回视图（共享内存），修改视图会改变原数组",
+                  "en": "NumPy slicing and reshape typically return views (shared memory); modifying the view changes the original"
+                }
+              },
+              "right": {
+                "code": "import numpy as np\n\na = np.array([1, 2, 3, 4, 5])\n\n# 方法1: .copy() 显式复制\nb = a[1:4].copy()\nb[0] = 99\nprint(a)  # [1, 2, 3, 4, 5] — 原数组不受影响\n\n# 方法2: np.array() 默认 copy=True\nc = np.array(a)\n\n# 检查是否是视图\nprint(b.base is None)         # True → 独立副本\nprint(a[1:4].base is not None) # True → 是视图",
+                "note": {
+                  "zh": "需要独立副本时显式调用 .copy()；可用 .base 检查是否是视图（base 非 None 说明是视图）",
+                  "en": "Use .copy() explicitly for independent copies; check .base to verify (non-None base means it's a view)"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "numpy-pandas",
+      "title": {
+        "zh": "NumPy 与 pandas 联动",
+        "en": "NumPy-pandas Integration"
+      },
+      "icon": "🔗",
+      "sections": [
+        {
+          "type": "api-table",
+          "title": {
+            "zh": "NumPy-pandas 互操作 API",
+            "en": "NumPy-pandas Interop APIs"
+          },
+          "items": [
+            {
+              "name": "df.to_numpy() / df.values",
+              "desc": {
+                "zh": "将 DataFrame 或 Series 转换为 NumPy 数组；推荐用 to_numpy()",
+                "en": "Convert DataFrame or Series to NumPy array; prefer to_numpy() over .values"
+              },
+              "signature": "df.to_numpy(dtype=None, copy=False, na_value=_NoDefault)\ndf.values  # property, no params",
+              "example": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({'a': [1, 2, 3], 'b': [4.0, 5.0, 6.0]})\n\narr1 = df.to_numpy()\nprint(arr1, arr1.dtype)\n\narr2 = df.values\nprint(arr2 is arr1)  # 可能共享内存\n\n# 指定类型\narr3 = df.to_numpy(dtype='float32')\nprint(arr3.dtype)",
+              "output": "[[1. 4.]\n [2. 5.]\n [3. 6.]] float64\nFalse\nfloat32",
+              "params": [
+                {
+                  "name": "dtype",
+                  "type": "str | dtype | None",
+                  "default": "None",
+                  "desc": {
+                    "zh": "目标数据类型；None 时自动推断（混合类型统一为最通用类型）",
+                    "en": "Target dtype; None auto-infers (mixed types unified to most general dtype)"
+                  }
+                },
+                {
+                  "name": "copy",
+                  "type": "bool",
+                  "default": "False",
+                  "desc": {
+                    "zh": "是否强制复制；False 时可能返回视图",
+                    "en": "Whether to force copy; False may return a view"
+                  }
+                },
+                {
+                  "name": "na_value",
+                  "type": "scalar",
+                  "default": "—",
+                  "desc": {
+                    "zh": "用于替换 NA/NaN 的值；默认不替换",
+                    "en": "Value to use for NA/NaN; default keeps them as-is"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "pandas",
+                "convert",
+                "interop"
+              ]
+            },
+            {
+              "name": "pd.DataFrame(np_array, columns=)",
+              "desc": {
+                "zh": "将 NumPy 数组转为 DataFrame，需手动指定列名",
+                "en": "Convert a NumPy array to DataFrame, specifying column names manually"
+              },
+              "signature": "pd.DataFrame(data=np_array, index=None, columns=None, dtype=None, copy=False)",
+              "example": "import pandas as pd\nimport numpy as np\n\narr = np.array([[1, 'Alice', 88.5],\n                [2, 'Bob', 92.0],\n                [3, 'Charlie', 78.5]])\n\ndf = pd.DataFrame(arr, columns=['id', 'name', 'score'])\nprint(df)\nprint(df.dtypes)  # 注意：全部是 object 类型",
+              "output": "  id     name score\n0  1    Alice  88.5\n1  2      Bob  92.0\n2  3  Charlie  78.5\nid       object\nname     object\nscore    object\ndtype: object",
+              "params": [
+                {
+                  "name": "data",
+                  "type": "ndarray",
+                  "default": "—",
+                  "desc": {
+                    "zh": "二维 NumPy 数组；混合类型的数组会导致所有列为 object",
+                    "en": "2D NumPy array; mixed-type arrays result in all-object columns"
+                  }
+                },
+                {
+                  "name": "columns",
+                  "type": "list[str]",
+                  "default": "None",
+                  "desc": {
+                    "zh": "列名列表；None 时自动生成 0, 1, 2, ...",
+                    "en": "Column name list; None auto-generates 0, 1, 2, ..."
+                  }
+                },
+                {
+                  "name": "dtype",
+                  "type": "dtype | None",
+                  "default": "None",
+                  "desc": {
+                    "zh": "强制所有列使用此类型；通常不设，而是后续用 astype 逐列转换",
+                    "en": "Force all columns to this dtype; usually leave as None and convert per-column with astype"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "pandas",
+                "convert",
+                "create"
+              ]
+            },
+            {
+              "name": "np.where() 在 pandas 中的应用",
+              "desc": {
+                "zh": "用 np.where 根据条件创建新列，比 apply + if/else 快数十倍",
+                "en": "Use np.where to create conditional columns — 10-100x faster than apply with if/else"
+              },
+              "signature": "np.where(condition, x, y)",
+              "example": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'score': [95, 58, 72, 88]\n})\n\ndf['pass'] = np.where(df['score'] >= 60, 'Pass', 'Fail')\nprint(df)",
+              "output": "      name  score  pass\n0    Alice     95  Pass\n1      Bob     58  Fail\n2  Charlie     72  Pass\n3    Diana     88  Pass",
+              "params": [
+                {
+                  "name": "condition",
+                  "type": "Series[bool]",
+                  "default": "—",
+                  "desc": {
+                    "zh": "pandas 布尔 Series，如 df['score'] >= 60",
+                    "en": "A pandas boolean Series, e.g. df['score'] >= 60"
+                  }
+                },
+                {
+                  "name": "x",
+                  "type": "scalar | Series",
+                  "default": "—",
+                  "desc": {
+                    "zh": "条件为 True 时的值；可以是标量或另一列",
+                    "en": "Value when True; can be a scalar or another column"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": "scalar | Series",
+                  "default": "—",
+                  "desc": {
+                    "zh": "条件为 False 时的值；可以是标量或另一列",
+                    "en": "Value when False; can be a scalar or another column"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "pandas",
+                "conditional",
+                "column-creation",
+                "performance"
+              ]
+            },
+            {
+              "name": "np.select() 在 pandas 中的应用",
+              "desc": {
+                "zh": "用 np.select 实现多条件分支列创建，比嵌套 np.where 更清晰",
+                "en": "Use np.select for multi-condition column creation — cleaner than nested np.where"
+              },
+              "signature": "np.select(condlist, choicelist, default=0)",
+              "example": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana'],\n    'score': [95, 58, 72, 45]\n})\n\nconditions = [\n    df['score'] >= 90,\n    df['score'] >= 60,\n    df['score'] >= 0\n]\nchoices = ['A', 'B', 'C']\n\ndf['grade'] = np.select(conditions, choices, default='F')\nprint(df)",
+              "output": "      name  score grade\n0    Alice     95     A\n1      Bob     58     C\n2  Charlie     72     B\n3    Diana     45     C",
+              "params": [
+                {
+                  "name": "condlist",
+                  "type": "list[Series[bool]]",
+                  "default": "—",
+                  "desc": {
+                    "zh": "pandas 布尔 Series 列表；顺序重要，第一个匹配的条件生效",
+                    "en": "List of pandas boolean Series; order matters, first match wins"
+                  }
+                },
+                {
+                  "name": "choicelist",
+                  "type": "list[scalar | Series]",
+                  "default": "—",
+                  "desc": {
+                    "zh": "对应每个条件的取值",
+                    "en": "Values corresponding to each condition"
+                  }
+                },
+                {
+                  "name": "default",
+                  "type": "scalar",
+                  "default": "0",
+                  "desc": {
+                    "zh": "所有条件不满足时的默认值",
+                    "en": "Default value when no condition matches"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "pandas",
+                "conditional",
+                "multi-branch",
+                "column-creation"
+              ]
+            },
+            {
+              "name": "df.apply(np.func)",
+              "desc": {
+                "zh": "在 pandas 中使用 NumPy 函数：直接向量化调用通常比 apply 更快",
+                "en": "Using NumPy functions in pandas: direct vectorized calls are usually faster than apply"
+              },
+              "signature": "df.apply(func, axis=0)\n# 或直接: np.func(df['col'])",
+              "example": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'value': [1, 4, 9, 16, 25]\n})\n\n# 方法1: apply（慢）\ndf['sqrt_apply'] = df['value'].apply(np.sqrt)\n\n# 方法2: 直接向量化（快）\ndf['sqrt_direct'] = np.sqrt(df['value'])\n\nprint(df)\nprint('结果相同:', df['sqrt_apply'].equals(df['sqrt_direct']))",
+              "output": "   value  sqrt_apply  sqrt_direct\n0      1         1.0          1.0\n1      4         2.0          2.0\n2      9         3.0          3.0\n3     16         4.0          4.0\n4     25         5.0          5.0\n结果相同: True",
+              "params": [
+                {
+                  "name": "func",
+                  "type": "callable",
+                  "default": "—",
+                  "desc": {
+                    "zh": "NumPy 函数如 np.sqrt, np.log, np.exp 等；推荐直接调用而非用 apply 包装",
+                    "en": "NumPy function like np.sqrt, np.log, np.exp; prefer direct call over wrapping with apply"
+                  }
+                },
+                {
+                  "name": "axis",
+                  "type": "int",
+                  "default": "0",
+                  "desc": {
+                    "zh": "0=按列应用，1=按行应用",
+                    "en": "0=apply per column, 1=apply per row"
+                  }
+                },
+                {
+                  "name": "直接调用",
+                  "type": "best-practice",
+                  "default": "—",
+                  "desc": {
+                    "zh": "大多数 NumPy ufunc 可直接接受 Series，无需 apply：np.sqrt(df['col'])",
+                    "en": "Most NumPy ufuncs accept Series directly without apply: np.sqrt(df['col'])"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "pandas",
+                "apply",
+                "performance",
+                "vectorize"
+              ]
+            },
+            {
+              "name": "pd.to_numeric()",
+              "desc": {
+                "zh": "将字符串或混合类型列转为数值类型，errors='coerce' 将无效值变为 NaN",
+                "en": "Convert string or mixed-type columns to numeric; errors='coerce' turns invalid values to NaN"
+              },
+              "signature": "pd.to_numeric(arg, errors='raise', downcast=None)",
+              "example": "import pandas as pd\nimport numpy as np\n\ns = pd.Series(['1', '2.5', 'three', '4', None])\n\n# errors='coerce': 无法转换的变为 NaN\nresult = pd.to_numeric(s, errors='coerce')\nprint(result)\nprint(result.dtype)",
+              "output": "0    1.0\n1    2.5\n2    NaN\n3    4.0\n4    NaN\ndtype: float64",
+              "params": [
+                {
+                  "name": "arg",
+                  "type": "scalar | list | Series",
+                  "default": "—",
+                  "desc": {
+                    "zh": "要转换为数值的输入",
+                    "en": "Input to convert to numeric"
+                  }
+                },
+                {
+                  "name": "errors",
+                  "type": "str",
+                  "default": "'raise'",
+                  "desc": {
+                    "zh": "'raise' 报错, 'coerce' 转为 NaN, 'ignore' 保持原样",
+                    "en": "'raise' to error, 'coerce' to NaN, 'ignore' to keep original"
+                  }
+                },
+                {
+                  "name": "downcast",
+                  "type": "str | None",
+                  "default": "None",
+                  "desc": {
+                    "zh": "向下转型：'integer', 'signed', 'unsigned', 'float' 以节省内存",
+                    "en": "Downcast: 'integer', 'signed', 'unsigned', 'float' to save memory"
+                  }
+                }
+              ],
+              "tags": [
+                "pandas",
+                "numpy",
+                "type-conversion",
+                "cleaning"
+              ]
+            },
+            {
+              "name": "np.vectorize(func)(series)",
+              "desc": {
+                "zh": "用 np.vectorize 将自定义标量函数应用到整个 Series，语法更简洁",
+                "en": "Apply a custom scalar function to an entire Series via np.vectorize for cleaner syntax"
+              },
+              "signature": "np.vectorize(pyfunc)(series)",
+              "example": "import pandas as pd\nimport numpy as np\n\ndef categorize(val):\n    if val > 100: return 'high'\n    elif val > 50: return 'medium'\n    else: return 'low'\n\ndf = pd.DataFrame({'revenue': [120, 45, 80, 200, 30]})\ndf['level'] = np.vectorize(categorize)(df['revenue'])\nprint(df)",
+              "output": "   revenue   level\n0      120    high\n1       45     low\n2       80  medium\n3      200    high\n4       30     low",
+              "params": [
+                {
+                  "name": "pyfunc",
+                  "type": "callable",
+                  "default": "—",
+                  "desc": {
+                    "zh": "接受标量输入的自定义函数",
+                    "en": "Custom function that accepts scalar input"
+                  }
+                },
+                {
+                  "name": "series",
+                  "type": "Series",
+                  "default": "—",
+                  "desc": {
+                    "zh": "要逐元素处理的 pandas Series",
+                    "en": "The pandas Series to process element-wise"
+                  }
+                },
+                {
+                  "name": "性能说明",
+                  "type": "note",
+                  "default": "—",
+                  "desc": {
+                    "zh": "np.vectorize 本质是 Python 循环包装，性能不如真正的向量化操作，但比 apply 语法更简洁",
+                    "en": "np.vectorize is a Python loop wrapper — not truly vectorized, but cleaner syntax than apply"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "pandas",
+                "vectorize",
+                "custom-function"
+              ]
+            },
+            {
+              "name": "Series.map() vs np.vectorize()",
+              "desc": {
+                "zh": "两种逐元素映射方式的对比：map 更 pandas 风格，vectorize 更 NumPy 风格",
+                "en": "Comparison of two element-wise mapping approaches: map is more pandas-idiomatic, vectorize is more NumPy-style"
+              },
+              "signature": "series.map(func_or_dict)\nnp.vectorize(func)(series)",
+              "example": "import pandas as pd\nimport numpy as np\n\ns = pd.Series([1, 2, 3, 4, 5])\n\n# Series.map — pandas 风格\nresult1 = s.map(lambda x: x ** 2)\n\n# np.vectorize — NumPy 风格\nresult2 = np.vectorize(lambda x: x ** 2)(s)\n\nprint('map:', result1.tolist())\nprint('vec:', result2.tolist())\n\n# map 独有优势：支持字典映射\nmapping = {1: 'one', 2: 'two', 3: 'three'}\nprint('dict:', s.map(mapping).tolist())",
+              "output": "map: [1, 4, 9, 16, 25]\nvec: [1, 4, 9, 16, 25]\ndict: ['one', 'two', 'three', nan, nan]",
+              "params": [
+                {
+                  "name": "func_or_dict",
+                  "type": "callable | dict | Series",
+                  "default": "—",
+                  "desc": {
+                    "zh": "map 可接受函数、字典或 Series 作为映射；字典映射是 map 的独有优势",
+                    "en": "map accepts function, dict, or Series as mapping; dict mapping is map's unique advantage"
+                  }
+                },
+                {
+                  "name": "na_action",
+                  "type": "str | None",
+                  "default": "None",
+                  "desc": {
+                    "zh": "map 专用：'ignore' 表示跳过 NaN 值不传入函数",
+                    "en": "For map: 'ignore' skips NaN values without passing them to the function"
+                  }
+                },
+                {
+                  "name": "性能对比",
+                  "type": "note",
+                  "default": "—",
+                  "desc": {
+                    "zh": "两者性能接近（都是 Python 循环）；优先用 map（更 pandas 风格），复杂逻辑可考虑 vectorize",
+                    "en": "Similar performance (both Python loops); prefer map (more pandas-idiomatic), consider vectorize for complex logic"
+                  }
+                }
+              ],
+              "tags": [
+                "numpy",
+                "pandas",
+                "map",
+                "vectorize",
+                "comparison"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "patterns",
+          "title": {
+            "zh": "常见模式",
+            "en": "Common Patterns"
+          },
+          "items": [
+            {
+              "title": {
+                "zh": "向量化计算替代 apply",
+                "en": "Vectorized Computation over apply"
+              },
+              "code": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'price': [100, 200, 150, 300],\n    'quantity': [5, 3, 8, 2]\n})\n\n# 反面：apply lambda（逐行 Python 循环）\ndf['total_slow'] = df.apply(\n    lambda row: row['price'] * row['quantity'], axis=1\n)\n\n# 正面：向量化运算（底层 C 实现，快 10-100x）\ndf['total_fast'] = df['price'] * df['quantity']\n\nprint(df)",
+              "note": {
+                "zh": "pandas 列之间的四则运算自动向量化，比 apply(axis=1) 快 10-100 倍",
+                "en": "Arithmetic between pandas columns is auto-vectorized, 10-100x faster than apply(axis=1)"
+              }
+            },
+            {
+              "title": {
+                "zh": "np.where 嵌套实现多条件",
+                "en": "Nested np.where for Multiple Conditions"
+              },
+              "code": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({'score': [95, 82, 67, 45, 55]})\n\n# 嵌套 np.where（可读性一般）\ndf['grade'] = np.where(\n    df['score'] >= 90, 'A',\n    np.where(df['score'] >= 80, 'B',\n        np.where(df['score'] >= 60, 'C', 'F')))\n\n# 推荐：np.select（更清晰）\nconds = [df['score']>=90, df['score']>=80, df['score']>=60]\ndf['grade2'] = np.select(conds, ['A','B','C'], default='F')\n\nprint(df)",
+              "note": {
+                "zh": "2 个条件用 np.where，3+ 个条件推荐 np.select 更清晰",
+                "en": "Use np.where for 2 conditions, np.select for 3+ conditions for better readability"
+              }
+            },
+            {
+              "title": {
+                "zh": "NumPy 广播 + pandas assign",
+                "en": "NumPy Broadcasting + pandas assign"
+              },
+              "code": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'math': [80, 90, 70],\n    'english': [85, 75, 95],\n    'science': [90, 80, 85]\n})\n\n# 利用 NumPy 广播：所有科目乘以不同权重\nweights = np.array([0.4, 0.3, 0.3])  # 数学40%, 英语30%, 理科30%\ndf = df.assign(\n    weighted_total=(df[['math','english','science']].values * weights).sum(axis=1)\n)\nprint(df)",
+              "note": {
+                "zh": "先用 .values 转为 NumPy 数组，利用广播与权重数组相乘，再用 assign 赋值回 DataFrame",
+                "en": "Convert to NumPy via .values, broadcast-multiply with weights, then assign back to DataFrame"
+              }
+            },
+            {
+              "title": {
+                "zh": "用 NumPy 生成测试数据",
+                "en": "Generate Test Data with NumPy"
+              },
+              "code": "import pandas as pd\nimport numpy as np\n\nrng = np.random.default_rng(42)\nn = 1000\n\ndf = pd.DataFrame({\n    'id': np.arange(1, n + 1),\n    'name': rng.choice(['Alice','Bob','Charlie','Diana','Eve'], n),\n    'age': rng.integers(18, 65, n),\n    'salary': rng.normal(50000, 15000, n).round(2),\n    'department': rng.choice(['Engineering','Marketing','Sales','HR'], n),\n    'score': rng.uniform(0, 100, n).round(1)\n})\nprint(df.head())\nprint(f'Shape: {df.shape}')",
+              "note": {
+                "zh": "用 NumPy 随机生成器快速创建仿真数据，非常适合练习和测试",
+                "en": "Use NumPy random generator to quickly create mock data, great for practice and testing"
+              }
+            }
+          ]
+        },
+        {
+          "type": "pitfalls",
+          "title": {
+            "zh": "常见陷阱",
+            "en": "Common Pitfalls"
+          },
+          "items": [
+            {
+              "title": {
+                "zh": "df.values 返回的是 view（修改会影响原数据）",
+                "en": "df.values returns a view (modifications affect original data)"
+              },
+              "wrong": {
+                "code": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({'a': [1.0, 2.0, 3.0], 'b': [4.0, 5.0, 6.0]})\narr = df.values\n\n# 修改数组会影响 DataFrame！\narr[0, 0] = 999\nprint(df)  # a 列第一个值变成了 999！",
+                "note": {
+                  "zh": "df.values 可能返回视图（尤其是同类型列），修改数组会意外改变 DataFrame",
+                  "en": "df.values may return a view (especially for same-dtype columns); modifying the array unexpectedly changes the DataFrame"
+                }
+              },
+              "right": {
+                "code": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({'a': [1.0, 2.0, 3.0], 'b': [4.0, 5.0, 6.0]})\n\n# 方法1: to_numpy(copy=True)\narr = df.to_numpy(copy=True)\narr[0, 0] = 999\nprint(df)  # DataFrame 不受影响\n\n# 方法2: .copy()\narr2 = df.values.copy()",
+                "note": {
+                  "zh": "需要安全副本时用 df.to_numpy(copy=True) 或 df.values.copy()",
+                  "en": "Use df.to_numpy(copy=True) or df.values.copy() when you need a safe independent copy"
+                }
+              }
+            },
+            {
+              "title": {
+                "zh": "NumPy 没有 NaN-safe 运算（用 np.nanmean 而非 np.mean）",
+                "en": "NumPy has no NaN-safe operations by default (use np.nanmean, not np.mean)"
+              },
+              "wrong": {
+                "code": "import numpy as np\n\na = np.array([1.0, 2.0, np.nan, 4.0, 5.0])\n\nprint(np.mean(a))   # nan — 一个 NaN 污染整个结果！\nprint(np.sum(a))    # nan\nprint(np.std(a))    # nan",
+                "note": {
+                  "zh": "np.mean/sum/std 遇到 NaN 会返回 NaN，不会自动忽略缺失值",
+                  "en": "np.mean/sum/std return NaN when encountering NaN; they do NOT auto-skip missing values"
+                }
+              },
+              "right": {
+                "code": "import numpy as np\n\na = np.array([1.0, 2.0, np.nan, 4.0, 5.0])\n\n# 用 nan-safe 版本\nprint(np.nanmean(a))  # 3.0\nprint(np.nansum(a))   # 12.0\nprint(np.nanstd(a))   # 1.414...\n\n# pandas 默认就是 NaN-safe 的\nimport pandas as pd\ns = pd.Series(a)\nprint(s.mean())       # 3.0 — 自动跳过 NaN",
+                "note": {
+                  "zh": "NumPy 中用 np.nanmean/nansum/nanstd 系列函数跳过 NaN；pandas 默认自动跳过",
+                  "en": "Use np.nanmean/nansum/nanstd in NumPy to skip NaN; pandas skips NaN by default"
+                }
+              }
+            },
+            {
+              "title": {
+                "zh": "dtype 不匹配导致的隐式转换",
+                "en": "Implicit type conversion from dtype mismatch"
+              },
+              "wrong": {
+                "code": "import pandas as pd\nimport numpy as np\n\n# 整数列赋值 NaN 会自动转为 float！\ndf = pd.DataFrame({'id': [1, 2, 3, 4, 5]})\nprint(df['id'].dtype)  # int64\n\ndf.loc[2, 'id'] = np.nan\nprint(df['id'].dtype)  # float64 — 类型被偷偷改了！\nprint(df)",
+                "note": {
+                  "zh": "numpy int64 不支持 NaN，赋值 NaN 会导致整列从 int64 隐式转为 float64",
+                  "en": "numpy int64 cannot hold NaN; assigning NaN silently converts the entire column from int64 to float64"
+                }
+              },
+              "right": {
+                "code": "import pandas as pd\nimport numpy as np\n\n# 方法1: 使用 pandas 的 nullable integer 类型\ndf = pd.DataFrame({'id': pd.array([1, 2, 3, 4, 5], dtype='Int64')})\ndf.loc[2, 'id'] = pd.NA\nprint(df['id'].dtype)  # Int64（保持整数！）\nprint(df)\n\n# 方法2: 提前规划，避免在整数列中出现 NaN\n# 方法3: 用 -1 或 0 等哨兵值代替 NaN",
+                "note": {
+                  "zh": "使用 pandas 的 nullable 类型（Int64, Float64, boolean）来安全地处理缺失值",
+                  "en": "Use pandas nullable types (Int64, Float64, boolean) to safely handle missing values without silent type changes"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "confusing-apis",
       "title": {
         "zh": "易混淆 API 对比",
