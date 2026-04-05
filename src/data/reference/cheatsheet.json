@@ -14308,6 +14308,225 @@
                 "binomial",
                 "distribution"
               ]
+            },
+            {
+              "name": "np.random.randn() / standard_normal()",
+              "desc": {
+                "zh": "标准正态分布 N(0,1) 的快捷方式",
+                "en": "Shortcut for standard normal distribution N(0,1)"
+              },
+              "signature": "np.random.randn(d0, d1, ...)         # 旧 API\nnp.random.standard_normal(size=None)  # 等价写法",
+              "example": "import numpy as np\nnp.random.seed(42)\n\n# randn：参数是维度（不是 tuple）\nprint(np.random.randn(3).round(2))\n\n# standard_normal：参数是 size tuple\nprint(np.random.standard_normal((2, 3)).round(2))\n\n# 等价于 normal(0, 1, size=...)\n# 转换为任意正态：mean + std * randn()\nscores = 75 + 10 * np.random.randn(5)  # N(75, 10)\nprint(scores.round(0))",
+              "output": "[ 0.5  -0.14  0.65]\n[[ 1.52 -0.23 -0.23]\n [-1.17 -0.04 -0.56]]\n[ 80.  68.  74.  75.  67.]",
+              "params": [
+                {
+                  "name": "d0, d1, ...",
+                  "type": "int",
+                  "default": "required",
+                  "desc": {
+                    "zh": "randn: 各维度大小（非 tuple）",
+                    "en": "randn: dimension sizes (not tuple)"
+                  }
+                },
+                {
+                  "name": "size",
+                  "type": "int | tuple",
+                  "default": "None",
+                  "desc": {
+                    "zh": "standard_normal: 输出形状",
+                    "en": "standard_normal: output shape"
+                  }
+                }
+              ],
+              "tags": [
+                "random",
+                "randn",
+                "standard_normal",
+                "gaussian",
+                "N(0,1)"
+              ]
+            },
+            {
+              "name": "np.random.beta()",
+              "desc": {
+                "zh": "Beta 分布：常用于比例/概率建模（值域 [0,1]）",
+                "en": "Beta distribution: for modeling proportions/probabilities (range [0,1])"
+              },
+              "signature": "np.random.beta(a, b, size=None)",
+              "example": "import numpy as np\nnp.random.seed(42)\n\n# a=b=1 → 均匀分布\n# a=b=5 → 接近正态，集中在 0.5\n# a=2,b=5 → 左偏，集中在较小值\nprint('a=2,b=5:', np.random.beta(2, 5, size=5).round(2))\nprint('a=5,b=2:', np.random.beta(5, 2, size=5).round(2))",
+              "output": "a=2,b=5: [0.14 0.44 0.27 0.32 0.11]\na=5,b=2: [0.79 0.56 0.73 0.91 0.73]",
+              "params": [
+                {
+                  "name": "a",
+                  "type": "float",
+                  "default": "required",
+                  "desc": {
+                    "zh": "α 参数：越大分布越靠右",
+                    "en": "α parameter: larger = distribution shifts right"
+                  }
+                },
+                {
+                  "name": "b",
+                  "type": "float",
+                  "default": "required",
+                  "desc": {
+                    "zh": "β 参数：越大分布越靠左",
+                    "en": "β parameter: larger = distribution shifts left"
+                  }
+                },
+                {
+                  "name": "size",
+                  "type": "int | tuple",
+                  "default": "None",
+                  "desc": {
+                    "zh": "输出形状",
+                    "en": "Output shape"
+                  }
+                }
+              ],
+              "tags": [
+                "random",
+                "beta",
+                "proportion",
+                "probability"
+              ]
+            },
+            {
+              "name": "np.random.gamma() / lognormal()",
+              "desc": {
+                "zh": "Gamma 分布（等待时间）/ 对数正态分布（收入、价格）",
+                "en": "Gamma (waiting times) / Log-normal (income, prices)"
+              },
+              "signature": "np.random.gamma(shape, scale=1.0, size=None)\nnp.random.lognormal(mean=0.0, sigma=1.0, size=None)",
+              "example": "import numpy as np\nnp.random.seed(42)\n\n# Gamma：shape=k 次事件的等待时间\nwait = np.random.gamma(shape=2, scale=3, size=5).round(1)\nprint('Gamma:', wait)\n\n# 对数正态：ln(X) ~ N(mean, sigma)\n# 常用于模拟收入、股票价格等右偏数据\nprices = np.random.lognormal(mean=3, sigma=0.5, size=5).round(1)\nprint('LogNormal:', prices)",
+              "output": "Gamma: [ 3.2  7.2  5.4  3.7  2.8]\nLogNormal: [25.7 19.   9.4 31.9 17.5]",
+              "params": [
+                {
+                  "name": "shape (k)",
+                  "type": "float",
+                  "default": "required",
+                  "desc": {
+                    "zh": "Gamma 形状参数（事件次数）",
+                    "en": "Gamma shape parameter (number of events)"
+                  }
+                },
+                {
+                  "name": "scale (θ)",
+                  "type": "float",
+                  "default": "1.0",
+                  "desc": {
+                    "zh": "Gamma 尺度参数（平均等待时间）",
+                    "en": "Gamma scale parameter (mean waiting time)"
+                  }
+                },
+                {
+                  "name": "mean, sigma",
+                  "type": "float",
+                  "default": "0.0, 1.0",
+                  "desc": {
+                    "zh": "对数正态的 ln(X) 的均值和标准差",
+                    "en": "Mean and std of ln(X) for log-normal"
+                  }
+                }
+              ],
+              "tags": [
+                "random",
+                "gamma",
+                "lognormal",
+                "skewed",
+                "income"
+              ]
+            },
+            {
+              "name": "np.random.multivariate_normal()",
+              "desc": {
+                "zh": "多元正态分布：生成相关联的多维随机数据",
+                "en": "Multivariate normal: generate correlated multi-dimensional random data"
+              },
+              "signature": "np.random.multivariate_normal(mean, cov, size=None)",
+              "example": "import numpy as np\nnp.random.seed(42)\n\n# 生成身高体重相关数据（相关系数 ≈ 0.8）\nmean = [170, 65]     # 平均身高 170cm，体重 65kg\ncov = [[100, 40],    # 身高方差 100，身高-体重协方差 40\n       [40, 25]]     # 协方差 40，体重方差 25\n\ndata = np.random.multivariate_normal(mean, cov, size=5).round(1)\nprint(data)",
+              "output": "[[174.9  70.2]\n [168.6  64.2]\n [176.5  68.1]\n [185.2  74.2]\n [167.7  63.4]]",
+              "params": [
+                {
+                  "name": "mean",
+                  "type": "array[float]",
+                  "default": "required",
+                  "desc": {
+                    "zh": "各维度的均值向量",
+                    "en": "Mean vector for each dimension"
+                  }
+                },
+                {
+                  "name": "cov",
+                  "type": "array[float]",
+                  "default": "required",
+                  "desc": {
+                    "zh": "协方差矩阵（对角线=方差，非对角线=协方差）",
+                    "en": "Covariance matrix (diagonal=variance, off-diagonal=covariance)"
+                  }
+                },
+                {
+                  "name": "size",
+                  "type": "int | tuple",
+                  "default": "None",
+                  "desc": {
+                    "zh": "生成样本数",
+                    "en": "Number of samples"
+                  }
+                }
+              ],
+              "tags": [
+                "random",
+                "multivariate",
+                "normal",
+                "correlated",
+                "simulation"
+              ]
+            },
+            {
+              "name": "np.random.triangular()",
+              "desc": {
+                "zh": "三角分布：已知最小值、最大值和最可能值时使用",
+                "en": "Triangular distribution: when min, max, and mode are known"
+              },
+              "signature": "np.random.triangular(left, mode, right, size=None)",
+              "example": "import numpy as np\nnp.random.seed(42)\n\n# 项目工期估算：最少 5 天，最可能 7 天，最多 15 天\ndays = np.random.triangular(left=5, mode=7, right=15, size=6).round(1)\nprint('工期估算:', days)\nprint(f'平均: {days.mean():.1f} 天')",
+              "output": "工期估算: [ 7.7 12.7  8.6  9.2  6.8  7.1]\n平均: 8.7 天",
+              "params": [
+                {
+                  "name": "left",
+                  "type": "float",
+                  "default": "required",
+                  "desc": {
+                    "zh": "最小值（下界）",
+                    "en": "Minimum value (lower bound)"
+                  }
+                },
+                {
+                  "name": "mode",
+                  "type": "float",
+                  "default": "required",
+                  "desc": {
+                    "zh": "最可能的值（众数/峰值）",
+                    "en": "Most likely value (mode/peak)"
+                  }
+                },
+                {
+                  "name": "right",
+                  "type": "float",
+                  "default": "required",
+                  "desc": {
+                    "zh": "最大值（上界）",
+                    "en": "Maximum value (upper bound)"
+                  }
+                }
+              ],
+              "tags": [
+                "random",
+                "triangular",
+                "estimation",
+                "project"
+              ]
             }
           ]
         },
