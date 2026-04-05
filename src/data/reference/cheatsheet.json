@@ -1780,6 +1780,17 @@
                 "zh": "loc/iloc 的行列选择器之间用逗号分隔；这是避免 SettingWithCopyWarning 的最佳方式",
                 "en": "Row and column selectors in loc/iloc are separated by comma; best way to avoid SettingWithCopyWarning"
               }
+            },
+            {
+              "title": {
+                "zh": "花式索引：用列表选取多行/多列",
+                "en": "Fancy Indexing: select rows/cols with lists"
+              },
+              "code": "import pandas as pd\n\ndf = pd.DataFrame({'A': [1,2,3,4,5], 'B': [10,20,30,40,50], 'C': ['a','b','c','d','e']})\n\n# iloc 花式索引：用整数列表选行\nprint(df.iloc[[0, 2, 4]])  # 取第0、2、4行\n\n# loc 花式索引：用标签列表选行和列\nprint(df.loc[[1, 3], ['A', 'C']])  # 取第1、3行的A和C列\n\n# 用布尔 Series 索引（最常用）\nmask = df['A'] > 2\nprint(df.loc[mask, 'B'])  # 取 A>2 的行的 B 列\n\n# 结合 isin 做花式筛选\nprint(df.loc[df['C'].isin(['a', 'c', 'e'])])",
+              "note": {
+                "zh": "iloc 用整数列表，loc 用标签列表。布尔 Series 是 pandas 最常用的花式索引方式",
+                "en": "iloc uses integer lists, loc uses label lists. Boolean Series is the most common fancy indexing in pandas"
+              }
             }
           ]
         },
@@ -14057,6 +14068,17 @@
               "note": {
                 "zh": "NumPy 的核心优势在于向量化运算；尽量用数组运算替代 Python for 循环",
                 "en": "NumPy's core advantage is vectorized operations; always prefer array operations over Python for-loops"
+              }
+            },
+            {
+              "title": {
+                "zh": "花式索引 (Fancy Indexing)",
+                "en": "Fancy Indexing"
+              },
+              "code": "import numpy as np\n\narr = np.array([10, 20, 30, 40, 50])\n\n# 用整数数组索引（取第0、2、4个元素）\nprint(arr[[0, 2, 4]])  # [10, 30, 50]\n\n# 二维花式索引\nmatrix = np.arange(12).reshape(3, 4)\nprint(matrix[[0, 2], [1, 3]])  # [1, 11]  取 (0,1) 和 (2,3)\n\n# 用布尔数组索引\nmask = np.array([True, False, True, False, True])\nprint(arr[mask])  # [10, 30, 50]\n\n# 花式索引返回的是副本（不是 view）\nsubset = arr[[0, 2]]\nsubset[0] = 999  # 不影响原数组",
+              "note": {
+                "zh": "花式索引用整数数组或布尔数组选取元素。与切片不同，花式索引返回副本而非视图",
+                "en": "Fancy indexing uses integer/boolean arrays to select elements. Unlike slicing, fancy indexing returns a copy, not a view"
               }
             }
           ]
