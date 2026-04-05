@@ -13805,12 +13805,12 @@
             {
               "name": "np.where()",
               "desc": {
-                "zh": "条件选择：满足条件取 x，不满足取 y；pandas 中最常用的 NumPy 函数之一",
-                "en": "Conditional selection: pick x where condition is true, y otherwise — one of the most used NumPy functions in pandas"
+                "zh": "条件选择：x/y 可以是标量、数组或列表；只传 condition 返回索引",
+                "en": "Conditional selection: x/y can be scalar, array, or list; condition-only returns indices"
               },
               "signature": "np.where(condition, x, y)",
-              "example": "import numpy as np\n\na = np.array([1, -2, 3, -4, 5])\nresult = np.where(a > 0, a, 0)\nprint(result)\n\n# 嵌套 np.where 实现多条件\nlabel = np.where(a > 0, 'pos',\n            np.where(a < 0, 'neg', 'zero'))\nprint(label)",
-              "output": "[1 0 3 0 5]\n['pos' 'neg' 'pos' 'neg' 'pos']",
+              "example": "import numpy as np\n\na = np.array([1, -2, 3, -4, 5])\n\n# x/y 是标量\nprint(np.where(a > 0, 'pos', 'neg'))\n\n# x/y 是数组：正数保留，负数取绝对值\nprint(np.where(a > 0, a, -a))\n\n# x/y 是列表\nprint(np.where(a > 0, [10,20,30,40,50], [0,0,0,0,0]))\n\n# 只传 condition：返回满足条件的索引\nprint(np.where(a > 0))",
+              "output": "['pos' 'neg' 'pos' 'neg' 'pos']\n[1 2 3 4 5]\n[10  0 30  0 50]\n(array([0, 2, 4]),)",
               "params": [
                 {
                   "name": "condition",

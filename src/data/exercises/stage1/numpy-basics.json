@@ -211,24 +211,24 @@
         "en": "Conditional Selection with np.where"
       },
       "description": {
-        "zh": "给定数组 scores，使用 np.where 将 >=60 的分数标记为 'pass'，否则标记为 'fail'。打印结果。",
-        "en": "Given the array scores, use np.where to label scores >=60 as 'pass' and others as 'fail'. Print the result."
+        "zh": "np.where(condition, x, y) 根据条件选择值。x 和 y 可以是标量、数组或列表。\n\n任务：\n1. 将 scores 中 ≥60 的标记为 'pass'，否则 'fail'\n2. 将负数替换为 0，正数保留原值（x 用数组）",
+        "en": "np.where(condition, x, y) selects values by condition. x and y can be scalars, arrays, or lists.\n\nTask:\n1. Mark scores >=60 as 'pass', else 'fail'\n2. Replace negatives with 0, keep positives (x as array)"
       },
       "setupCode": "import numpy as np\nscores = np.array([85, 42, 73, 58, 95, 36])",
-      "starterCode": "import numpy as np\nscores = np.array([85, 42, 73, 58, 95, 36])\n\n# Use np.where to label pass/fail\nresult = np.where(___)\nprint(result)",
-      "solutionCode": "import numpy as np\nscores = np.array([85, 42, 73, 58, 95, 36])\n\nresult = np.where(scores >= 60, 'pass', 'fail')\nprint(result)",
-      "validationType": "custom-check",
-      "checkCode": "try:\n    result = \"'pass'\" in _output and \"'fail'\" in _output\nexcept:\n    result = False\nresult",
+      "starterCode": "# 1. 标量参数：scores >= 60 标记为 'pass'/'fail'\nresult1 = np.where(scores >= 60, ___, ___)\nprint(result1)\n\n# 2. 数组参数：负数替为 0，正数保留\nnums = np.array([5, -3, 8, -1, 0, 7])\nresult2 = np.where(nums > 0, ___, ___)\nprint(result2)",
+      "solutionCode": "result1 = np.where(scores >= 60, 'pass', 'fail')\nprint(result1)\n\nnums = np.array([5, -3, 8, -1, 0, 7])\nresult2 = np.where(nums > 0, nums, 0)\nprint(result2)",
+      "validationType": "exact-output",
       "hints": {
         "zh": [
-          "np.where(condition, x, y) 返回一个数组：条件为 True 取 x，否则取 y",
-          "条件是 scores >= 60"
+          "第1题：x='pass', y='fail'（标量）",
+          "第2题：x=nums（保留原值），y=0（替为0）"
         ],
         "en": [
-          "np.where(condition, x, y) returns an array: takes x where True, y where False",
-          "The condition is scores >= 60"
+          "Task 1: x='pass', y='fail' (scalars)",
+          "Task 2: x=nums (keep original), y=0 (replace)"
         ]
-      }
+      },
+      "expectedOutput": "['pass' 'fail' 'pass' 'fail' 'pass' 'fail']\n[5 0 8 0 0 7]"
     },
     {
       "id": "s1-numpy-008",
