@@ -13,6 +13,7 @@ import s1LocIloc from "@/data/exercises/stage1/loc-iloc.json";
 import s1Dtypes from "@/data/exercises/stage1/dtypes.json";
 import s1Sorting from "@/data/exercises/stage1/sorting.json";
 import s1Numpy from "@/data/exercises/stage1/numpy-basics.json";
+import s1Broadcast from "@/data/exercises/stage1/numpy-broadcasting.json";
 
 // Stage 2
 import s2FileIo from "@/data/exercises/stage2/file-io.json";
@@ -50,7 +51,7 @@ const asModule = (m: unknown) => m as unknown as ExerciseModule;
 const allModules: ExerciseModule[] = [
   // Stage 1
   asModule(s1Intro), asModule(s1Series), asModule(s1DfCreate), asModule(s1Inspect),
-  asModule(s1Selection), asModule(s1LocIloc), asModule(s1Dtypes), asModule(s1Sorting), asModule(s1Numpy),
+  asModule(s1Selection), asModule(s1LocIloc), asModule(s1Dtypes), asModule(s1Sorting), asModule(s1Numpy), asModule(s1Broadcast),
   // Stage 2
   asModule(s2FileIo), asModule(s2Missing), asModule(s2BoolIdx), asModule(s2ColOps),
   asModule(s2String), asModule(s2TypeConv), asModule(s2Rename), asModule(s2ApplyMap), asModule(s2NumpyPd),

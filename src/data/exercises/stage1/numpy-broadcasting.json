@@ -1,0 +1,365 @@
+{
+  "module": "numpy-broadcasting",
+  "stageId": "stage1",
+  "lessonId": "numpy-broadcasting",
+  "tags": [
+    "numpy",
+    "broadcasting",
+    "vectorization",
+    "shape"
+  ],
+  "exercises": [
+    {
+      "id": "s1-broadcast-001",
+      "type": "multiple-choice",
+      "difficulty": 1,
+      "title": {
+        "zh": "广播的基本概念",
+        "en": "Broadcasting Basics"
+      },
+      "description": {
+        "zh": "NumPy 广播 (Broadcasting) 是什么？\n\n广播是 NumPy 的核心机制之一，它允许不同形状的数组进行数学运算，而不需要手动复制数据。当两个数组的形状不完全一致时，NumPy 会自动\"拉伸\"较小的数组来匹配较大的数组。\n\n例如：一个 (3,3) 的矩阵加上一个 (3,) 的向量，NumPy 会自动将向量沿行方向复制 3 次。",
+        "en": "What is NumPy Broadcasting?\n\nBroadcasting is a core NumPy mechanism that allows arrays of different shapes to perform math operations without manually copying data."
+      },
+      "options": {
+        "zh": [
+          "不同形状的数组自动扩展以匹配形状后进行运算",
+          "将小数组的数据复制多份存入内存",
+          "只能在相同形状的数组间运算",
+          "自动将所有数组转为一维后运算"
+        ],
+        "en": [
+          "Arrays of different shapes are automatically expanded to match before computation",
+          "Small arrays are physically copied multiple times in memory",
+          "Only arrays of identical shape can operate together",
+          "All arrays are flattened to 1D before computation"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "广播是\"虚拟\"扩展，不实际复制数据，所以很高效"
+        ],
+        "en": [
+          "Broadcasting is a 'virtual' expansion, no actual data copying, so it's efficient"
+        ]
+      },
+      "explanation": {
+        "zh": "广播是虚拟扩展——NumPy 不会真的复制数据到内存，而是在计算时假装较小数组被扩展了。这使得广播既节省内存又高效。",
+        "en": "Broadcasting is virtual expansion — NumPy doesn't actually copy data in memory, but pretends the smaller array is expanded during computation."
+      }
+    },
+    {
+      "id": "s1-broadcast-002",
+      "type": "output-matching",
+      "difficulty": 1,
+      "title": {
+        "zh": "标量广播：数组 + 标量",
+        "en": "Scalar Broadcasting: Array + Scalar"
+      },
+      "description": {
+        "zh": "最简单的广播：标量会自动扩展为与数组相同的形状。\n\n```python\narr + 10  等价于  arr + np.array([10, 10, 10, ...])\n```\n\n以下代码的输出是什么？",
+        "en": "Simplest broadcast: scalar auto-expands to match array shape.\n\nWhat is the output of this code?"
+      },
+      "code": "import numpy as np\narr = np.array([1, 2, 3])\nprint(arr * 2 + 10)",
+      "options": {
+        "zh": [
+          "[12 14 16]",
+          "[2 4 6]",
+          "[11 12 13]",
+          "[3 4 5]"
+        ],
+        "en": [
+          "[12 14 16]",
+          "[2 4 6]",
+          "[11 12 13]",
+          "[3 4 5]"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "先乘 2 得 [2,4,6]，再加 10 得 [12,14,16]"
+        ],
+        "en": [
+          "First *2 gives [2,4,6], then +10 gives [12,14,16]"
+        ]
+      },
+      "explanation": {
+        "zh": "标量 2 被广播为 [2,2,2]，标量 10 被广播为 [10,10,10]。运算按元素进行：[1*2+10, 2*2+10, 3*2+10] = [12, 14, 16]。这是最常见的广播场景。",
+        "en": "Scalar 2 broadcasts to [2,2,2], scalar 10 broadcasts to [10,10,10]. Element-wise: [1*2+10, 2*2+10, 3*2+10] = [12, 14, 16]."
+      }
+    },
+    {
+      "id": "s1-broadcast-003",
+      "type": "coding",
+      "difficulty": 1,
+      "title": {
+        "zh": "标量广播实践：温度转换",
+        "en": "Scalar Broadcasting: Temperature Conversion"
+      },
+      "description": {
+        "zh": "利用标量广播，将摄氏温度数组转换为华氏温度。\n\n公式：F = C × 9/5 + 32\n\n不需要循环，直接对数组运算即可——标量会自动广播。",
+        "en": "Use scalar broadcasting to convert Celsius array to Fahrenheit.\n\nFormula: F = C × 9/5 + 32\n\nNo loops needed — scalars broadcast automatically."
+      },
+      "setupCode": "import numpy as np\n\ncelsius = np.array([0, 20, 37, 100])",
+      "starterCode": "# 将摄氏度转为华氏度：F = C * 9/5 + 32\nfahrenheit = ___\nprint(fahrenheit)",
+      "solutionCode": "fahrenheit = celsius * 9/5 + 32\nprint(fahrenheit)",
+      "validationType": "exact-output",
+      "expectedOutput": "[ 32.   68.   98.6 212. ]",
+      "hints": {
+        "zh": [
+          "直接写 celsius * 9/5 + 32，NumPy 会自动对每个元素运算"
+        ],
+        "en": [
+          "Just write celsius * 9/5 + 32, NumPy auto-applies to each element"
+        ]
+      },
+      "explanation": {
+        "zh": "9/5 和 32 都是标量，NumPy 将它们广播为与 celsius 相同形状的数组，然后逐元素计算。这比 for 循环快 10-100 倍。",
+        "en": "9/5 and 32 are scalars, NumPy broadcasts them to match celsius shape, then computes element-wise. This is 10-100x faster than a for loop."
+      }
+    },
+    {
+      "id": "s1-broadcast-004",
+      "type": "output-matching",
+      "difficulty": 2,
+      "title": {
+        "zh": "一维 + 二维广播",
+        "en": "1D + 2D Broadcasting"
+      },
+      "description": {
+        "zh": "**广播规则**：从尾部维度开始对齐，每个维度要么相等，要么其中一个为 1（或缺失）。\n\n```\n矩阵 (3, 3) + 向量 (3,)\n→ 向量变成 (1, 3)，再广播为 (3, 3)\n→ 每行都加上这个向量\n```\n\n以下代码的输出是什么？",
+        "en": "**Broadcasting rule**: Align from trailing dimensions. Each dim must be equal, or one of them is 1 (or missing).\n\nWhat is the output?"
+      },
+      "code": "import numpy as np\nmatrix = np.array([[1, 2, 3],\n                   [4, 5, 6]])\nrow = np.array([10, 20, 30])\nprint(matrix + row)",
+      "options": {
+        "zh": [
+          "[[11 22 33]\n [14 25 36]]",
+          "[[11 12 13]\n [14 15 16]]",
+          "[[2 4 6]\n [5 7 9]]",
+          "报错：形状不匹配"
+        ],
+        "en": [
+          "[[11 22 33]\n [14 25 36]]",
+          "[[11 12 13]\n [14 15 16]]",
+          "[[2 4 6]\n [5 7 9]]",
+          "Error: shape mismatch"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "(2,3) + (3,) → row 广播为 (2,3)，即每行都加 [10,20,30]"
+        ],
+        "en": [
+          "(2,3) + (3,) → row broadcasts to (2,3), each row adds [10,20,30]"
+        ]
+      },
+      "explanation": {
+        "zh": "matrix 形状 (2,3)，row 形状 (3,)。从尾部对齐：3==3 ✓。row 缺失第一个维度，扩展为 (1,3)→(2,3)。结果：第一行 [1+10, 2+20, 3+30]=[11,22,33]，第二行 [4+10, 5+20, 6+30]=[14,25,36]。",
+        "en": "matrix shape (2,3), row shape (3,). Align from end: 3==3 ✓. row expands (1,3)→(2,3). Row 0: [11,22,33], Row 1: [14,25,36]."
+      }
+    },
+    {
+      "id": "s1-broadcast-005",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "列向量广播：每列减去列均值",
+        "en": "Column Vector Broadcasting: Subtract Column Mean"
+      },
+      "description": {
+        "zh": "**列向量广播**：shape (n,1) 的列向量与 (n,m) 的矩阵运算时，列向量沿列方向复制。\n\n```\n(3, 4) - (3, 1) → 列向量广播为 (3, 4)\n→ 每列都减去对应行的值\n```\n\n任务：计算矩阵每行的均值，然后用广播让每个元素减去所在行的均值（行中心化）。",
+        "en": "Column vector broadcasting: shape (n,1) broadcasts along columns.\n\nTask: compute row means, then subtract each row's mean from its elements (row centering)."
+      },
+      "setupCode": "import numpy as np\n\ndata = np.array([[10, 20, 30],\n                 [40, 50, 60],\n                 [70, 80, 90]])",
+      "starterCode": "# 1. 计算每行均值，保持为列向量 (3,1)\n#    提示：data.mean(axis=1, keepdims=True)\nrow_means = ___\nprint('行均值:', row_means.flatten())\n\n# 2. 广播减法：每个元素减去所在行均值\ncentered = ___\nprint('中心化结果:')\nprint(centered)",
+      "solutionCode": "row_means = data.mean(axis=1, keepdims=True)\nprint('行均值:', row_means.flatten())\n\ncentered = data - row_means\nprint('中心化结果:')\nprint(centered)",
+      "validationType": "exact-output",
+      "expectedOutput": "行均值: [20. 50. 80.]\n中心化结果:\n[[-10.   0.  10.]\n [-10.   0.  10.]\n [-10.   0.  10.]]",
+      "hints": {
+        "zh": [
+          "axis=1 表示沿行方向计算均值",
+          "keepdims=True 保持维度为 (3,1) 而非 (3,)，这对广播至关重要",
+          "直接 data - row_means，NumPy 会自动广播"
+        ],
+        "en": [
+          "axis=1 computes mean along rows",
+          "keepdims=True keeps shape (3,1) not (3,), crucial for broadcasting",
+          "Just data - row_means, NumPy auto-broadcasts"
+        ]
+      },
+      "explanation": {
+        "zh": "keepdims=True 使均值保持为 (3,1) 列向量。data(3,3) - row_means(3,1)：尾部维度 3 vs 1，1 被广播为 3。每行的每个元素都减去该行的均值。这是数据标准化的基础操作。",
+        "en": "keepdims=True keeps means as (3,1) column vector. data(3,3) - row_means(3,1): trailing dim 3 vs 1, 1 broadcasts to 3."
+      }
+    },
+    {
+      "id": "s1-broadcast-006",
+      "type": "true-false",
+      "difficulty": 2,
+      "title": {
+        "zh": "广播规则判断：(4,3) + (4,1) 可以广播吗？",
+        "en": "Broadcasting Rule: Can (4,3) + (4,1) broadcast?"
+      },
+      "description": {
+        "zh": "**广播规则回顾**：从尾部维度逐一比较，每对维度必须满足：\n- 两个维度相等，或\n- 其中一个为 1\n\n(4,3) + (4,1)：\n- 尾部第1维：3 vs 1 → 1 可以广播为 3 ✓\n- 尾部第2维：4 vs 4 → 相等 ✓\n\n所以 (4,3) + (4,1) 可以广播，结果形状为 (4,3)。对吗？",
+        "en": "Can (4,3) + (4,1) broadcast? True or False?"
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": [
+          "从尾部开始：3 vs 1（OK，1→3），4 vs 4（OK，相等）"
+        ],
+        "en": [
+          "From end: 3 vs 1 (OK, 1→3), 4 vs 4 (OK, equal)"
+        ]
+      },
+      "explanation": {
+        "zh": "正确！(4,3) + (4,1) → (4,3)。(4,1) 的列沿第二维广播 3 次。实际效果：每行的 3 个元素都加上同一个值（该行对应的标量）。",
+        "en": "Correct! (4,3) + (4,1) → (4,3). The (4,1) column broadcasts 3 times along axis 1."
+      }
+    },
+    {
+      "id": "s1-broadcast-007",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "广播失败：形状不兼容",
+        "en": "Broadcasting Failure: Incompatible Shapes"
+      },
+      "description": {
+        "zh": "以下哪组形状**不能**广播？\n\n广播规则：从尾部维度逐一对齐，每对维度要么相等要么有一个为 1。",
+        "en": "Which pair of shapes CANNOT broadcast?\n\nRule: align from trailing dims, each pair must be equal or one is 1."
+      },
+      "options": {
+        "zh": [
+          "(3, 4) + (4,)　　→ 尾部 4==4 ✓",
+          "(3, 4) + (3,)　　→ 尾部 4 vs 3 ✗",
+          "(5, 1) + (1, 3)　→ 5 vs 1 ✓, 1 vs 3 ✓",
+          "(2, 3, 4) + (3, 4) → 4==4 ✓, 3==3 ✓, 2 vs 缺失 ✓"
+        ],
+        "en": [
+          "(3,4) + (4,) → trailing 4==4 ✓",
+          "(3,4) + (3,) → trailing 4 vs 3 ✗",
+          "(5,1) + (1,3) → 5 vs 1 ✓, 1 vs 3 ✓",
+          "(2,3,4) + (3,4) → 4==4 ✓, 3==3 ✓, 2 vs missing ✓"
+        ]
+      },
+      "correctIndex": 1,
+      "hints": {
+        "zh": [
+          "(3,4) + (3,)：尾部维度 4 vs 3，既不相等也没有 1"
+        ],
+        "en": [
+          "(3,4) + (3,): trailing dim 4 vs 3, neither equal nor 1"
+        ]
+      },
+      "explanation": {
+        "zh": "(3,4) + (3,) 失败！尾部维度 4≠3 且都不是 1。这是常见错误——把 (3,) 当成列向量用，但它实际是行向量。解决方法：reshape 为 (3,1) 即可广播。",
+        "en": "(3,4) + (3,) fails! Trailing 4≠3 and neither is 1. Common mistake — (3,) acts as row vector. Fix: reshape to (3,1)."
+      }
+    },
+    {
+      "id": "s1-broadcast-008",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "外积：用广播生成乘法表",
+        "en": "Outer Product: Multiplication Table via Broadcasting"
+      },
+      "description": {
+        "zh": "**经典广播应用**：两个一维数组通过 reshape 变成列向量和行向量，广播后得到外积（乘法表）。\n\n```\n列向量 (n, 1) × 行向量 (1, m) → 矩阵 (n, m)\n```\n\n任务：用广播生成 1-5 的乘法表（5×5 矩阵）。",
+        "en": "Classic broadcasting: reshape 1D arrays to column and row vectors for outer product (multiplication table).\n\nTask: generate 1-5 multiplication table (5×5 matrix) via broadcasting."
+      },
+      "setupCode": "import numpy as np",
+      "starterCode": "# 创建 1-5 的数组\nnums = np.arange(1, 6)\n\n# 变成列向量 (5, 1)\ncol = nums.reshape(___)\n\n# 变成行向量 (1, 5)（其实 nums 本身就是 (5,)，但显式更清晰）\nrow = nums.reshape(___)\n\n# 广播乘法：(5,1) × (1,5) → (5,5)\ntable = col * row\nprint(table)",
+      "solutionCode": "nums = np.arange(1, 6)\ncol = nums.reshape(5, 1)\nrow = nums.reshape(1, 5)\ntable = col * row\nprint(table)",
+      "validationType": "exact-output",
+      "expectedOutput": "[[ 1  2  3  4  5]\n [ 2  4  6  8 10]\n [ 3  6  9 12 15]\n [ 4  8 12 16 20]\n [ 5 10 15 20 25]]",
+      "hints": {
+        "zh": [
+          "列向量：reshape(5, 1) 或 reshape(-1, 1)",
+          "行向量：reshape(1, 5) 或 reshape(1, -1)",
+          "(5,1) × (1,5) 广播为 (5,5)"
+        ],
+        "en": [
+          "Column: reshape(5, 1) or reshape(-1, 1)",
+          "Row: reshape(1, 5) or reshape(1, -1)",
+          "(5,1) × (1,5) broadcasts to (5,5)"
+        ]
+      },
+      "explanation": {
+        "zh": "这是广播最优雅的应用之一。(5,1) × (1,5)：尾部 1 vs 5 → 广播为 5；倒数第二 5 vs 1 → 广播为 5。结果 (5,5)。等价于 np.outer(nums, nums)，但广播写法更灵活。",
+        "en": "One of broadcasting's most elegant uses. (5,1)×(1,5): trailing 1 vs 5 → 5; second 5 vs 1 → 5. Result (5,5). Equivalent to np.outer() but more flexible."
+      }
+    },
+    {
+      "id": "s1-broadcast-009",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "pandas 中的广播：DataFrame 与 Series",
+        "en": "Broadcasting in pandas: DataFrame and Series"
+      },
+      "description": {
+        "zh": "pandas 继承了 NumPy 的广播机制！\n\n- `DataFrame + 标量` → 每个元素加标量\n- `DataFrame + Series(同列名)` → 每行加对应列的值\n- `DataFrame.sub(Series, axis=0)` → 每列减对应行的值\n\n任务：\n1. 将所有成绩乘以 1.1（加分 10%）\n2. 每科减去该科的均值（列中心化）",
+        "en": "pandas inherits NumPy broadcasting!\n\nTask:\n1. Multiply all scores by 1.1 (10% bonus)\n2. Subtract each column's mean (column centering)"
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'math': [80, 90, 70],\n    'english': [85, 75, 95],\n    'science': [90, 80, 85]\n}, index=['Alice', 'Bob', 'Charlie'])",
+      "starterCode": "# 1. 所有成绩 × 1.1（标量广播）\nboosted = ___\nprint(boosted)\n\n# 2. 每列减去该列均值（Series 广播）\n#    df.mean() 返回每列均值的 Series\ncentered = ___\nprint(centered.round(1))",
+      "solutionCode": "boosted = df * 1.1\nprint(boosted)\n\ncentered = df - df.mean()\nprint(centered.round(1))",
+      "validationType": "exact-output",
+      "expectedOutput": "math  english  science\nAlice    88.0     93.5     99.0\nBob      99.0     82.5     88.0\nCharlie  77.0    104.5     93.5\n         math  english  science\nAlice     0.0      0.0      5.0\nBob      10.0    -10.0     -5.0\nCharlie -10.0     10.0      0.0",
+      "hints": {
+        "zh": [
+          "第1题：直接 df * 1.1",
+          "第2题：df.mean() 返回 Series（每列均值），直接 df - df.mean()"
+        ],
+        "en": [
+          "Task 1: just df * 1.1",
+          "Task 2: df.mean() returns Series (column means), just df - df.mean()"
+        ]
+      },
+      "explanation": {
+        "zh": "pandas 的广播规则：DataFrame op Series 时，按列名对齐。df.mean() 返回 Series(index=['math','english','science'])，与 df 的列名匹配，所以每列都减去对应的均值。这是特征标准化的基础。",
+        "en": "pandas broadcasting: DataFrame op Series aligns by column names. df.mean() returns Series with column names matching df, so each column subtracts its own mean."
+      }
+    },
+    {
+      "id": "s1-broadcast-010",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 广播实现 Z-score 标准化",
+        "en": "[Comprehensive] Z-score Normalization via Broadcasting"
+      },
+      "description": {
+        "zh": "Z-score 标准化是数据预处理的常用方法：\n\n```\nZ = (X - mean) / std\n```\n\n利用广播，一行代码完成整个 DataFrame 的标准化，不需要循环，不需要 apply。\n\n任务：对 df 的所有数值列做 Z-score 标准化。",
+        "en": "Z-score normalization via broadcasting — one line, no loops, no apply.\n\nTask: Z-score normalize all numeric columns in df."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'height': [170, 180, 160, 175, 165],\n    'weight': [65, 80, 55, 72, 58],\n    'age': [25, 30, 22, 28, 35]\n})",
+      "starterCode": "# Z-score: (X - mean) / std\n# df.mean() 和 df.std() 都返回 Series，广播自动对齐列\nresult = ___\nprint(result.round(2))",
+      "solutionCode": "result = (df - df.mean()) / df.std()\nprint(result.round(2))",
+      "validationType": "exact-output",
+      "expectedOutput": "height  weight   age\n0    0.00   -0.10 -0.61\n1    1.26    1.37  0.40\n2   -1.26   -1.08 -1.21\n3    0.63    0.59  0.00\n4   -0.63   -0.78  1.41",
+      "hints": {
+        "zh": [
+          "df.mean() 返回每列均值 Series",
+          "df.std() 返回每列标准差 Series",
+          "(df - df.mean()) / df.std() 利用两次广播完成标准化"
+        ],
+        "en": [
+          "df.mean() returns column means Series",
+          "df.std() returns column stds Series",
+          "(df - df.mean()) / df.std() uses two broadcasts"
+        ]
+      },
+      "explanation": {
+        "zh": "这行代码做了两次广播：\n1. df(5,3) - df.mean()(3,) → 每列减去列均值\n2. 结果(5,3) / df.std()(3,) → 每列除以列标准差\n\n等价于 sklearn 的 StandardScaler，但一行就搞定了。这就是向量化 + 广播的威力。",
+        "en": "Two broadcasts:\n1. df(5,3) - df.mean()(3,) → each column minus its mean\n2. result(5,3) / df.std()(3,) → each column divided by its std\n\nEquivalent to sklearn StandardScaler, but in one line."
+      }
+    }
+  ]
+}

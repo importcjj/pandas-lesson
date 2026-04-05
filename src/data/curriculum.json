@@ -107,6 +107,17 @@
           },
           "exerciseModules": ["stage1/numpy-basics"],
           "estimatedMinutes": 25
+        },
+        {
+          "id": "numpy-broadcasting",
+          "order": 10,
+          "title": { "zh": "NumPy 广播机制", "en": "NumPy Broadcasting" },
+          "description": {
+            "zh": "深入理解广播规则，掌握不同形状数组的运算技巧",
+            "en": "Deep dive into broadcasting rules and operations with different shaped arrays"
+          },
+          "exerciseModules": ["stage1/numpy-broadcasting"],
+          "estimatedMinutes": 30
         }
       ]
     },
