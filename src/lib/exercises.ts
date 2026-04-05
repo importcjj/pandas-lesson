@@ -12,6 +12,7 @@ import s1Selection from "@/data/exercises/stage1/selection.json";
 import s1LocIloc from "@/data/exercises/stage1/loc-iloc.json";
 import s1Dtypes from "@/data/exercises/stage1/dtypes.json";
 import s1Sorting from "@/data/exercises/stage1/sorting.json";
+import s1Numpy from "@/data/exercises/stage1/numpy-basics.json";
 
 // Stage 2
 import s2FileIo from "@/data/exercises/stage2/file-io.json";
@@ -22,6 +23,7 @@ import s2String from "@/data/exercises/stage2/string-methods.json";
 import s2TypeConv from "@/data/exercises/stage2/type-conversion.json";
 import s2Rename from "@/data/exercises/stage2/rename-reindex.json";
 import s2ApplyMap from "@/data/exercises/stage2/apply-map.json";
+import s2NumpyPd from "@/data/exercises/stage2/numpy-pandas.json";
 
 // Stage 3
 import s3Groupby from "@/data/exercises/stage3/groupby.json";
@@ -48,10 +50,10 @@ const asModule = (m: unknown) => m as unknown as ExerciseModule;
 const allModules: ExerciseModule[] = [
   // Stage 1
   asModule(s1Intro), asModule(s1Series), asModule(s1DfCreate), asModule(s1Inspect),
-  asModule(s1Selection), asModule(s1LocIloc), asModule(s1Dtypes), asModule(s1Sorting),
+  asModule(s1Selection), asModule(s1LocIloc), asModule(s1Dtypes), asModule(s1Sorting), asModule(s1Numpy),
   // Stage 2
   asModule(s2FileIo), asModule(s2Missing), asModule(s2BoolIdx), asModule(s2ColOps),
-  asModule(s2String), asModule(s2TypeConv), asModule(s2Rename), asModule(s2ApplyMap),
+  asModule(s2String), asModule(s2TypeConv), asModule(s2Rename), asModule(s2ApplyMap), asModule(s2NumpyPd),
   // Stage 3
   asModule(s3Groupby), asModule(s3Pivot), asModule(s3Merge), asModule(s3Window),
   asModule(s3Datetime), asModule(s3Categorical), asModule(s3MultiIdx), asModule(s3Viz),

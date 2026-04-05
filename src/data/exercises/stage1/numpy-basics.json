@@ -1,0 +1,316 @@
+{
+  "module": "numpy-basics",
+  "stageId": "stage1",
+  "lessonId": "numpy-basics",
+  "tags": [
+    "numpy",
+    "array",
+    "basics"
+  ],
+  "exercises": [
+    {
+      "id": "s1-numpy-001",
+      "type": "multiple-choice",
+      "difficulty": 1,
+      "title": {
+        "zh": "NumPy 数组 vs Python 列表",
+        "en": "NumPy Array vs Python List"
+      },
+      "description": {
+        "zh": "以下哪项是 NumPy 数组相比 Python 列表的主要优势？",
+        "en": "Which of the following is the main advantage of NumPy arrays over Python lists?"
+      },
+      "options": {
+        "zh": [
+          "支持向量化运算，所有元素必须是同一类型，性能更高",
+          "可以存储不同类型的元素",
+          "语法更简洁，不需要导入任何库",
+          "NumPy 数组和 Python 列表没有区别"
+        ],
+        "en": [
+          "Supports vectorized operations, all elements must be the same type, better performance",
+          "Can store elements of different types",
+          "Simpler syntax, no library import needed",
+          "NumPy arrays and Python lists have no differences"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "想想 NumPy 对同质数据类型做了什么优化"
+        ],
+        "en": [
+          "Think about what optimizations NumPy makes for homogeneous data types"
+        ]
+      },
+      "explanation": {
+        "zh": "NumPy 数组要求所有元素类型一致（同质性），因此可以在底层使用连续内存块存储数据，支持向量化运算，比 Python 列表的逐元素操作快数十倍。",
+        "en": "NumPy arrays require all elements to be the same type (homogeneity), enabling contiguous memory storage, vectorized operations, and performance that is tens of times faster than element-by-element Python list operations."
+      }
+    },
+    {
+      "id": "s1-numpy-002",
+      "type": "coding",
+      "difficulty": 1,
+      "title": {
+        "zh": "创建数组并查看属性",
+        "en": "Create Array and Inspect Properties"
+      },
+      "description": {
+        "zh": "用 np.array 从列表 [1, 2, 3, 4, 5] 创建一个 NumPy 数组，然后打印它的 shape 和 dtype。",
+        "en": "Create a NumPy array from the list [1, 2, 3, 4, 5] using np.array, then print its shape and dtype."
+      },
+      "setupCode": "import numpy as np",
+      "starterCode": "import numpy as np\n\n# Create a NumPy array from the list [1, 2, 3, 4, 5]\narr = ___\n\n# Print shape and dtype\nprint(arr.shape)\nprint(arr.dtype)",
+      "solutionCode": "import numpy as np\n\narr = np.array([1, 2, 3, 4, 5])\n\nprint(arr.shape)\nprint(arr.dtype)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = '(5,)' in _output and 'int' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "使用 np.array() 并传入 Python 列表",
+          "shape 返回数组的维度，dtype 返回数据类型"
+        ],
+        "en": [
+          "Use np.array() and pass in a Python list",
+          "shape returns the array dimensions, dtype returns the data type"
+        ]
+      }
+    },
+    {
+      "id": "s1-numpy-003",
+      "type": "coding",
+      "difficulty": 1,
+      "title": {
+        "zh": "用 arange 和 linspace 生成序列",
+        "en": "Generate Sequences with arange and linspace"
+      },
+      "description": {
+        "zh": "使用 np.arange 生成 0 到 9 的整数序列，使用 np.linspace 生成 0 到 1 之间的 5 个等间距数字，分别打印。",
+        "en": "Use np.arange to generate an integer sequence from 0 to 9, and np.linspace to generate 5 evenly spaced numbers from 0 to 1. Print both."
+      },
+      "setupCode": "import numpy as np",
+      "starterCode": "import numpy as np\n\n# Generate integers from 0 to 9\na = np.arange(___)\nprint(a)\n\n# Generate 5 evenly spaced numbers from 0 to 1\nb = np.linspace(___, ___, ___)\nprint(b)",
+      "solutionCode": "import numpy as np\n\na = np.arange(10)\nprint(a)\n\nb = np.linspace(0, 1, 5)\nprint(b)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = '[0 1 2 3 4 5 6 7 8 9]' in _output and '0.25' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "np.arange(n) 生成 0 到 n-1 的整数",
+          "np.linspace(start, stop, num) 生成 num 个等间距数字"
+        ],
+        "en": [
+          "np.arange(n) generates integers from 0 to n-1",
+          "np.linspace(start, stop, num) generates num evenly spaced numbers"
+        ]
+      }
+    },
+    {
+      "id": "s1-numpy-004",
+      "type": "fill-blank",
+      "difficulty": 1,
+      "title": {
+        "zh": "创建特定数组",
+        "en": "Create Special Arrays"
+      },
+      "description": {
+        "zh": "补全代码，分别用 np.zeros、np.ones 和 np.full 创建指定的数组。",
+        "en": "Complete the code to create specified arrays using np.zeros, np.ones, and np.full."
+      },
+      "codeTemplate": "import numpy as np\n\n# Create a 3-element array of zeros\na = np._____(3)\nprint(a)\n\n# Create a 2x3 array of ones\nb = np._____((2, 3))\nprint(b)\n\n# Create a 4-element array filled with 7\nc = np._____(4, 7)\nprint(c)",
+      "blanks": [
+        {
+          "placeholder": "np._____(3)",
+          "answer": "zeros",
+          "alternatives": []
+        },
+        {
+          "placeholder": "np._____((2, 3))",
+          "answer": "ones",
+          "alternatives": []
+        },
+        {
+          "placeholder": "np._____(4, 7)",
+          "answer": "full",
+          "alternatives": []
+        }
+      ],
+      "explanation": {
+        "zh": "np.zeros(n) 创建全零数组，np.ones(shape) 创建全一数组，np.full(shape, value) 创建填充指定值的数组。这三个函数是创建初始数组的常用方式。",
+        "en": "np.zeros(n) creates an all-zeros array, np.ones(shape) creates an all-ones array, and np.full(shape, value) creates an array filled with a specified value. These three functions are commonly used to create initial arrays."
+      }
+    },
+    {
+      "id": "s1-numpy-005",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "用 np.random 生成随机数据",
+        "en": "Generate Random Data with np.random"
+      },
+      "description": {
+        "zh": "使用 np.random.seed(42) 设置随机种子，然后生成一个 3x3 的随机整数矩阵（范围 1-100），打印结果。",
+        "en": "Set a random seed with np.random.seed(42), then generate a 3x3 matrix of random integers (range 1-100). Print the result."
+      },
+      "setupCode": "import numpy as np",
+      "starterCode": "import numpy as np\n\n# Set random seed for reproducibility\nnp.random.seed(___)\n\n# Generate a 3x3 matrix of random integers between 1 and 100\nresult = np.random.randint(___, ___, size=(___, ___))\nprint(result)",
+      "solutionCode": "import numpy as np\n\nnp.random.seed(42)\n\nresult = np.random.randint(1, 101, size=(3, 3))\nprint(result)",
+      "validationType": "custom-check",
+      "checkCode": "import numpy as np\ntry:\n    np.random.seed(42)\n    expected = np.random.randint(1, 101, size=(3, 3))\n    result = np.array_equal(result, expected)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "np.random.seed() 确保每次运行生成相同的随机数",
+          "np.random.randint(low, high, size) 中 high 是不包含的上界",
+          "要生成 1-100 的整数，high 应设为 101"
+        ],
+        "en": [
+          "np.random.seed() ensures the same random numbers are generated each run",
+          "In np.random.randint(low, high, size), high is exclusive",
+          "To generate integers 1-100, set high to 101"
+        ]
+      }
+    },
+    {
+      "id": "s1-numpy-006",
+      "type": "output-matching",
+      "difficulty": 2,
+      "title": {
+        "zh": "数组切片和布尔索引",
+        "en": "Array Slicing and Boolean Indexing"
+      },
+      "description": {
+        "zh": "以下代码的输出是什么？",
+        "en": "What is the output of the following code?"
+      },
+      "code": "import numpy as np\narr = np.array([10, 20, 30, 40, 50])\nprint(arr[arr > 25])",
+      "options": {
+        "zh": [
+          "[30 40 50]",
+          "[10 20 30 40 50]",
+          "[False False  True  True  True]",
+          "[20 30 40 50]"
+        ],
+        "en": [
+          "[30 40 50]",
+          "[10 20 30 40 50]",
+          "[False False  True  True  True]",
+          "[20 30 40 50]"
+        ]
+      },
+      "correctIndex": 0,
+      "explanation": {
+        "zh": "arr > 25 产生布尔数组 [False, False, True, True, True]，用它索引原数组会返回所有为 True 位置的元素，即 [30, 40, 50]。",
+        "en": "arr > 25 produces a boolean array [False, False, True, True, True]. Using it to index the original array returns elements at all True positions, i.e., [30, 40, 50]."
+      }
+    },
+    {
+      "id": "s1-numpy-007",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "用 np.where 条件选择",
+        "en": "Conditional Selection with np.where"
+      },
+      "description": {
+        "zh": "给定数组 scores，使用 np.where 将 >=60 的分数标记为 'pass'，否则标记为 'fail'。打印结果。",
+        "en": "Given the array scores, use np.where to label scores >=60 as 'pass' and others as 'fail'. Print the result."
+      },
+      "setupCode": "import numpy as np\nscores = np.array([85, 42, 73, 58, 95, 36])",
+      "starterCode": "import numpy as np\nscores = np.array([85, 42, 73, 58, 95, 36])\n\n# Use np.where to label pass/fail\nresult = np.where(___)\nprint(result)",
+      "solutionCode": "import numpy as np\nscores = np.array([85, 42, 73, 58, 95, 36])\n\nresult = np.where(scores >= 60, 'pass', 'fail')\nprint(result)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = \"'pass'\" in _output and \"'fail'\" in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "np.where(condition, x, y) 返回一个数组：条件为 True 取 x，否则取 y",
+          "条件是 scores >= 60"
+        ],
+        "en": [
+          "np.where(condition, x, y) returns an array: takes x where True, y where False",
+          "The condition is scores >= 60"
+        ]
+      }
+    },
+    {
+      "id": "s1-numpy-008",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "数组运算与广播机制",
+        "en": "Array Operations and Broadcasting"
+      },
+      "description": {
+        "zh": "创建一个 3x3 矩阵 m 和一个长度为 3 的行向量 v，利用广播机制让矩阵每一行都加上向量 v，打印结果。",
+        "en": "Create a 3x3 matrix m and a row vector v of length 3. Use broadcasting to add v to each row of m. Print the result."
+      },
+      "setupCode": "import numpy as np",
+      "starterCode": "import numpy as np\n\nm = np.array([[1, 2, 3],\n              [4, 5, 6],\n              [7, 8, 9]])\nv = np.array([10, 20, 30])\n\n# Add v to each row of m using broadcasting\nresult = ___\nprint(result)",
+      "solutionCode": "import numpy as np\n\nm = np.array([[1, 2, 3],\n              [4, 5, 6],\n              [7, 8, 9]])\nv = np.array([10, 20, 30])\n\nresult = m + v\nprint(result)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = '11' in _output and '22' in _output and '33' in _output and '17' in _output and '28' in _output and '39' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "NumPy 的广播会自动将 v 扩展到与 m 相同的形状",
+          "直接用 + 运算符即可"
+        ],
+        "en": [
+          "NumPy broadcasting automatically expands v to match m's shape",
+          "Simply use the + operator"
+        ]
+      }
+    },
+    {
+      "id": "s1-numpy-009",
+      "type": "true-false",
+      "difficulty": 1,
+      "title": {
+        "zh": "np.nan 的比较行为",
+        "en": "np.nan Comparison Behavior"
+      },
+      "description": {
+        "zh": "np.nan == np.nan 返回 True。",
+        "en": "np.nan == np.nan returns True."
+      },
+      "correctAnswer": false,
+      "hints": {
+        "zh": [
+          "NaN 是 IEEE 754 浮点标准中的特殊值"
+        ],
+        "en": [
+          "NaN is a special value in the IEEE 754 floating point standard"
+        ]
+      },
+      "explanation": {
+        "zh": "根据 IEEE 754 标准，NaN 不等于任何值，包括它自身。np.nan == np.nan 返回 False。要检测 NaN，应使用 np.isnan()。",
+        "en": "According to the IEEE 754 standard, NaN is not equal to any value, including itself. np.nan == np.nan returns False. To detect NaN, use np.isnan()."
+      }
+    },
+    {
+      "id": "s1-numpy-010",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "用 np.reshape 变形数组",
+        "en": "Reshape Arrays with np.reshape"
+      },
+      "description": {
+        "zh": "将一个包含 12 个元素的一维数组变形为 3x4 的二维数组，再变形为 2x2x3 的三维数组，分别打印 shape。",
+        "en": "Reshape a 1D array of 12 elements into a 3x4 2D array, then into a 2x2x3 3D array. Print the shape of each."
+      },
+      "setupCode": "import numpy as np",
+      "starterCode": "import numpy as np\n\narr = np.arange(12)\n\n# Reshape to 3x4\na = arr.reshape(___)\nprint(a.shape)\n\n# Reshape to 2x2x3\nb = arr.reshape(___)\nprint(b.shape)",
+      "solutionCode": "import numpy as np\n\narr = np.arange(12)\n\na = arr.reshape(3, 4)\nprint(a.shape)\n\nb = arr.reshape(2, 2, 3)\nprint(b.shape)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = '(3, 4)' in _output and '(2, 2, 3)' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "reshape 的参数是目标形状的各个维度",
+          "所有维度的乘积必须等于原数组的元素总数（12）"
+        ],
+        "en": [
+          "reshape takes the target shape dimensions as parameters",
+          "The product of all dimensions must equal the total number of elements (12)"
+        ]
+      }
+    }
+  ]
+}

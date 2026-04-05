@@ -96,6 +96,17 @@
           },
           "exerciseModules": ["stage1/sorting"],
           "estimatedMinutes": 20
+        },
+        {
+          "id": "numpy-basics",
+          "order": 9,
+          "title": { "zh": "NumPy 基础", "en": "NumPy Basics" },
+          "description": {
+            "zh": "学习 NumPy 数组操作，为 pandas 的向量化计算打基础",
+            "en": "Learn NumPy array operations as foundation for pandas vectorized computing"
+          },
+          "exerciseModules": ["stage1/numpy-basics"],
+          "estimatedMinutes": 25
         }
       ]
     },
@@ -194,6 +205,17 @@
             "en": "Custom transformations with apply and map"
           },
           "exerciseModules": ["stage2/apply-map"],
+          "estimatedMinutes": 30
+        },
+        {
+          "id": "numpy-pandas",
+          "order": 9,
+          "title": { "zh": "NumPy 与 pandas 联动", "en": "NumPy-pandas Interop" },
+          "description": {
+            "zh": "掌握 NumPy 和 pandas 的互转与向量化技巧",
+            "en": "Master NumPy-pandas conversion and vectorization techniques"
+          },
+          "exerciseModules": ["stage2/numpy-pandas"],
           "estimatedMinutes": 30
         }
       ]

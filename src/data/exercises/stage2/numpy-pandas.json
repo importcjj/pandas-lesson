@@ -1,0 +1,302 @@
+{
+  "module": "numpy-pandas",
+  "stageId": "stage2",
+  "lessonId": "numpy-pandas",
+  "tags": ["numpy", "pandas", "interop", "vectorize"],
+  "exercises": [
+    {
+      "id": "s2-nppd-001",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "DataFrame 与 NumPy 互转",
+        "en": "DataFrame and NumPy Conversion"
+      },
+      "description": {
+        "zh": "将 DataFrame 转为 NumPy 数组并打印，再将 NumPy 数组转回 DataFrame（列名为 A, B）并打印。",
+        "en": "Convert a DataFrame to a NumPy array and print it, then convert a NumPy array back to a DataFrame (columns A, B) and print it."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'A': [1, 2, 3], 'B': [4, 5, 6]})",
+      "starterCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'A': [1, 2, 3], 'B': [4, 5, 6]})\n\n# Convert DataFrame to NumPy array\narr = df.___\nprint(arr)\nprint(type(arr))\n\n# Convert NumPy array back to DataFrame\ndf2 = pd.DataFrame(___, columns=___)\nprint(df2)",
+      "solutionCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'A': [1, 2, 3], 'B': [4, 5, 6]})\n\narr = df.to_numpy()\nprint(arr)\nprint(type(arr))\n\ndf2 = pd.DataFrame(arr, columns=['A', 'B'])\nprint(df2)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'ndarray' in _output and '   A  B' in _output or ('A' in _output and 'B' in _output and 'ndarray' in _output)\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "使用 df.to_numpy() 将 DataFrame 转为数组（推荐用法）",
+          "用 pd.DataFrame(array, columns=[...]) 从数组创建 DataFrame"
+        ],
+        "en": [
+          "Use df.to_numpy() to convert DataFrame to array (recommended)",
+          "Use pd.DataFrame(array, columns=[...]) to create DataFrame from array"
+        ]
+      }
+    },
+    {
+      "id": "s2-nppd-002",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "用 np.where 创建条件列",
+        "en": "Create Conditional Column with np.where"
+      },
+      "description": {
+        "zh": "给 DataFrame 添加一个 'result' 列：分数 >=60 为 'pass'，否则为 'fail'。使用 np.where 实现。",
+        "en": "Add a 'result' column to the DataFrame: scores >=60 are 'pass', others are 'fail'. Use np.where."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'Diana'], 'score': [85, 42, 73, 58]})",
+      "starterCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'Diana'], 'score': [85, 42, 73, 58]})\n\n# Add a 'result' column using np.where\ndf['result'] = np.where(___)\nprint(df)",
+      "solutionCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'Diana'], 'score': [85, 42, 73, 58]})\n\ndf['result'] = np.where(df['score'] >= 60, 'pass', 'fail')\nprint(df)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'pass' in _output and 'fail' in _output and 'result' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "np.where(condition, value_if_true, value_if_false)",
+          "条件可以直接用 DataFrame 列进行比较：df['score'] >= 60"
+        ],
+        "en": [
+          "np.where(condition, value_if_true, value_if_false)",
+          "The condition can use DataFrame column comparison directly: df['score'] >= 60"
+        ]
+      }
+    },
+    {
+      "id": "s2-nppd-003",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "用 np.select 创建多条件列",
+        "en": "Create Multi-Condition Column with np.select"
+      },
+      "description": {
+        "zh": "根据分数创建等级列 'grade'：>=90 为 'A'，>=80 为 'B'，>=60 为 'C'，其余为 'F'。使用 np.select 实现。",
+        "en": "Create a 'grade' column based on scores: >=90 is 'A', >=80 is 'B', >=60 is 'C', others are 'F'. Use np.select."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'], 'score': [95, 82, 67, 45, 88]})",
+      "starterCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'], 'score': [95, 82, 67, 45, 88]})\n\n# Define conditions and choices\nconditions = [\n    ___,\n    ___,\n    ___\n]\nchoices = ['A', 'B', 'C']\n\n# Create grade column\ndf['grade'] = np.select(conditions, choices, default=___)\nprint(df)",
+      "solutionCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'], 'score': [95, 82, 67, 45, 88]})\n\nconditions = [\n    df['score'] >= 90,\n    df['score'] >= 80,\n    df['score'] >= 60\n]\nchoices = ['A', 'B', 'C']\n\ndf['grade'] = np.select(conditions, choices, default='F')\nprint(df)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = all(g in _output for g in ['A', 'B', 'C', 'F']) and 'grade' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "np.select(conditions, choices, default) 按顺序检查条件",
+          "条件的顺序很重要：>=90 应该在 >=80 之前",
+          "default 参数指定所有条件都不满足时的默认值"
+        ],
+        "en": [
+          "np.select(conditions, choices, default) checks conditions in order",
+          "The order of conditions matters: >=90 should come before >=80",
+          "The default parameter specifies the value when no conditions are met"
+        ]
+      }
+    },
+    {
+      "id": "s2-nppd-004",
+      "type": "multiple-choice",
+      "difficulty": 2,
+      "title": {
+        "zh": "df.values vs df.to_numpy() 的区别",
+        "en": "df.values vs df.to_numpy()"
+      },
+      "description": {
+        "zh": "关于 df.values 和 df.to_numpy()，以下哪项说法是正确的？",
+        "en": "Which of the following statements about df.values and df.to_numpy() is correct?"
+      },
+      "options": {
+        "zh": [
+          "to_numpy() 是推荐用法，支持 dtype 和 copy 参数；values 是旧接口，可能返回非 NumPy 数组",
+          "values 性能更好，应该优先使用",
+          "两者完全相同，没有任何区别",
+          "to_numpy() 已被弃用，应该使用 values"
+        ],
+        "en": [
+          "to_numpy() is recommended, supports dtype and copy parameters; values is the legacy interface that may return non-NumPy arrays",
+          "values has better performance and should be preferred",
+          "They are completely identical with no differences",
+          "to_numpy() is deprecated and values should be used instead"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": ["查看 pandas 文档中关于 .values 的说明"],
+        "en": ["Check the pandas documentation about .values"]
+      },
+      "explanation": {
+        "zh": "df.to_numpy() 是 pandas 推荐的方式，它支持 dtype 和 copy 参数，且始终返回 NumPy 数组。df.values 是较旧的接口，对于含有扩展类型（如 Categorical、Sparse）的 DataFrame 可能返回非标准的数组类型。",
+        "en": "df.to_numpy() is the recommended pandas method. It supports dtype and copy parameters and always returns a NumPy array. df.values is the older interface that may return non-standard array types for DataFrames with extension types (e.g., Categorical, Sparse)."
+      }
+    },
+    {
+      "id": "s2-nppd-005",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "用 NumPy 向量化替代 apply",
+        "en": "Replace apply with NumPy Vectorization"
+      },
+      "description": {
+        "zh": "将使用 apply 的代码改写为 NumPy 向量化操作。计算每行的 BMI（体重/身高的平方），身高单位为米。",
+        "en": "Rewrite the apply-based code using NumPy vectorization. Calculate BMI (weight / height^2) for each row, where height is in meters."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'height': [1.70, 1.65, 1.80, 1.75], 'weight': [65, 58, 80, 72]})",
+      "starterCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'height': [1.70, 1.65, 1.80, 1.75], 'weight': [65, 58, 80, 72]})\n\n# Slow version (using apply):\n# df['bmi'] = df.apply(lambda row: row['weight'] / row['height']**2, axis=1)\n\n# Fast version: use NumPy vectorization\ndf['bmi'] = ___\ndf['bmi'] = df['bmi'].round(1)\nprint(df)",
+      "solutionCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'height': [1.70, 1.65, 1.80, 1.75], 'weight': [65, 58, 80, 72]})\n\ndf['bmi'] = df['weight'].to_numpy() / df['height'].to_numpy() ** 2\ndf['bmi'] = df['bmi'].round(1)\nprint(df)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = '22.5' in _output and '21.3' in _output and '24.7' in _output and '23.5' in _output and 'bmi' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "向量化运算可以直接对整列进行数学操作",
+          "df['weight'] / df['height'] ** 2 利用了 NumPy 的广播机制",
+          "也可以用 .to_numpy() 转为数组后再运算"
+        ],
+        "en": [
+          "Vectorized operations can perform math on entire columns directly",
+          "df['weight'] / df['height'] ** 2 leverages NumPy broadcasting",
+          "You can also use .to_numpy() to convert to arrays first"
+        ]
+      }
+    },
+    {
+      "id": "s2-nppd-006",
+      "type": "fill-blank",
+      "difficulty": 2,
+      "title": {
+        "zh": "np.nanmean vs Series.mean 处理 NaN",
+        "en": "np.nanmean vs Series.mean for NaN Handling"
+      },
+      "description": {
+        "zh": "补全代码，分别用 np.nanmean 和 Series.mean() 计算含 NaN 数据的平均值。",
+        "en": "Complete the code to calculate the mean of data containing NaN using both np.nanmean and Series.mean()."
+      },
+      "codeTemplate": "import pandas as pd\nimport numpy as np\n\narr = np.array([1, 2, np.nan, 4, 5])\ns = pd.Series(arr)\n\n# NumPy: use nanmean to ignore NaN\nnp_mean = np._____(arr)\nprint(f'np.nanmean: {np_mean}')\n\n# pandas: Series.mean() ignores NaN by default\npd_mean = s._____()\nprint(f'Series.mean: {pd_mean}')",
+      "blanks": [
+        {
+          "placeholder": "np._____(arr)",
+          "answer": "nanmean",
+          "alternatives": []
+        },
+        {
+          "placeholder": "s._____()",
+          "answer": "mean",
+          "alternatives": []
+        }
+      ],
+      "explanation": {
+        "zh": "NumPy 的 np.mean() 遇到 NaN 会返回 NaN，需要用 np.nanmean() 来忽略 NaN。而 pandas 的 Series.mean() 默认忽略 NaN（skipna=True）。两者结果相同但行为不同。",
+        "en": "NumPy's np.mean() returns NaN when encountering NaN, requiring np.nanmean() to ignore NaN. pandas' Series.mean() ignores NaN by default (skipna=True). Both produce the same result but have different default behaviors."
+      }
+    },
+    {
+      "id": "s2-nppd-007",
+      "type": "coding",
+      "difficulty": 2,
+      "title": {
+        "zh": "用 np.random 生成测试 DataFrame",
+        "en": "Generate Test DataFrame with np.random"
+      },
+      "description": {
+        "zh": "使用 np.random 生成一个包含 100 行、3 列（A、B、C）的测试 DataFrame，数据为标准正态分布随机数。设置种子为 0，打印前 5 行和描述统计。",
+        "en": "Use np.random to generate a test DataFrame with 100 rows and 3 columns (A, B, C) of standard normal random numbers. Set seed to 0. Print the first 5 rows and descriptive statistics."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np",
+      "starterCode": "import pandas as pd\nimport numpy as np\n\nnp.random.seed(0)\n\n# Generate a 100x3 array of standard normal random numbers\ndata = np.random.___(___, ___)\n\n# Create DataFrame with columns A, B, C\ndf = pd.DataFrame(___, columns=___)\nprint(df.head())\nprint(df.describe())",
+      "solutionCode": "import pandas as pd\nimport numpy as np\n\nnp.random.seed(0)\n\ndata = np.random.randn(100, 3)\n\ndf = pd.DataFrame(data, columns=['A', 'B', 'C'])\nprint(df.head())\nprint(df.describe())",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = all(c in _output for c in ['A', 'B', 'C', 'mean', 'std', 'count'])\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "np.random.randn(rows, cols) 生成标准正态分布随机数",
+          "pd.DataFrame(data, columns=[...]) 指定列名"
+        ],
+        "en": [
+          "np.random.randn(rows, cols) generates standard normal random numbers",
+          "pd.DataFrame(data, columns=[...]) specifies column names"
+        ]
+      }
+    },
+    {
+      "id": "s2-nppd-008",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "用 np.vectorize 自定义向量化函数",
+        "en": "Custom Vectorized Functions with np.vectorize"
+      },
+      "description": {
+        "zh": "使用 np.vectorize 将一个分类函数向量化，对 DataFrame 的 'age' 列进行分类：<18 为 'minor'，18-65 为 'adult'，>65 为 'senior'。",
+        "en": "Use np.vectorize to vectorize a classification function. Classify the 'age' column: <18 is 'minor', 18-65 is 'adult', >65 is 'senior'."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'], 'age': [12, 35, 72, 18, 65]})",
+      "starterCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'], 'age': [12, 35, 72, 18, 65]})\n\n# Define the classification function\ndef classify_age(age):\n    if age < 18:\n        return 'minor'\n    elif age <= 65:\n        return 'adult'\n    else:\n        return 'senior'\n\n# Vectorize and apply\nvfunc = np.vectorize(___)\ndf['category'] = vfunc(___)\nprint(df)",
+      "solutionCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'], 'age': [12, 35, 72, 18, 65]})\n\ndef classify_age(age):\n    if age < 18:\n        return 'minor'\n    elif age <= 65:\n        return 'adult'\n    else:\n        return 'senior'\n\nvfunc = np.vectorize(classify_age)\ndf['category'] = vfunc(df['age'])\nprint(df)",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = 'minor' in _output and 'adult' in _output and 'senior' in _output and 'category' in _output\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "np.vectorize(func) 将普通函数转为可接受数组的向量化函数",
+          "将函数名（不带括号）传给 np.vectorize",
+          "用 df['age'] 作为参数调用向量化后的函数"
+        ],
+        "en": [
+          "np.vectorize(func) converts a regular function into one that accepts arrays",
+          "Pass the function name (without parentheses) to np.vectorize",
+          "Call the vectorized function with df['age'] as the argument"
+        ]
+      }
+    },
+    {
+      "id": "s2-nppd-009",
+      "type": "true-false",
+      "difficulty": 2,
+      "title": {
+        "zh": "修改 to_numpy() 返回的数组是否影响原 DataFrame",
+        "en": "Does Modifying to_numpy() Array Affect the Original DataFrame"
+      },
+      "description": {
+        "zh": "修改 df.to_numpy() 返回的数组一定会影响原 DataFrame 的数据。",
+        "en": "Modifying the array returned by df.to_numpy() will always affect the original DataFrame's data."
+      },
+      "correctAnswer": false,
+      "hints": {
+        "zh": ["to_numpy() 的 copy 参数默认行为是什么？不同的 dtype 会影响结果吗？"],
+        "en": ["What is the default behavior of to_numpy()'s copy parameter? Do different dtypes affect the result?"]
+      },
+      "explanation": {
+        "zh": "不一定。如果 DataFrame 包含混合类型数据，to_numpy() 会创建副本，修改数组不会影响原 DataFrame。即使是单一类型，pandas 也不保证返回的是视图（view）。可以使用 to_numpy(copy=True) 确保获得副本，或 to_numpy(copy=False) 尝试获得视图。",
+        "en": "Not necessarily. If the DataFrame contains mixed types, to_numpy() creates a copy, and modifying the array won't affect the original DataFrame. Even with a single type, pandas doesn't guarantee a view. Use to_numpy(copy=True) to ensure a copy, or to_numpy(copy=False) to attempt a view."
+      }
+    },
+    {
+      "id": "s2-nppd-010",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "[综合] 用 NumPy + pandas 完成数据分析",
+        "en": "[Challenge] Data Analysis with NumPy + pandas"
+      },
+      "description": {
+        "zh": "综合练习：生成模拟数据，使用 NumPy 和 pandas 完成分析。\n1. 用 np.random 生成 50 名学生的数学和英语成绩（40-100）\n2. 用 np.where 添加 'math_pass' 列（>=60 为 True）\n3. 用 np.select 添加 'grade' 列（平均分 >=90:A, >=80:B, >=60:C, 其余:F）\n4. 打印各等级人数统计",
+        "en": "Comprehensive exercise: generate simulated data and analyze with NumPy + pandas.\n1. Use np.random to generate math and english scores (40-100) for 50 students\n2. Use np.where to add a 'math_pass' column (>=60 is True)\n3. Use np.select to add a 'grade' column (avg >=90:A, >=80:B, >=60:C, else:F)\n4. Print the count of each grade"
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np",
+      "starterCode": "import pandas as pd\nimport numpy as np\n\nnp.random.seed(42)\n\n# Step 1: Generate scores\nmath = np.random.randint(40, 101, size=50)\nenglish = np.random.randint(40, 101, size=50)\ndf = pd.DataFrame({'math': math, 'english': english})\n\n# Step 2: Add math_pass column\ndf['math_pass'] = np.where(___)\n\n# Step 3: Calculate average and add grade column\ndf['avg'] = (df['math'] + df['english']) / 2\nconditions = [___]\nchoices = [___]\ndf['grade'] = np.select(conditions, choices, default=___)\n\n# Step 4: Print grade counts\nprint(df['grade'].value_counts())\nprint(df.head(10))",
+      "solutionCode": "import pandas as pd\nimport numpy as np\n\nnp.random.seed(42)\n\nmath = np.random.randint(40, 101, size=50)\nenglish = np.random.randint(40, 101, size=50)\ndf = pd.DataFrame({'math': math, 'english': english})\n\ndf['math_pass'] = np.where(df['math'] >= 60, True, False)\n\ndf['avg'] = (df['math'] + df['english']) / 2\nconditions = [\n    df['avg'] >= 90,\n    df['avg'] >= 80,\n    df['avg'] >= 60\n]\nchoices = ['A', 'B', 'C']\ndf['grade'] = np.select(conditions, choices, default='F')\n\nprint(df['grade'].value_counts())\nprint(df.head(10))",
+      "validationType": "custom-check",
+      "checkCode": "try:\n    result = all(x in _output for x in ['grade', 'math', 'english']) and any(g in _output for g in ['A', 'B', 'C', 'F'])\nexcept:\n    result = False\nresult",
+      "hints": {
+        "zh": [
+          "np.where(condition, true_val, false_val) 用于二元条件",
+          "np.select 的 conditions 是列表，按顺序检查",
+          "注意 np.select 条件的顺序：>=90 在 >=80 之前",
+          "value_counts() 统计每个值的出现次数"
+        ],
+        "en": [
+          "np.where(condition, true_val, false_val) is for binary conditions",
+          "np.select conditions is a list, checked in order",
+          "Note the order of np.select conditions: >=90 before >=80",
+          "value_counts() counts occurrences of each value"
+        ]
+      }
+    }
+  ]
+}
