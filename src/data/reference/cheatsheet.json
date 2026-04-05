@@ -13562,60 +13562,6 @@
               ]
             },
             {
-              "name": "np.random.normal() / uniform() / randint() / choice()",
-              "desc": {
-                "zh": "生成服从特定分布的随机数组：正态、均匀、整数、随机选取",
-                "en": "Generate random arrays from various distributions: normal, uniform, integer, and random choice"
-              },
-              "signature": "np.random.normal(loc=0.0, scale=1.0, size=None)\nnp.random.uniform(low=0.0, high=1.0, size=None)\nnp.random.randint(low, high=None, size=None)\nnp.random.choice(a, size=None, replace=True, p=None)",
-              "example": "import numpy as np\nnp.random.seed(42)\n\nprint('normal:', np.random.normal(0, 1, 5).round(2))\nprint('uniform:', np.random.uniform(10, 20, 4).round(2))\nprint('randint:', np.random.randint(1, 100, 5))\nprint('choice:', np.random.choice(['A', 'B', 'C'], 6))",
-              "output": "normal: [ 0.5  -0.14  0.65  1.52 -0.23]\nuniform: [13.75 19.51 17.32 15.99]\nrandint: [52 93 15 72 61]\nchoice: ['C' 'A' 'C' 'B' 'B' 'A']",
-              "params": [
-                {
-                  "name": "loc / low",
-                  "type": "float",
-                  "default": "0.0",
-                  "desc": {
-                    "zh": "分布中心（normal）或下界（uniform/randint）",
-                    "en": "Distribution center (normal) or lower bound (uniform/randint)"
-                  }
-                },
-                {
-                  "name": "scale / high",
-                  "type": "float",
-                  "default": "1.0",
-                  "desc": {
-                    "zh": "标准差（normal）或上界（uniform/randint）",
-                    "en": "Standard deviation (normal) or upper bound (uniform/randint)"
-                  }
-                },
-                {
-                  "name": "size",
-                  "type": "int | tuple",
-                  "default": "None",
-                  "desc": {
-                    "zh": "输出形状；None 返回标量",
-                    "en": "Output shape; None returns a scalar"
-                  }
-                },
-                {
-                  "name": "a / p / replace",
-                  "type": "various",
-                  "default": "—",
-                  "desc": {
-                    "zh": "choice 专用：a=候选数组, p=概率权重, replace=是否有放回",
-                    "en": "For choice: a=candidate array, p=probability weights, replace=with replacement"
-                  }
-                }
-              ],
-              "tags": [
-                "numpy",
-                "random",
-                "distribution",
-                "generate"
-              ]
-            },
-            {
               "name": "np.reshape() / np.ravel() / np.flatten()",
               "desc": {
                 "zh": "改变数组形状：reshape 任意变形，ravel/flatten 展平为一维",
@@ -14026,6 +13972,341 @@
                 "vectorize",
                 "function",
                 "element-wise"
+              ]
+            },
+            {
+              "name": "np.random.seed() / np.random.default_rng()",
+              "desc": {
+                "zh": "设置随机种子（保证结果可复现）",
+                "en": "Set random seed (ensure reproducible results)"
+              },
+              "signature": "np.random.seed(seed)           # 旧 API（全局状态）\nrng = np.random.default_rng(seed)  # 新 API（推荐，独立状态）",
+              "example": "import numpy as np\n\n# 旧 API（影响全局状态，不推荐在库代码中使用）\nnp.random.seed(42)\nprint(np.random.rand(3))\n\n# 新 API（推荐：每个 rng 独立，不污染全局）\nrng = np.random.default_rng(42)\nprint(rng.random(3))",
+              "output": "[0.37454012 0.95071431 0.73199394]\n[0.77395605 0.43887844 0.85859792]",
+              "params": [
+                {
+                  "name": "seed",
+                  "type": "int",
+                  "default": "None",
+                  "desc": {
+                    "zh": "随机种子，相同种子产生相同序列",
+                    "en": "Random seed, same seed produces same sequence"
+                  }
+                }
+              ],
+              "tags": [
+                "random",
+                "seed",
+                "reproducible",
+                "rng"
+              ]
+            },
+            {
+              "name": "np.random.rand() / rng.random()",
+              "desc": {
+                "zh": "生成 [0, 1) 均匀分布的随机数",
+                "en": "Generate uniform random numbers in [0, 1)"
+              },
+              "signature": "np.random.rand(d0, d1, ...)      # 旧 API\nrng.random(size=None)             # 新 API",
+              "example": "import numpy as np\n\n# 一维：5 个随机数\nprint(np.random.rand(5).round(2))\n\n# 二维：2×3 矩阵\nprint(np.random.rand(2, 3).round(2))\n\n# 指定范围 [a, b)：a + (b-a) * rand\n# 例如 [10, 50) 的随机数\nprint((10 + 40 * np.random.rand(4)).round(1))",
+              "output": "[0.6  0.71 0.02 0.97 0.83]\n[[0.21 0.18 0.18]\n [0.3  0.52 0.43]]\n[33.3 47.2 16.1 29.7]",
+              "params": [
+                {
+                  "name": "d0, d1, ...",
+                  "type": "int",
+                  "default": "required",
+                  "desc": {
+                    "zh": "输出数组的形状维度",
+                    "en": "Shape dimensions of output array"
+                  }
+                },
+                {
+                  "name": "size",
+                  "type": "int | tuple",
+                  "default": "None",
+                  "desc": {
+                    "zh": "新 API 的形状参数",
+                    "en": "Shape parameter for new API"
+                  }
+                }
+              ],
+              "tags": [
+                "random",
+                "rand",
+                "uniform",
+                "0-1"
+              ]
+            },
+            {
+              "name": "np.random.randint()",
+              "desc": {
+                "zh": "生成 [low, high) 范围内的随机整数",
+                "en": "Generate random integers in [low, high)"
+              },
+              "signature": "np.random.randint(low, high=None, size=None, dtype=int)",
+              "example": "import numpy as np\nnp.random.seed(42)\n\n# 单个随机整数 [0, 10)\nprint(np.random.randint(10))\n\n# 5 个 [1, 7) 的随机整数\nprint(np.random.randint(1, 7, size=5))\n\n# 2×3 矩阵，值在 [0, 100)\nprint(np.random.randint(0, 100, size=(2, 3)))",
+              "output": "6\n[4 5 1 4 5]\n[[51 92 14]\n [71 60 20]]",
+              "params": [
+                {
+                  "name": "low",
+                  "type": "int",
+                  "default": "required",
+                  "desc": {
+                    "zh": "下界（含）；若只传一个参数则为上界，下界默认 0",
+                    "en": "Lower bound (inclusive); if only arg, acts as upper bound with low=0"
+                  }
+                },
+                {
+                  "name": "high",
+                  "type": "int",
+                  "default": "None",
+                  "desc": {
+                    "zh": "上界（不含）",
+                    "en": "Upper bound (exclusive)"
+                  }
+                },
+                {
+                  "name": "size",
+                  "type": "int | tuple",
+                  "default": "None",
+                  "desc": {
+                    "zh": "输出形状",
+                    "en": "Output shape"
+                  }
+                },
+                {
+                  "name": "dtype",
+                  "type": "type",
+                  "default": "int",
+                  "desc": {
+                    "zh": "输出类型，默认 int64",
+                    "en": "Output type, default int64"
+                  }
+                }
+              ],
+              "tags": [
+                "random",
+                "randint",
+                "integer",
+                "dice"
+              ]
+            },
+            {
+              "name": "np.random.normal()",
+              "desc": {
+                "zh": "生成正态（高斯）分布的随机数",
+                "en": "Generate normally (Gaussian) distributed random numbers"
+              },
+              "signature": "np.random.normal(loc=0.0, scale=1.0, size=None)",
+              "example": "import numpy as np\nnp.random.seed(42)\n\n# 标准正态分布 N(0,1)\nprint(np.random.normal(size=5).round(2))\n\n# 均值 100，标准差 15（如智商分布）\nscores = np.random.normal(loc=100, scale=15, size=6).round(0)\nprint(scores)",
+              "output": "[0.5  -0.14  0.65  1.52 -0.23]\n[107.  98. 110. 123.  97. 105.]",
+              "params": [
+                {
+                  "name": "loc",
+                  "type": "float",
+                  "default": "0.0",
+                  "desc": {
+                    "zh": "均值（分布中心）",
+                    "en": "Mean (center of distribution)"
+                  }
+                },
+                {
+                  "name": "scale",
+                  "type": "float",
+                  "default": "1.0",
+                  "desc": {
+                    "zh": "标准差（分布宽度，越大越分散）",
+                    "en": "Standard deviation (spread, larger = more dispersed)"
+                  }
+                },
+                {
+                  "name": "size",
+                  "type": "int | tuple",
+                  "default": "None",
+                  "desc": {
+                    "zh": "输出形状",
+                    "en": "Output shape"
+                  }
+                }
+              ],
+              "tags": [
+                "random",
+                "normal",
+                "gaussian",
+                "bell curve"
+              ]
+            },
+            {
+              "name": "np.random.uniform()",
+              "desc": {
+                "zh": "生成 [low, high) 均匀分布的随机浮点数",
+                "en": "Generate uniform random floats in [low, high)"
+              },
+              "signature": "np.random.uniform(low=0.0, high=1.0, size=None)",
+              "example": "import numpy as np\nnp.random.seed(42)\n\n# [0, 1) 均匀分布（等价于 rand）\nprint(np.random.uniform(size=3).round(2))\n\n# [10.0, 50.0) 均匀分布\nprices = np.random.uniform(10, 50, size=4).round(2)\nprint(prices)",
+              "output": "[0.37 0.95 0.73]\n[42.31 23.64 15.6  16.14]",
+              "params": [
+                {
+                  "name": "low",
+                  "type": "float",
+                  "default": "0.0",
+                  "desc": {
+                    "zh": "下界（含）",
+                    "en": "Lower bound (inclusive)"
+                  }
+                },
+                {
+                  "name": "high",
+                  "type": "float",
+                  "default": "1.0",
+                  "desc": {
+                    "zh": "上界（不含）",
+                    "en": "Upper bound (exclusive)"
+                  }
+                },
+                {
+                  "name": "size",
+                  "type": "int | tuple",
+                  "default": "None",
+                  "desc": {
+                    "zh": "输出形状",
+                    "en": "Output shape"
+                  }
+                }
+              ],
+              "tags": [
+                "random",
+                "uniform",
+                "float",
+                "range"
+              ]
+            },
+            {
+              "name": "np.random.choice()",
+              "desc": {
+                "zh": "从数组中随机抽样（有/无放回）",
+                "en": "Random sampling from array (with/without replacement)"
+              },
+              "signature": "np.random.choice(a, size=None, replace=True, p=None)",
+              "example": "import numpy as np\nnp.random.seed(42)\n\n# 从列表中随机选 3 个（有放回）\nprint(np.random.choice(['A', 'B', 'C', 'D'], size=3))\n\n# 无放回抽样（不重复）\nprint(np.random.choice(10, size=5, replace=False))\n\n# 带权重抽样（A 概率 50%，其他各 10%）\nprint(np.random.choice(['A','B','C','D','E'], size=6, p=[0.5,0.1,0.1,0.1,0.2]))",
+              "output": "['D' 'A' 'D']\n[8 1 5 0 7]\n['A' 'E' 'A' 'A' 'A' 'C']",
+              "params": [
+                {
+                  "name": "a",
+                  "type": "array | int",
+                  "default": "required",
+                  "desc": {
+                    "zh": "从此数组抽样；若为 int n，等价于 np.arange(n)",
+                    "en": "Sample from this array; if int n, equivalent to np.arange(n)"
+                  }
+                },
+                {
+                  "name": "size",
+                  "type": "int | tuple",
+                  "default": "None",
+                  "desc": {
+                    "zh": "抽样数量/形状",
+                    "en": "Sample count/shape"
+                  }
+                },
+                {
+                  "name": "replace",
+                  "type": "bool",
+                  "default": "True",
+                  "desc": {
+                    "zh": "True=有放回（可重复），False=无放回（不重复）",
+                    "en": "True=with replacement (can repeat), False=without (no repeats)"
+                  }
+                },
+                {
+                  "name": "p",
+                  "type": "array",
+                  "default": "None",
+                  "desc": {
+                    "zh": "每个元素被选中的概率，必须加和为 1",
+                    "en": "Probability of each element, must sum to 1"
+                  }
+                }
+              ],
+              "tags": [
+                "random",
+                "choice",
+                "sample",
+                "probability",
+                "weight"
+              ]
+            },
+            {
+              "name": "np.random.shuffle() / np.random.permutation()",
+              "desc": {
+                "zh": "随机打乱数组顺序",
+                "en": "Randomly shuffle array order"
+              },
+              "signature": "np.random.shuffle(x)        # 原地打乱，返回 None\nnp.random.permutation(x)    # 返回打乱后的副本",
+              "example": "import numpy as np\nnp.random.seed(42)\n\n# permutation：返回新数组（不改原数组）\narr = np.array([1, 2, 3, 4, 5])\nprint(np.random.permutation(arr))\nprint(arr)  # 原数组不变\n\n# shuffle：原地打乱（改变原数组）\nnp.random.shuffle(arr)\nprint(arr)  # 已被打乱",
+              "output": "[4 1 2 3 5]\n[1 2 3 4 5]\n[4 1 2 3 5]",
+              "params": [
+                {
+                  "name": "x",
+                  "type": "array | int",
+                  "default": "required",
+                  "desc": {
+                    "zh": "shuffle：原地修改；permutation：返回副本。传 int n 等价于 permutation(arange(n))",
+                    "en": "shuffle: in-place; permutation: returns copy. int n = permutation(arange(n))"
+                  }
+                }
+              ],
+              "tags": [
+                "random",
+                "shuffle",
+                "permutation",
+                "order"
+              ]
+            },
+            {
+              "name": "np.random.exponential() / poisson() / binomial()",
+              "desc": {
+                "zh": "其他常用分布：指数/泊松/二项分布",
+                "en": "Other distributions: exponential/Poisson/binomial"
+              },
+              "signature": "np.random.exponential(scale=1.0, size=None)  # 指数分布\nnp.random.poisson(lam=1.0, size=None)         # 泊松分布\nnp.random.binomial(n, p, size=None)           # 二项分布",
+              "example": "import numpy as np\nnp.random.seed(42)\n\n# 指数分布（平均等待时间 5 分钟）\nwait = np.random.exponential(scale=5, size=5).round(1)\nprint('等待时间:', wait)\n\n# 泊松分布（平均每小时 3 个事件）\nevents = np.random.poisson(lam=3, size=6)\nprint('事件数:', events)\n\n# 二项分布（10 次试验，每次成功率 0.3）\nsuccesses = np.random.binomial(n=10, p=0.3, size=5)\nprint('成功次数:', successes)",
+              "output": "等待时间: [1.9 14.3  1.3  2.3  0.5]\n事件数: [3 4 2 1 2 6]\n成功次数: [3 3 1 4 3]",
+              "params": [
+                {
+                  "name": "scale",
+                  "type": "float",
+                  "default": "1.0",
+                  "desc": {
+                    "zh": "指数分布的均值（λ的倒数）",
+                    "en": "Mean of exponential (inverse of rate λ)"
+                  }
+                },
+                {
+                  "name": "lam",
+                  "type": "float",
+                  "default": "1.0",
+                  "desc": {
+                    "zh": "泊松分布的期望值（λ）",
+                    "en": "Expected value of Poisson (λ)"
+                  }
+                },
+                {
+                  "name": "n, p",
+                  "type": "int, float",
+                  "default": "required",
+                  "desc": {
+                    "zh": "二项分布：n=试验次数，p=单次成功概率",
+                    "en": "Binomial: n=trials, p=success probability per trial"
+                  }
+                }
+              ],
+              "tags": [
+                "random",
+                "exponential",
+                "poisson",
+                "binomial",
+                "distribution"
               ]
             }
           ]
