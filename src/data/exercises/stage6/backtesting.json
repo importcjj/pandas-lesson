@@ -1,1 +1,416 @@
-{"module":"backtesting","stageId":"stage6","lessonId":"backtesting","tags":[],"exercises":[]}
+{
+  "module": "backtesting",
+  "stageId": "stage6",
+  "lessonId": "backtesting",
+  "tags": [
+    "backtest",
+    "strategy",
+    "signal",
+    "pnl",
+    "trading"
+  ],
+  "exercises": [
+    {
+      "id": "s6-bt-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "SMA 交叉生成交易信号",
+        "en": "Generate Trading Signal from SMA Crossover"
+      },
+      "description": {
+        "zh": "根据短期均线 (SMA5) 和长期均线 (SMA20) 的关系生成交易信号：SMA5 > SMA20 时为 1 (做多)，SMA5 < SMA20 时为 -1 (做空)，相等时为 0 (平仓)。将信号赋给 signal。",
+        "en": "Generate trading signals based on the relationship between short-term (SMA5) and long-term (SMA20) moving averages: 1 (long) when SMA5 > SMA20, -1 (short) when SMA5 < SMA20, 0 (flat) when equal. Assign the signal to signal."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100, name='price')\nsma5 = prices.rolling(5).mean()\nsma20 = prices.rolling(20).mean()",
+      "starterCode": "# Generate signal: 1 when SMA5 > SMA20, -1 when SMA5 < SMA20, else 0\nsignal = np.___(___, ___)\nsignal = pd.Series(signal, index=prices.index)",
+      "solutionCode": "signal = np.sign(sma5 - sma20)\nsignal = pd.Series(signal, index=prices.index)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100, name=\"price\")\\nsma5 = prices.rolling(5).mean()\\nsma20 = prices.rolling(20).mean()\\nsignal = np.sign(sma5 - sma20)\\nsignal = pd.Series(signal, index=prices.index)', _ns)\ntry:\n    result = signal.equals(_ns['signal'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "np.sign() 函数返回 -1、0 或 1，取决于输入值的符号",
+          "SMA5 - SMA20 的符号就代表了交叉方向"
+        ],
+        "en": [
+          "np.sign() returns -1, 0, or 1 depending on the sign of the input",
+          "The sign of SMA5 - SMA20 represents the crossover direction"
+        ]
+      },
+      "explanation": {
+        "zh": "SMA 交叉是最经典的趋势跟踪策略之一。短期均线上穿长期均线（金叉）产生买入信号，下穿（死叉）产生卖出信号。np.sign() 自动将差值转换为 -1/0/1 的信号序列。",
+        "en": "SMA crossover is one of the most classic trend-following strategies. When the short-term MA crosses above the long-term MA (golden cross), it generates a buy signal; crossing below (death cross) generates a sell signal. np.sign() automatically converts the difference into a -1/0/1 signal series."
+      }
+    },
+    {
+      "id": "s6-bt-002",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "信号偏移的原因",
+        "en": "Why Shift the Signal by One Day"
+      },
+      "description": {
+        "zh": "在回测中，我们通常将交易信号向后偏移一天 (signal.shift(1)) 再计算收益。这是为了什么？",
+        "en": "In backtesting, we typically shift the trading signal by one day (signal.shift(1)) before computing returns. Why?"
+      },
+      "options": {
+        "zh": [
+          "避免前视偏差 (look-ahead bias)，信号在当天收盘后才确定，次日才能执行",
+          "让信号和价格序列长度一致",
+          "减少交易频率",
+          "提高策略的夏普比率"
+        ],
+        "en": [
+          "Avoid look-ahead bias: the signal is confirmed at today's close and can only be executed the next day",
+          "Make the signal and price series the same length",
+          "Reduce trading frequency",
+          "Improve the strategy's Sharpe ratio"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "想想信号是什么时候产生的，又能在什么时候执行"
+        ],
+        "en": [
+          "Think about when the signal is generated and when it can actually be executed"
+        ]
+      },
+      "explanation": {
+        "zh": "信号基于当天收盘价计算，所以最早只能在次日执行交易。如果不偏移信号，就等于使用了未来信息（当天收盘价生成信号并在当天获利），这就是前视偏差。shift(1) 确保只用过去的信息做决策。",
+        "en": "The signal is computed from today's closing price, so the earliest it can be executed is the next day. Without shifting, we would be using future information (generating a signal from today's close and profiting on the same day) — this is look-ahead bias. shift(1) ensures decisions use only past information."
+      }
+    },
+    {
+      "id": "s6-bt-003",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "持仓信号转每日策略收益",
+        "en": "Position Signal to Daily Strategy Returns"
+      },
+      "description": {
+        "zh": "使用偏移后的信号 (signal.shift(1)) 乘以每日收益率 (daily_returns) 来计算策略的每日收益率，赋给 strategy_returns。",
+        "en": "Multiply the shifted signal (signal.shift(1)) by daily returns (daily_returns) to compute the strategy's daily returns. Assign to strategy_returns."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100, name='price')\nsma5 = prices.rolling(5).mean()\nsma20 = prices.rolling(20).mean()\nsignal = np.sign(sma5 - sma20)\ndaily_returns = prices.pct_change()",
+      "starterCode": "# Shift signal by 1 to avoid look-ahead bias, then multiply by daily returns\nstrategy_returns = signal.___(___)  * ___",
+      "solutionCode": "strategy_returns = signal.shift(1) * daily_returns",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100, name=\"price\")\\nsma5 = prices.rolling(5).mean()\\nsma20 = prices.rolling(20).mean()\\nsignal = np.sign(sma5 - sma20)\\ndaily_returns = prices.pct_change()\\nstrategy_returns = signal.shift(1) * daily_returns', _ns)\ntry:\n    result = strategy_returns.equals(_ns['strategy_returns'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "signal.shift(1) 将信号向后移动一天",
+          "策略收益 = 前一天的持仓方向 * 当天的价格变动百分比"
+        ],
+        "en": [
+          "signal.shift(1) shifts the signal forward by one day",
+          "Strategy return = previous day's position direction * today's price change percentage"
+        ]
+      },
+      "explanation": {
+        "zh": "strategy_returns = signal.shift(1) * daily_returns 的含义是：用昨天确定的持仓方向乘以今天的实际收益率。shift(1) 保证不使用未来信息。做多信号 (1) 时，策略收益等于市场收益；做空信号 (-1) 时，策略收益是市场收益的反向。",
+        "en": "strategy_returns = signal.shift(1) * daily_returns means: multiply yesterday's determined position direction by today's actual return. shift(1) ensures no future information is used. With a long signal (1), strategy return equals market return; with a short signal (-1), strategy return is the inverse of market return."
+      }
+    },
+    {
+      "id": "s6-bt-004",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "累计收益率：策略 vs 买入并持有",
+        "en": "Cumulative Returns: Strategy vs Buy-and-Hold"
+      },
+      "description": {
+        "zh": "分别计算策略和买入并持有的累计收益率曲线。使用 (1 + returns).cumprod() 计算累计净值，分别赋给 cum_strategy 和 cum_bh。",
+        "en": "Compute the cumulative return curves for both the strategy and buy-and-hold. Use (1 + returns).cumprod() to calculate cumulative wealth. Assign to cum_strategy and cum_bh."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100, name='price')\nsma5 = prices.rolling(5).mean()\nsma20 = prices.rolling(20).mean()\nsignal = np.sign(sma5 - sma20)\ndaily_returns = prices.pct_change()\nstrategy_returns = signal.shift(1) * daily_returns",
+      "starterCode": "# Cumulative strategy returns\ncum_strategy = (1 + strategy_returns).___\n\n# Cumulative buy-and-hold returns\ncum_bh = (1 + daily_returns).___",
+      "solutionCode": "cum_strategy = (1 + strategy_returns).cumprod()\ncum_bh = (1 + daily_returns).cumprod()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100, name=\"price\")\\nsma5 = prices.rolling(5).mean()\\nsma20 = prices.rolling(20).mean()\\nsignal = np.sign(sma5 - sma20)\\ndaily_returns = prices.pct_change()\\nstrategy_returns = signal.shift(1) * daily_returns\\ncum_strategy = (1 + strategy_returns).cumprod()\\ncum_bh = (1 + daily_returns).cumprod()', _ns)\ntry:\n    result = cum_strategy.equals(_ns['cum_strategy']) and cum_bh.equals(_ns['cum_bh'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "cumprod() 计算累积乘积，将每日收益率转换为累计净值",
+          "(1 + r1) * (1 + r2) * ... 就是 cumprod 的效果"
+        ],
+        "en": [
+          "cumprod() computes the cumulative product, converting daily returns to cumulative wealth",
+          "(1 + r1) * (1 + r2) * ... is what cumprod does"
+        ]
+      },
+      "explanation": {
+        "zh": "累计净值曲线是回测中最基本的可视化。(1 + daily_return).cumprod() 将每日百分比收益转换为以初始值 1 为基准的净值曲线。通过对比策略净值和买入持有净值，可以直观评估策略是否跑赢了市场。",
+        "en": "The cumulative wealth curve is the most fundamental visualization in backtesting. (1 + daily_return).cumprod() converts daily percentage returns into a wealth curve starting at 1. Comparing strategy wealth vs buy-and-hold wealth visually shows whether the strategy outperforms the market."
+      }
+    },
+    {
+      "id": "s6-bt-005",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "交易成本计算",
+        "en": "Transaction Cost Calculation"
+      },
+      "description": {
+        "zh": "交易成本在信号发生变化时产生。使用信号的差分绝对值乘以成本费率来计算每日交易成本。",
+        "en": "Transaction costs are incurred when the signal changes. Compute daily transaction costs as the absolute difference of signal changes multiplied by the cost rate."
+      },
+      "codeTemplate": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100)\nsma5 = prices.rolling(5).mean()\nsma20 = prices.rolling(20).mean()\nsignal = np.sign(sma5 - sma20)\ncost_rate = 0.001\ntx_cost = abs(signal.___1___()) * cost_rate",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "diff",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "需要一个方法来计算前后两个信号值之间的差异",
+          "当信号从 1 变为 -1 时，差值绝对值为 2，代表双倍交易成本"
+        ],
+        "en": [
+          "You need a method to compute the difference between consecutive signal values",
+          "When the signal changes from 1 to -1, the absolute difference is 2, representing double the cost"
+        ]
+      },
+      "explanation": {
+        "zh": "signal.diff() 计算相邻信号值的差异。当信号没有变化时 diff 为 0（无交易成本）；从 0 变为 1 或 -1 时 diff 绝对值为 1（开仓成本）；从 1 变为 -1 时 diff 绝对值为 2（同时平仓和反向开仓的成本）。乘以费率即得交易成本。",
+        "en": "signal.diff() computes differences between consecutive signal values. When the signal doesn't change, diff is 0 (no cost); changing from 0 to 1 or -1 yields abs(diff)=1 (opening cost); from 1 to -1 yields abs(diff)=2 (cost of closing and opening reverse position). Multiply by the cost rate to get transaction costs."
+      }
+    },
+    {
+      "id": "s6-bt-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "扣除交易成本后的净收益",
+        "en": "Net Returns After Transaction Costs"
+      },
+      "description": {
+        "zh": "从策略的每日收益中减去交易成本，得到净收益 (net_returns)，再计算扣费后的累计净值 (cum_net)。",
+        "en": "Subtract transaction costs from the strategy's daily returns to get net returns (net_returns), then compute the cumulative net wealth curve (cum_net)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100)\nsma5 = prices.rolling(5).mean()\nsma20 = prices.rolling(20).mean()\nsignal = np.sign(sma5 - sma20)\ndaily_returns = prices.pct_change()\nstrategy_returns = signal.shift(1) * daily_returns\ncost_rate = 0.001\ntx_cost = abs(signal.diff()) * cost_rate",
+      "starterCode": "# Net returns = strategy returns minus transaction costs\nnet_returns = strategy_returns - ___\n\n# Cumulative net wealth\ncum_net = (1 + ___).cumprod()",
+      "solutionCode": "net_returns = strategy_returns - tx_cost\ncum_net = (1 + net_returns).cumprod()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100)\\nsma5 = prices.rolling(5).mean()\\nsma20 = prices.rolling(20).mean()\\nsignal = np.sign(sma5 - sma20)\\ndaily_returns = prices.pct_change()\\nstrategy_returns = signal.shift(1) * daily_returns\\ncost_rate = 0.001\\ntx_cost = abs(signal.diff()) * cost_rate\\nnet_returns = strategy_returns - tx_cost\\ncum_net = (1 + net_returns).cumprod()', _ns)\ntry:\n    result = net_returns.equals(_ns['net_returns']) and cum_net.equals(_ns['cum_net'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "净收益 = 毛收益 - 交易成本",
+          "累计净值的计算方式与之前相同，只是用净收益代替毛收益"
+        ],
+        "en": [
+          "Net returns = gross returns - transaction costs",
+          "Cumulative wealth calculation is the same, just using net returns instead of gross"
+        ]
+      },
+      "explanation": {
+        "zh": "扣除交易成本是回测走向真实的关键一步。高频换仓的策略在扣费后可能变成亏损。净收益 = 毛收益 - 交易成本，然后 (1 + net_returns).cumprod() 得到扣费后的累计净值曲线，这是评估策略实际表现的基础。",
+        "en": "Accounting for transaction costs is a critical step toward realistic backtesting. High-turnover strategies may become unprofitable after costs. Net returns = gross returns - transaction costs, then (1 + net_returns).cumprod() gives the after-cost cumulative wealth curve, which is the basis for evaluating actual strategy performance."
+      }
+    },
+    {
+      "id": "s6-bt-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "胜率和盈亏比计算",
+        "en": "Win Rate and Profit Factor Calculation"
+      },
+      "description": {
+        "zh": "计算策略的胜率 (win_rate) 和盈利因子 (profit_factor)。胜率 = 盈利交易数 / 总交易数；盈利因子 = 总盈利 / 总亏损的绝对值。只考虑 net_returns 中非零且非 NaN 的交易日。",
+        "en": "Compute the strategy's win rate (win_rate) and profit factor (profit_factor). Win rate = number of profitable days / total trading days; Profit factor = total profit / abs(total loss). Only consider non-zero and non-NaN days from net_returns."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100)\nsma5 = prices.rolling(5).mean()\nsma20 = prices.rolling(20).mean()\nsignal = np.sign(sma5 - sma20)\ndaily_returns = prices.pct_change()\nstrategy_returns = signal.shift(1) * daily_returns\ncost_rate = 0.001\ntx_cost = abs(signal.diff()) * cost_rate\nnet_returns = strategy_returns - tx_cost\ntrades = net_returns.dropna()\ntrades = trades[trades != 0]",
+      "starterCode": "# Win rate: fraction of profitable trades\nwins = trades[trades > ___]\nwin_rate = len(___) / len(trades)\n\n# Profit factor: total gains / abs(total losses)\ntotal_gain = trades[trades > 0].___\ntotal_loss = trades[trades < 0].___\nprofit_factor = total_gain / abs(total_loss)",
+      "solutionCode": "wins = trades[trades > 0]\nwin_rate = len(wins) / len(trades)\ntotal_gain = trades[trades > 0].sum()\ntotal_loss = trades[trades < 0].sum()\nprofit_factor = total_gain / abs(total_loss)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100)\\nsma5 = prices.rolling(5).mean()\\nsma20 = prices.rolling(20).mean()\\nsignal = np.sign(sma5 - sma20)\\ndaily_returns = prices.pct_change()\\nstrategy_returns = signal.shift(1) * daily_returns\\ncost_rate = 0.001\\ntx_cost = abs(signal.diff()) * cost_rate\\nnet_returns = strategy_returns - tx_cost\\ntrades = net_returns.dropna()\\ntrades = trades[trades != 0]\\nwins = trades[trades > 0]\\nwin_rate = len(wins) / len(trades)\\ntotal_gain = trades[trades > 0].sum()\\ntotal_loss = trades[trades < 0].sum()\\nprofit_factor = total_gain / abs(total_loss)', _ns)\ntry:\n    result = np.isclose(win_rate, _ns['win_rate']) and np.isclose(profit_factor, _ns['profit_factor'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "trades[trades > 0] 筛选出所有盈利交易",
+          ".sum() 计算总和，len() 计算个数"
+        ],
+        "en": [
+          "trades[trades > 0] filters all profitable trades",
+          ".sum() computes the total, len() counts the number"
+        ]
+      },
+      "explanation": {
+        "zh": "胜率衡量策略获胜的频率，盈利因子衡量每亏损 1 元能赚回多少。一个好策略不一定需要高胜率，但盈利因子应该大于 1。胜率 50% 但盈利因子为 2 意味着赢的时候赚的是输的时候亏的两倍，这仍然是好策略。",
+        "en": "Win rate measures how often the strategy profits; profit factor measures how much is earned per unit lost. A good strategy doesn't require a high win rate, but the profit factor should exceed 1. A 50% win rate with profit factor 2 means wins are twice as large as losses, which is still a good strategy."
+      }
+    },
+    {
+      "id": "s6-bt-008",
+      "type": "true-false",
+      "difficulty": 4,
+      "title": {
+        "zh": "低胜率策略也能盈利",
+        "en": "A Low Win-Rate Strategy Can Still Be Profitable"
+      },
+      "description": {
+        "zh": "一个胜率只有 40% 的交易策略仍然可以是盈利的（累计收益为正）。",
+        "en": "A trading strategy with only a 40% win rate can still be profitable (positive cumulative returns)."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": [
+          "除了胜率，还要考虑每次盈利和亏损的幅度"
+        ],
+        "en": [
+          "Besides win rate, consider the magnitude of each win and loss"
+        ]
+      },
+      "explanation": {
+        "zh": "盈利与否不仅取决于胜率，还取决于盈亏比。例如：10 次交易中赢 4 次，每次赚 300 元；输 6 次，每次亏 100 元。总盈利 = 4*300 - 6*100 = 600 元。许多成功的趋势跟踪策略胜率低于 50%，但依靠「截断亏损、让利润奔跑」来实现整体盈利。",
+        "en": "Profitability depends on both win rate and the win/loss ratio. Example: 10 trades, 4 wins at $300 each, 6 losses at $100 each. Total profit = 4*300 - 6*100 = $600. Many successful trend-following strategies have win rates below 50% but achieve overall profit by 'cutting losses short and letting profits run'."
+      }
+    },
+    {
+      "id": "s6-bt-009",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "滚动夏普比率",
+        "en": "Rolling Sharpe Ratio of Strategy"
+      },
+      "description": {
+        "zh": "计算策略净收益的 20 日滚动夏普比率 (rolling_sharpe)。夏普比率 = 滚动均值 / 滚动标准差 * sqrt(252)（年化因子）。",
+        "en": "Compute the 20-day rolling Sharpe ratio (rolling_sharpe) of the strategy's net returns. Sharpe = rolling mean / rolling std * sqrt(252) (annualization factor)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100)\nsma5 = prices.rolling(5).mean()\nsma20 = prices.rolling(20).mean()\nsignal = np.sign(sma5 - sma20)\ndaily_returns = prices.pct_change()\nstrategy_returns = signal.shift(1) * daily_returns\ncost_rate = 0.001\ntx_cost = abs(signal.diff()) * cost_rate\nnet_returns = strategy_returns - tx_cost",
+      "starterCode": "# 20-day rolling Sharpe ratio (annualized)\nrolling_mean = net_returns.rolling(___).mean()\nrolling_std = net_returns.rolling(___).std()\nrolling_sharpe = (rolling_mean / rolling_std) * np.sqrt(___)",
+      "solutionCode": "rolling_mean = net_returns.rolling(20).mean()\nrolling_std = net_returns.rolling(20).std()\nrolling_sharpe = (rolling_mean / rolling_std) * np.sqrt(252)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100)\\nsma5 = prices.rolling(5).mean()\\nsma20 = prices.rolling(20).mean()\\nsignal = np.sign(sma5 - sma20)\\ndaily_returns = prices.pct_change()\\nstrategy_returns = signal.shift(1) * daily_returns\\ncost_rate = 0.001\\ntx_cost = abs(signal.diff()) * cost_rate\\nnet_returns = strategy_returns - tx_cost\\nrolling_mean = net_returns.rolling(20).mean()\\nrolling_std = net_returns.rolling(20).std()\\nrolling_sharpe = (rolling_mean / rolling_std) * np.sqrt(252)', _ns)\ntry:\n    result = rolling_sharpe.equals(_ns['rolling_sharpe'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "rolling(20) 创建 20 日的滑动窗口",
+          "年化因子 sqrt(252) 是因为一年约有 252 个交易日"
+        ],
+        "en": [
+          "rolling(20) creates a 20-day sliding window",
+          "Annualization factor sqrt(252) comes from approximately 252 trading days per year"
+        ]
+      },
+      "explanation": {
+        "zh": "滚动夏普比率展示策略风险调整收益随时间的变化。夏普比率 = (均值收益 / 收益标准差) * sqrt(252) 将日度指标年化。滚动窗口版本能揭示策略在不同市场环境中的表现差异，比单一夏普比率提供更多信息。",
+        "en": "Rolling Sharpe ratio shows how the strategy's risk-adjusted return varies over time. Sharpe = (mean return / return std) * sqrt(252) annualizes the daily metric. The rolling window version reveals performance differences across market regimes, providing more insight than a single Sharpe ratio."
+      }
+    },
+    {
+      "id": "s6-bt-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "权益曲线与回撤图",
+        "en": "Equity Curve and Drawdown Chart"
+      },
+      "description": {
+        "zh": "计算策略的权益曲线 (equity)、滚动最大净值 (rolling_max) 和回撤序列 (drawdown)。回撤 = (当前净值 - 历史最高净值) / 历史最高净值。",
+        "en": "Compute the strategy's equity curve (equity), rolling maximum wealth (rolling_max), and drawdown series (drawdown). Drawdown = (current wealth - historical max) / historical max."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100)\nsma5 = prices.rolling(5).mean()\nsma20 = prices.rolling(20).mean()\nsignal = np.sign(sma5 - sma20)\ndaily_returns = prices.pct_change()\nstrategy_returns = signal.shift(1) * daily_returns\ncost_rate = 0.001\ntx_cost = abs(signal.diff()) * cost_rate\nnet_returns = strategy_returns - tx_cost",
+      "starterCode": "# Equity curve\nequity = (1 + net_returns).cumprod()\n\n# Rolling maximum\nrolling_max = equity.___\n\n# Drawdown\ndrawdown = (equity - rolling_max) / ___",
+      "solutionCode": "equity = (1 + net_returns).cumprod()\nrolling_max = equity.cummax()\ndrawdown = (equity - rolling_max) / rolling_max",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100)\\nsma5 = prices.rolling(5).mean()\\nsma20 = prices.rolling(20).mean()\\nsignal = np.sign(sma5 - sma20)\\ndaily_returns = prices.pct_change()\\nstrategy_returns = signal.shift(1) * daily_returns\\ncost_rate = 0.001\\ntx_cost = abs(signal.diff()) * cost_rate\\nnet_returns = strategy_returns - tx_cost\\nequity = (1 + net_returns).cumprod()\\nrolling_max = equity.cummax()\\ndrawdown = (equity - rolling_max) / rolling_max', _ns)\ntry:\n    result = drawdown.equals(_ns['drawdown'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "cummax() 计算序列的累积最大值",
+          "回撤是当前值相对于历史最高点的百分比下降"
+        ],
+        "en": [
+          "cummax() computes the cumulative maximum of a series",
+          "Drawdown is the percentage decline from the historical peak"
+        ]
+      },
+      "explanation": {
+        "zh": "最大回撤是衡量策略风险的关键指标。cummax() 跟踪历史最高净值，(equity - cummax) / cummax 计算每个时点相对于峰值的回撤比例。回撤值始终 <= 0，最大回撤（绝对值最大的回撤）反映了策略可能面临的最大亏损幅度。",
+        "en": "Maximum drawdown is a key risk metric. cummax() tracks the historical peak wealth, (equity - cummax) / cummax computes the drawdown percentage at each point. Drawdown is always <= 0, and the maximum drawdown (largest absolute value) reflects the largest potential loss the strategy could face."
+      }
+    },
+    {
+      "id": "s6-bt-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 未偏移信号导致使用未来信息",
+        "en": "[Debug] Unshifted Signal Uses Future Information"
+      },
+      "description": {
+        "zh": "以下代码直接用当天信号乘以当天收益率，存在前视偏差。请修复代码，使信号偏移 1 天后再计算策略收益。",
+        "en": "The following code multiplies today's signal by today's return, introducing look-ahead bias. Fix the code by shifting the signal by 1 day before computing strategy returns."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100)\nsma5 = prices.rolling(5).mean()\nsma20 = prices.rolling(20).mean()\nsignal = np.sign(sma5 - sma20)\ndaily_returns = prices.pct_change()",
+      "starterCode": "# BUG: Using today's signal with today's return (look-ahead bias)\n# strategy_returns = signal * daily_returns\n\n# FIX: Shift the signal to avoid look-ahead bias\nstrategy_returns = signal.___(___)  * daily_returns",
+      "solutionCode": "strategy_returns = signal.shift(1) * daily_returns",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumsum(np.random.randn(100)) + 100)\\nsma5 = prices.rolling(5).mean()\\nsma20 = prices.rolling(20).mean()\\nsignal = np.sign(sma5 - sma20)\\ndaily_returns = prices.pct_change()\\nstrategy_returns = signal.shift(1) * daily_returns', _ns)\ntry:\n    result = strategy_returns.equals(_ns['strategy_returns'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "信号基于当天收盘价生成，最早只能在次日执行",
+          "shift(1) 将信号向后移动一天"
+        ],
+        "en": [
+          "The signal is generated from today's close price and can only be executed the next day",
+          "shift(1) moves the signal forward by one day"
+        ]
+      },
+      "explanation": {
+        "zh": "前视偏差是回测中最常见也最危险的错误之一。signal * daily_returns 意味着在 t 日收盘价确定信号后就用 t 日的收益获利，这在现实中不可能做到。正确做法是 signal.shift(1) * daily_returns，即用 t-1 日的信号决定 t 日的持仓。未偏移的回测结果通常过于乐观。",
+        "en": "Look-ahead bias is one of the most common and dangerous errors in backtesting. signal * daily_returns means profiting from day t's return using a signal determined at day t's close, which is impossible in practice. The correct approach is signal.shift(1) * daily_returns, using day t-1's signal for day t's position. Unshifted backtest results are typically overly optimistic."
+      }
+    },
+    {
+      "id": "s6-bt-012",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 双均线策略完整回测",
+        "en": "[Challenge] Dual MA Strategy: Full Backtest"
+      },
+      "description": {
+        "zh": "实现完整的双均线交叉策略回测：1) 计算 10 日和 30 日 SMA 并生成信号；2) 偏移信号，计算策略毛收益和净收益（扣除 0.1% 交易成本）；3) 计算年化收益率 (ann_return)、年化波动率 (ann_vol)、夏普比率 (sharpe)、最大回撤 (max_dd)；4) 将指标保存到字典 metrics 中。",
+        "en": "Implement a full dual-MA crossover backtest: 1) Compute 10-day and 30-day SMA, generate signal; 2) Shift signal, compute gross and net returns (0.1% cost); 3) Calculate annualized return (ann_return), annualized volatility (ann_vol), Sharpe ratio (sharpe), max drawdown (max_dd); 4) Store metrics in a dict named metrics."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumsum(np.random.randn(250)) + 100, name='price')",
+      "starterCode": "# Step 1: SMA and signal\nsma10 = prices.rolling(___).mean()\nsma30 = prices.rolling(___).mean()\nsignal = np.sign(sma10 - sma30)\n\n# Step 2: Strategy returns with costs\ndaily_returns = prices.pct_change()\nstrategy_returns = signal.shift(1) * daily_returns\ncost_rate = 0.001\ntx_cost = abs(signal.diff()) * cost_rate\nnet_returns = strategy_returns - tx_cost\n\n# Step 3: Performance metrics\nequity = (1 + net_returns).cumprod()\nrolling_max = equity.cummax()\ndrawdown = (equity - rolling_max) / rolling_max\n\nann_return = net_returns.mean() * ___\nann_vol = net_returns.std() * np.sqrt(___)\nsharpe = ann_return / ___\nmax_dd = drawdown.min()\n\n# Step 4: Store metrics\nmetrics = {\n    'ann_return': ann_return,\n    'ann_vol': ann_vol,\n    'sharpe': sharpe,\n    'max_dd': max_dd\n}",
+      "solutionCode": "sma10 = prices.rolling(10).mean()\nsma30 = prices.rolling(30).mean()\nsignal = np.sign(sma10 - sma30)\n\ndaily_returns = prices.pct_change()\nstrategy_returns = signal.shift(1) * daily_returns\ncost_rate = 0.001\ntx_cost = abs(signal.diff()) * cost_rate\nnet_returns = strategy_returns - tx_cost\n\nequity = (1 + net_returns).cumprod()\nrolling_max = equity.cummax()\ndrawdown = (equity - rolling_max) / rolling_max\n\nann_return = net_returns.mean() * 252\nann_vol = net_returns.std() * np.sqrt(252)\nsharpe = ann_return / ann_vol\nmax_dd = drawdown.min()\n\nmetrics = {\n    'ann_return': ann_return,\n    'ann_vol': ann_vol,\n    'sharpe': sharpe,\n    'max_dd': max_dd\n}",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumsum(np.random.randn(250)) + 100, name=\"price\")\\nsma10 = prices.rolling(10).mean()\\nsma30 = prices.rolling(30).mean()\\nsignal = np.sign(sma10 - sma30)\\ndaily_returns = prices.pct_change()\\nstrategy_returns = signal.shift(1) * daily_returns\\ncost_rate = 0.001\\ntx_cost = abs(signal.diff()) * cost_rate\\nnet_returns = strategy_returns - tx_cost\\nequity = (1 + net_returns).cumprod()\\nrolling_max = equity.cummax()\\ndrawdown = (equity - rolling_max) / rolling_max\\nann_return = net_returns.mean() * 252\\nann_vol = net_returns.std() * np.sqrt(252)\\nsharpe = ann_return / ann_vol\\nmax_dd = drawdown.min()\\nmetrics = {\"ann_return\": ann_return, \"ann_vol\": ann_vol, \"sharpe\": sharpe, \"max_dd\": max_dd}', _ns)\ntry:\n    result = all(np.isclose(metrics[k], _ns['metrics'][k]) for k in ['ann_return', 'ann_vol', 'sharpe', 'max_dd'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "年化收益率 = 日均收益 * 252",
+          "年化波动率 = 日波动率 * sqrt(252)",
+          "夏普比率 = 年化收益率 / 年化波动率",
+          "最大回撤 = drawdown.min()（回撤值为负数）"
+        ],
+        "en": [
+          "Annualized return = daily mean return * 252",
+          "Annualized volatility = daily std * sqrt(252)",
+          "Sharpe ratio = annualized return / annualized volatility",
+          "Max drawdown = drawdown.min() (drawdown values are negative)"
+        ]
+      },
+      "explanation": {
+        "zh": "本综合练习涵盖了完整的回测流程：信号生成 -> 信号偏移 -> 毛收益 -> 扣除交易成本 -> 净收益 -> 权益曲线 -> 绩效指标。年化收益率和波动率通过乘以 252（交易日数）进行年化。夏普比率是最广泛使用的风险调整收益指标。最大回撤反映了策略可能面临的最大亏损。",
+        "en": "This challenge covers the complete backtest workflow: signal generation -> signal shifting -> gross returns -> transaction costs -> net returns -> equity curve -> performance metrics. Returns and volatility are annualized by multiplying by 252 (trading days). Sharpe ratio is the most widely used risk-adjusted return metric. Maximum drawdown reflects the largest potential loss the strategy could face."
+      }
+    }
+  ]
+}

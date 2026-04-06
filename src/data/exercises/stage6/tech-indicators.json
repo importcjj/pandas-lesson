@@ -1,1 +1,448 @@
-{"module":"tech-indicators","stageId":"stage6","lessonId":"tech-indicators","tags":[],"exercises":[]}
+{
+  "module": "tech-indicators",
+  "stageId": "stage6",
+  "lessonId": "tech-indicators",
+  "tags": [
+    "technical-analysis",
+    "ma",
+    "ema",
+    "rsi",
+    "bollinger",
+    "macd"
+  ],
+  "exercises": [
+    {
+      "id": "s6-tech-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "简单移动平均线 (SMA)",
+        "en": "Simple Moving Average (SMA)"
+      },
+      "description": {
+        "zh": "计算收盘价的 20 日简单移动平均线 (SMA20)，将结果赋给 sma20。",
+        "en": "Compute the 20-day Simple Moving Average (SMA20) of closing prices. Assign the result to sma20."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=252, freq='B')\ndf = pd.DataFrame({'close': 100 + np.cumsum(np.random.randn(252) * 0.8)}, index=dates)",
+      "starterCode": "# Compute 20-day Simple Moving Average\nsma20 = df['close'].rolling(___).mean()",
+      "solutionCode": "sma20 = df['close'].rolling(20).mean()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=252, freq=\\'B\\')\\ndf = pd.DataFrame({\"close\": 100 + np.cumsum(np.random.randn(252) * 0.8)}, index=dates)\\nsma20 = df[\\'close\\'].rolling(20).mean()', _ns)\ntry:\n    result = sma20.dropna().equals(_ns['sma20'].dropna())\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "rolling(window) 创建一个滑动窗口对象",
+          "mean() 计算窗口内的平均值"
+        ],
+        "en": [
+          "rolling(window) creates a rolling window object",
+          "mean() computes the average within the window"
+        ]
+      },
+      "explanation": {
+        "zh": "简单移动平均线 (SMA) 是技术分析中最基础的指标。SMA20 取过去 20 天收盘价的算术平均值。rolling(20) 创建一个 20 日滑动窗口，.mean() 计算窗口内均值。前 19 个值为 NaN，因为窗口不满。SMA 能平滑价格波动，识别趋势方向。",
+        "en": "The Simple Moving Average (SMA) is the most fundamental technical indicator. SMA20 takes the arithmetic mean of the last 20 closing prices. rolling(20) creates a 20-day sliding window, and .mean() computes the window average. The first 19 values are NaN due to insufficient window size. SMA smooths price fluctuations and identifies trend direction."
+      }
+    },
+    {
+      "id": "s6-tech-002",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "指数移动平均线 (EMA)",
+        "en": "Exponential Moving Average (EMA)"
+      },
+      "description": {
+        "zh": "计算收盘价的 20 日指数移动平均线 (EMA20)，将结果赋给 ema20。",
+        "en": "Compute the 20-day Exponential Moving Average (EMA20) of closing prices. Assign the result to ema20."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=252, freq='B')\ndf = pd.DataFrame({'close': 100 + np.cumsum(np.random.randn(252) * 0.8)}, index=dates)",
+      "starterCode": "# Compute 20-day Exponential Moving Average\nema20 = df['close'].ewm(span=___).mean()",
+      "solutionCode": "ema20 = df['close'].ewm(span=20).mean()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=252, freq=\\'B\\')\\ndf = pd.DataFrame({\"close\": 100 + np.cumsum(np.random.randn(252) * 0.8)}, index=dates)\\nema20 = df[\\'close\\'].ewm(span=20).mean()', _ns)\ntry:\n    result = np.allclose(ema20.dropna().values, _ns['ema20'].dropna().values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "ewm(span=N) 创建指数加权移动窗口，span 参数指定衰减周期",
+          "EMA 给予近期数据更大权重"
+        ],
+        "en": [
+          "ewm(span=N) creates an exponentially weighted moving window with decay period N",
+          "EMA gives more weight to recent data"
+        ]
+      },
+      "explanation": {
+        "zh": "指数移动平均线 (EMA) 通过指数衰减给近期价格更大权重，因此比 SMA 对最新价格变化更敏感。ewm(span=20) 中 span 参数对应衰减系数 alpha = 2/(span+1)。EMA 在趋势跟踪中比 SMA 更快响应价格变动。",
+        "en": "The Exponential Moving Average (EMA) gives more weight to recent prices via exponential decay, making it more responsive to latest price changes than SMA. In ewm(span=20), the span parameter corresponds to decay factor alpha = 2/(span+1). EMA responds faster to price movements in trend following."
+      }
+    },
+    {
+      "id": "s6-tech-003",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "金叉信号条件",
+        "en": "Golden Cross Signal Condition"
+      },
+      "description": {
+        "zh": "金叉是指短期均线从下方穿越长期均线，即短期 SMA 大于长期 SMA。填写条件运算符。",
+        "en": "A golden cross occurs when the short-term SMA crosses above the long-term SMA. Fill in the comparison operator."
+      },
+      "codeTemplate": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nclose = pd.Series(100 + np.cumsum(np.random.randn(252) * 0.8))\nsma_short = close.rolling(10).mean()\nsma_long = close.rolling(50).mean()\ngolden_cross = (sma_short ___1___ sma_long) & (sma_short.shift(1) <= sma_long.shift(1))",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": ">",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "金叉表示短期均线「超过」长期均线",
+          "当前短期 > 长期，且前一天短期 <= 长期，就是穿越发生的时刻"
+        ],
+        "en": [
+          "Golden cross means the short-term MA 'exceeds' the long-term MA",
+          "Current short > long AND previous short <= long identifies the crossover moment"
+        ]
+      },
+      "explanation": {
+        "zh": "金叉 (Golden Cross) 是技术分析中最经典的买入信号之一。它要求两个条件同时满足：(1) 当前短期 SMA > 长期 SMA（用 > 运算符）；(2) 前一天短期 SMA <= 长期 SMA（表示刚刚发生了穿越）。对应的死叉 (Death Cross) 则相反：短期均线从上方穿越到下方。",
+        "en": "The Golden Cross is one of the most classic buy signals in technical analysis. It requires two conditions: (1) current short SMA > long SMA (using the > operator); (2) previous short SMA <= long SMA (indicating the crossover just occurred). The opposite -- the Death Cross -- occurs when the short-term MA crosses below the long-term MA."
+      }
+    },
+    {
+      "id": "s6-tech-004",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "RSI 相对强弱指标计算",
+        "en": "RSI (Relative Strength Index) Calculation"
+      },
+      "description": {
+        "zh": "计算 14 日 RSI 指标。步骤：计算价格变动 delta，分离涨幅 gain 和跌幅 loss，分别取 14 日滚动均值，计算 RS = avg_gain / avg_loss，最终 RSI = 100 - 100/(1+RS)。将结果赋给 rsi。",
+        "en": "Compute the 14-day RSI. Steps: calculate price change delta, separate gains and losses, take 14-day rolling means, compute RS = avg_gain / avg_loss, then RSI = 100 - 100/(1+RS). Assign the result to rsi."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=252, freq='B')\nclose = pd.Series(100 + np.cumsum(np.random.randn(252) * 0.8), index=dates, name='close')",
+      "starterCode": "# Step 1: Price changes\ndelta = close.diff()\n\n# Step 2: Separate gains and losses\ngain = delta.clip(lower=___)\nloss = (-delta).clip(lower=___)\n\n# Step 3: Rolling average gain and loss (14-day)\navg_gain = gain.rolling(___).mean()\navg_loss = loss.rolling(___).mean()\n\n# Step 4: RS and RSI\nrs = avg_gain / avg_loss\nrsi = 100 - 100 / (1 + rs)",
+      "solutionCode": "delta = close.diff()\ngain = delta.clip(lower=0)\nloss = (-delta).clip(lower=0)\navg_gain = gain.rolling(14).mean()\navg_loss = loss.rolling(14).mean()\nrs = avg_gain / avg_loss\nrsi = 100 - 100 / (1 + rs)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=252, freq=\\'B\\')\\nclose = pd.Series(100 + np.cumsum(np.random.randn(252) * 0.8), index=dates, name=\\'close\\')\\ndelta = close.diff()\\ngain = delta.clip(lower=0)\\nloss = (-delta).clip(lower=0)\\navg_gain = gain.rolling(14).mean()\\navg_loss = loss.rolling(14).mean()\\nrs = avg_gain / avg_loss\\nrsi = 100 - 100 / (1 + rs)', _ns)\ntry:\n    result = np.allclose(rsi.dropna().values, _ns['rsi'].dropna().values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "clip(lower=0) 将负值截断为 0，只保留正值部分",
+          "涨幅 = max(delta, 0)，跌幅 = max(-delta, 0)"
+        ],
+        "en": [
+          "clip(lower=0) truncates negative values to 0, keeping only positive parts",
+          "Gain = max(delta, 0), Loss = max(-delta, 0)"
+        ]
+      },
+      "explanation": {
+        "zh": "RSI 是最常用的振荡指标之一，范围 0-100。计算流程：diff() 获取每日涨跌；clip(lower=0) 分离涨幅和跌幅；rolling(14).mean() 计算平均涨/跌幅；RS = 平均涨幅/平均跌幅；RSI = 100 - 100/(1+RS)。RSI > 70 通常被视为超买，< 30 为超卖。",
+        "en": "RSI is one of the most widely used oscillator indicators, ranging 0-100. Workflow: diff() gets daily changes; clip(lower=0) separates gains and losses; rolling(14).mean() computes average gain/loss; RS = avg_gain/avg_loss; RSI = 100 - 100/(1+RS). RSI > 70 is typically considered overbought, < 30 oversold."
+      }
+    },
+    {
+      "id": "s6-tech-005",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "RSI 超买超卖含义",
+        "en": "RSI Overbought/Oversold Meaning"
+      },
+      "description": {
+        "zh": "当 RSI 指标值超过 70 时，通常表示什么市场状态？",
+        "en": "When the RSI indicator value exceeds 70, what market condition does it typically indicate?"
+      },
+      "options": {
+        "zh": [
+          "超买 (overbought)，价格可能即将回落",
+          "超卖 (oversold)，价格可能即将反弹",
+          "趋势确认，价格将继续上涨",
+          "市场中性，无明确信号"
+        ],
+        "en": [
+          "Overbought -- price may be due for a pullback",
+          "Oversold -- price may be due for a bounce",
+          "Trend confirmation -- price will continue rising",
+          "Market neutral -- no clear signal"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "RSI > 70 意味着近期涨幅显著大于跌幅"
+        ],
+        "en": [
+          "RSI > 70 means recent gains significantly outweigh losses"
+        ]
+      },
+      "explanation": {
+        "zh": "RSI > 70 表示超买状态：近期涨幅远大于跌幅，价格可能已经上涨过快，存在回调风险。RSI < 30 则表示超卖：近期跌幅过大，可能即将反弹。但需注意，在强趋势市场中，RSI 可以长时间保持在超买或超卖区域。",
+        "en": "RSI > 70 indicates overbought conditions: recent gains far exceed losses, suggesting the price may have risen too quickly and is at risk of a pullback. RSI < 30 indicates oversold: excessive recent declines may lead to a bounce. Note that in strong trends, RSI can remain in overbought or oversold territory for extended periods."
+      }
+    },
+    {
+      "id": "s6-tech-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "布林带 (Bollinger Bands)",
+        "en": "Bollinger Bands"
+      },
+      "description": {
+        "zh": "计算 20 日布林带：中轨 (middle) = 20日SMA，上轨 (upper) = 中轨 + 2*20日标准差，下轨 (lower) = 中轨 - 2*20日标准差。",
+        "en": "Compute 20-day Bollinger Bands: middle band = 20-day SMA, upper band = middle + 2 * 20-day std, lower band = middle - 2 * 20-day std."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=252, freq='B')\ndf = pd.DataFrame({'close': 100 + np.cumsum(np.random.randn(252) * 0.8)}, index=dates)",
+      "starterCode": "# Middle band: 20-day SMA\nmiddle = df['close'].rolling(___).mean()\n\n# Standard deviation\nstd = df['close'].rolling(___).std()\n\n# Upper and lower bands\nupper = middle + ___ * std\nlower = middle - ___ * std",
+      "solutionCode": "middle = df['close'].rolling(20).mean()\nstd = df['close'].rolling(20).std()\nupper = middle + 2 * std\nlower = middle - 2 * std",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=252, freq=\\'B\\')\\ndf = pd.DataFrame({\"close\": 100 + np.cumsum(np.random.randn(252) * 0.8)}, index=dates)\\nmiddle = df[\\'close\\'].rolling(20).mean()\\nstd = df[\\'close\\'].rolling(20).std()\\nupper = middle + 2 * std\\nlower = middle - 2 * std', _ns)\ntry:\n    result = np.allclose(middle.dropna().values, _ns['middle'].dropna().values) and np.allclose(upper.dropna().values, _ns['upper'].dropna().values) and np.allclose(lower.dropna().values, _ns['lower'].dropna().values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "rolling(20).mean() 计算 20 日均值，rolling(20).std() 计算 20 日标准差",
+          "上下轨距离中轨各 2 个标准差"
+        ],
+        "en": [
+          "rolling(20).mean() for 20-day average, rolling(20).std() for 20-day standard deviation",
+          "Upper and lower bands are 2 standard deviations from the middle band"
+        ]
+      },
+      "explanation": {
+        "zh": "布林带由三条线组成：中轨是 20 日 SMA，上下轨分别距中轨 2 个标准差。价格在上下轨之间波动。触及上轨可能表示超买，触及下轨可能表示超卖。布林带会随波动率自动扩张和收缩，这是它相比固定百分比通道的优势。",
+        "en": "Bollinger Bands consist of three lines: the middle band is a 20-day SMA, and the upper/lower bands are 2 standard deviations away. Prices fluctuate between the bands. Touching the upper band may indicate overbought conditions, and the lower band oversold. Bollinger Bands automatically expand and contract with volatility, which is their advantage over fixed-percentage channels."
+      }
+    },
+    {
+      "id": "s6-tech-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "MACD 指标计算",
+        "en": "MACD Indicator Calculation"
+      },
+      "description": {
+        "zh": "计算 MACD 指标：MACD 线 = EMA12 - EMA26，信号线 (signal) = MACD 的 9 日 EMA，柱状图 (histogram) = MACD - signal。",
+        "en": "Compute the MACD indicator: MACD line = EMA12 - EMA26, signal line = 9-day EMA of MACD, histogram = MACD - signal."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=252, freq='B')\ndf = pd.DataFrame({'close': 100 + np.cumsum(np.random.randn(252) * 0.8)}, index=dates)",
+      "starterCode": "# EMA12 and EMA26\nema12 = df['close'].ewm(span=___).mean()\nema26 = df['close'].ewm(span=___).mean()\n\n# MACD line\nmacd = ema12 - ema26\n\n# Signal line: 9-day EMA of MACD\nsignal = macd.ewm(span=___).mean()\n\n# Histogram\nhistogram = macd - signal",
+      "solutionCode": "ema12 = df['close'].ewm(span=12).mean()\nema26 = df['close'].ewm(span=26).mean()\nmacd = ema12 - ema26\nsignal = macd.ewm(span=9).mean()\nhistogram = macd - signal",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=252, freq=\\'B\\')\\ndf = pd.DataFrame({\"close\": 100 + np.cumsum(np.random.randn(252) * 0.8)}, index=dates)\\nema12 = df[\\'close\\'].ewm(span=12).mean()\\nema26 = df[\\'close\\'].ewm(span=26).mean()\\nmacd = ema12 - ema26\\nsignal = macd.ewm(span=9).mean()\\nhistogram = macd - signal', _ns)\ntry:\n    result = np.allclose(macd.dropna().values, _ns['macd'].dropna().values) and np.allclose(signal.dropna().values, _ns['signal'].dropna().values) and np.allclose(histogram.dropna().values, _ns['histogram'].dropna().values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "MACD 使用 12 日和 26 日 EMA 的差值",
+          "信号线是 MACD 线自身的 9 日 EMA"
+        ],
+        "en": [
+          "MACD uses the difference between 12-day and 26-day EMAs",
+          "The signal line is the 9-day EMA of the MACD line itself"
+        ]
+      },
+      "explanation": {
+        "zh": "MACD (Moving Average Convergence Divergence) 是最受欢迎的趋势跟踪+动量指标。MACD 线 = EMA12 - EMA26 衡量短期和长期趋势的差异；信号线是 MACD 的 9 日平滑；柱状图显示 MACD 与信号线的差距。MACD 上穿信号线为买入信号，下穿为卖出信号。",
+        "en": "MACD (Moving Average Convergence Divergence) is one of the most popular trend-following + momentum indicators. MACD line = EMA12 - EMA26 measures the difference between short and long-term trends; the signal line is a 9-day smoothing of MACD; the histogram shows the gap between MACD and signal. MACD crossing above the signal line is a buy signal, crossing below is a sell signal."
+      }
+    },
+    {
+      "id": "s6-tech-008",
+      "type": "true-false",
+      "difficulty": 4,
+      "title": {
+        "zh": "EMA 比 SMA 对近期价格更敏感",
+        "en": "EMA Reacts Faster to Recent Prices than SMA"
+      },
+      "description": {
+        "zh": "在相同周期参数下，指数移动平均线 (EMA) 比简单移动平均线 (SMA) 对最近的价格变化反应更快。",
+        "en": "With the same period parameter, the Exponential Moving Average (EMA) reacts faster to recent price changes than the Simple Moving Average (SMA)."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": [
+          "思考两者的权重分配方式：SMA 等权，EMA 指数衰减"
+        ],
+        "en": [
+          "Think about how weights are distributed: SMA uses equal weights, EMA uses exponential decay"
+        ]
+      },
+      "explanation": {
+        "zh": "SMA 对窗口内所有数据点赋予相等权重，而 EMA 对近期数据赋予更大权重（指数衰减）。因此当价格突然变化时，EMA 会比 SMA 更快地反映这一变化。这使得 EMA 在趋势反转时更灵敏，但也可能产生更多假信号。",
+        "en": "SMA assigns equal weight to all data points in the window, while EMA gives more weight to recent data (exponential decay). Therefore, when prices change suddenly, EMA reflects this change faster than SMA. This makes EMA more sensitive to trend reversals, but may also generate more false signals."
+      }
+    },
+    {
+      "id": "s6-tech-009",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "SMA 交叉买卖信号生成",
+        "en": "Generate Buy/Sell Signals from SMA Crossover"
+      },
+      "description": {
+        "zh": "使用 10 日和 50 日 SMA 生成交易信号：金叉(短上穿长)标记为 1（买入），死叉(短下穿长)标记为 -1（卖出）。将信号 Series 赋给 signals。",
+        "en": "Generate trading signals using 10-day and 50-day SMA: golden cross (short crosses above long) marked as 1 (buy), death cross (short crosses below long) marked as -1 (sell). Assign the signal Series to signals."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=252, freq='B')\nclose = pd.Series(100 + np.cumsum(np.random.randn(252) * 0.8), index=dates)",
+      "starterCode": "sma10 = close.rolling(10).mean()\nsma50 = close.rolling(50).mean()\n\n# Position: 1 when short > long, 0 otherwise\nposition = (sma10 > sma50).astype(int)\n\n# Signals: difference in position gives buy(1) and sell(-1)\nsignals = position.___()",
+      "solutionCode": "sma10 = close.rolling(10).mean()\nsma50 = close.rolling(50).mean()\nposition = (sma10 > sma50).astype(int)\nsignals = position.diff()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=252, freq=\\'B\\')\\nclose = pd.Series(100 + np.cumsum(np.random.randn(252) * 0.8), index=dates)\\nsma10 = close.rolling(10).mean()\\nsma50 = close.rolling(50).mean()\\nposition = (sma10 > sma50).astype(int)\\nsignals = position.diff()', _ns)\ntry:\n    result = signals.dropna().equals(_ns['signals'].dropna())\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "position 从 0 变到 1 表示金叉（买入信号），从 1 变到 0 表示死叉（卖出信号）",
+          "diff() 可以捕捉 position 的变化点"
+        ],
+        "en": [
+          "position changing from 0 to 1 indicates golden cross (buy), from 1 to 0 indicates death cross (sell)",
+          "diff() captures the change points in position"
+        ]
+      },
+      "explanation": {
+        "zh": "交叉信号生成的核心思路：先用布尔条件 (sma10 > sma50) 判断当前持仓方向（1=多头，0=空仓），再用 diff() 捕捉变化点。diff() 结果为 1 时表示从空仓变为多头（买入），为 -1 时表示从多头变为空仓（卖出），为 0 或 NaN 时无信号。这是向量化回测的基本模式。",
+        "en": "The core idea for crossover signal generation: use boolean condition (sma10 > sma50) to determine current position direction (1=long, 0=flat), then use diff() to capture change points. diff() = 1 means switching from flat to long (buy), -1 means long to flat (sell), 0 or NaN means no signal. This is the fundamental pattern for vectorized backtesting."
+      }
+    },
+    {
+      "id": "s6-tech-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "ATR 平均真实波幅计算",
+        "en": "ATR (Average True Range) Calculation"
+      },
+      "description": {
+        "zh": "计算 14 日 ATR。真实波幅 (TR) = max(High-Low, |High-PrevClose|, |Low-PrevClose|)，ATR = TR 的 14 日滚动均值。将结果赋给 atr。",
+        "en": "Compute the 14-day ATR. True Range (TR) = max(High-Low, |High-PrevClose|, |Low-PrevClose|), ATR = 14-day rolling mean of TR. Assign the result to atr."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=252, freq='B')\nclose = 100 + np.cumsum(np.random.randn(252) * 0.8)\ndf = pd.DataFrame({\n    'high': close + np.abs(np.random.randn(252) * 0.5),\n    'low': close - np.abs(np.random.randn(252) * 0.5),\n    'close': close\n}, index=dates)",
+      "starterCode": "prev_close = df['close'].shift(1)\n\n# True Range: max of three components\ntr1 = df['high'] - df['low']\ntr2 = (df['high'] - prev_close).abs()\ntr3 = (df['low'] - prev_close).abs()\n\n# Combine using DataFrame max\ntr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=___)\n\n# ATR: 14-day rolling mean of TR\natr = tr.rolling(___).mean()",
+      "solutionCode": "prev_close = df['close'].shift(1)\ntr1 = df['high'] - df['low']\ntr2 = (df['high'] - prev_close).abs()\ntr3 = (df['low'] - prev_close).abs()\ntr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)\natr = tr.rolling(14).mean()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=252, freq=\\'B\\')\\nclose = 100 + np.cumsum(np.random.randn(252) * 0.8)\\ndf = pd.DataFrame({\"high\": close + np.abs(np.random.randn(252) * 0.5), \"low\": close - np.abs(np.random.randn(252) * 0.5), \"close\": close}, index=dates)\\nprev_close = df[\\'close\\'].shift(1)\\ntr1 = df[\\'high\\'] - df[\\'low\\']\\ntr2 = (df[\\'high\\'] - prev_close).abs()\\ntr3 = (df[\\'low\\'] - prev_close).abs()\\ntr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)\\natr = tr.rolling(14).mean()', _ns)\ntry:\n    result = np.allclose(atr.dropna().values, _ns['atr'].dropna().values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "max(axis=1) 在行方向取最大值（比较三个 TR 分量）",
+          "shift(1) 获取前一日收盘价"
+        ],
+        "en": [
+          "max(axis=1) takes the maximum across columns (comparing three TR components)",
+          "shift(1) gets the previous day closing price"
+        ]
+      },
+      "explanation": {
+        "zh": "ATR (Average True Range) 衡量市场波动性。真实波幅考虑三种情况：当日振幅 (High-Low)、跳空高开 (|High-PrevClose|)、跳空低开 (|Low-PrevClose|)，取最大值。ATR 常用于设置止损位和评估市场波动水平。ATR 越大表示市场波动越剧烈。",
+        "en": "ATR (Average True Range) measures market volatility. True Range considers three scenarios: intraday range (High-Low), gap up (|High-PrevClose|), gap down (|Low-PrevClose|), taking the maximum. ATR is commonly used for setting stop-loss levels and assessing market volatility. Higher ATR indicates more volatile markets."
+      }
+    },
+    {
+      "id": "s6-tech-011",
+      "type": "output-matching",
+      "difficulty": 4,
+      "title": {
+        "zh": "识别均线交叉类型",
+        "en": "Identify MA Crossover Type"
+      },
+      "description": {
+        "zh": "某股票前一天 SMA10=50.2, SMA50=50.8，今天 SMA10=51.0, SMA50=50.9。以下代码判断交叉类型，输出什么？",
+        "en": "A stock had SMA10=50.2, SMA50=50.8 yesterday and SMA10=51.0, SMA50=50.9 today. What does the following code output for the crossover type?"
+      },
+      "code": "prev_short, prev_long = 50.2, 50.8\ncurr_short, curr_long = 51.0, 50.9\nif curr_short > curr_long and prev_short <= prev_long:\n    print('Golden Cross')\nelif curr_short < curr_long and prev_short >= prev_long:\n    print('Death Cross')\nelse:\n    print('No Crossover')",
+      "options": {
+        "zh": [
+          "Golden Cross",
+          "Death Cross",
+          "No Crossover",
+          "Error"
+        ],
+        "en": [
+          "Golden Cross",
+          "Death Cross",
+          "No Crossover",
+          "Error"
+        ]
+      },
+      "correctIndex": 0,
+      "explanation": {
+        "zh": "前一天 SMA10(50.2) < SMA50(50.8)，今天 SMA10(51.0) > SMA50(50.9)。短期均线从下方穿越到上方，满足金叉条件：curr_short > curr_long 且 prev_short <= prev_long。所以输出 'Golden Cross'。",
+        "en": "Yesterday SMA10(50.2) < SMA50(50.8), today SMA10(51.0) > SMA50(50.9). The short-term MA crossed from below to above, satisfying the golden cross condition: curr_short > curr_long AND prev_short <= prev_long. Output is 'Golden Cross'."
+      }
+    },
+    {
+      "id": "s6-tech-012",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 未排序日期索引上的 rolling 计算错误",
+        "en": "[Debug] Rolling on Unsorted Datetime Index"
+      },
+      "description": {
+        "zh": "以下代码在日期未排序的数据上计算 SMA，导致结果不正确。请修复代码，先排序再计算。将修复后的 SMA 赋给 sma20。",
+        "en": "The following code computes SMA on data with an unsorted datetime index, producing incorrect results. Fix the code by sorting first. Assign the corrected SMA to sma20."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=252, freq='B')\nclose = pd.Series(100 + np.cumsum(np.random.randn(252) * 0.8), index=dates)\nclose = close.sample(frac=1)",
+      "starterCode": "# BUG: datetime index is shuffled, rolling computes over non-consecutive days\n# sma20 = close.rolling(20).mean()\n\n# FIX: sort by index first\nsma20 = close.___().rolling(20).mean()",
+      "solutionCode": "sma20 = close.sort_index().rolling(20).mean()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=252, freq=\\'B\\')\\nclose = pd.Series(100 + np.cumsum(np.random.randn(252) * 0.8), index=dates)\\nclose = close.sample(frac=1)\\nsma20 = close.sort_index().rolling(20).mean()', _ns)\ntry:\n    result = sma20.equals(_ns['sma20'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "rolling() 按照 Series 的位置顺序滑动窗口",
+          "如果日期乱序，窗口内的数据点不是连续的交易日"
+        ],
+        "en": [
+          "rolling() slides the window by positional order of the Series",
+          "If dates are shuffled, data points within the window are not consecutive trading days"
+        ]
+      },
+      "explanation": {
+        "zh": "rolling() 按 Series 的物理位置滑动窗口，不会检查索引的时间顺序。如果日期索引未排序，窗口内可能混合了不同时间段的数据，导致 SMA 失去意义。sort_index() 确保数据按时间升序排列后再计算。这是金融数据处理中常见的陷阱，数据来源可能是乱序的。",
+        "en": "rolling() slides the window by physical position, ignoring index chronology. If the datetime index is unsorted, the window may mix data from different time periods, making the SMA meaningless. sort_index() ensures data is in ascending chronological order before computation. This is a common pitfall in financial data processing where data sources may be unordered."
+      }
+    },
+    {
+      "id": "s6-tech-013",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 技术分析仪表板：价格+MA+BB、RSI、MACD",
+        "en": "[Challenge] Technical Dashboard: Price+MA+BB, RSI, MACD"
+      },
+      "description": {
+        "zh": "为一只股票构建完整的技术分析数据集：(1) SMA20、EMA20 和布林带 (bb_upper, bb_lower)；(2) 14日 RSI (rsi)；(3) MACD 线 (macd)、信号线 (macd_signal)、柱状图 (macd_hist)。将所有指标合并到一个 DataFrame (dashboard) 中。",
+        "en": "Build a complete technical analysis dataset for a stock: (1) SMA20, EMA20, and Bollinger Bands (bb_upper, bb_lower); (2) 14-day RSI (rsi); (3) MACD line (macd), signal line (macd_signal), histogram (macd_hist). Combine all indicators into a single DataFrame (dashboard)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=252, freq='B')\ndf = pd.DataFrame({'close': 100 + np.cumsum(np.random.randn(252) * 0.8)}, index=dates)",
+      "starterCode": "close = df['close']\n\n# Panel 1: Price overlays\nsma20 = close.rolling(20).mean()\nema20 = close.ewm(span=20).mean()\nbb_std = close.rolling(20).std()\nbb_upper = sma20 + 2 * bb_std\nbb_lower = sma20 - 2 * bb_std\n\n# Panel 2: RSI\ndelta = close.diff()\ngain = delta.clip(lower=0)\nloss = (-delta).clip(lower=0)\navg_gain = gain.rolling(___).mean()\navg_loss = loss.rolling(___).mean()\nrs = avg_gain / avg_loss\nrsi = 100 - 100 / (1 + rs)\n\n# Panel 3: MACD\nema12 = close.ewm(span=___).mean()\nema26 = close.ewm(span=___).mean()\nmacd = ema12 - ema26\nmacd_signal = macd.ewm(span=___).mean()\nmacd_hist = macd - macd_signal\n\n# Combine all into dashboard\ndashboard = pd.DataFrame({\n    'close': close,\n    'sma20': sma20,\n    'ema20': ema20,\n    'bb_upper': bb_upper,\n    'bb_lower': bb_lower,\n    'rsi': rsi,\n    'macd': macd,\n    'macd_signal': macd_signal,\n    'macd_hist': macd_hist\n})",
+      "solutionCode": "close = df['close']\nsma20 = close.rolling(20).mean()\nema20 = close.ewm(span=20).mean()\nbb_std = close.rolling(20).std()\nbb_upper = sma20 + 2 * bb_std\nbb_lower = sma20 - 2 * bb_std\ndelta = close.diff()\ngain = delta.clip(lower=0)\nloss = (-delta).clip(lower=0)\navg_gain = gain.rolling(14).mean()\navg_loss = loss.rolling(14).mean()\nrs = avg_gain / avg_loss\nrsi = 100 - 100 / (1 + rs)\nema12 = close.ewm(span=12).mean()\nema26 = close.ewm(span=26).mean()\nmacd = ema12 - ema26\nmacd_signal = macd.ewm(span=9).mean()\nmacd_hist = macd - macd_signal\ndashboard = pd.DataFrame({\n    'close': close,\n    'sma20': sma20,\n    'ema20': ema20,\n    'bb_upper': bb_upper,\n    'bb_lower': bb_lower,\n    'rsi': rsi,\n    'macd': macd,\n    'macd_signal': macd_signal,\n    'macd_hist': macd_hist\n})",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=252, freq=\\'B\\')\\ndf = pd.DataFrame({\"close\": 100 + np.cumsum(np.random.randn(252) * 0.8)}, index=dates)\\nclose = df[\\'close\\']\\nsma20 = close.rolling(20).mean()\\nema20 = close.ewm(span=20).mean()\\nbb_std = close.rolling(20).std()\\nbb_upper = sma20 + 2 * bb_std\\nbb_lower = sma20 - 2 * bb_std\\ndelta = close.diff()\\ngain = delta.clip(lower=0)\\nloss = (-delta).clip(lower=0)\\navg_gain = gain.rolling(14).mean()\\navg_loss = loss.rolling(14).mean()\\nrs = avg_gain / avg_loss\\nrsi = 100 - 100 / (1 + rs)\\nema12 = close.ewm(span=12).mean()\\nema26 = close.ewm(span=26).mean()\\nmacd = ema12 - ema26\\nmacd_signal = macd.ewm(span=9).mean()\\nmacd_hist = macd - macd_signal\\ndashboard = pd.DataFrame({\"close\": close, \"sma20\": sma20, \"ema20\": ema20, \"bb_upper\": bb_upper, \"bb_lower\": bb_lower, \"rsi\": rsi, \"macd\": macd, \"macd_signal\": macd_signal, \"macd_hist\": macd_hist})', _ns)\ntry:\n    result = list(dashboard.columns) == list(_ns['dashboard'].columns) and np.allclose(dashboard.dropna().values, _ns['dashboard'].dropna().values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "RSI 使用 14 日窗口，MACD 使用 EMA12、EMA26 和 9 日信号线",
+          "所有指标最终合并到一个 DataFrame 中，方便后续绘图",
+          "布林带标准差也用 20 日 rolling"
+        ],
+        "en": [
+          "RSI uses a 14-day window; MACD uses EMA12, EMA26, and a 9-day signal line",
+          "All indicators are combined into one DataFrame for convenient plotting",
+          "Bollinger Band std also uses 20-day rolling"
+        ]
+      },
+      "explanation": {
+        "zh": "本综合练习将三大类技术指标整合到一个 DataFrame 中：(1) 趋势指标：SMA20、EMA20 及布林带显示价格趋势和波动通道；(2) 动量指标：RSI 衡量超买超卖状态；(3) 趋势+动量指标：MACD 同时反映趋势方向和动量变化。在实际交易中，这三类指标通常在三个子图中展示，形成完整的技术分析仪表板。",
+        "en": "This challenge integrates three categories of technical indicators into one DataFrame: (1) Trend indicators: SMA20, EMA20, and Bollinger Bands show price trends and volatility channels; (2) Momentum indicator: RSI measures overbought/oversold conditions; (3) Trend + momentum: MACD reflects both trend direction and momentum changes. In practice, these three categories are typically displayed in three sub-panels, forming a complete technical analysis dashboard."
+      }
+    }
+  ]
+}

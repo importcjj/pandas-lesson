@@ -1,1 +1,414 @@
-{"module":"portfolio","stageId":"stage6","lessonId":"portfolio","tags":[],"exercises":[]}
+{
+  "module": "portfolio",
+  "stageId": "stage6",
+  "lessonId": "portfolio",
+  "tags": [
+    "portfolio",
+    "optimization",
+    "efficient-frontier",
+    "sharpe",
+    "weights"
+  ],
+  "exercises": [
+    {
+      "id": "s6-port-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "等权组合收益率",
+        "en": "Equal-Weight Portfolio Return"
+      },
+      "description": {
+        "zh": "给定 4 只股票的日收益率 DataFrame，计算等权组合的每日收益率 (port_returns)。等权即每只股票权重相同，为 1/N。",
+        "en": "Given a DataFrame of daily returns for 4 stocks, compute the equal-weight portfolio's daily returns (port_returns). Equal weight means each stock has weight 1/N."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=['AAPL', 'GOOG', 'MSFT', 'AMZN'])",
+      "starterCode": "# Equal weights for 4 stocks\nweights = np.array([1/4, 1/4, 1/4, 1/4])\n\n# Portfolio daily returns = weighted sum of individual returns\nport_returns = returns.___(___, axis=___)",
+      "solutionCode": "weights = np.array([1/4, 1/4, 1/4, 1/4])\nport_returns = returns.dot(weights)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=[\"AAPL\", \"GOOG\", \"MSFT\", \"AMZN\"])\\nweights = np.array([1/4, 1/4, 1/4, 1/4])\\nport_returns = returns.dot(weights)', _ns)\ntry:\n    result = np.allclose(port_returns.values, _ns['port_returns'].values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "DataFrame.dot(weights) 对每行计算加权求和",
+          "等权组合收益也可以用 returns.mean(axis=1) 计算"
+        ],
+        "en": [
+          "DataFrame.dot(weights) computes the weighted sum for each row",
+          "Equal-weight portfolio return can also be computed via returns.mean(axis=1)"
+        ]
+      },
+      "explanation": {
+        "zh": "等权组合是最简单的投资组合构建方式。returns.dot(weights) 对每行（每天）计算加权求和：r_p = w1*r1 + w2*r2 + w3*r3 + w4*r4。当所有权重相同时，等价于 returns.mean(axis=1)。等权组合是评估更复杂策略的基准。",
+        "en": "Equal-weight portfolio is the simplest portfolio construction method. returns.dot(weights) computes the weighted sum for each row (day): r_p = w1*r1 + w2*r2 + w3*r3 + w4*r4. When all weights are equal, this is equivalent to returns.mean(axis=1). Equal-weight serves as a benchmark for more complex strategies."
+      }
+    },
+    {
+      "id": "s6-port-002",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "分散化降低的风险类型",
+        "en": "What Risk Does Diversification Reduce"
+      },
+      "description": {
+        "zh": "投资组合分散化主要能够降低以下哪种风险？",
+        "en": "Portfolio diversification primarily reduces which type of risk?"
+      },
+      "options": {
+        "zh": [
+          "非系统性风险（个股特异风险）",
+          "系统性风险（市场风险）",
+          "流动性风险",
+          "通货膨胀风险"
+        ],
+        "en": [
+          "Unsystematic risk (idiosyncratic risk)",
+          "Systematic risk (market risk)",
+          "Liquidity risk",
+          "Inflation risk"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "想想当持有很多不同股票时，哪种风险会被「平均掉」"
+        ],
+        "en": [
+          "Think about which risk gets 'averaged out' when holding many different stocks"
+        ]
+      },
+      "explanation": {
+        "zh": "分散化可以降低非系统性风险（也叫特异风险或可分散风险），即个别公司特有的风险。当持有足够多不相关的资产时，个股的涨跌会相互抵消。但系统性风险（如整体市场下跌、利率变动）无法通过分散化消除，因为它影响所有资产。",
+        "en": "Diversification reduces unsystematic risk (also called idiosyncratic or diversifiable risk), which is specific to individual companies. When holding enough uncorrelated assets, individual stock movements cancel out. However, systematic risk (e.g., market-wide declines, interest rate changes) cannot be eliminated through diversification, as it affects all assets."
+      }
+    },
+    {
+      "id": "s6-port-003",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "组合方差：协方差矩阵与权重",
+        "en": "Portfolio Variance from Covariance Matrix and Weights"
+      },
+      "description": {
+        "zh": "使用协方差矩阵 (cov_matrix) 和权重向量 (weights) 计算组合的年化方差 (port_var) 和年化波动率 (port_vol)。公式：方差 = w^T * Cov * w。",
+        "en": "Compute the portfolio's annualized variance (port_var) and annualized volatility (port_vol) using the covariance matrix (cov_matrix) and weight vector (weights). Formula: variance = w^T * Cov * w."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=['AAPL', 'GOOG', 'MSFT', 'AMZN'])\ncov_matrix = returns.cov() * 252\nweights = np.array([0.25, 0.25, 0.25, 0.25])",
+      "starterCode": "# Portfolio variance: w^T @ Cov @ w\nport_var = np.dot(weights.T, np.dot(___, ___))\n\n# Portfolio volatility (standard deviation)\nport_vol = np.___(port_var)",
+      "solutionCode": "port_var = np.dot(weights.T, np.dot(cov_matrix, weights))\nport_vol = np.sqrt(port_var)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=[\"AAPL\", \"GOOG\", \"MSFT\", \"AMZN\"])\\ncov_matrix = returns.cov() * 252\\nweights = np.array([0.25, 0.25, 0.25, 0.25])\\nport_var = np.dot(weights.T, np.dot(cov_matrix, weights))\\nport_vol = np.sqrt(port_var)', _ns)\ntry:\n    result = np.isclose(port_var, _ns['port_var']) and np.isclose(port_vol, _ns['port_vol'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "组合方差 = w^T @ Sigma @ w，可用 np.dot 嵌套实现",
+          "波动率 = 方差的平方根"
+        ],
+        "en": [
+          "Portfolio variance = w^T @ Sigma @ w, achievable with nested np.dot",
+          "Volatility = square root of variance"
+        ]
+      },
+      "explanation": {
+        "zh": "组合方差的矩阵公式 w^T * Sigma * w 考虑了所有资产之间的协方差关系。如果资产之间的相关性低于 1，组合波动率将小于各资产波动率的加权平均——这就是分散化的数学基础。协方差矩阵乘以 252 将日度协方差年化。",
+        "en": "The matrix formula w^T * Sigma * w for portfolio variance accounts for all pairwise covariances. If assets have correlations below 1, portfolio volatility will be less than the weighted average of individual volatilities — this is the mathematical basis of diversification. Multiplying the covariance matrix by 252 annualizes daily covariances."
+      }
+    },
+    {
+      "id": "s6-port-004",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "组合夏普比率",
+        "en": "Portfolio Sharpe Ratio"
+      },
+      "description": {
+        "zh": "计算组合的年化收益率 (port_return)、年化波动率 (port_vol)，以及夏普比率 (sharpe)。假设无风险利率 rf = 0.02。",
+        "en": "Compute the portfolio's annualized return (port_return), annualized volatility (port_vol), and Sharpe ratio (sharpe). Assume risk-free rate rf = 0.02."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=['AAPL', 'GOOG', 'MSFT', 'AMZN'])\nweights = np.array([0.4, 0.3, 0.2, 0.1])\nmean_returns = returns.mean() * 252\ncov_matrix = returns.cov() * 252\nrf = 0.02",
+      "starterCode": "# Annualized portfolio return\nport_return = np.dot(___, mean_returns)\n\n# Annualized portfolio volatility\nport_vol = np.sqrt(np.dot(weights.T, np.dot(cov_matrix, weights)))\n\n# Sharpe ratio = (return - risk_free) / volatility\nsharpe = (___ - ___) / ___",
+      "solutionCode": "port_return = np.dot(weights, mean_returns)\nport_vol = np.sqrt(np.dot(weights.T, np.dot(cov_matrix, weights)))\nsharpe = (port_return - rf) / port_vol",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=[\"AAPL\", \"GOOG\", \"MSFT\", \"AMZN\"])\\nweights = np.array([0.4, 0.3, 0.2, 0.1])\\nmean_returns = returns.mean() * 252\\ncov_matrix = returns.cov() * 252\\nrf = 0.02\\nport_return = np.dot(weights, mean_returns)\\nport_vol = np.sqrt(np.dot(weights.T, np.dot(cov_matrix, weights)))\\nsharpe = (port_return - rf) / port_vol', _ns)\ntry:\n    result = np.isclose(sharpe, _ns['sharpe'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "np.dot(weights, mean_returns) 计算加权平均收益率",
+          "夏普比率 = (组合收益 - 无风险利率) / 组合波动率"
+        ],
+        "en": [
+          "np.dot(weights, mean_returns) computes the weighted average return",
+          "Sharpe ratio = (portfolio return - risk-free rate) / portfolio volatility"
+        ]
+      },
+      "explanation": {
+        "zh": "夏普比率衡量每承担一单位风险（波动率）所获得的超额收益。公式：(Rp - Rf) / sigma_p。夏普比率越高，风险调整后的表现越好。通常夏普 > 1 被认为较好，> 2 为优秀。它是比较不同组合和策略的标准指标。",
+        "en": "The Sharpe ratio measures excess return per unit of risk (volatility). Formula: (Rp - Rf) / sigma_p. A higher Sharpe indicates better risk-adjusted performance. Generally, Sharpe > 1 is considered good, > 2 is excellent. It is the standard metric for comparing portfolios and strategies."
+      }
+    },
+    {
+      "id": "s6-port-005",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "组合收益率的向量点乘",
+        "en": "Portfolio Return via Dot Product"
+      },
+      "description": {
+        "zh": "使用 NumPy 的向量点乘方法计算组合收益率。",
+        "en": "Compute the portfolio return using NumPy's vector dot product method."
+      },
+      "codeTemplate": "import numpy as np\nnp.random.seed(42)\nweights = np.array([0.3, 0.3, 0.2, 0.2])\nreturns = np.array([0.12, 0.08, 0.15, 0.05])\nport_return = np.___1___(weights, returns)",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "dot",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "需要一个计算两个向量内积的 NumPy 函数"
+        ],
+        "en": [
+          "You need a NumPy function that computes the inner product of two vectors"
+        ]
+      },
+      "explanation": {
+        "zh": "np.dot(weights, returns) 计算权重向量和收益向量的点积：0.3*0.12 + 0.3*0.08 + 0.2*0.15 + 0.2*0.05 = 0.10。这是计算组合收益率最简洁的方式。也可以使用 @ 运算符：weights @ returns。",
+        "en": "np.dot(weights, returns) computes the dot product of weight and return vectors: 0.3*0.12 + 0.3*0.08 + 0.2*0.15 + 0.2*0.05 = 0.10. This is the most concise way to compute portfolio return. You can also use the @ operator: weights @ returns."
+      }
+    },
+    {
+      "id": "s6-port-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "蒙特卡洛模拟：5000 组随机权重",
+        "en": "Monte Carlo: Simulate 5000 Random Weight Combinations"
+      },
+      "description": {
+        "zh": "通过蒙特卡洛模拟生成 5000 组随机权重组合，计算每组的年化收益率、年化波动率和夏普比率。将结果存入 DataFrame results，列名为 'return', 'volatility', 'sharpe'。",
+        "en": "Use Monte Carlo simulation to generate 5000 random weight combinations. Compute annualized return, volatility, and Sharpe for each. Store results in a DataFrame named results with columns 'return', 'volatility', 'sharpe'."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=['AAPL', 'GOOG', 'MSFT', 'AMZN'])\nmean_returns = returns.mean() * 252\ncov_matrix = returns.cov() * 252\nrf = 0.02\nnum_portfolios = 5000",
+      "starterCode": "all_returns = []\nall_vols = []\nall_sharpes = []\nall_weights = []\n\nfor i in range(num_portfolios):\n    # Generate random weights that sum to 1\n    w = np.random.random(4)\n    w = w / w.___\n    \n    # Portfolio return and volatility\n    ret = np.dot(w, mean_returns)\n    vol = np.sqrt(np.dot(w.T, np.dot(cov_matrix, w)))\n    sr = (ret - rf) / vol\n    \n    all_returns.append(ret)\n    all_vols.append(vol)\n    all_sharpes.append(sr)\n    all_weights.append(w)\n\nresults = pd.DataFrame({'return': all_returns, 'volatility': all_vols, 'sharpe': all_sharpes})",
+      "solutionCode": "all_returns = []\nall_vols = []\nall_sharpes = []\nall_weights = []\n\nfor i in range(num_portfolios):\n    w = np.random.random(4)\n    w = w / w.sum()\n    \n    ret = np.dot(w, mean_returns)\n    vol = np.sqrt(np.dot(w.T, np.dot(cov_matrix, w)))\n    sr = (ret - rf) / vol\n    \n    all_returns.append(ret)\n    all_vols.append(vol)\n    all_sharpes.append(sr)\n    all_weights.append(w)\n\nresults = pd.DataFrame({'return': all_returns, 'volatility': all_vols, 'sharpe': all_sharpes})",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=[\"AAPL\", \"GOOG\", \"MSFT\", \"AMZN\"])\\nmean_returns = returns.mean() * 252\\ncov_matrix = returns.cov() * 252\\nrf = 0.02\\nnum_portfolios = 5000\\nall_returns = []\\nall_vols = []\\nall_sharpes = []\\nall_weights = []\\nfor i in range(num_portfolios):\\n    w = np.random.random(4)\\n    w = w / w.sum()\\n    ret = np.dot(w, mean_returns)\\n    vol = np.sqrt(np.dot(w.T, np.dot(cov_matrix, w)))\\n    sr = (ret - rf) / vol\\n    all_returns.append(ret)\\n    all_vols.append(vol)\\n    all_sharpes.append(sr)\\n    all_weights.append(w)\\nresults = pd.DataFrame({\"return\": all_returns, \"volatility\": all_vols, \"sharpe\": all_sharpes})', _ns)\ntry:\n    result = results.shape == (5000, 3) and list(results.columns) == ['return', 'volatility', 'sharpe'] and np.allclose(results.values, _ns['results'].values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "np.random.random(4) 生成 4 个 [0,1) 之间的随机数",
+          "除以 sum() 使权重归一化为总和等于 1"
+        ],
+        "en": [
+          "np.random.random(4) generates 4 random numbers in [0, 1)",
+          "Dividing by sum() normalizes weights to sum to 1"
+        ]
+      },
+      "explanation": {
+        "zh": "蒙特卡洛模拟通过大量随机采样来探索组合的可行域。每次生成随机权重并归一化（w / w.sum()），然后计算该组合的收益和风险。5000 次模拟后，所有点在「波动率-收益」平面上形成一个「子弹形」区域，其上边界就是有效前沿。",
+        "en": "Monte Carlo simulation explores the feasible portfolio space through random sampling. Each iteration generates random weights, normalizes them (w / w.sum()), and computes the portfolio's return and risk. After 5000 simulations, all points form a 'bullet-shaped' region on the volatility-return plane, whose upper boundary is the efficient frontier."
+      }
+    },
+    {
+      "id": "s6-port-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "最大夏普比率组合",
+        "en": "Find Maximum Sharpe Portfolio from Simulation"
+      },
+      "description": {
+        "zh": "从蒙特卡洛模拟结果中找出夏普比率最高的组合，提取其收益率 (max_sharpe_return)、波动率 (max_sharpe_vol) 和权重 (max_sharpe_weights)。",
+        "en": "Find the portfolio with the highest Sharpe ratio from the Monte Carlo results. Extract its return (max_sharpe_return), volatility (max_sharpe_vol), and weights (max_sharpe_weights)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=['AAPL', 'GOOG', 'MSFT', 'AMZN'])\nmean_returns = returns.mean() * 252\ncov_matrix = returns.cov() * 252\nrf = 0.02\nnum_portfolios = 5000\nall_returns = []\nall_vols = []\nall_sharpes = []\nall_weights = []\nfor i in range(num_portfolios):\n    w = np.random.random(4)\n    w = w / w.sum()\n    ret = np.dot(w, mean_returns)\n    vol = np.sqrt(np.dot(w.T, np.dot(cov_matrix, w)))\n    sr = (ret - rf) / vol\n    all_returns.append(ret)\n    all_vols.append(vol)\n    all_sharpes.append(sr)\n    all_weights.append(w)\nresults = pd.DataFrame({'return': all_returns, 'volatility': all_vols, 'sharpe': all_sharpes})",
+      "starterCode": "# Find index of maximum Sharpe ratio\nmax_sharpe_idx = results['sharpe'].___\n\n# Extract return, volatility, and weights\nmax_sharpe_return = results.loc[max_sharpe_idx, '___']\nmax_sharpe_vol = results.loc[max_sharpe_idx, '___']\nmax_sharpe_weights = all_weights[max_sharpe_idx]",
+      "solutionCode": "max_sharpe_idx = results['sharpe'].idxmax()\nmax_sharpe_return = results.loc[max_sharpe_idx, 'return']\nmax_sharpe_vol = results.loc[max_sharpe_idx, 'volatility']\nmax_sharpe_weights = all_weights[max_sharpe_idx]",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=[\"AAPL\", \"GOOG\", \"MSFT\", \"AMZN\"])\\nmean_returns = returns.mean() * 252\\ncov_matrix = returns.cov() * 252\\nrf = 0.02\\nnum_portfolios = 5000\\nall_returns = []\\nall_vols = []\\nall_sharpes = []\\nall_weights = []\\nfor i in range(num_portfolios):\\n    w = np.random.random(4)\\n    w = w / w.sum()\\n    ret = np.dot(w, mean_returns)\\n    vol = np.sqrt(np.dot(w.T, np.dot(cov_matrix, w)))\\n    sr = (ret - rf) / vol\\n    all_returns.append(ret)\\n    all_vols.append(vol)\\n    all_sharpes.append(sr)\\n    all_weights.append(w)\\nresults = pd.DataFrame({\"return\": all_returns, \"volatility\": all_vols, \"sharpe\": all_sharpes})\\nmax_sharpe_idx = results[\"sharpe\"].idxmax()\\nmax_sharpe_return = results.loc[max_sharpe_idx, \"return\"]\\nmax_sharpe_vol = results.loc[max_sharpe_idx, \"volatility\"]\\nmax_sharpe_weights = all_weights[max_sharpe_idx]', _ns)\ntry:\n    result = np.isclose(max_sharpe_return, _ns['max_sharpe_return']) and np.isclose(max_sharpe_vol, _ns['max_sharpe_vol'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "idxmax() 返回最大值所在的索引位置",
+          "用 .loc[idx, col] 提取特定行列的值"
+        ],
+        "en": [
+          "idxmax() returns the index of the maximum value",
+          "Use .loc[idx, col] to extract a value at a specific row and column"
+        ]
+      },
+      "explanation": {
+        "zh": "最大夏普比率组合（切线组合）是有效前沿上风险调整收益最优的点。在均值-方差框架下，它是从无风险利率出发的资本市场线与有效前沿的切点。idxmax() 找到夏普比率最大的行索引，再通过 .loc 提取对应的收益率和波动率。",
+        "en": "The maximum Sharpe ratio portfolio (tangency portfolio) is the point on the efficient frontier with the best risk-adjusted return. In the mean-variance framework, it is the tangent point where the Capital Market Line from the risk-free rate meets the efficient frontier. idxmax() finds the row index with the highest Sharpe, then .loc extracts the corresponding return and volatility."
+      }
+    },
+    {
+      "id": "s6-port-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "最小波动率组合",
+        "en": "Find Minimum Volatility Portfolio"
+      },
+      "description": {
+        "zh": "从蒙特卡洛模拟结果中找出波动率最低的组合，提取其收益率 (min_vol_return)、波动率 (min_vol_vol) 和权重 (min_vol_weights)。",
+        "en": "Find the portfolio with the lowest volatility from the Monte Carlo results. Extract its return (min_vol_return), volatility (min_vol_vol), and weights (min_vol_weights)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=['AAPL', 'GOOG', 'MSFT', 'AMZN'])\nmean_returns = returns.mean() * 252\ncov_matrix = returns.cov() * 252\nrf = 0.02\nnum_portfolios = 5000\nall_returns = []\nall_vols = []\nall_sharpes = []\nall_weights = []\nfor i in range(num_portfolios):\n    w = np.random.random(4)\n    w = w / w.sum()\n    ret = np.dot(w, mean_returns)\n    vol = np.sqrt(np.dot(w.T, np.dot(cov_matrix, w)))\n    sr = (ret - rf) / vol\n    all_returns.append(ret)\n    all_vols.append(vol)\n    all_sharpes.append(sr)\n    all_weights.append(w)\nresults = pd.DataFrame({'return': all_returns, 'volatility': all_vols, 'sharpe': all_sharpes})",
+      "starterCode": "# Find index of minimum volatility\nmin_vol_idx = results['volatility'].___\n\n# Extract return, volatility, and weights\nmin_vol_return = results.loc[min_vol_idx, 'return']\nmin_vol_vol = results.loc[min_vol_idx, 'volatility']\nmin_vol_weights = all_weights[min_vol_idx]",
+      "solutionCode": "min_vol_idx = results['volatility'].idxmin()\nmin_vol_return = results.loc[min_vol_idx, 'return']\nmin_vol_vol = results.loc[min_vol_idx, 'volatility']\nmin_vol_weights = all_weights[min_vol_idx]",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=[\"AAPL\", \"GOOG\", \"MSFT\", \"AMZN\"])\\nmean_returns = returns.mean() * 252\\ncov_matrix = returns.cov() * 252\\nrf = 0.02\\nnum_portfolios = 5000\\nall_returns = []\\nall_vols = []\\nall_sharpes = []\\nall_weights = []\\nfor i in range(num_portfolios):\\n    w = np.random.random(4)\\n    w = w / w.sum()\\n    ret = np.dot(w, mean_returns)\\n    vol = np.sqrt(np.dot(w.T, np.dot(cov_matrix, w)))\\n    sr = (ret - rf) / vol\\n    all_returns.append(ret)\\n    all_vols.append(vol)\\n    all_sharpes.append(sr)\\n    all_weights.append(w)\\nresults = pd.DataFrame({\"return\": all_returns, \"volatility\": all_vols, \"sharpe\": all_sharpes})\\nmin_vol_idx = results[\"volatility\"].idxmin()\\nmin_vol_return = results.loc[min_vol_idx, \"return\"]\\nmin_vol_vol = results.loc[min_vol_idx, \"volatility\"]\\nmin_vol_weights = all_weights[min_vol_idx]', _ns)\ntry:\n    result = np.isclose(min_vol_return, _ns['min_vol_return']) and np.isclose(min_vol_vol, _ns['min_vol_vol'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "idxmin() 返回最小值所在的索引位置",
+          "最小波动率组合是风险最低的可行组合"
+        ],
+        "en": [
+          "idxmin() returns the index of the minimum value",
+          "The minimum volatility portfolio is the least risky feasible portfolio"
+        ]
+      },
+      "explanation": {
+        "zh": "最小波动率组合（MVP）是有效前沿的最左端点，代表给定资产集合中风险最低的配置。对于风险厌恶型投资者，这是一个重要的参考点。idxmin() 找到波动率最小的行索引。注意最小波动率组合的收益通常低于最大夏普组合。",
+        "en": "The minimum volatility portfolio (MVP) is the leftmost point on the efficient frontier, representing the lowest-risk allocation possible with the given assets. For risk-averse investors, this is an important reference point. idxmin() finds the row index with the lowest volatility. Note that the MVP's return is typically lower than the max Sharpe portfolio."
+      }
+    },
+    {
+      "id": "s6-port-009",
+      "type": "true-false",
+      "difficulty": 4,
+      "title": {
+        "zh": "等权组合与有效前沿",
+        "en": "Equal-Weight Portfolio and the Efficient Frontier"
+      },
+      "description": {
+        "zh": "等权投资组合（每只股票权重相同）总是位于有效前沿上。",
+        "en": "An equal-weight portfolio (same weight for each stock) always lies on the efficient frontier."
+      },
+      "correctAnswer": false,
+      "hints": {
+        "zh": [
+          "有效前沿上的组合在给定风险下收益最高，或给定收益下风险最低"
+        ],
+        "en": [
+          "Portfolios on the efficient frontier have the highest return for a given risk, or lowest risk for a given return"
+        ]
+      },
+      "explanation": {
+        "zh": "等权组合是一种简单的基准配置，但它通常不在有效前沿上。有效前沿上的每个点都是在给定风险水平下收益率最高的组合（或给定收益水平下风险最低的组合）。等权组合没有考虑资产的预期收益和协方差结构，所以通常存在更优的权重分配方案。只有在非常特殊的情况下（如所有资产的预期收益和风险完全相同且相关性相等），等权组合才恰好在有效前沿上。",
+        "en": "The equal-weight portfolio is a simple benchmark, but it typically does not lie on the efficient frontier. Each point on the efficient frontier maximizes return for a given risk level (or minimizes risk for a given return). Equal weighting ignores expected returns and the covariance structure, so a better weight allocation usually exists. Only under very special conditions (e.g., identical expected returns, risks, and correlations) would equal weighting happen to be on the efficient frontier."
+      }
+    },
+    {
+      "id": "s6-port-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "绘制有效前沿散点图",
+        "en": "Plot Efficient Frontier Scatter"
+      },
+      "description": {
+        "zh": "使用 matplotlib 绘制有效前沿散点图：x 轴为波动率，y 轴为收益率，颜色按夏普比率着色。标记出最大夏普组合（红色星号）和最小波动率组合（蓝色星号）。将 figure 赋给 fig。",
+        "en": "Plot the efficient frontier scatter using matplotlib: x-axis is volatility, y-axis is return, colored by Sharpe ratio. Mark the max Sharpe portfolio (red star) and min volatility portfolio (blue star). Assign the figure to fig."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\nnp.random.seed(42)\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=['AAPL', 'GOOG', 'MSFT', 'AMZN'])\nmean_returns = returns.mean() * 252\ncov_matrix = returns.cov() * 252\nrf = 0.02\nnum_portfolios = 5000\nall_returns = []\nall_vols = []\nall_sharpes = []\nfor i in range(num_portfolios):\n    w = np.random.random(4)\n    w = w / w.sum()\n    ret = np.dot(w, mean_returns)\n    vol = np.sqrt(np.dot(w.T, np.dot(cov_matrix, w)))\n    sr = (ret - rf) / vol\n    all_returns.append(ret)\n    all_vols.append(vol)\n    all_sharpes.append(sr)\nresults = pd.DataFrame({'return': all_returns, 'volatility': all_vols, 'sharpe': all_sharpes})\nmax_sharpe_idx = results['sharpe'].idxmax()\nmin_vol_idx = results['volatility'].idxmin()",
+      "starterCode": "fig, ax = plt.subplots(figsize=(10, 6))\n\n# Scatter plot colored by Sharpe ratio\nscatter = ax.scatter(results['volatility'], results['return'], c=results['___'], cmap='viridis', alpha=0.5, s=10)\nplt.colorbar(scatter, label='Sharpe Ratio')\n\n# Mark max Sharpe portfolio\nax.scatter(results.loc[max_sharpe_idx, 'volatility'], results.loc[max_sharpe_idx, 'return'], c='red', marker='*', s=300, label='Max Sharpe')\n\n# Mark min volatility portfolio\nax.scatter(results.loc[min_vol_idx, 'volatility'], results.loc[min_vol_idx, 'return'], c='blue', marker='*', s=300, label='Min Volatility')\n\nax.set_xlabel('Volatility')\nax.set_ylabel('Return')\nax.set_title('Efficient Frontier')\nax.legend()\nplt.tight_layout()",
+      "solutionCode": "fig, ax = plt.subplots(figsize=(10, 6))\nscatter = ax.scatter(results['volatility'], results['return'], c=results['sharpe'], cmap='viridis', alpha=0.5, s=10)\nplt.colorbar(scatter, label='Sharpe Ratio')\nax.scatter(results.loc[max_sharpe_idx, 'volatility'], results.loc[max_sharpe_idx, 'return'], c='red', marker='*', s=300, label='Max Sharpe')\nax.scatter(results.loc[min_vol_idx, 'volatility'], results.loc[min_vol_idx, 'return'], c='blue', marker='*', s=300, label='Min Volatility')\nax.set_xlabel('Volatility')\nax.set_ylabel('Return')\nax.set_title('Efficient Frontier')\nax.legend()\nplt.tight_layout()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "try:\n    result = fig is not None and len(fig.axes) >= 1\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "scatter 的 c 参数用于按数值着色",
+          "cmap='viridis' 是常用的颜色映射方案"
+        ],
+        "en": [
+          "The c parameter of scatter colors points by a numeric value",
+          "cmap='viridis' is a commonly used colormap"
+        ]
+      },
+      "explanation": {
+        "zh": "有效前沿散点图是现代投资组合理论的经典可视化。每个点代表一种权重组合，颜色深浅表示夏普比率的高低。散点形成的「子弹形」区域的上边界就是有效前沿。红色星号（最大夏普）和蓝色星号（最小波动率）是两个关键参考点，帮助投资者根据风险偏好选择组合。",
+        "en": "The efficient frontier scatter plot is the classic visualization of Modern Portfolio Theory. Each point represents a weight combination, with color intensity showing the Sharpe ratio. The upper boundary of the 'bullet-shaped' scatter is the efficient frontier. The red star (max Sharpe) and blue star (min volatility) are two key reference points helping investors choose portfolios based on risk preference."
+      }
+    },
+    {
+      "id": "s6-port-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 权重未归一化导致结果错误",
+        "en": "[Debug] Weights Not Summing to 1 Cause Wrong Results"
+      },
+      "description": {
+        "zh": "以下代码的权重总和不为 1，导致组合收益率和波动率计算不正确。请修复代码，对权重进行归一化处理。",
+        "en": "The following code has weights that don't sum to 1, causing incorrect portfolio return and volatility. Fix the code by normalizing the weights."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=['AAPL', 'GOOG', 'MSFT', 'AMZN'])\nmean_returns = returns.mean() * 252\ncov_matrix = returns.cov() * 252",
+      "starterCode": "# BUG: Weights don't sum to 1\n# weights = np.array([0.3, 0.3, 0.3, 0.3])\n\n# FIX: Normalize weights so they sum to 1\nweights = np.array([0.3, 0.3, 0.3, 0.3])\nweights = weights / weights.___\n\nport_return = np.dot(weights, mean_returns)\nport_vol = np.sqrt(np.dot(weights.T, np.dot(cov_matrix, weights)))",
+      "solutionCode": "weights = np.array([0.3, 0.3, 0.3, 0.3])\nweights = weights / weights.sum()\nport_return = np.dot(weights, mean_returns)\nport_vol = np.sqrt(np.dot(weights.T, np.dot(cov_matrix, weights)))",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nreturns = pd.DataFrame(np.random.randn(250, 4) * 0.02, columns=[\"AAPL\", \"GOOG\", \"MSFT\", \"AMZN\"])\\nmean_returns = returns.mean() * 252\\ncov_matrix = returns.cov() * 252\\nweights = np.array([0.3, 0.3, 0.3, 0.3])\\nweights = weights / weights.sum()\\nport_return = np.dot(weights, mean_returns)\\nport_vol = np.sqrt(np.dot(weights.T, np.dot(cov_matrix, weights)))', _ns)\ntry:\n    result = np.isclose(port_return, _ns['port_return']) and np.isclose(port_vol, _ns['port_vol']) and np.isclose(weights.sum(), 1.0)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "投资组合权重必须总和为 1（100% 投资）",
+          "weights / weights.sum() 可以将任意正数向量归一化"
+        ],
+        "en": [
+          "Portfolio weights must sum to 1 (100% invested)",
+          "weights / weights.sum() normalizes any positive vector"
+        ]
+      },
+      "explanation": {
+        "zh": "投资组合的权重总和必须为 1，代表全部资金都已分配。原始权重 [0.3, 0.3, 0.3, 0.3] 总和为 1.2，意味着使用了 120% 的资金（隐含了杠杆）。weights / weights.sum() 将权重归一化为 [0.25, 0.25, 0.25, 0.25]，确保总和为 1。这是蒙特卡洛模拟中生成随机权重的标准做法。",
+        "en": "Portfolio weights must sum to 1, representing full allocation of capital. The original weights [0.3, 0.3, 0.3, 0.3] sum to 1.2, implying 120% investment (leverage). weights / weights.sum() normalizes to [0.25, 0.25, 0.25, 0.25], ensuring the sum is 1. This is the standard approach for generating random weights in Monte Carlo simulations."
+      }
+    },
+    {
+      "id": "s6-port-012",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 5 只股票的组合优化与有效前沿",
+        "en": "[Challenge] 5 Stocks: Covariance, Simulation, Efficient Frontier, Optimal Portfolios"
+      },
+      "description": {
+        "zh": "对 5 只股票执行完整的组合优化流程：1) 计算年化协方差矩阵 (cov_ann)；2) 运行 10000 次蒙特卡洛模拟；3) 找出最大夏普组合和最小波动率组合；4) 将两个最优组合的指标存入字典 optimal（含 'max_sharpe' 和 'min_vol' 两个子字典，各包含 'return', 'volatility', 'sharpe', 'weights'）。",
+        "en": "Perform a full portfolio optimization for 5 stocks: 1) Compute annualized covariance matrix (cov_ann); 2) Run 10000 Monte Carlo simulations; 3) Find max Sharpe and min volatility portfolios; 4) Store optimal portfolio metrics in a dict named optimal with keys 'max_sharpe' and 'min_vol', each containing 'return', 'volatility', 'sharpe', 'weights'."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nreturns = pd.DataFrame(np.random.randn(500, 5) * 0.02, columns=['AAPL', 'GOOG', 'MSFT', 'AMZN', 'TSLA'])\nreturns['TSLA'] = returns['TSLA'] * 1.5\nrf = 0.02",
+      "starterCode": "# Step 1: Annualized stats\nmean_ann = returns.mean() * 252\ncov_ann = returns.___() * 252\n\n# Step 2: Monte Carlo simulation (10000 portfolios)\nnum_portfolios = 10000\nall_ret = []\nall_vol = []\nall_sr = []\nall_w = []\n\nfor i in range(num_portfolios):\n    w = np.random.random(5)\n    w = w / w.sum()\n    ret = np.dot(w, mean_ann)\n    vol = np.sqrt(np.dot(w.T, np.dot(cov_ann, w)))\n    sr = (ret - rf) / vol\n    all_ret.append(ret)\n    all_vol.append(vol)\n    all_sr.append(sr)\n    all_w.append(w)\n\nsim = pd.DataFrame({'return': all_ret, 'volatility': all_vol, 'sharpe': all_sr})\n\n# Step 3: Find optimal portfolios\nmax_idx = sim['sharpe'].___\nmin_idx = sim['volatility'].___\n\n# Step 4: Store results\noptimal = {\n    'max_sharpe': {\n        'return': sim.loc[max_idx, 'return'],\n        'volatility': sim.loc[max_idx, 'volatility'],\n        'sharpe': sim.loc[max_idx, 'sharpe'],\n        'weights': all_w[max_idx]\n    },\n    'min_vol': {\n        'return': sim.loc[min_idx, 'return'],\n        'volatility': sim.loc[min_idx, 'volatility'],\n        'sharpe': sim.loc[min_idx, 'sharpe'],\n        'weights': all_w[min_idx]\n    }\n}",
+      "solutionCode": "mean_ann = returns.mean() * 252\ncov_ann = returns.cov() * 252\n\nnum_portfolios = 10000\nall_ret = []\nall_vol = []\nall_sr = []\nall_w = []\n\nfor i in range(num_portfolios):\n    w = np.random.random(5)\n    w = w / w.sum()\n    ret = np.dot(w, mean_ann)\n    vol = np.sqrt(np.dot(w.T, np.dot(cov_ann, w)))\n    sr = (ret - rf) / vol\n    all_ret.append(ret)\n    all_vol.append(vol)\n    all_sr.append(sr)\n    all_w.append(w)\n\nsim = pd.DataFrame({'return': all_ret, 'volatility': all_vol, 'sharpe': all_sr})\n\nmax_idx = sim['sharpe'].idxmax()\nmin_idx = sim['volatility'].idxmin()\n\noptimal = {\n    'max_sharpe': {\n        'return': sim.loc[max_idx, 'return'],\n        'volatility': sim.loc[max_idx, 'volatility'],\n        'sharpe': sim.loc[max_idx, 'sharpe'],\n        'weights': all_w[max_idx]\n    },\n    'min_vol': {\n        'return': sim.loc[min_idx, 'return'],\n        'volatility': sim.loc[min_idx, 'volatility'],\n        'sharpe': sim.loc[min_idx, 'sharpe'],\n        'weights': all_w[min_idx]\n    }\n}",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nreturns = pd.DataFrame(np.random.randn(500, 5) * 0.02, columns=[\"AAPL\", \"GOOG\", \"MSFT\", \"AMZN\", \"TSLA\"])\\nreturns[\"TSLA\"] = returns[\"TSLA\"] * 1.5\\nrf = 0.02\\nmean_ann = returns.mean() * 252\\ncov_ann = returns.cov() * 252\\nnum_portfolios = 10000\\nall_ret = []\\nall_vol = []\\nall_sr = []\\nall_w = []\\nfor i in range(num_portfolios):\\n    w = np.random.random(5)\\n    w = w / w.sum()\\n    ret = np.dot(w, mean_ann)\\n    vol = np.sqrt(np.dot(w.T, np.dot(cov_ann, w)))\\n    sr = (ret - rf) / vol\\n    all_ret.append(ret)\\n    all_vol.append(vol)\\n    all_sr.append(sr)\\n    all_w.append(w)\\nsim = pd.DataFrame({\"return\": all_ret, \"volatility\": all_vol, \"sharpe\": all_sr})\\nmax_idx = sim[\"sharpe\"].idxmax()\\nmin_idx = sim[\"volatility\"].idxmin()\\noptimal = {\"max_sharpe\": {\"return\": sim.loc[max_idx, \"return\"], \"volatility\": sim.loc[max_idx, \"volatility\"], \"sharpe\": sim.loc[max_idx, \"sharpe\"], \"weights\": all_w[max_idx]}, \"min_vol\": {\"return\": sim.loc[min_idx, \"return\"], \"volatility\": sim.loc[min_idx, \"volatility\"], \"sharpe\": sim.loc[min_idx, \"sharpe\"], \"weights\": all_w[min_idx]}}', _ns)\ntry:\n    result = np.isclose(optimal['max_sharpe']['sharpe'], _ns['optimal']['max_sharpe']['sharpe']) and np.isclose(optimal['min_vol']['volatility'], _ns['optimal']['min_vol']['volatility']) and np.allclose(optimal['max_sharpe']['weights'], _ns['optimal']['max_sharpe']['weights'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "returns.cov() 计算收益率的协方差矩阵",
+          "idxmax() 找最大值索引，idxmin() 找最小值索引",
+          "确保随机权重归一化为总和 1",
+          "TSLA 波动率更高（乘以 1.5），最小波动率组合可能给它较低权重"
+        ],
+        "en": [
+          "returns.cov() computes the covariance matrix of returns",
+          "idxmax() finds the max index, idxmin() finds the min index",
+          "Ensure random weights are normalized to sum to 1",
+          "TSLA has higher volatility (multiplied by 1.5), so the min-vol portfolio may assign it lower weight"
+        ]
+      },
+      "explanation": {
+        "zh": "本综合练习整合了现代投资组合理论的核心流程：协方差估计 -> 蒙特卡洛模拟 -> 最优组合筛选。5 只股票中 TSLA 波动率被放大了 1.5 倍，因此最小波动率组合倾向于降低 TSLA 的权重，而如果 TSLA 的预期收益较高，最大夏普组合可能仍会分配一定权重。这体现了风险-收益权衡的核心思想。10000 次模拟比 5000 次能更好地逼近真实的有效前沿。",
+        "en": "This challenge integrates the core workflow of Modern Portfolio Theory: covariance estimation -> Monte Carlo simulation -> optimal portfolio selection. Among the 5 stocks, TSLA's volatility is amplified by 1.5x, so the min-vol portfolio tends to reduce TSLA's weight. However, if TSLA's expected return is high, the max Sharpe portfolio may still allocate significant weight. This illustrates the core risk-return tradeoff. 10000 simulations approximate the true efficient frontier better than 5000."
+      }
+    }
+  ]
+}

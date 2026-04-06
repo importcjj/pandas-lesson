@@ -1,1 +1,348 @@
-{"module":"quant-project","stageId":"stage6","lessonId":"quant-project","tags":[],"exercises":[]}
+{
+  "module": "quant-project",
+  "stageId": "stage6",
+  "lessonId": "quant-project",
+  "tags": [
+    "quant",
+    "project",
+    "pipeline",
+    "research",
+    "comprehensive"
+  ],
+  "exercises": [
+    {
+      "id": "s6-qp-001",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "模拟多股票相关收益率",
+        "en": "Simulate Correlated Multi-Stock Returns"
+      },
+      "description": {
+        "zh": "使用 np.random.multivariate_normal 模拟 20 只股票 3 年(756 个交易日)的日收益率。构建均值向量 means 和协方差矩阵 cov_matrix，生成收益率 DataFrame (returns)，列名为 stock_0 到 stock_19。",
+        "en": "Use np.random.multivariate_normal to simulate daily returns for 20 stocks over 3 years (756 trading days). Build a mean vector and covariance matrix, generate a returns DataFrame with columns stock_0 to stock_19."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nn_stocks = 20\nn_days = 756\ndates = pd.bdate_range('2021-01-01', periods=n_days)",
+      "starterCode": "# Mean daily returns: slightly positive for each stock\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\n\n# Build covariance matrix from random correlations\n# Step 1: Generate random factor loadings\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\n# Step 2: Cov = factor_loadings @ factor_loadings.T + diagonal noise\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\n\n# Generate multivariate normal returns\nraw_returns = np.random.___(___, ___, size=___)\n\n# Build DataFrame\ncolumns = [f'stock_{i}' for i in range(n_stocks)]\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)",
+      "solutionCode": "means = np.random.uniform(0.0002, 0.001, n_stocks)\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\ncolumns = [f'stock_{i}' for i in range(n_stocks)]\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nn_stocks = 20\\nn_days = 756\\ndates = pd.bdate_range(\\'2021-01-01\\', periods=n_days)\\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\\ncolumns = [f\\'stock_{i}\\' for i in range(n_stocks)]\\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)', _ns)\ntry:\n    result = returns.shape == (756, 20) and np.allclose(returns.values, _ns['returns'].values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "np.random.multivariate_normal(mean, cov, size) 从多元正态分布中采样",
+          "size 参数为样本数量（交易日数）"
+        ],
+        "en": [
+          "np.random.multivariate_normal(mean, cov, size) samples from a multivariate normal distribution",
+          "size parameter is the number of samples (trading days)"
+        ]
+      },
+      "explanation": {
+        "zh": "多元正态分布模拟是量化研究的起点。通过因子载荷(factor loadings)构建协方差矩阵，可以模拟股票间的相关性结构：共同因子（如市场因子）导致股票间正相关，对角噪声代表个股特异风险。这比独立模拟每只股票更接近真实市场。",
+        "en": "Multivariate normal simulation is the starting point of quantitative research. Building the covariance matrix via factor loadings simulates the correlation structure between stocks: common factors (like market factor) create positive correlations, and diagonal noise represents idiosyncratic risk. This is more realistic than simulating each stock independently."
+      }
+    },
+    {
+      "id": "s6-qp-002",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "构建动量因子",
+        "en": "Construct Momentum Factor"
+      },
+      "description": {
+        "zh": "为所有股票计算 20 日动量因子：过去 20 个交易日的累计收益率。对 returns DataFrame 使用 rolling(20).sum() 计算动量因子 DataFrame (momentum)。",
+        "en": "Compute a 20-day momentum factor for all stocks: cumulative return over the past 20 trading days. Use rolling(20).sum() on the returns DataFrame to compute the momentum factor DataFrame (momentum)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nn_stocks = 20\nn_days = 756\ndates = pd.bdate_range('2021-01-01', periods=n_days)\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\ncolumns = [f'stock_{i}' for i in range(n_stocks)]\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)",
+      "starterCode": "# Compute 20-day momentum factor (rolling cumulative return)\nmomentum = returns.___(___).___\n\n# Drop NaN rows\nmomentum = momentum.dropna()",
+      "solutionCode": "momentum = returns.rolling(20).sum()\nmomentum = momentum.dropna()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nn_stocks = 20\\nn_days = 756\\ndates = pd.bdate_range(\\'2021-01-01\\', periods=n_days)\\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\\ncolumns = [f\\'stock_{i}\\' for i in range(n_stocks)]\\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\\nmomentum = returns.rolling(20).sum()\\nmomentum = momentum.dropna()', _ns)\ntry:\n    result = momentum.shape == _ns['momentum'].shape and np.allclose(momentum.values, _ns['momentum'].values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "rolling(20).sum() 计算过去 20 天收益率之和，近似累计收益",
+          "dropna() 去掉前 19 行的 NaN 值"
+        ],
+        "en": [
+          "rolling(20).sum() computes the sum of returns over the past 20 days, approximating cumulative return",
+          "dropna() removes the first 19 rows with NaN values"
+        ]
+      },
+      "explanation": {
+        "zh": "动量因子是最经典的量化因子之一，基于「过去涨得好的股票未来可能继续涨」的假设。rolling(20).sum() 计算过去 20 天的累计收益率（对数收益可直接求和）。动量因子是截面因子：每天在所有股票之间横向比较，用于排序和选股。",
+        "en": "The momentum factor is one of the most classic quantitative factors, based on the hypothesis that 'stocks that performed well recently will continue to perform well'. rolling(20).sum() computes cumulative returns over 20 days (log returns can be summed directly). Momentum is a cross-sectional factor: compared across all stocks each day for ranking and stock selection."
+      }
+    },
+    {
+      "id": "s6-qp-003",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "计算滚动 IC 序列",
+        "en": "Compute Rolling IC Series"
+      },
+      "description": {
+        "zh": "计算动量因子的信息系数(IC)：每天计算因子值与下一日收益率的 Spearman 秩相关系数。遍历有效日期，将 IC 值存入 Series (ic_series)。",
+        "en": "Compute the Information Coefficient (IC) for the momentum factor: calculate the Spearman rank correlation between factor values and next-day returns for each day. Store IC values in a Series (ic_series)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nfrom scipy.stats import spearmanr\nnp.random.seed(42)\nn_stocks = 20\nn_days = 756\ndates = pd.bdate_range('2021-01-01', periods=n_days)\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\ncolumns = [f'stock_{i}' for i in range(n_stocks)]\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\nmomentum = returns.rolling(20).sum()\nnext_returns = returns.shift(-1)",
+      "starterCode": "# Compute IC for each day: Spearman correlation of factor vs next-day return\nic_values = {}\nvalid_dates = momentum.dropna().index[:-1]  # exclude last day (no next return)\n\nfor date in valid_dates:\n    factor_row = momentum.loc[date]\n    ret_row = next_returns.loc[date]\n    if factor_row.notna().all() and ret_row.notna().all():\n        corr, _ = ___(factor_row.values, ret_row.values)\n        ic_values[date] = corr\n\nic_series = pd.Series(ic_values)",
+      "solutionCode": "ic_values = {}\nvalid_dates = momentum.dropna().index[:-1]\n\nfor date in valid_dates:\n    factor_row = momentum.loc[date]\n    ret_row = next_returns.loc[date]\n    if factor_row.notna().all() and ret_row.notna().all():\n        corr, _ = spearmanr(factor_row.values, ret_row.values)\n        ic_values[date] = corr\n\nic_series = pd.Series(ic_values)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nfrom scipy.stats import spearmanr\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nfrom scipy.stats import spearmanr\\nnp.random.seed(42)\\nn_stocks = 20\\nn_days = 756\\ndates = pd.bdate_range(\\'2021-01-01\\', periods=n_days)\\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\\ncolumns = [f\\'stock_{i}\\' for i in range(n_stocks)]\\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\\nmomentum = returns.rolling(20).sum()\\nnext_returns = returns.shift(-1)\\nic_values = {}\\nvalid_dates = momentum.dropna().index[:-1]\\nfor date in valid_dates:\\n    factor_row = momentum.loc[date]\\n    ret_row = next_returns.loc[date]\\n    if factor_row.notna().all() and ret_row.notna().all():\\n        corr, _ = spearmanr(factor_row.values, ret_row.values)\\n        ic_values[date] = corr\\nic_series = pd.Series(ic_values)', _ns)\ntry:\n    result = len(ic_series) == len(_ns['ic_series']) and np.allclose(ic_series.values, _ns['ic_series'].values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "spearmanr(x, y) 返回 (相关系数, p值)",
+          "IC 衡量因子的预测能力：正值说明因子与未来收益正相关"
+        ],
+        "en": [
+          "spearmanr(x, y) returns (correlation, p-value)",
+          "IC measures factor predictive power: positive means factor is positively correlated with future returns"
+        ]
+      },
+      "explanation": {
+        "zh": "信息系数(IC)是评估因子有效性的核心指标。每天将因子值（20只股票的动量排名）与下一日收益率做 Spearman 秩相关。IC 均值(IC mean)反映因子方向性，IC 标准差反映稳定性，IC_IR = IC_mean / IC_std 是综合评价指标。通常 |IC mean| > 0.03 的因子就有使用价值。",
+        "en": "Information Coefficient (IC) is the core metric for evaluating factor effectiveness. Each day, compute the Spearman rank correlation between factor values (momentum rankings of 20 stocks) and next-day returns. IC mean reflects factor directionality, IC std reflects stability, and IC_IR = IC_mean / IC_std is the comprehensive metric. Factors with |IC mean| > 0.03 are generally considered useful."
+      }
+    },
+    {
+      "id": "s6-qp-004",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "构建多空组合",
+        "en": "Build Long-Short Portfolio"
+      },
+      "description": {
+        "zh": "根据动量因子构建多空组合：每天按因子值排名，做多(long)排名前 5 的股票，做空(short)排名后 5 的股票。计算每日多空组合收益率 ls_returns（等权做多减等权做空）。",
+        "en": "Build a long-short portfolio based on momentum factor: rank stocks by factor value each day, long the top 5 and short the bottom 5. Compute daily long-short portfolio returns (ls_returns) as equal-weight long minus equal-weight short."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nn_stocks = 20\nn_days = 756\ndates = pd.bdate_range('2021-01-01', periods=n_days)\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\ncolumns = [f'stock_{i}' for i in range(n_stocks)]\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\nmomentum = returns.rolling(20).sum()\nnext_returns = returns.shift(-1)\nn_long = 5\nn_short = 5",
+      "starterCode": "# Build long-short portfolio\nls_returns_dict = {}\nvalid_dates = momentum.dropna().index[:-1]\n\nfor date in valid_dates:\n    factor_row = momentum.loc[date]\n    ret_row = next_returns.loc[date]\n\n    # Rank stocks by factor value\n    ranked = factor_row.sort_values(ascending=False)\n\n    # Top n_long stocks (long) and bottom n_short stocks (short)\n    long_stocks = ranked.index[:___]\n    short_stocks = ranked.index[-___:]\n\n    # Equal-weight long-short return\n    long_ret = ret_row[long_stocks].___\n    short_ret = ret_row[short_stocks].___\n    ls_returns_dict[date] = long_ret - short_ret\n\nls_returns = pd.Series(ls_returns_dict)",
+      "solutionCode": "ls_returns_dict = {}\nvalid_dates = momentum.dropna().index[:-1]\n\nfor date in valid_dates:\n    factor_row = momentum.loc[date]\n    ret_row = next_returns.loc[date]\n    ranked = factor_row.sort_values(ascending=False)\n    long_stocks = ranked.index[:n_long]\n    short_stocks = ranked.index[-n_short:]\n    long_ret = ret_row[long_stocks].mean()\n    short_ret = ret_row[short_stocks].mean()\n    ls_returns_dict[date] = long_ret - short_ret\n\nls_returns = pd.Series(ls_returns_dict)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nn_stocks = 20\\nn_days = 756\\ndates = pd.bdate_range(\\'2021-01-01\\', periods=n_days)\\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\\ncolumns = [f\\'stock_{i}\\' for i in range(n_stocks)]\\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\\nmomentum = returns.rolling(20).sum()\\nnext_returns = returns.shift(-1)\\nn_long = 5\\nn_short = 5\\nls_returns_dict = {}\\nvalid_dates = momentum.dropna().index[:-1]\\nfor date in valid_dates:\\n    factor_row = momentum.loc[date]\\n    ret_row = next_returns.loc[date]\\n    ranked = factor_row.sort_values(ascending=False)\\n    long_stocks = ranked.index[:n_long]\\n    short_stocks = ranked.index[-n_short:]\\n    long_ret = ret_row[long_stocks].mean()\\n    short_ret = ret_row[short_stocks].mean()\\n    ls_returns_dict[date] = long_ret - short_ret\\nls_returns = pd.Series(ls_returns_dict)', _ns)\ntry:\n    result = len(ls_returns) == len(_ns['ls_returns']) and np.allclose(ls_returns.values, _ns['ls_returns'].values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "sort_values(ascending=False) 按降序排列，前 N 个是做多标的",
+          "等权收益率 = 各股票收益率的 mean()"
+        ],
+        "en": [
+          "sort_values(ascending=False) sorts in descending order; top N are long positions",
+          "Equal-weight return = mean() of individual stock returns"
+        ]
+      },
+      "explanation": {
+        "zh": "多空组合(long-short portfolio)是因子研究的标准检验方式。做多因子值最高的股票（预期收益高）、做空因子值最低的股票（预期收益低），等权配置。多空收益率 = 多头均值 - 空头均值，是一个市场中性策略（beta 接近 0）。这种构造方式隔离了因子本身的 alpha。",
+        "en": "The long-short portfolio is the standard way to test factors in quantitative research. Long stocks with the highest factor values (expected high returns), short those with the lowest (expected low returns), equally weighted. L/S return = long mean - short mean, forming a market-neutral strategy (beta near 0). This construction isolates the factor's alpha."
+      }
+    },
+    {
+      "id": "s6-qp-005",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "月度调仓回测",
+        "en": "Backtest with Monthly Rebalancing"
+      },
+      "description": {
+        "zh": "实现月度调仓回测：每月末根据动量因子重新选股，持有到下个月末。计算每月的多空组合收益率 monthly_ls_returns，以及累计净值曲线 cumulative_nav。",
+        "en": "Implement a backtest with monthly rebalancing: reselect stocks at each month-end based on momentum factor, hold until next month-end. Compute monthly long-short returns (monthly_ls_returns) and cumulative NAV curve (cumulative_nav)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nn_stocks = 20\nn_days = 756\ndates = pd.bdate_range('2021-01-01', periods=n_days)\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\ncolumns = [f'stock_{i}' for i in range(n_stocks)]\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\nmomentum = returns.rolling(20).sum()\nn_long = 5\nn_short = 5",
+      "starterCode": "# Get month-end dates for rebalancing\nmonth_ends = momentum.dropna().groupby(pd.Grouper(freq='M')).tail(1).index\n\nmonthly_ls_returns = {}\nfor i in range(len(month_ends) - 1):\n    rebal_date = month_ends[i]\n    next_rebal = month_ends[i + 1]\n\n    # Rank by momentum at rebalance date\n    ranked = momentum.loc[rebal_date].sort_values(ascending=False)\n    long_stocks = ranked.index[:n_long]\n    short_stocks = ranked.index[-n_short:]\n\n    # Holding period returns (sum of daily returns)\n    hold_mask = (returns.index > rebal_date) & (returns.index <= next_rebal)\n    hold_returns = returns.loc[hold_mask]\n\n    long_ret = hold_returns[long_stocks].___.___\n    short_ret = hold_returns[short_stocks].___.___\n    monthly_ls_returns[next_rebal] = long_ret - short_ret\n\nmonthly_ls_returns = pd.Series(monthly_ls_returns)\ncumulative_nav = (1 + monthly_ls_returns).cumprod()",
+      "solutionCode": "month_ends = momentum.dropna().groupby(pd.Grouper(freq='M')).tail(1).index\n\nmonthly_ls_returns = {}\nfor i in range(len(month_ends) - 1):\n    rebal_date = month_ends[i]\n    next_rebal = month_ends[i + 1]\n    ranked = momentum.loc[rebal_date].sort_values(ascending=False)\n    long_stocks = ranked.index[:n_long]\n    short_stocks = ranked.index[-n_short:]\n    hold_mask = (returns.index > rebal_date) & (returns.index <= next_rebal)\n    hold_returns = returns.loc[hold_mask]\n    long_ret = hold_returns[long_stocks].sum().mean()\n    short_ret = hold_returns[short_stocks].sum().mean()\n    monthly_ls_returns[next_rebal] = long_ret - short_ret\n\nmonthly_ls_returns = pd.Series(monthly_ls_returns)\ncumulative_nav = (1 + monthly_ls_returns).cumprod()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nn_stocks = 20\\nn_days = 756\\ndates = pd.bdate_range(\\'2021-01-01\\', periods=n_days)\\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\\ncolumns = [f\\'stock_{i}\\' for i in range(n_stocks)]\\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\\nmomentum = returns.rolling(20).sum()\\nn_long = 5\\nn_short = 5\\nmonth_ends = momentum.dropna().groupby(pd.Grouper(freq=\"M\")).tail(1).index\\nmonthly_ls_returns = {}\\nfor i in range(len(month_ends) - 1):\\n    rebal_date = month_ends[i]\\n    next_rebal = month_ends[i + 1]\\n    ranked = momentum.loc[rebal_date].sort_values(ascending=False)\\n    long_stocks = ranked.index[:n_long]\\n    short_stocks = ranked.index[-n_short:]\\n    hold_mask = (returns.index > rebal_date) & (returns.index <= next_rebal)\\n    hold_returns = returns.loc[hold_mask]\\n    long_ret = hold_returns[long_stocks].sum().mean()\\n    short_ret = hold_returns[short_stocks].sum().mean()\\n    monthly_ls_returns[next_rebal] = long_ret - short_ret\\nmonthly_ls_returns = pd.Series(monthly_ls_returns)\\ncumulative_nav = (1 + monthly_ls_returns).cumprod()', _ns)\ntry:\n    result = np.allclose(cumulative_nav.values, _ns['cumulative_nav'].values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "持有期收益 = 每日收益之和: hold_returns[stocks].sum() 得到每只股票的持有期收益",
+          ".mean() 对所有持仓股票取等权平均"
+        ],
+        "en": [
+          "Holding period return = sum of daily returns: hold_returns[stocks].sum() gives each stock's holding return",
+          ".mean() takes equal-weight average across all positions"
+        ]
+      },
+      "explanation": {
+        "zh": "月度调仓是实际量化策略中最常见的频率之一。每月末根据因子排名重新选股，下个月按新组合持有。持有期收益 = 日收益之和(近似)。sum().mean() 先对每只股票在持有期内的日收益求和，再对所有持仓取等权平均。cumulative_nav = (1 + monthly_return).cumprod() 计算累计净值。",
+        "en": "Monthly rebalancing is one of the most common frequencies in real quantitative strategies. Reselect stocks at month-end based on factor rankings, hold the new portfolio for the next month. Holding return = sum of daily returns (approximation). sum().mean() first sums daily returns for each stock over the holding period, then takes equal-weight average. cumulative_nav = (1 + monthly_return).cumprod() computes cumulative NAV."
+      }
+    },
+    {
+      "id": "s6-qp-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "加入交易成本",
+        "en": "Add Transaction Costs"
+      },
+      "description": {
+        "zh": "在月度调仓回测中加入交易成本(0.1% per trade)。每次调仓时，计算换手率(turnover)并扣除交易成本。将扣费后的月度收益赋给 monthly_ls_net，累计净值赋给 nav_net。",
+        "en": "Add transaction costs (0.1% per trade) to the monthly rebalancing backtest. Compute turnover at each rebalance and deduct transaction costs. Assign net monthly returns to monthly_ls_net and cumulative NAV to nav_net."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nn_stocks = 20\nn_days = 756\ndates = pd.bdate_range('2021-01-01', periods=n_days)\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\ncolumns = [f'stock_{i}' for i in range(n_stocks)]\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\nmomentum = returns.rolling(20).sum()\nn_long = 5\nn_short = 5\ncost_per_trade = 0.001",
+      "starterCode": "month_ends = momentum.dropna().groupby(pd.Grouper(freq='M')).tail(1).index\n\nmonthly_ls_net = {}\nprev_long = set()\nprev_short = set()\n\nfor i in range(len(month_ends) - 1):\n    rebal_date = month_ends[i]\n    next_rebal = month_ends[i + 1]\n    ranked = momentum.loc[rebal_date].sort_values(ascending=False)\n    long_stocks = set(ranked.index[:n_long])\n    short_stocks = set(ranked.index[-n_short:])\n\n    # Compute turnover: count changed positions\n    long_changed = len(long_stocks - prev_long) + len(prev_long - long_stocks)\n    short_changed = len(short_stocks - prev_short) + len(prev_short - short_stocks)\n    turnover = (long_changed + short_changed) / (2 * (n_long + n_short))\n    cost = turnover * ___\n\n    hold_mask = (returns.index > rebal_date) & (returns.index <= next_rebal)\n    hold_returns = returns.loc[hold_mask]\n    long_ret = hold_returns[list(long_stocks)].sum().mean()\n    short_ret = hold_returns[list(short_stocks)].sum().mean()\n    monthly_ls_net[next_rebal] = long_ret - short_ret - ___\n\n    prev_long = long_stocks\n    prev_short = short_stocks\n\nmonthly_ls_net = pd.Series(monthly_ls_net)\nnav_net = (1 + monthly_ls_net).cumprod()",
+      "solutionCode": "month_ends = momentum.dropna().groupby(pd.Grouper(freq='M')).tail(1).index\n\nmonthly_ls_net = {}\nprev_long = set()\nprev_short = set()\n\nfor i in range(len(month_ends) - 1):\n    rebal_date = month_ends[i]\n    next_rebal = month_ends[i + 1]\n    ranked = momentum.loc[rebal_date].sort_values(ascending=False)\n    long_stocks = set(ranked.index[:n_long])\n    short_stocks = set(ranked.index[-n_short:])\n    long_changed = len(long_stocks - prev_long) + len(prev_long - long_stocks)\n    short_changed = len(short_stocks - prev_short) + len(prev_short - short_stocks)\n    turnover = (long_changed + short_changed) / (2 * (n_long + n_short))\n    cost = turnover * cost_per_trade\n    hold_mask = (returns.index > rebal_date) & (returns.index <= next_rebal)\n    hold_returns = returns.loc[hold_mask]\n    long_ret = hold_returns[list(long_stocks)].sum().mean()\n    short_ret = hold_returns[list(short_stocks)].sum().mean()\n    monthly_ls_net[next_rebal] = long_ret - short_ret - cost\n    prev_long = long_stocks\n    prev_short = short_stocks\n\nmonthly_ls_net = pd.Series(monthly_ls_net)\nnav_net = (1 + monthly_ls_net).cumprod()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nn_stocks = 20\\nn_days = 756\\ndates = pd.bdate_range(\\'2021-01-01\\', periods=n_days)\\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\\ncolumns = [f\\'stock_{i}\\' for i in range(n_stocks)]\\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\\nmomentum = returns.rolling(20).sum()\\nn_long = 5\\nn_short = 5\\ncost_per_trade = 0.001\\nmonth_ends = momentum.dropna().groupby(pd.Grouper(freq=\"M\")).tail(1).index\\nmonthly_ls_net = {}\\nprev_long = set()\\nprev_short = set()\\nfor i in range(len(month_ends) - 1):\\n    rebal_date = month_ends[i]\\n    next_rebal = month_ends[i + 1]\\n    ranked = momentum.loc[rebal_date].sort_values(ascending=False)\\n    long_stocks = set(ranked.index[:n_long])\\n    short_stocks = set(ranked.index[-n_short:])\\n    long_changed = len(long_stocks - prev_long) + len(prev_long - long_stocks)\\n    short_changed = len(short_stocks - prev_short) + len(prev_short - short_stocks)\\n    turnover = (long_changed + short_changed) / (2 * (n_long + n_short))\\n    cost = turnover * cost_per_trade\\n    hold_mask = (returns.index > rebal_date) & (returns.index <= next_rebal)\\n    hold_returns = returns.loc[hold_mask]\\n    long_ret = hold_returns[list(long_stocks)].sum().mean()\\n    short_ret = hold_returns[list(short_stocks)].sum().mean()\\n    monthly_ls_net[next_rebal] = long_ret - short_ret - cost\\n    prev_long = long_stocks\\n    prev_short = short_stocks\\nmonthly_ls_net = pd.Series(monthly_ls_net)\\nnav_net = (1 + monthly_ls_net).cumprod()', _ns)\ntry:\n    result = np.allclose(nav_net.values, _ns['nav_net'].values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "换手率(turnover)衡量持仓变化比例，交易成本 = turnover * cost_per_trade",
+          "集合差集 long_stocks - prev_long 找出新增的持仓"
+        ],
+        "en": [
+          "Turnover measures the proportion of position changes; transaction cost = turnover * cost_per_trade",
+          "Set difference long_stocks - prev_long finds newly added positions"
+        ]
+      },
+      "explanation": {
+        "zh": "交易成本是实际回测中不可忽略的因素。换手率(turnover)衡量每次调仓时持仓变化的比例。高换手率意味着频繁交易，成本累积会显著侵蚀收益。cost_per_trade = 0.1% 包含佣金和滑点。比较扣费前后的净值曲线可以评估策略的「成本敏感度」。如果扣费后收益大幅下降，说明策略依赖高频交易。",
+        "en": "Transaction costs are essential in realistic backtesting. Turnover measures the proportion of positions changed at each rebalance. High turnover means frequent trading, and cumulative costs significantly erode returns. cost_per_trade = 0.1% includes commission and slippage. Comparing NAV curves before and after costs reveals the strategy's 'cost sensitivity'. If post-cost returns drop significantly, the strategy relies on frequent trading."
+      }
+    },
+    {
+      "id": "s6-qp-007",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "完整绩效指标",
+        "en": "Full Performance Metrics"
+      },
+      "description": {
+        "zh": "计算策略的完整绩效指标：年化收益率(annual_ret)、年化波动率(annual_vol)、Sharpe比率(sharpe)、Sortino比率(sortino)、最大回撤(max_dd)和胜率(win_rate)。将结果存入字典 metrics。",
+        "en": "Compute full performance metrics: annualized return (annual_ret), annualized volatility (annual_vol), Sharpe ratio (sharpe), Sortino ratio (sortino), maximum drawdown (max_dd), and win rate (win_rate). Store results in a dict named metrics."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nn_stocks = 20\nn_days = 756\ndates = pd.bdate_range('2021-01-01', periods=n_days)\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\ncolumns = [f'stock_{i}' for i in range(n_stocks)]\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\nmomentum = returns.rolling(20).sum()\nn_long = 5\nn_short = 5\nmonth_ends = momentum.dropna().groupby(pd.Grouper(freq='M')).tail(1).index\nmonthly_ls = {}\nfor i in range(len(month_ends) - 1):\n    rebal_date = month_ends[i]\n    next_rebal = month_ends[i + 1]\n    ranked = momentum.loc[rebal_date].sort_values(ascending=False)\n    long_stocks = ranked.index[:n_long]\n    short_stocks = ranked.index[-n_short:]\n    hold_mask = (returns.index > rebal_date) & (returns.index <= next_rebal)\n    hold_returns = returns.loc[hold_mask]\n    long_ret = hold_returns[long_stocks].sum().mean()\n    short_ret = hold_returns[short_stocks].sum().mean()\n    monthly_ls[next_rebal] = long_ret - short_ret\nmonthly_ls = pd.Series(monthly_ls)",
+      "starterCode": "# Annualized return (compound from monthly)\nannual_ret = (1 + monthly_ls).prod() ** (12 / len(monthly_ls)) - 1\n\n# Annualized volatility\nannual_vol = monthly_ls.std() * np.sqrt(___)\n\n# Sharpe ratio (assume risk-free = 0)\nsharpe = annual_ret / ___\n\n# Sortino ratio (downside deviation only)\ndownside = monthly_ls[monthly_ls < 0]\ndownside_std = downside.std() * np.sqrt(12)\nsortino = annual_ret / ___\n\n# Maximum drawdown\ncumulative = (1 + monthly_ls).cumprod()\nrunning_max = cumulative.cummax()\ndrawdown = (cumulative - running_max) / running_max\nmax_dd = drawdown.___\n\n# Win rate\nwin_rate = (monthly_ls > 0).___ / len(monthly_ls)\n\nmetrics = {\n    'annual_ret': annual_ret,\n    'annual_vol': annual_vol,\n    'sharpe': sharpe,\n    'sortino': sortino,\n    'max_dd': max_dd,\n    'win_rate': win_rate\n}",
+      "solutionCode": "annual_ret = (1 + monthly_ls).prod() ** (12 / len(monthly_ls)) - 1\nannual_vol = monthly_ls.std() * np.sqrt(12)\nsharpe = annual_ret / annual_vol\ndownside = monthly_ls[monthly_ls < 0]\ndownside_std = downside.std() * np.sqrt(12)\nsortino = annual_ret / downside_std\ncumulative = (1 + monthly_ls).cumprod()\nrunning_max = cumulative.cummax()\ndrawdown = (cumulative - running_max) / running_max\nmax_dd = drawdown.min()\nwin_rate = (monthly_ls > 0).sum() / len(monthly_ls)\n\nmetrics = {\n    'annual_ret': annual_ret,\n    'annual_vol': annual_vol,\n    'sharpe': sharpe,\n    'sortino': sortino,\n    'max_dd': max_dd,\n    'win_rate': win_rate\n}",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nn_stocks = 20\\nn_days = 756\\ndates = pd.bdate_range(\\'2021-01-01\\', periods=n_days)\\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\\ncolumns = [f\\'stock_{i}\\' for i in range(n_stocks)]\\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\\nmomentum = returns.rolling(20).sum()\\nn_long = 5\\nn_short = 5\\nmonth_ends = momentum.dropna().groupby(pd.Grouper(freq=\"M\")).tail(1).index\\nmonthly_ls = {}\\nfor i in range(len(month_ends) - 1):\\n    rebal_date = month_ends[i]\\n    next_rebal = month_ends[i + 1]\\n    ranked = momentum.loc[rebal_date].sort_values(ascending=False)\\n    long_stocks = ranked.index[:n_long]\\n    short_stocks = ranked.index[-n_short:]\\n    hold_mask = (returns.index > rebal_date) & (returns.index <= next_rebal)\\n    hold_returns = returns.loc[hold_mask]\\n    long_ret = hold_returns[long_stocks].sum().mean()\\n    short_ret = hold_returns[short_stocks].sum().mean()\\n    monthly_ls[next_rebal] = long_ret - short_ret\\nmonthly_ls = pd.Series(monthly_ls)\\nannual_ret = (1 + monthly_ls).prod() ** (12 / len(monthly_ls)) - 1\\nannual_vol = monthly_ls.std() * np.sqrt(12)\\nsharpe = annual_ret / annual_vol\\ndownside = monthly_ls[monthly_ls < 0]\\ndownside_std = downside.std() * np.sqrt(12)\\nsortino = annual_ret / downside_std\\ncumulative = (1 + monthly_ls).cumprod()\\nrunning_max = cumulative.cummax()\\ndrawdown = (cumulative - running_max) / running_max\\nmax_dd = drawdown.min()\\nwin_rate = (monthly_ls > 0).sum() / len(monthly_ls)\\nmetrics = {\"annual_ret\": annual_ret, \"annual_vol\": annual_vol, \"sharpe\": sharpe, \"sortino\": sortino, \"max_dd\": max_dd, \"win_rate\": win_rate}', _ns)\ntry:\n    result = all(np.isclose(metrics[k], _ns['metrics'][k]) for k in metrics)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "月度波动率年化: std * sqrt(12)",
+          "Sharpe = annual_ret / annual_vol, Sortino 只用下行波动率",
+          "最大回撤 = drawdown.min() (负值)，胜率 = 正收益月数 / 总月数"
+        ],
+        "en": [
+          "Annualize monthly vol: std * sqrt(12)",
+          "Sharpe = annual_ret / annual_vol; Sortino uses only downside volatility",
+          "Max drawdown = drawdown.min() (negative value); win rate = positive months / total months"
+        ]
+      },
+      "explanation": {
+        "zh": "这些是量化策略评估的核心指标。Sharpe 比率衡量每单位风险的收益，>1 为优秀。Sortino 只考虑下行风险，对「好的波动」不惩罚。最大回撤是峰值到谷底的最大跌幅，反映最坏情况。胜率是正收益月份的比例。综合这些指标才能全面评估策略：高收益低波动低回撤高胜率才是好策略。",
+        "en": "These are core metrics for quantitative strategy evaluation. Sharpe ratio measures return per unit of risk; >1 is excellent. Sortino only considers downside risk, not penalizing 'good volatility'. Max drawdown is the largest peak-to-trough decline, reflecting the worst case. Win rate is the proportion of positive-return months. Only by combining all metrics can you fully evaluate a strategy: high return, low volatility, low drawdown, and high win rate together indicate a good strategy."
+      }
+    },
+    {
+      "id": "s6-qp-008",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "四面板可视化",
+        "en": "Four-Panel Visualization"
+      },
+      "description": {
+        "zh": "创建 2x2 四面板图表：(1) 净值曲线与回撤，(2) 月度收益柱状图，(3) 滚动 3 月 Sharpe 比率，(4) 因子 IC 序列。将 figure 对象赋给 fig。",
+        "en": "Create a 2x2 four-panel chart: (1) NAV curve and drawdown, (2) monthly returns bar chart, (3) rolling 3-month Sharpe ratio, (4) factor IC series. Assign the figure object to fig."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nfrom scipy.stats import spearmanr\nnp.random.seed(42)\nn_stocks = 20\nn_days = 756\ndates = pd.bdate_range('2021-01-01', periods=n_days)\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\ncolumns = [f'stock_{i}' for i in range(n_stocks)]\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\nmomentum = returns.rolling(20).sum()\nnext_returns = returns.shift(-1)\nn_long = 5\nn_short = 5\nmonth_ends = momentum.dropna().groupby(pd.Grouper(freq='M')).tail(1).index\nmonthly_ls = {}\nfor i in range(len(month_ends) - 1):\n    rebal_date = month_ends[i]\n    next_rebal = month_ends[i + 1]\n    ranked = momentum.loc[rebal_date].sort_values(ascending=False)\n    long_stocks = ranked.index[:n_long]\n    short_stocks = ranked.index[-n_short:]\n    hold_mask = (returns.index > rebal_date) & (returns.index <= next_rebal)\n    hold_returns = returns.loc[hold_mask]\n    long_ret = hold_returns[long_stocks].sum().mean()\n    short_ret = hold_returns[short_stocks].sum().mean()\n    monthly_ls[next_rebal] = long_ret - short_ret\nmonthly_ls = pd.Series(monthly_ls)\ncumulative = (1 + monthly_ls).cumprod()\nrunning_max = cumulative.cummax()\ndrawdown = (cumulative - running_max) / running_max\nic_values = {}\nvalid_dates = momentum.dropna().index[:-1]\nfor date in valid_dates:\n    factor_row = momentum.loc[date]\n    ret_row = next_returns.loc[date]\n    if factor_row.notna().all() and ret_row.notna().all():\n        corr, _ = spearmanr(factor_row.values, ret_row.values)\n        ic_values[date] = corr\nic_series = pd.Series(ic_values)",
+      "starterCode": "fig, axes = plt.subplots(2, 2, figsize=(14, 10))\n\n# Panel 1: NAV curve + drawdown\naxes[0, 0].plot(cumulative.index, cumulative.values, label='NAV')\nax_dd = axes[0, 0].twinx()\nax_dd.fill_between(drawdown.index, drawdown.values, alpha=0.3, color='red', label='Drawdown')\naxes[0, 0].set_title('Equity Curve & Drawdown')\naxes[0, 0].legend(loc='upper left')\n\n# Panel 2: Monthly returns bar chart\ncolors = ['green' if x > 0 else 'red' for x in monthly_ls.values]\naxes[0, 1].___(monthly_ls.index, monthly_ls.values, color=colors, width=20)\naxes[0, 1].set_title('Monthly Returns')\naxes[0, 1].axhline(y=0, color='black', linewidth=0.5)\n\n# Panel 3: Rolling 3-month Sharpe\nrolling_sharpe = monthly_ls.rolling(3).mean() / monthly_ls.rolling(3).std() * np.sqrt(12)\naxes[1, 0].___(rolling_sharpe.index, rolling_sharpe.values)\naxes[1, 0].set_title('Rolling 3-Month Sharpe Ratio')\naxes[1, 0].axhline(y=0, color='black', linewidth=0.5)\n\n# Panel 4: Factor IC series\naxes[1, 1].___(ic_series.index, ic_series.values, alpha=0.5)\naxes[1, 1].axhline(y=ic_series.mean(), color='red', linestyle='--', label=f'IC Mean={ic_series.mean():.4f}')\naxes[1, 1].set_title('Factor IC Series')\naxes[1, 1].legend()\n\nplt.tight_layout()",
+      "solutionCode": "fig, axes = plt.subplots(2, 2, figsize=(14, 10))\n\naxes[0, 0].plot(cumulative.index, cumulative.values, label='NAV')\nax_dd = axes[0, 0].twinx()\nax_dd.fill_between(drawdown.index, drawdown.values, alpha=0.3, color='red', label='Drawdown')\naxes[0, 0].set_title('Equity Curve & Drawdown')\naxes[0, 0].legend(loc='upper left')\n\ncolors = ['green' if x > 0 else 'red' for x in monthly_ls.values]\naxes[0, 1].bar(monthly_ls.index, monthly_ls.values, color=colors, width=20)\naxes[0, 1].set_title('Monthly Returns')\naxes[0, 1].axhline(y=0, color='black', linewidth=0.5)\n\nrolling_sharpe = monthly_ls.rolling(3).mean() / monthly_ls.rolling(3).std() * np.sqrt(12)\naxes[1, 0].plot(rolling_sharpe.index, rolling_sharpe.values)\naxes[1, 0].set_title('Rolling 3-Month Sharpe Ratio')\naxes[1, 0].axhline(y=0, color='black', linewidth=0.5)\n\naxes[1, 1].bar(ic_series.index, ic_series.values, alpha=0.5)\naxes[1, 1].axhline(y=ic_series.mean(), color='red', linestyle='--', label=f'IC Mean={ic_series.mean():.4f}')\naxes[1, 1].set_title('Factor IC Series')\naxes[1, 1].legend()\n\nplt.tight_layout()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "try:\n    result = fig is not None and len(fig.axes) >= 4\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "bar() 绘制柱状图，plot() 绘制折线图",
+          "twinx() 创建共享 x 轴的双 y 轴"
+        ],
+        "en": [
+          "bar() draws bar charts, plot() draws line charts",
+          "twinx() creates a twin y-axis sharing the same x-axis"
+        ]
+      },
+      "explanation": {
+        "zh": "四面板图是量化研究报告的标准展示形式。净值曲线+回撤图展示策略的收益和风险；月度收益柱状图直观显示盈亏分布；滚动 Sharpe 反映策略在不同时期的风险调整表现；IC 序列评估因子的持续有效性。twinx() 在同一子图中叠加两个不同量纲的指标（净值和回撤）。",
+        "en": "The four-panel chart is the standard display format in quantitative research reports. NAV + drawdown shows strategy return and risk; monthly return bars visualize profit/loss distribution; rolling Sharpe reflects risk-adjusted performance over time; IC series evaluates factor persistence. twinx() overlays two metrics with different scales (NAV and drawdown) on the same subplot."
+      }
+    },
+    {
+      "id": "s6-qp-009",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "敏感性分析：不同回看期",
+        "en": "Sensitivity Analysis: Varying Lookback Period"
+      },
+      "description": {
+        "zh": "对动量因子的回看期进行敏感性分析：分别使用 lookback = [10, 20, 40, 60] 天计算动量因子并回测，比较各配置的 Sharpe 比率。将结果存入 DataFrame (sensitivity_df)。",
+        "en": "Perform sensitivity analysis on the momentum lookback period: compute momentum factor and backtest with lookback = [10, 20, 40, 60] days, comparing Sharpe ratios. Store results in a DataFrame (sensitivity_df)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nn_stocks = 20\nn_days = 756\ndates = pd.bdate_range('2021-01-01', periods=n_days)\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\ncolumns = [f'stock_{i}' for i in range(n_stocks)]\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\nn_long = 5\nn_short = 5\nlookbacks = [10, 20, 40, 60]",
+      "starterCode": "results = []\n\nfor lb in lookbacks:\n    # Compute momentum with this lookback\n    mom = returns.rolling(lb).sum()\n    month_ends = mom.dropna().groupby(pd.Grouper(freq='M')).tail(1).index\n\n    monthly_ret = {}\n    for i in range(len(month_ends) - 1):\n        rebal_date = month_ends[i]\n        next_rebal = month_ends[i + 1]\n        ranked = mom.loc[rebal_date].sort_values(ascending=False)\n        long_stocks = ranked.index[:n_long]\n        short_stocks = ranked.index[-n_short:]\n        hold_mask = (returns.index > rebal_date) & (returns.index <= next_rebal)\n        hr = returns.loc[hold_mask]\n        lr = hr[long_stocks].sum().mean()\n        sr = hr[short_stocks].sum().mean()\n        monthly_ret[next_rebal] = lr - sr\n\n    ms = pd.Series(monthly_ret)\n    ann_ret = (1 + ms).prod() ** (12 / len(ms)) - 1\n    ann_vol = ms.std() * np.sqrt(12)\n    sharpe = ann_ret / ann_vol if ann_vol > 0 else 0\n\n    results.append({'lookback': lb, 'annual_ret': ann_ret, 'annual_vol': ann_vol, 'sharpe': ___})\n\nsensitivity_df = pd.DataFrame(___)",
+      "solutionCode": "results = []\n\nfor lb in lookbacks:\n    mom = returns.rolling(lb).sum()\n    month_ends = mom.dropna().groupby(pd.Grouper(freq='M')).tail(1).index\n\n    monthly_ret = {}\n    for i in range(len(month_ends) - 1):\n        rebal_date = month_ends[i]\n        next_rebal = month_ends[i + 1]\n        ranked = mom.loc[rebal_date].sort_values(ascending=False)\n        long_stocks = ranked.index[:n_long]\n        short_stocks = ranked.index[-n_short:]\n        hold_mask = (returns.index > rebal_date) & (returns.index <= next_rebal)\n        hr = returns.loc[hold_mask]\n        lr = hr[long_stocks].sum().mean()\n        sr = hr[short_stocks].sum().mean()\n        monthly_ret[next_rebal] = lr - sr\n\n    ms = pd.Series(monthly_ret)\n    ann_ret = (1 + ms).prod() ** (12 / len(ms)) - 1\n    ann_vol = ms.std() * np.sqrt(12)\n    sharpe = ann_ret / ann_vol if ann_vol > 0 else 0\n\n    results.append({'lookback': lb, 'annual_ret': ann_ret, 'annual_vol': ann_vol, 'sharpe': sharpe})\n\nsensitivity_df = pd.DataFrame(results)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nn_stocks = 20\\nn_days = 756\\ndates = pd.bdate_range(\\'2021-01-01\\', periods=n_days)\\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\\ncolumns = [f\\'stock_{i}\\' for i in range(n_stocks)]\\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\\nn_long = 5\\nn_short = 5\\nlookbacks = [10, 20, 40, 60]\\nresults = []\\nfor lb in lookbacks:\\n    mom = returns.rolling(lb).sum()\\n    month_ends = mom.dropna().groupby(pd.Grouper(freq=\"M\")).tail(1).index\\n    monthly_ret = {}\\n    for i in range(len(month_ends) - 1):\\n        rebal_date = month_ends[i]\\n        next_rebal = month_ends[i + 1]\\n        ranked = mom.loc[rebal_date].sort_values(ascending=False)\\n        long_stocks = ranked.index[:n_long]\\n        short_stocks = ranked.index[-n_short:]\\n        hold_mask = (returns.index > rebal_date) & (returns.index <= next_rebal)\\n        hr = returns.loc[hold_mask]\\n        lr = hr[long_stocks].sum().mean()\\n        sr = hr[short_stocks].sum().mean()\\n        monthly_ret[next_rebal] = lr - sr\\n    ms = pd.Series(monthly_ret)\\n    ann_ret = (1 + ms).prod() ** (12 / len(ms)) - 1\\n    ann_vol = ms.std() * np.sqrt(12)\\n    sharpe = ann_ret / ann_vol if ann_vol > 0 else 0\\n    results.append({\"lookback\": lb, \"annual_ret\": ann_ret, \"annual_vol\": ann_vol, \"sharpe\": sharpe})\\nsensitivity_df = pd.DataFrame(results)', _ns)\ntry:\n    result = sensitivity_df.shape == (4, 4) and np.allclose(sensitivity_df['sharpe'].values, _ns['sensitivity_df']['sharpe'].values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "每个 lookback 值重新计算动量因子并独立回测",
+          "pd.DataFrame(results) 将字典列表转为 DataFrame"
+        ],
+        "en": [
+          "Recompute momentum factor and run independent backtest for each lookback value",
+          "pd.DataFrame(results) converts a list of dicts to a DataFrame"
+        ]
+      },
+      "explanation": {
+        "zh": "敏感性分析检验策略对参数选择的稳健性。如果只有某个特定回看期表现好，说明策略可能过拟合了该参数。理想情况下，一组相邻参数都应该给出类似的正 Sharpe，这增强了对策略有效性的信心。lookback 短（如10天）捕捉短期动量，长（如60天）捕捉中期趋势。",
+        "en": "Sensitivity analysis tests the strategy's robustness to parameter choices. If only a specific lookback performs well, the strategy may be overfitted to that parameter. Ideally, a range of adjacent parameters should yield similar positive Sharpe ratios, strengthening confidence in strategy validity. Short lookback (e.g., 10 days) captures short-term momentum, long (e.g., 60 days) captures medium-term trends."
+      }
+    },
+    {
+      "id": "s6-qp-010",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 完整量化研究报告",
+        "en": "[Challenge] Complete Quantitative Research Report"
+      },
+      "description": {
+        "zh": "将所有步骤整合为一个完整的量化研究流程：模拟数据、构建因子、回测、计算绩效指标、敏感性分析。最终输出一个摘要 DataFrame (report) 包含最佳回看期及其绩效指标。",
+        "en": "Integrate all steps into a complete quantitative research pipeline: simulate data, construct factor, backtest, compute performance metrics, and sensitivity analysis. Output a summary DataFrame (report) with the best lookback period and its performance metrics."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nn_stocks = 20\nn_days = 756\nn_long = 5\nn_short = 5\nlookbacks = [10, 20, 40, 60]",
+      "starterCode": "# Step 1: Simulate correlated returns\ndates = pd.bdate_range('2021-01-01', periods=n_days)\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\ncolumns = [f'stock_{i}' for i in range(n_stocks)]\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\n\n# Step 2-5: Loop over lookback periods\nall_results = []\nfor lb in lookbacks:\n    # Construct momentum factor\n    mom = returns.rolling(lb).___\n    month_ends = mom.dropna().groupby(pd.Grouper(freq='M')).tail(1).index\n\n    # Backtest with monthly rebalancing\n    monthly_ret = {}\n    for i in range(len(month_ends) - 1):\n        rd = month_ends[i]\n        nr = month_ends[i + 1]\n        ranked = mom.loc[rd].sort_values(ascending=False)\n        ls = ranked.index[:n_long]\n        ss = ranked.index[-n_short:]\n        hm = (returns.index > rd) & (returns.index <= nr)\n        hr = returns.loc[hm]\n        monthly_ret[nr] = hr[ls].sum().mean() - hr[ss].sum().mean()\n\n    ms = pd.Series(monthly_ret)\n\n    # Performance metrics\n    ann_ret = (1 + ms).prod() ** (12 / len(ms)) - 1\n    ann_vol = ms.std() * np.sqrt(12)\n    sharpe = ann_ret / ann_vol if ann_vol > 0 else 0\n    cumul = (1 + ms).cumprod()\n    max_dd = ((cumul - cumul.cummax()) / cumul.cummax()).min()\n    win_rate = (ms > 0).sum() / len(ms)\n\n    all_results.append({\n        'lookback': lb, 'annual_ret': ann_ret, 'annual_vol': ann_vol,\n        'sharpe': sharpe, 'max_dd': max_dd, 'win_rate': win_rate\n    })\n\n# Build report\nreport = pd.DataFrame(all_results)\nbest_idx = report['sharpe'].___\nbest_lb = report.loc[best_idx, 'lookback']\nprint(f'Best lookback: {best_lb} days')\nprint(report.to_string(index=False))",
+      "solutionCode": "dates = pd.bdate_range('2021-01-01', periods=n_days)\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\ncolumns = [f'stock_{i}' for i in range(n_stocks)]\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\n\nall_results = []\nfor lb in lookbacks:\n    mom = returns.rolling(lb).sum()\n    month_ends = mom.dropna().groupby(pd.Grouper(freq='M')).tail(1).index\n\n    monthly_ret = {}\n    for i in range(len(month_ends) - 1):\n        rd = month_ends[i]\n        nr = month_ends[i + 1]\n        ranked = mom.loc[rd].sort_values(ascending=False)\n        ls = ranked.index[:n_long]\n        ss = ranked.index[-n_short:]\n        hm = (returns.index > rd) & (returns.index <= nr)\n        hr = returns.loc[hm]\n        monthly_ret[nr] = hr[ls].sum().mean() - hr[ss].sum().mean()\n\n    ms = pd.Series(monthly_ret)\n    ann_ret = (1 + ms).prod() ** (12 / len(ms)) - 1\n    ann_vol = ms.std() * np.sqrt(12)\n    sharpe = ann_ret / ann_vol if ann_vol > 0 else 0\n    cumul = (1 + ms).cumprod()\n    max_dd = ((cumul - cumul.cummax()) / cumul.cummax()).min()\n    win_rate = (ms > 0).sum() / len(ms)\n\n    all_results.append({\n        'lookback': lb, 'annual_ret': ann_ret, 'annual_vol': ann_vol,\n        'sharpe': sharpe, 'max_dd': max_dd, 'win_rate': win_rate\n    })\n\nreport = pd.DataFrame(all_results)\nbest_idx = report['sharpe'].idxmax()\nbest_lb = report.loc[best_idx, 'lookback']\nprint(f'Best lookback: {best_lb} days')\nprint(report.to_string(index=False))",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nn_stocks = 20\\nn_days = 756\\nn_long = 5\\nn_short = 5\\nlookbacks = [10, 20, 40, 60]\\ndates = pd.bdate_range(\\'2021-01-01\\', periods=n_days)\\nmeans = np.random.uniform(0.0002, 0.001, n_stocks)\\nfactor_loadings = np.random.randn(n_stocks, 3) * 0.01\\ncov_matrix = factor_loadings @ factor_loadings.T + np.diag(np.random.uniform(0.0001, 0.0004, n_stocks))\\nraw_returns = np.random.multivariate_normal(means, cov_matrix, size=n_days)\\ncolumns = [f\\'stock_{i}\\' for i in range(n_stocks)]\\nreturns = pd.DataFrame(raw_returns, index=dates, columns=columns)\\nall_results = []\\nfor lb in lookbacks:\\n    mom = returns.rolling(lb).sum()\\n    month_ends = mom.dropna().groupby(pd.Grouper(freq=\"M\")).tail(1).index\\n    monthly_ret = {}\\n    for i in range(len(month_ends) - 1):\\n        rd = month_ends[i]\\n        nr = month_ends[i + 1]\\n        ranked = mom.loc[rd].sort_values(ascending=False)\\n        ls = ranked.index[:n_long]\\n        ss = ranked.index[-n_short:]\\n        hm = (returns.index > rd) & (returns.index <= nr)\\n        hr = returns.loc[hm]\\n        monthly_ret[nr] = hr[ls].sum().mean() - hr[ss].sum().mean()\\n    ms = pd.Series(monthly_ret)\\n    ann_ret = (1 + ms).prod() ** (12 / len(ms)) - 1\\n    ann_vol = ms.std() * np.sqrt(12)\\n    sharpe = ann_ret / ann_vol if ann_vol > 0 else 0\\n    cumul = (1 + ms).cumprod()\\n    max_dd = ((cumul - cumul.cummax()) / cumul.cummax()).min()\\n    win_rate = (ms > 0).sum() / len(ms)\\n    all_results.append({\"lookback\": lb, \"annual_ret\": ann_ret, \"annual_vol\": ann_vol, \"sharpe\": sharpe, \"max_dd\": max_dd, \"win_rate\": win_rate})\\nreport = pd.DataFrame(all_results)\\nbest_idx = report[\"sharpe\"].idxmax()\\nbest_lb = report.loc[best_idx, \"lookback\"]', _ns)\ntry:\n    result = report.shape == (4, 6) and np.allclose(report['sharpe'].values, _ns['report']['sharpe'].values) and best_lb == _ns['best_lb']\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "rolling(lb).sum() 计算不同回看期的动量因子",
+          "idxmax() 返回最大 Sharpe 对应的行索引",
+          "整个流程：模拟 -> 因子构建 -> 回测 -> 绩效 -> 参数敏感性"
+        ],
+        "en": [
+          "rolling(lb).sum() computes momentum factor with different lookback periods",
+          "idxmax() returns the row index of the maximum Sharpe",
+          "Full pipeline: simulate -> factor construction -> backtest -> metrics -> parameter sensitivity"
+        ]
+      },
+      "explanation": {
+        "zh": "这是一个完整的量化研究报告流程。从模拟相关收益率数据开始，构建动量因子，通过月度调仓回测评估策略表现，计算多维绩效指标，最后通过参数敏感性分析确认策略稳健性。report DataFrame 汇总了不同回看期下的所有关键指标，idxmax() 找到最优配置。实际研究中还需要考虑交易成本、样本外验证和更多因子的组合。",
+        "en": "This is a complete quantitative research pipeline. Starting from simulating correlated return data, constructing the momentum factor, evaluating strategy performance via monthly rebalancing backtest, computing multi-dimensional performance metrics, and finally confirming robustness through parameter sensitivity analysis. The report DataFrame summarizes all key metrics across lookback periods, and idxmax() identifies the optimal configuration. In practice, you would also need to consider transaction costs, out-of-sample validation, and combining multiple factors."
+      }
+    }
+  ]
+}

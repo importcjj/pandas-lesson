@@ -1,1 +1,412 @@
-{"module":"factor-analysis","stageId":"stage6","lessonId":"factor-analysis","tags":[],"exercises":[]}
+{
+  "module": "factor-analysis",
+  "stageId": "stage6",
+  "lessonId": "factor-analysis",
+  "tags": [
+    "factor",
+    "momentum",
+    "ic",
+    "quintile",
+    "alpha"
+  ],
+  "exercises": [
+    {
+      "id": "s6-factor-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "动量因子：20 日收益率",
+        "en": "Momentum Factor: 20-Day Return"
+      },
+      "description": {
+        "zh": "计算动量因子：每只股票过去 20 个交易日的收益率作为因子值。使用 pct_change(20) 计算，将结果赋给 momentum。",
+        "en": "Compute the momentum factor: each stock's 20-day return as the factor score. Use pct_change(20) and assign the result to momentum."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.DataFrame({\n    'Stock_A': np.cumprod(1 + np.random.normal(0.001, 0.02, 120)),\n    'Stock_B': np.cumprod(1 + np.random.normal(0.0005, 0.015, 120)),\n    'Stock_C': np.cumprod(1 + np.random.normal(-0.0003, 0.025, 120)),\n    'Stock_D': np.cumprod(1 + np.random.normal(0.0008, 0.018, 120)),\n    'Stock_E': np.cumprod(1 + np.random.normal(0.0002, 0.022, 120))\n})",
+      "starterCode": "# Compute 20-day momentum factor\nmomentum = prices.pct_change(___)\n\nprint(momentum.tail())",
+      "solutionCode": "momentum = prices.pct_change(20)\nprint(momentum.tail())",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.DataFrame({\\n    'Stock_A': np.cumprod(1 + np.random.normal(0.001, 0.02, 120)),\\n    'Stock_B': np.cumprod(1 + np.random.normal(0.0005, 0.015, 120)),\\n    'Stock_C': np.cumprod(1 + np.random.normal(-0.0003, 0.025, 120)),\\n    'Stock_D': np.cumprod(1 + np.random.normal(0.0008, 0.018, 120)),\\n    'Stock_E': np.cumprod(1 + np.random.normal(0.0002, 0.022, 120))\\n})\\nmomentum = prices.pct_change(20)\", _ns)\ntry:\n    result = momentum.equals(_ns['momentum'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "pct_change(n) 计算 n 期收益率",
+          "20 日动量是最常用的短期动量因子"
+        ],
+        "en": [
+          "pct_change(n) computes the n-period return",
+          "20-day momentum is the most common short-term momentum factor"
+        ]
+      },
+      "explanation": {
+        "zh": "动量因子基于「强者恒强」假设：过去表现好的股票未来可能继续表现好。pct_change(20) 计算 20 天前到现在的收益率，作为动量信号。动量效应是最广泛记录的市场异象之一，在全球多个市场和资产类别中被验证。",
+        "en": "The momentum factor is based on the 'winners keep winning' hypothesis: stocks that performed well recently may continue to perform well. pct_change(20) computes the return from 20 days ago to now as the momentum signal. Momentum is one of the most well-documented market anomalies, validated across global markets and asset classes."
+      }
+    },
+    {
+      "id": "s6-factor-002",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "IC (信息系数) 的含义",
+        "en": "Meaning of IC (Information Coefficient)"
+      },
+      "description": {
+        "zh": "IC (Information Coefficient) 在因子分析中衡量什么？",
+        "en": "What does IC (Information Coefficient) measure in factor analysis?"
+      },
+      "options": {
+        "zh": [
+          "因子值与未来收益率之间的相关性",
+          "因子值与当前价格之间的相关性",
+          "不同因子之间的相关性",
+          "因子值的自相关性"
+        ],
+        "en": [
+          "Correlation between factor values and future returns",
+          "Correlation between factor values and current prices",
+          "Correlation between different factors",
+          "Autocorrelation of factor values"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "IC 用于评估因子的预测能力"
+        ],
+        "en": [
+          "IC is used to evaluate a factor's predictive power"
+        ]
+      },
+      "explanation": {
+        "zh": "IC (信息系数) 是因子值与未来收益率之间的 Spearman 秩相关系数。它衡量因子对未来收益的预测能力。IC 绝对值越大，因子越有效。通常 |IC| > 0.03 就被认为有一定预测力，|IC| > 0.05 被认为是不错的因子。",
+        "en": "IC (Information Coefficient) is the Spearman rank correlation between factor values and future returns. It measures the factor's predictive power for future returns. Higher absolute IC means a more effective factor. Typically |IC| > 0.03 indicates some predictive power, and |IC| > 0.05 is considered a good factor."
+      }
+    },
+    {
+      "id": "s6-factor-003",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "反转因子：-5 日收益率",
+        "en": "Reversal Factor: -5 Day Return"
+      },
+      "description": {
+        "zh": "计算短期反转因子：取过去 5 天收益率的负值（跌得多的排名靠前）。将结果赋给 reversal。",
+        "en": "Compute the short-term reversal factor: negate the 5-day return (stocks that fell most rank highest). Assign the result to reversal."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.DataFrame({\n    'Stock_A': np.cumprod(1 + np.random.normal(0.001, 0.02, 120)),\n    'Stock_B': np.cumprod(1 + np.random.normal(0.0005, 0.015, 120)),\n    'Stock_C': np.cumprod(1 + np.random.normal(-0.0003, 0.025, 120)),\n    'Stock_D': np.cumprod(1 + np.random.normal(0.0008, 0.018, 120)),\n    'Stock_E': np.cumprod(1 + np.random.normal(0.0002, 0.022, 120))\n})",
+      "starterCode": "# Compute 5-day return\nret_5d = prices.pct_change(___)\n\n# Reversal factor = negative of short-term return\nreversal = ___ret_5d\n\nprint(reversal.tail())",
+      "solutionCode": "ret_5d = prices.pct_change(5)\nreversal = -ret_5d\nprint(reversal.tail())",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.DataFrame({\\n    'Stock_A': np.cumprod(1 + np.random.normal(0.001, 0.02, 120)),\\n    'Stock_B': np.cumprod(1 + np.random.normal(0.0005, 0.015, 120)),\\n    'Stock_C': np.cumprod(1 + np.random.normal(-0.0003, 0.025, 120)),\\n    'Stock_D': np.cumprod(1 + np.random.normal(0.0008, 0.018, 120)),\\n    'Stock_E': np.cumprod(1 + np.random.normal(0.0002, 0.022, 120))\\n})\\nret_5d = prices.pct_change(5)\\nreversal = -ret_5d\", _ns)\ntry:\n    result = reversal.equals(_ns['reversal'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "pct_change(5) 计算 5 日收益率",
+          "取负号使得跌幅大的股票因子值更高"
+        ],
+        "en": [
+          "pct_change(5) computes the 5-day return",
+          "Negating makes stocks with larger declines have higher factor values"
+        ]
+      },
+      "explanation": {
+        "zh": "短期反转因子基于「均值回归」假设：短期内跌得多的股票未来可能反弹。取负值是为了让因子方向一致：因子值越大，预期收益越高。反转因子和动量因子方向相反，在不同时间尺度上捕捉不同的市场行为。",
+        "en": "The short-term reversal factor is based on the 'mean reversion' hypothesis: stocks that declined sharply in the short term may bounce back. Negating ensures consistent factor direction: higher factor value implies higher expected return. Reversal and momentum factors capture different market behaviors at different time scales."
+      }
+    },
+    {
+      "id": "s6-factor-004",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "波动率因子：20 日滚动标准差",
+        "en": "Volatility Factor: 20-Day Rolling Std"
+      },
+      "description": {
+        "zh": "计算波动率因子：每只股票过去 20 个交易日收益率的滚动标准差。先计算日收益率 daily_ret，再计算 20 日滚动标准差 vol_factor。",
+        "en": "Compute the volatility factor: 20-day rolling standard deviation of each stock's daily returns. First compute daily returns (daily_ret), then compute the 20-day rolling std (vol_factor)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.DataFrame({\n    'Stock_A': np.cumprod(1 + np.random.normal(0.001, 0.02, 120)),\n    'Stock_B': np.cumprod(1 + np.random.normal(0.0005, 0.015, 120)),\n    'Stock_C': np.cumprod(1 + np.random.normal(-0.0003, 0.025, 120)),\n    'Stock_D': np.cumprod(1 + np.random.normal(0.0008, 0.018, 120)),\n    'Stock_E': np.cumprod(1 + np.random.normal(0.0002, 0.022, 120))\n})",
+      "starterCode": "# Compute daily returns\ndaily_ret = prices.___().dropna()\n\n# 20-day rolling volatility factor\nvol_factor = daily_ret.rolling(___).___()\n\nprint(vol_factor.tail())",
+      "solutionCode": "daily_ret = prices.pct_change().dropna()\nvol_factor = daily_ret.rolling(20).std()\nprint(vol_factor.tail())",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.DataFrame({\\n    'Stock_A': np.cumprod(1 + np.random.normal(0.001, 0.02, 120)),\\n    'Stock_B': np.cumprod(1 + np.random.normal(0.0005, 0.015, 120)),\\n    'Stock_C': np.cumprod(1 + np.random.normal(-0.0003, 0.025, 120)),\\n    'Stock_D': np.cumprod(1 + np.random.normal(0.0008, 0.018, 120)),\\n    'Stock_E': np.cumprod(1 + np.random.normal(0.0002, 0.022, 120))\\n})\\ndaily_ret = prices.pct_change().dropna()\\nvol_factor = daily_ret.rolling(20).std()\", _ns)\ntry:\n    result = vol_factor.equals(_ns['vol_factor'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "pct_change() 计算日收益率",
+          "rolling(20).std() 计算 20 日滚动标准差"
+        ],
+        "en": [
+          "pct_change() computes daily returns",
+          "rolling(20).std() computes the 20-day rolling standard deviation"
+        ]
+      },
+      "explanation": {
+        "zh": "波动率因子捕捉「低波动异象」：历史上低波动股票的风险调整收益往往优于高波动股票。rolling(20).std() 对每个时间窗口计算局部波动率。波动率因子在多因子模型中常作为风险因子使用，也可以取负值作为 alpha 因子。",
+        "en": "The volatility factor captures the 'low volatility anomaly': historically, low-volatility stocks tend to have better risk-adjusted returns than high-volatility stocks. rolling(20).std() computes local volatility for each time window. Volatility factors are commonly used as risk factors in multi-factor models, or negated as alpha factors."
+      }
+    },
+    {
+      "id": "s6-factor-005",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "IC 计算：Spearman 秩相关",
+        "en": "IC Calculation: Spearman Rank Correlation"
+      },
+      "description": {
+        "zh": "IC 通过 Spearman 秩相关衡量因子值与未来收益率之间的单调关系。补全代码中的关键部分。",
+        "en": "IC measures the monotonic relationship between factor values and future returns via Spearman rank correlation. Fill in the key part."
+      },
+      "codeTemplate": "from scipy import stats\nimport numpy as np\nnp.random.seed(42)\nfactor = np.random.randn(50)\nforward_returns = factor * 0.1 + np.random.randn(50) * 0.5\nic, p_value = stats.spearmanr(factor, ___1___)",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "forward_returns",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "IC 衡量的是因子与「未来」收益率的相关性，不是当期收益"
+        ],
+        "en": [
+          "IC measures the correlation between the factor and 'future' returns, not current returns"
+        ]
+      },
+      "explanation": {
+        "zh": "IC = spearmanr(factor, forward_returns)，其中 forward_returns 是下一期的收益率。使用 Spearman 秩相关而非 Pearson 相关，因为我们关心的是排序关系（因子值大的股票收益是否更高），而非线性关系。这使得 IC 对异常值更稳健。",
+        "en": "IC = spearmanr(factor, forward_returns), where forward_returns are next-period returns. Spearman rank correlation is used instead of Pearson because we care about the ranking relationship (do higher factor values predict higher returns), not the linear relationship. This makes IC more robust to outliers."
+      }
+    },
+    {
+      "id": "s6-factor-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "滚动 IC 时间序列与 ICIR",
+        "en": "Rolling IC Time Series and ICIR"
+      },
+      "description": {
+        "zh": "计算动量因子的逐期 IC 序列 (ic_series)，然后计算 ICIR = IC 均值 / IC 标准差，将其赋给 icir。ICIR 衡量因子预测的稳定性。",
+        "en": "Compute the per-period IC series (ic_series) for the momentum factor, then compute ICIR = IC mean / IC std. Assign it to icir. ICIR measures the stability of a factor's predictions."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nnp.random.seed(42)\nprices = pd.DataFrame({\n    'Stock_A': np.cumprod(1 + np.random.normal(0.001, 0.02, 120)),\n    'Stock_B': np.cumprod(1 + np.random.normal(0.0005, 0.015, 120)),\n    'Stock_C': np.cumprod(1 + np.random.normal(-0.0003, 0.025, 120)),\n    'Stock_D': np.cumprod(1 + np.random.normal(0.0008, 0.018, 120)),\n    'Stock_E': np.cumprod(1 + np.random.normal(0.0002, 0.022, 120))\n})\nreturns = prices.pct_change().dropna()\nmomentum = prices.pct_change(20)",
+      "starterCode": "# Compute forward 5-day returns\nfwd_ret = returns.rolling(5).sum().shift(___)\n\n# Compute IC for each time period (cross-sectional correlation)\nic_list = []\nfor t in range(40, len(momentum)):\n    factor_row = momentum.iloc[t]\n    ret_row = fwd_ret.iloc[t]\n    if factor_row.notna().all() and ret_row.notna().all():\n        ic, _ = stats.spearmanr(factor_row, ret_row)\n        ic_list.append(ic)\n\nic_series = pd.Series(ic_list)\n\n# ICIR = mean IC / std IC\nicir = ic_series.___() / ic_series.___()",
+      "solutionCode": "fwd_ret = returns.rolling(5).sum().shift(-5)\n\nic_list = []\nfor t in range(40, len(momentum)):\n    factor_row = momentum.iloc[t]\n    ret_row = fwd_ret.iloc[t]\n    if factor_row.notna().all() and ret_row.notna().all():\n        ic, _ = stats.spearmanr(factor_row, ret_row)\n        ic_list.append(ic)\n\nic_series = pd.Series(ic_list)\nicir = ic_series.mean() / ic_series.std()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nnp.random.seed(42)\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nfrom scipy import stats\\nnp.random.seed(42)\\nprices = pd.DataFrame({\\n    'Stock_A': np.cumprod(1 + np.random.normal(0.001, 0.02, 120)),\\n    'Stock_B': np.cumprod(1 + np.random.normal(0.0005, 0.015, 120)),\\n    'Stock_C': np.cumprod(1 + np.random.normal(-0.0003, 0.025, 120)),\\n    'Stock_D': np.cumprod(1 + np.random.normal(0.0008, 0.018, 120)),\\n    'Stock_E': np.cumprod(1 + np.random.normal(0.0002, 0.022, 120))\\n})\\nreturns = prices.pct_change().dropna()\\nmomentum = prices.pct_change(20)\\nfwd_ret = returns.rolling(5).sum().shift(-5)\\nic_list = []\\nfor t in range(40, len(momentum)):\\n    factor_row = momentum.iloc[t]\\n    ret_row = fwd_ret.iloc[t]\\n    if factor_row.notna().all() and ret_row.notna().all():\\n        ic, _ = stats.spearmanr(factor_row, ret_row)\\n        ic_list.append(ic)\\nic_series = pd.Series(ic_list)\\nicir = ic_series.mean() / ic_series.std()\", _ns)\ntry:\n    result = np.isclose(icir, _ns['icir'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "shift(-5) 将未来 5 天的收益率对齐到当前时刻",
+          "ICIR = IC 均值 / IC 标准差，衡量信号的稳定性"
+        ],
+        "en": [
+          "shift(-5) aligns the next 5-day returns to the current time point",
+          "ICIR = IC mean / IC std, measuring signal stability"
+        ]
+      },
+      "explanation": {
+        "zh": "IC 序列展示了因子预测能力随时间的变化。ICIR (IC Information Ratio) = mean(IC) / std(IC)，类似于 Sharpe 比率但用于衡量因子信号质量。|ICIR| > 0.5 通常被认为是一个不错的因子。shift(-5) 是将未来收益率「回溯」到当前，模拟实时可用的因子信号。",
+        "en": "The IC series shows how factor predictive power varies over time. ICIR (IC Information Ratio) = mean(IC) / std(IC), similar to the Sharpe ratio but for factor signal quality. |ICIR| > 0.5 is generally considered a decent factor. shift(-5) 'pulls back' future returns to the current time, simulating real-time factor signals."
+      }
+    },
+    {
+      "id": "s6-factor-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "分位数排序：按因子值分 5 组",
+        "en": "Quintile Sort: Rank Stocks by Factor into 5 Groups"
+      },
+      "description": {
+        "zh": "在某一截面上，根据因子值将股票排序并分成 5 组（quintiles）。使用 pd.qcut 将因子排名切成 5 等分，将结果赋给 quintiles。",
+        "en": "On a cross-section, rank stocks by factor values and split into 5 groups (quintiles). Use pd.qcut to cut factor ranks into 5 equal bins. Assign the result to quintiles."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nnp.random.seed(42)\nstocks = [f'Stock_{i}' for i in range(20)]\nfactor_values = pd.Series(np.random.randn(20), index=stocks, name='factor')",
+      "starterCode": "# Rank stocks by factor value\nranks = factor_values.___\n\n# Split into 5 quintiles (1=lowest, 5=highest)\nquintiles = pd.qcut(ranks, q=___, labels=[1, 2, 3, 4, 5])\n\nprint(quintiles.value_counts().sort_index())",
+      "solutionCode": "ranks = factor_values.rank()\nquintiles = pd.qcut(ranks, q=5, labels=[1, 2, 3, 4, 5])\nprint(quintiles.value_counts().sort_index())",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nstocks = [f'Stock_{i}' for i in range(20)]\\nfactor_values = pd.Series(np.random.randn(20), index=stocks, name='factor')\\nranks = factor_values.rank()\\nquintiles = pd.qcut(ranks, q=5, labels=[1, 2, 3, 4, 5])\", _ns)\ntry:\n    result = quintiles.equals(_ns['quintiles'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "rank() 对 Series 进行排名",
+          "pd.qcut(data, q=5) 将数据等频切成 5 组"
+        ],
+        "en": [
+          "rank() ranks the Series values",
+          "pd.qcut(data, q=5) cuts data into 5 equal-frequency bins"
+        ]
+      },
+      "explanation": {
+        "zh": "分位数排序是因子分析的核心方法。先对因子值排名，再用 pd.qcut 切成 5 组。第 1 组是因子值最低的股票，第 5 组是最高的。通过比较各组的收益率，可以直观判断因子是否有效。如果从 Q1 到 Q5 收益率单调递增，说明因子有良好的选股能力。",
+        "en": "Quintile sorting is the core method in factor analysis. First rank factor values, then use pd.qcut to split into 5 groups. Group 1 has the lowest factor values, group 5 the highest. Comparing returns across groups visually reveals factor effectiveness. If returns increase monotonically from Q1 to Q5, the factor has good stock-picking ability."
+      }
+    },
+    {
+      "id": "s6-factor-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "分组收益分析：各分位数平均收益",
+        "en": "Quintile Return Analysis: Mean Return per Quintile"
+      },
+      "description": {
+        "zh": "根据因子分组计算每组的平均未来收益率，将结果赋给 quintile_returns。同时计算多空收益 long_short（Q5 - Q1）。",
+        "en": "Compute the mean future return for each factor quintile group. Assign the result to quintile_returns. Also compute the long-short return (long_short = Q5 - Q1)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nstocks = [f'Stock_{i}' for i in range(20)]\nfactor_values = pd.Series(np.random.randn(20), index=stocks, name='factor')\nforward_returns = pd.Series(factor_values * 0.05 + np.random.randn(20) * 0.1, index=stocks, name='fwd_ret')\nranks = factor_values.rank()\nquintiles = pd.qcut(ranks, q=5, labels=[1, 2, 3, 4, 5])",
+      "starterCode": "# Mean return per quintile\nquintile_returns = forward_returns.groupby(quintiles).___\n\n# Long-short return: Q5 minus Q1\nlong_short = quintile_returns.loc[___] - quintile_returns.loc[___]\n\nprint('Quintile returns:')\nprint(quintile_returns)\nprint(f'\\nLong-short return: {long_short:.4f}')",
+      "solutionCode": "quintile_returns = forward_returns.groupby(quintiles).mean()\nlong_short = quintile_returns.loc[5] - quintile_returns.loc[1]\nprint('Quintile returns:')\nprint(quintile_returns)\nprint(f'\\nLong-short return: {long_short:.4f}')",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nstocks = [f'Stock_{i}' for i in range(20)]\\nfactor_values = pd.Series(np.random.randn(20), index=stocks, name='factor')\\nforward_returns = pd.Series(factor_values * 0.05 + np.random.randn(20) * 0.1, index=stocks, name='fwd_ret')\\nranks = factor_values.rank()\\nquintiles = pd.qcut(ranks, q=5, labels=[1, 2, 3, 4, 5])\\nquintile_returns = forward_returns.groupby(quintiles).mean()\\nlong_short = quintile_returns.loc[5] - quintile_returns.loc[1]\", _ns)\ntry:\n    result = np.isclose(long_short, _ns['long_short']) and quintile_returns.equals(_ns['quintile_returns'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "groupby(quintiles).mean() 计算每组的平均值",
+          "long_short = Q5 收益 - Q1 收益"
+        ],
+        "en": [
+          "groupby(quintiles).mean() computes the mean for each group",
+          "long_short = Q5 return - Q1 return"
+        ]
+      },
+      "explanation": {
+        "zh": "分组收益分析是验证因子有效性的标准方法。如果 Q5 (因子值最高组) 收益高于 Q1 (最低组)，则 long_short > 0，说明因子方向正确。多空收益代表了一个做多高因子值股票、做空低因子值股票的策略收益。这是因子投资的基本逻辑。",
+        "en": "Quintile return analysis is the standard method for validating factor effectiveness. If Q5 (highest factor values) returns exceed Q1 (lowest), then long_short > 0, indicating correct factor direction. The long-short return represents the return of buying high-factor stocks and shorting low-factor stocks. This is the basic logic of factor investing."
+      }
+    },
+    {
+      "id": "s6-factor-009",
+      "type": "true-false",
+      "difficulty": 4,
+      "title": {
+        "zh": "好因子的分位数收益应单调",
+        "en": "A Good Factor Should Have Monotonic Quintile Returns"
+      },
+      "description": {
+        "zh": "一个好的因子应该使分位数收益呈现单调递增（或递减）的趋势，即从 Q1 到 Q5 收益逐渐升高（或降低）。",
+        "en": "A good factor should produce monotonically increasing (or decreasing) quintile returns, i.e., returns gradually rise (or fall) from Q1 to Q5."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": [
+          "想想如果 Q3 的收益比 Q5 还高，这个因子的排序能力如何"
+        ],
+        "en": [
+          "Consider what it means if Q3 returns are higher than Q5 returns for the factor's sorting ability"
+        ]
+      },
+      "explanation": {
+        "zh": "单调的分位数收益说明因子具有一致的选股能力：因子值越大（或越小），未来收益越高。如果收益不单调（如 Q3 > Q5），说明因子在中间值区域的预测不可靠，只有极端值有效，这会降低因子在实际使用中的稳定性。理想情况下，从 Q1 到 Q5 应呈阶梯状递增或递减。",
+        "en": "Monotonic quintile returns indicate consistent stock-picking ability: higher (or lower) factor values correspond to higher future returns. Non-monotonic returns (e.g., Q3 > Q5) suggest unreliable predictions in the middle range, reducing practical stability. Ideally, returns should form a staircase pattern from Q1 to Q5."
+      }
+    },
+    {
+      "id": "s6-factor-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "因子中性化：组内去均值",
+        "en": "Factor Neutralization: Demean Within Groups"
+      },
+      "description": {
+        "zh": "对因子进行行业中性化处理：在每个行业组内减去该组的均值（去均值），将结果赋给 neutral_factor。",
+        "en": "Neutralize the factor by industry: subtract the group mean within each industry group (demean). Assign the result to neutral_factor."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nstocks = [f'Stock_{i}' for i in range(20)]\nfactor_values = pd.Series(np.random.randn(20), index=stocks, name='factor')\nindustry = pd.Series(np.random.choice(['Tech', 'Finance', 'Healthcare', 'Energy'], 20), index=stocks, name='industry')",
+      "starterCode": "# Demean factor within each industry group\nneutral_factor = factor_values.groupby(industry).transform(lambda x: x - x.___)\n\nprint('Original factor mean by industry:')\nprint(factor_values.groupby(industry).mean())\nprint('\\nNeutralized factor mean by industry:')\nprint(neutral_factor.groupby(industry).mean())",
+      "solutionCode": "neutral_factor = factor_values.groupby(industry).transform(lambda x: x - x.mean())\nprint('Original factor mean by industry:')\nprint(factor_values.groupby(industry).mean())\nprint('\\nNeutralized factor mean by industry:')\nprint(neutral_factor.groupby(industry).mean())",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nstocks = [f'Stock_{i}' for i in range(20)]\\nfactor_values = pd.Series(np.random.randn(20), index=stocks, name='factor')\\nindustry = pd.Series(np.random.choice(['Tech', 'Finance', 'Healthcare', 'Energy'], 20), index=stocks, name='industry')\\nneutral_factor = factor_values.groupby(industry).transform(lambda x: x - x.mean())\", _ns)\ntry:\n    result = neutral_factor.equals(_ns['neutral_factor'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "groupby().transform() 保持原始索引不变",
+          "lambda x: x - x.mean() 实现组内去均值"
+        ],
+        "en": [
+          "groupby().transform() preserves the original index",
+          "lambda x: x - x.mean() performs within-group demeaning"
+        ]
+      },
+      "explanation": {
+        "zh": "因子中性化消除了行业偏差。未中性化的因子可能因为某些行业整体因子值偏高而产生行业暴露，导致因子收益实际上是行业效应。去均值后，每个行业组内的因子均值为 0，确保因子信号反映的是个股相对于同行业的差异，而非行业间差异。",
+        "en": "Factor neutralization removes industry bias. An un-neutralized factor may have industry exposure because some industries systematically have higher factor values, making factor returns actually industry effects. After demeaning, each industry group's factor mean is 0, ensuring the factor signal reflects individual stock differences within the same industry, not cross-industry differences."
+      }
+    },
+    {
+      "id": "s6-factor-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 用当期收益率计算 IC 导致前视偏差",
+        "en": "[Debug] Using Current-Period Returns for IC Causes Look-Ahead Bias"
+      },
+      "description": {
+        "zh": "以下代码在计算 IC 时错误地使用了当期收益率而非未来收益率，导致前视偏差。请修复代码，使用 shift(-5) 将未来 5 天收益率对齐到当前。",
+        "en": "The following code incorrectly uses current-period returns instead of future returns when computing IC, causing look-ahead bias. Fix the code by using shift(-5) to align 5-day forward returns to the current period."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nnp.random.seed(42)\nprices = pd.DataFrame({\n    'Stock_A': np.cumprod(1 + np.random.normal(0.001, 0.02, 60)),\n    'Stock_B': np.cumprod(1 + np.random.normal(0.0005, 0.015, 60)),\n    'Stock_C': np.cumprod(1 + np.random.normal(-0.0003, 0.025, 60)),\n    'Stock_D': np.cumprod(1 + np.random.normal(0.0008, 0.018, 60)),\n    'Stock_E': np.cumprod(1 + np.random.normal(0.0002, 0.022, 60))\n})\nreturns = prices.pct_change().dropna()\nmomentum = prices.pct_change(20)",
+      "starterCode": "# BUG: using current-period returns (look-ahead bias!)\n# current_ret = returns.rolling(5).sum()\n# ic_wrong, _ = stats.spearmanr(momentum.iloc[40], current_ret.iloc[40])\n\n# FIX: use forward returns with shift\nfwd_ret = returns.rolling(5).sum().shift(___)\nic_correct, _ = stats.spearmanr(momentum.iloc[40], fwd_ret.iloc[40])\n\nprint(f'Correct IC (using forward returns): {ic_correct:.4f}')",
+      "solutionCode": "fwd_ret = returns.rolling(5).sum().shift(-5)\nic_correct, _ = stats.spearmanr(momentum.iloc[40], fwd_ret.iloc[40])\nprint(f'Correct IC (using forward returns): {ic_correct:.4f}')",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nnp.random.seed(42)\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nfrom scipy import stats\\nnp.random.seed(42)\\nprices = pd.DataFrame({\\n    'Stock_A': np.cumprod(1 + np.random.normal(0.001, 0.02, 60)),\\n    'Stock_B': np.cumprod(1 + np.random.normal(0.0005, 0.015, 60)),\\n    'Stock_C': np.cumprod(1 + np.random.normal(-0.0003, 0.025, 60)),\\n    'Stock_D': np.cumprod(1 + np.random.normal(0.0008, 0.018, 60)),\\n    'Stock_E': np.cumprod(1 + np.random.normal(0.0002, 0.022, 60))\\n})\\nreturns = prices.pct_change().dropna()\\nmomentum = prices.pct_change(20)\\nfwd_ret = returns.rolling(5).sum().shift(-5)\\nic_correct, _ = stats.spearmanr(momentum.iloc[40], fwd_ret.iloc[40])\", _ns)\ntry:\n    result = np.isclose(ic_correct, _ns['ic_correct'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "shift(-5) 将数据向上移动 5 行，使未来收益对齐到当前时刻",
+          "前视偏差是量化回测中最常见也最危险的陷阱之一"
+        ],
+        "en": [
+          "shift(-5) shifts data up by 5 rows, aligning future returns to the current time",
+          "Look-ahead bias is one of the most common and dangerous pitfalls in quantitative backtesting"
+        ]
+      },
+      "explanation": {
+        "zh": "前视偏差 (look-ahead bias) 是量化投资中最严重的错误之一：在决策时使用了未来才能获得的信息。原代码用当期收益计算 IC，相当于在选股时已经知道了结果。修复方法是用 shift(-5) 将未来 5 天的收益率对齐到当前时刻，确保因子只与真正的未来收益率关联。",
+        "en": "Look-ahead bias is one of the most serious errors in quantitative investing: using information at decision time that is only available in the future. The original code uses current returns to compute IC, equivalent to knowing the outcome when selecting stocks. The fix uses shift(-5) to align 5-day future returns to the current time, ensuring the factor is only correlated with truly future returns."
+      }
+    },
+    {
+      "id": "s6-factor-012",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 双因子分析：构建、IC、分组收益、复合因子",
+        "en": "[Challenge] Two-Factor Analysis: Construction, IC, Quintile Returns, Composite"
+      },
+      "description": {
+        "zh": "对动量因子和波动率因子进行完整分析：计算各自的 IC (momentum_ic, vol_ic)、分组收益 (mom_quintile_ret, vol_quintile_ret)，然后构建等权复合因子 (composite) 并计算其 IC (composite_ic)。",
+        "en": "Perform a complete analysis of momentum and volatility factors: compute each factor's IC (momentum_ic, vol_ic), quintile returns (mom_quintile_ret, vol_quintile_ret), then construct an equal-weight composite factor (composite) and compute its IC (composite_ic)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nnp.random.seed(42)\nprices = pd.DataFrame({\n    'Stock_A': np.cumprod(1 + np.random.normal(0.001, 0.02, 120)),\n    'Stock_B': np.cumprod(1 + np.random.normal(0.0005, 0.015, 120)),\n    'Stock_C': np.cumprod(1 + np.random.normal(-0.0003, 0.025, 120)),\n    'Stock_D': np.cumprod(1 + np.random.normal(0.0008, 0.018, 120)),\n    'Stock_E': np.cumprod(1 + np.random.normal(0.0002, 0.022, 120)),\n    'Stock_F': np.cumprod(1 + np.random.normal(0.0006, 0.019, 120)),\n    'Stock_G': np.cumprod(1 + np.random.normal(-0.0001, 0.021, 120)),\n    'Stock_H': np.cumprod(1 + np.random.normal(0.0004, 0.017, 120)),\n    'Stock_I': np.cumprod(1 + np.random.normal(0.0007, 0.023, 120)),\n    'Stock_J': np.cumprod(1 + np.random.normal(0.0003, 0.016, 120))\n})\nreturns = prices.pct_change().dropna()",
+      "starterCode": "# Step 1: Compute factors at t=60\nmomentum = prices.pct_change(20).iloc[60]\nvol_factor = -returns.rolling(20).std().iloc[60]  # negative: low vol is better\n\n# Step 2: Forward returns (5-day)\nfwd_ret = returns.iloc[61:66].sum()\n\n# Step 3: IC for each factor\nmomentum_ic, _ = stats.spearmanr(momentum, ___)\nvol_ic, _ = stats.spearmanr(vol_factor, ___)\n\n# Step 4: Quintile returns for momentum\nmom_ranks = momentum.rank()\nmom_quintiles = pd.qcut(mom_ranks, q=5, labels=[1, 2, 3, 4, 5])\nmom_quintile_ret = fwd_ret.groupby(mom_quintiles).___\n\n# Step 5: Quintile returns for volatility\nvol_ranks = vol_factor.rank()\nvol_quintiles = pd.qcut(vol_ranks, q=5, labels=[1, 2, 3, 4, 5])\nvol_quintile_ret = fwd_ret.groupby(vol_quintiles).___\n\n# Step 6: Composite factor (equal weight of z-scores)\nmom_z = (momentum - momentum.mean()) / momentum.___\nvol_z = (vol_factor - vol_factor.mean()) / vol_factor.___\ncomposite = (mom_z + vol_z) / 2\n\n# Step 7: Composite IC\ncomposite_ic, _ = stats.spearmanr(composite, fwd_ret)",
+      "solutionCode": "momentum = prices.pct_change(20).iloc[60]\nvol_factor = -returns.rolling(20).std().iloc[60]\nfwd_ret = returns.iloc[61:66].sum()\n\nmomentum_ic, _ = stats.spearmanr(momentum, fwd_ret)\nvol_ic, _ = stats.spearmanr(vol_factor, fwd_ret)\n\nmom_ranks = momentum.rank()\nmom_quintiles = pd.qcut(mom_ranks, q=5, labels=[1, 2, 3, 4, 5])\nmom_quintile_ret = fwd_ret.groupby(mom_quintiles).mean()\n\nvol_ranks = vol_factor.rank()\nvol_quintiles = pd.qcut(vol_ranks, q=5, labels=[1, 2, 3, 4, 5])\nvol_quintile_ret = fwd_ret.groupby(vol_quintiles).mean()\n\nmom_z = (momentum - momentum.mean()) / momentum.std()\nvol_z = (vol_factor - vol_factor.mean()) / vol_factor.std()\ncomposite = (mom_z + vol_z) / 2\n\ncomposite_ic, _ = stats.spearmanr(composite, fwd_ret)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nnp.random.seed(42)\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nfrom scipy import stats\\nnp.random.seed(42)\\nprices = pd.DataFrame({\\n    'Stock_A': np.cumprod(1 + np.random.normal(0.001, 0.02, 120)),\\n    'Stock_B': np.cumprod(1 + np.random.normal(0.0005, 0.015, 120)),\\n    'Stock_C': np.cumprod(1 + np.random.normal(-0.0003, 0.025, 120)),\\n    'Stock_D': np.cumprod(1 + np.random.normal(0.0008, 0.018, 120)),\\n    'Stock_E': np.cumprod(1 + np.random.normal(0.0002, 0.022, 120)),\\n    'Stock_F': np.cumprod(1 + np.random.normal(0.0006, 0.019, 120)),\\n    'Stock_G': np.cumprod(1 + np.random.normal(-0.0001, 0.021, 120)),\\n    'Stock_H': np.cumprod(1 + np.random.normal(0.0004, 0.017, 120)),\\n    'Stock_I': np.cumprod(1 + np.random.normal(0.0007, 0.023, 120)),\\n    'Stock_J': np.cumprod(1 + np.random.normal(0.0003, 0.016, 120))\\n})\\nreturns = prices.pct_change().dropna()\\nmomentum = prices.pct_change(20).iloc[60]\\nvol_factor = -returns.rolling(20).std().iloc[60]\\nfwd_ret = returns.iloc[61:66].sum()\\nmomentum_ic, _ = stats.spearmanr(momentum, fwd_ret)\\nvol_ic, _ = stats.spearmanr(vol_factor, fwd_ret)\\nmom_ranks = momentum.rank()\\nmom_quintiles = pd.qcut(mom_ranks, q=5, labels=[1, 2, 3, 4, 5])\\nmom_quintile_ret = fwd_ret.groupby(mom_quintiles).mean()\\nvol_ranks = vol_factor.rank()\\nvol_quintiles = pd.qcut(vol_ranks, q=5, labels=[1, 2, 3, 4, 5])\\nvol_quintile_ret = fwd_ret.groupby(vol_quintiles).mean()\\nmom_z = (momentum - momentum.mean()) / momentum.std()\\nvol_z = (vol_factor - vol_factor.mean()) / vol_factor.std()\\ncomposite = (mom_z + vol_z) / 2\\ncomposite_ic, _ = stats.spearmanr(composite, fwd_ret)\", _ns)\ntry:\n    result = np.isclose(momentum_ic, _ns['momentum_ic']) and np.isclose(vol_ic, _ns['vol_ic']) and np.isclose(composite_ic, _ns['composite_ic']) and mom_quintile_ret.equals(_ns['mom_quintile_ret']) and vol_quintile_ret.equals(_ns['vol_quintile_ret'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "IC 使用 spearmanr(factor, fwd_ret) 计算",
+          "groupby(quintiles).mean() 计算分组平均收益",
+          "Z-score 标准化: (x - mean) / std，确保因子量纲一致后再合成"
+        ],
+        "en": [
+          "IC is computed using spearmanr(factor, fwd_ret)",
+          "groupby(quintiles).mean() computes group average returns",
+          "Z-score normalization: (x - mean) / std ensures consistent scale before combining factors"
+        ]
+      },
+      "explanation": {
+        "zh": "本综合练习展示了完整的多因子分析流程：(1) 构建因子（动量和波动率）；(2) 用 IC 评估单因子有效性；(3) 用分位数收益直观验证；(4) Z-score 标准化后等权合成复合因子。合成因子通常比单一因子更稳定，因为它综合了多维信息。实际中还会考虑因子间相关性、时变权重和风险中性化等高级技术。",
+        "en": "This challenge demonstrates a complete multi-factor analysis workflow: (1) construct factors (momentum and volatility); (2) evaluate individual factor effectiveness with IC; (3) visually validate with quintile returns; (4) Z-score normalize and equally weight into a composite factor. Composite factors are typically more stable than individual factors because they combine multi-dimensional information. In practice, one also considers factor correlations, time-varying weights, and risk neutralization."
+      }
+    }
+  ]
+}

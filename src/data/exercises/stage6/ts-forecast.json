@@ -1,1 +1,412 @@
-{"module":"ts-forecast","stageId":"stage6","lessonId":"ts-forecast","tags":[],"exercises":[]}
+{
+  "module": "ts-forecast",
+  "stageId": "stage6",
+  "lessonId": "ts-forecast",
+  "tags": [
+    "forecast",
+    "time-series",
+    "prediction",
+    "rmse",
+    "walk-forward"
+  ],
+  "exercises": [
+    {
+      "id": "s6-tsf-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "朴素预测：用当前值预测下一步",
+        "en": "Naive Forecast: Predict Next Value as Current Value"
+      },
+      "description": {
+        "zh": "实现朴素预测(naive forecast)：用当前观测值作为下一步的预测值。对给定的时间序列 ts，生成预测序列 forecast（长度比原序列少1），并计算预测误差 errors = actual - forecast。",
+        "en": "Implement a naive forecast: use the current observed value as the prediction for the next step. For the given time series ts, generate a forecast series (length = original - 1), and compute prediction errors = actual - forecast."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2022-01-01', periods=100, freq='D')\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 100)) + 100, index=dates, name='price')",
+      "starterCode": "# Naive forecast: predict next value = current value\nforecast = ts.___(___)\n\n# Actual values to compare (from index 1 onward)\nactual = ts.___[___:]\n\n# Compute errors\nerrors = actual.values - forecast.values",
+      "solutionCode": "forecast = ts.shift(1)\nactual = ts.iloc[1:]\nerrors = actual.values - forecast.iloc[1:].values",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2022-01-01\\', periods=100, freq=\\'D\\')\\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 100)) + 100, index=dates, name=\\'price\\')\\nforecast = ts.shift(1)\\nactual = ts.iloc[1:]\\nerrors = actual.values - forecast.iloc[1:].values', _ns)\ntry:\n    result = np.allclose(errors, _ns['errors'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "shift(1) 会将序列向下移动一步，即用前一个值填充当前位置",
+          "shift 后第一个值为 NaN，需要跳过"
+        ],
+        "en": [
+          "shift(1) moves the series down by one step, filling each position with the previous value",
+          "The first value after shift is NaN and should be skipped"
+        ]
+      },
+      "explanation": {
+        "zh": "朴素预测(naive forecast)是最简单的基准模型：假设下一个时间步的值等于当前值。虽然简单，但在随机游走数据中表现往往不差。它是评估更复杂模型的基线(baseline)。shift(1) 将序列整体右移一步，正好实现「用上一步值预测当前步」。",
+        "en": "The naive forecast is the simplest baseline model: assume the next time step equals the current value. Despite its simplicity, it often performs well on random walk data. It serves as a baseline for evaluating more complex models. shift(1) shifts the series right by one step, implementing 'predict current step using previous step value'."
+      }
+    },
+    {
+      "id": "s6-tsf-002",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "为什么选择 RMSE 而非 MAE",
+        "en": "Why Choose RMSE Over MAE"
+      },
+      "description": {
+        "zh": "在预测评估中，RMSE（均方根误差）相比 MAE（平均绝对误差）的主要优势是什么？",
+        "en": "In forecast evaluation, what is the main advantage of RMSE (Root Mean Squared Error) over MAE (Mean Absolute Error)?"
+      },
+      "options": {
+        "zh": [
+          "RMSE 对大误差的惩罚更重，能更好地反映极端预测偏差",
+          "RMSE 计算更简单",
+          "RMSE 不受异常值影响",
+          "RMSE 始终小于 MAE"
+        ],
+        "en": [
+          "RMSE penalizes large errors more heavily, better reflecting extreme prediction deviations",
+          "RMSE is simpler to compute",
+          "RMSE is not affected by outliers",
+          "RMSE is always smaller than MAE"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "RMSE 先对误差取平方，再开方 -- 想想平方操作对大误差和小误差分别有什么效果"
+        ],
+        "en": [
+          "RMSE squares the errors before taking the root -- think about how squaring affects large vs small errors"
+        ]
+      },
+      "explanation": {
+        "zh": "RMSE 通过先平方再求均值再开方，使得较大的预测误差在最终指标中占更大权重。例如，误差为10时平方为100，而误差为1时平方仅为1。因此 RMSE 对异常偏差更敏感，适合需要避免大幅预测失误的场景。RMSE 始终 >= MAE。",
+        "en": "RMSE squares errors before averaging and taking the root, giving larger prediction errors more weight in the final metric. For example, an error of 10 squares to 100, while an error of 1 squares to only 1. Thus RMSE is more sensitive to extreme deviations, suitable for scenarios where large prediction misses must be avoided. RMSE is always >= MAE."
+      }
+    },
+    {
+      "id": "s6-tsf-003",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "简单移动平均预测",
+        "en": "Simple Moving Average (SMA) Forecast"
+      },
+      "description": {
+        "zh": "使用滚动均值(rolling mean)作为预测：对时间序列 ts 计算窗口为 N=5 的滚动均值，将其向前移动1步作为预测值 forecast_sma，然后计算有效部分的 RMSE。",
+        "en": "Use rolling mean as a forecast: compute a rolling mean with window N=5 for the time series ts, shift it forward by 1 step as forecast_sma, and compute the RMSE for the valid portion."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2022-01-01', periods=100, freq='D')\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 100)) + 100, index=dates, name='price')\nN = 5",
+      "starterCode": "# Compute rolling mean with window N\nrolling_mean = ts.rolling(window=___).mean()\n\n# Shift forward by 1 step as forecast\nforecast_sma = rolling_mean.___(___)\n\n# Drop NaN and compute RMSE\nvalid = forecast_sma.dropna().index\nrmse_sma = np.sqrt(np.mean((ts[valid] - forecast_sma[valid]) ** 2))",
+      "solutionCode": "rolling_mean = ts.rolling(window=N).mean()\nforecast_sma = rolling_mean.shift(1)\nvalid = forecast_sma.dropna().index\nrmse_sma = np.sqrt(np.mean((ts[valid] - forecast_sma[valid]) ** 2))",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2022-01-01\\', periods=100, freq=\\'D\\')\\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 100)) + 100, index=dates, name=\\'price\\')\\nN = 5\\nrolling_mean = ts.rolling(window=N).mean()\\nforecast_sma = rolling_mean.shift(1)\\nvalid = forecast_sma.dropna().index\\nrmse_sma = np.sqrt(np.mean((ts[valid] - forecast_sma[valid]) ** 2))', _ns)\ntry:\n    result = np.isclose(rmse_sma, _ns['rmse_sma'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "rolling(window=N).mean() 计算最近 N 个值的均值",
+          "shift(1) 将预测值向前移动一步，避免使用未来数据"
+        ],
+        "en": [
+          "rolling(window=N).mean() computes the mean of the last N values",
+          "shift(1) moves predictions forward by one step to avoid using future data"
+        ]
+      },
+      "explanation": {
+        "zh": "SMA 预测使用过去 N 个观测值的均值来预测下一步。rolling(N).mean() 计算滚动均值，shift(1) 确保预测只使用历史数据。SMA 对趋势反应较慢，但能平滑短期波动。窗口 N 越大越平滑，但滞后也越大。",
+        "en": "SMA forecast uses the mean of the past N observations to predict the next step. rolling(N).mean() computes the rolling mean, and shift(1) ensures predictions only use historical data. SMA reacts slowly to trends but smooths short-term fluctuations. Larger N means smoother but more lagged predictions."
+      }
+    },
+    {
+      "id": "s6-tsf-004",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "指数加权移动平均预测",
+        "en": "Exponential Weighted Moving Average (EWM) Forecast"
+      },
+      "description": {
+        "zh": "使用指数加权移动平均(EWM)进行预测：对时间序列 ts 计算 span=10 的 EWM 均值，将其 shift(1) 作为预测值 forecast_ewm，然后计算有效部分的 RMSE。",
+        "en": "Use Exponential Weighted Moving Average (EWM) for forecasting: compute EWM mean with span=10 for ts, shift(1) it as forecast_ewm, and compute the RMSE for the valid portion."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2022-01-01', periods=100, freq='D')\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 100)) + 100, index=dates, name='price')",
+      "starterCode": "# Compute EWM mean with span=10\newm_mean = ts.___(span=___).mean()\n\n# Shift forward by 1 step as forecast\nforecast_ewm = ewm_mean.___(___)\n\n# Drop NaN and compute RMSE\nvalid = forecast_ewm.dropna().index\nrmse_ewm = np.sqrt(np.mean((ts[valid] - forecast_ewm[valid]) ** 2))",
+      "solutionCode": "ewm_mean = ts.ewm(span=10).mean()\nforecast_ewm = ewm_mean.shift(1)\nvalid = forecast_ewm.dropna().index\nrmse_ewm = np.sqrt(np.mean((ts[valid] - forecast_ewm[valid]) ** 2))",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2022-01-01\\', periods=100, freq=\\'D\\')\\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 100)) + 100, index=dates, name=\\'price\\')\\newm_mean = ts.ewm(span=10).mean()\\nforecast_ewm = ewm_mean.shift(1)\\nvalid = forecast_ewm.dropna().index\\nrmse_ewm = np.sqrt(np.mean((ts[valid] - forecast_ewm[valid]) ** 2))', _ns)\ntry:\n    result = np.isclose(rmse_ewm, _ns['rmse_ewm'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "ewm(span=10) 设置指数衰减的跨度参数",
+          "EWM 给近期数据更高权重，比 SMA 对趋势变化反应更快"
+        ],
+        "en": [
+          "ewm(span=10) sets the span parameter for exponential decay",
+          "EWM gives higher weight to recent data, reacting faster to trend changes than SMA"
+        ]
+      },
+      "explanation": {
+        "zh": "EWM(指数加权移动平均)给近期数据赋予更高权重，权重按指数衰减。span 参数控制衰减速度：span 越小，近期数据权重越高。与 SMA 相比，EWM 对趋势变化反应更快，但也更容易受到噪声影响。shift(1) 确保不使用未来数据。",
+        "en": "EWM gives higher weight to recent data, with weights decaying exponentially. The span parameter controls decay speed: smaller span means more weight on recent data. Compared to SMA, EWM reacts faster to trend changes but is also more susceptible to noise. shift(1) ensures no future data leakage."
+      }
+    },
+    {
+      "id": "s6-tsf-005",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "RMSE 计算公式",
+        "en": "RMSE Calculation Formula"
+      },
+      "description": {
+        "zh": "补全 RMSE（均方根误差）的计算代码。",
+        "en": "Complete the RMSE (Root Mean Squared Error) calculation code."
+      },
+      "codeTemplate": "import numpy as np\nactual = np.array([10, 20, 30, 40, 50])\npredicted = np.array([12, 18, 33, 37, 52])\nrmse = np.sqrt(np.___1___((actual - predicted)**2))",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "mean",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "RMSE 的全称是 Root Mean Squared Error -- 先平方，再取均值，最后开方"
+        ],
+        "en": [
+          "RMSE stands for Root Mean Squared Error -- square first, then take the mean, then the root"
+        ]
+      },
+      "explanation": {
+        "zh": "RMSE = sqrt(mean((actual - predicted)^2))。先计算每个预测误差的平方，再取均值（Mean Squared Error），最后开方得到 RMSE。np.mean() 计算数组均值，np.sqrt() 计算平方根。RMSE 的单位与原数据相同，便于直观解读。",
+        "en": "RMSE = sqrt(mean((actual - predicted)^2)). First square each prediction error, then take the mean (MSE), then take the square root to get RMSE. np.mean() computes the array mean, np.sqrt() computes the square root. RMSE has the same units as the original data, making it intuitive to interpret."
+      }
+    },
+    {
+      "id": "s6-tsf-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "Walk-Forward 验证",
+        "en": "Walk-Forward Validation"
+      },
+      "description": {
+        "zh": "实现 walk-forward 验证：使用扩展窗口(expanding window)训练，每次用历史数据的均值预测下一步。遍历从 min_train 开始的每个时间点，将预测值存入列表 predictions，最后计算 RMSE。",
+        "en": "Implement walk-forward validation: use an expanding window for training, predict the next step using the historical mean at each point. Iterate from min_train onward, store predictions in a list, and compute the RMSE."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2022-01-01', periods=100, freq='D')\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 100)) + 100, index=dates, name='price')\nmin_train = 20",
+      "starterCode": "# Walk-forward validation\npredictions = []\nactuals = []\n\nfor i in range(min_train, len(ts)):\n    # Use all data up to (but not including) index i for training\n    train = ts.iloc[:___]\n    # Predict next value as the mean of training data\n    pred = train.___\n    predictions.append(pred)\n    actuals.append(ts.iloc[___])\n\n# Compute RMSE\npredictions = np.array(predictions)\nactuals = np.array(actuals)\nrmse_wf = np.sqrt(np.mean((actuals - predictions) ** 2))",
+      "solutionCode": "predictions = []\nactuals = []\n\nfor i in range(min_train, len(ts)):\n    train = ts.iloc[:i]\n    pred = train.mean()\n    predictions.append(pred)\n    actuals.append(ts.iloc[i])\n\npredictions = np.array(predictions)\nactuals = np.array(actuals)\nrmse_wf = np.sqrt(np.mean((actuals - predictions) ** 2))",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2022-01-01\\', periods=100, freq=\\'D\\')\\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 100)) + 100, index=dates, name=\\'price\\')\\nmin_train = 20\\npredictions = []\\nactuals = []\\nfor i in range(min_train, len(ts)):\\n    train = ts.iloc[:i]\\n    pred = train.mean()\\n    predictions.append(pred)\\n    actuals.append(ts.iloc[i])\\npredictions = np.array(predictions)\\nactuals = np.array(actuals)\\nrmse_wf = np.sqrt(np.mean((actuals - predictions) ** 2))', _ns)\ntry:\n    result = np.isclose(rmse_wf, _ns['rmse_wf'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "iloc[:i] 选取前 i 个数据点作为训练集",
+          "每次循环扩大训练窗口，预测下一个值"
+        ],
+        "en": [
+          "iloc[:i] selects the first i data points as the training set",
+          "Each iteration expands the training window and predicts the next value"
+        ]
+      },
+      "explanation": {
+        "zh": "Walk-forward 验证是时间序列中最可靠的回测方法。每次只用历史数据训练模型并预测下一步，模拟真实的实时预测场景。与交叉验证不同，walk-forward 严格保持时间顺序，避免未来数据泄露。扩展窗口(expanding window)让模型使用所有可用历史数据。",
+        "en": "Walk-forward validation is the most reliable backtesting method for time series. It trains the model using only historical data and predicts one step ahead, simulating real-time forecasting. Unlike cross-validation, walk-forward strictly preserves temporal order, avoiding future data leakage. The expanding window lets the model use all available historical data."
+      }
+    },
+    {
+      "id": "s6-tsf-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "季节性分解：趋势 + 季节 + 残差",
+        "en": "Seasonal Decomposition: Trend + Seasonal + Residual"
+      },
+      "description": {
+        "zh": "使用 statsmodels 的 seasonal_decompose 对具有周期性的时间序列进行加法分解(additive decomposition)，提取趋势(trend)、季节(seasonal)和残差(resid)分量。",
+        "en": "Use statsmodels seasonal_decompose to perform additive decomposition on a periodic time series, extracting trend, seasonal, and residual components."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nfrom statsmodels.tsa.seasonal import seasonal_decompose\ndates = pd.date_range('2022-01-01', periods=365, freq='D')\ntrend = np.linspace(100, 120, 365)\nseasonal = 5 * np.sin(2 * np.pi * np.arange(365) / 30)\nnoise = np.random.normal(0, 1, 365)\nts = pd.Series(trend + seasonal + noise, index=dates, name='value')",
+      "starterCode": "# Perform additive seasonal decomposition with period=30\ndecomp = seasonal_decompose(ts, model='___', period=___)\n\n# Extract components\ntrend_comp = decomp.___\nseasonal_comp = decomp.___\nresid_comp = decomp.___",
+      "solutionCode": "decomp = seasonal_decompose(ts, model='additive', period=30)\ntrend_comp = decomp.trend\nseasonal_comp = decomp.seasonal\nresid_comp = decomp.resid",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nfrom statsmodels.tsa.seasonal import seasonal_decompose\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nfrom statsmodels.tsa.seasonal import seasonal_decompose\\ndates = pd.date_range(\\'2022-01-01\\', periods=365, freq=\\'D\\')\\ntrend_raw = np.linspace(100, 120, 365)\\nseasonal_raw = 5 * np.sin(2 * np.pi * np.arange(365) / 30)\\nnoise = np.random.normal(0, 1, 365)\\nts = pd.Series(trend_raw + seasonal_raw + noise, index=dates, name=\\'value\\')\\ndecomp = seasonal_decompose(ts, model=\\'additive\\', period=30)\\ntrend_comp = decomp.trend\\nseasonal_comp = decomp.seasonal\\nresid_comp = decomp.resid', _ns)\ntry:\n    result = seasonal_comp.equals(_ns['seasonal_comp']) and resid_comp.dropna().equals(_ns['resid_comp'].dropna())\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "model='additive' 表示加法模型：Y = Trend + Seasonal + Residual",
+          "分解结果对象有 trend、seasonal、resid 三个属性"
+        ],
+        "en": [
+          "model='additive' means additive model: Y = Trend + Seasonal + Residual",
+          "The decomposition result object has trend, seasonal, and resid attributes"
+        ]
+      },
+      "explanation": {
+        "zh": "季节性分解将时间序列拆分为三个分量：趋势(trend)反映长期变化方向，季节(seasonal)捕获周期性波动，残差(resid)是去除趋势和季节后的剩余部分。加法模型假设 Y = T + S + R，适用于季节波幅不随趋势变化的数据。period 参数指定一个完整周期的长度。",
+        "en": "Seasonal decomposition splits a time series into three components: trend reflects the long-term direction, seasonal captures periodic fluctuations, and residual is what remains after removing trend and seasonality. The additive model assumes Y = T + S + R, suitable when seasonal amplitude does not change with the trend. The period parameter specifies the length of one complete cycle."
+      }
+    },
+    {
+      "id": "s6-tsf-008",
+      "type": "true-false",
+      "difficulty": 4,
+      "title": {
+        "zh": "过拟合与预测模型",
+        "en": "Overfitting and Forecast Models"
+      },
+      "description": {
+        "zh": "一个完美拟合训练数据(training data)的预测模型一定是最好的预测模型。",
+        "en": "A forecast model that perfectly fits the training data is always the best forecast model."
+      },
+      "correctAnswer": false,
+      "hints": {
+        "zh": [
+          "想想模型是否可能记住了训练数据中的噪声"
+        ],
+        "en": [
+          "Think about whether the model might have memorized the noise in the training data"
+        ]
+      },
+      "explanation": {
+        "zh": "完美拟合训练数据通常意味着过拟合(overfitting)：模型不仅学习了数据中的真实模式，还记住了噪声。过拟合的模型在新数据上表现往往很差。好的预测模型应在训练集和验证集上都有合理的表现，这就是为什么需要 walk-forward 验证等方法来评估模型的真实预测能力。",
+        "en": "Perfectly fitting training data usually indicates overfitting: the model has learned not only the true patterns but also memorized the noise. Overfitted models typically perform poorly on new data. A good forecast model should perform reasonably on both training and validation sets, which is why methods like walk-forward validation are needed to assess true predictive ability."
+      }
+    },
+    {
+      "id": "s6-tsf-009",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "比较预测方法：RMSE 与 MAE",
+        "en": "Compare Forecast Methods: RMSE and MAE"
+      },
+      "description": {
+        "zh": "分别计算朴素预测(naive)和 SMA(window=5) 预测的 RMSE 和 MAE，将结果整理为 DataFrame (metrics_df)，列为 ['method', 'RMSE', 'MAE']。",
+        "en": "Compute RMSE and MAE for both naive and SMA (window=5) forecasts. Organize results into a DataFrame (metrics_df) with columns ['method', 'RMSE', 'MAE']."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2022-01-01', periods=100, freq='D')\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 100)) + 100, index=dates, name='price')",
+      "starterCode": "# Naive forecast\nf_naive = ts.shift(1).dropna()\na_naive = ts.iloc[1:]\n\n# SMA forecast (window=5)\nf_sma = ts.rolling(5).mean().shift(1).dropna()\na_sma = ts[f_sma.index]\n\n# Compute RMSE and MAE for each\nrmse_naive = np.sqrt(np.mean((a_naive - f_naive) ** 2))\nmae_naive = np.___(np.___(a_naive - f_naive))\n\nrmse_sma = np.sqrt(np.mean((a_sma - f_sma) ** 2))\nmae_sma = np.___(np.___(a_sma - f_sma))\n\n# Build metrics DataFrame\nmetrics_df = pd.DataFrame([\n    {'method': 'naive', 'RMSE': rmse_naive, 'MAE': mae_naive},\n    {'method': 'SMA', 'RMSE': rmse_sma, 'MAE': mae_sma}\n])",
+      "solutionCode": "f_naive = ts.shift(1).dropna()\na_naive = ts.iloc[1:]\n\nf_sma = ts.rolling(5).mean().shift(1).dropna()\na_sma = ts[f_sma.index]\n\nrmse_naive = np.sqrt(np.mean((a_naive - f_naive) ** 2))\nmae_naive = np.mean(np.abs(a_naive - f_naive))\n\nrmse_sma = np.sqrt(np.mean((a_sma - f_sma) ** 2))\nmae_sma = np.mean(np.abs(a_sma - f_sma))\n\nmetrics_df = pd.DataFrame([\n    {'method': 'naive', 'RMSE': rmse_naive, 'MAE': mae_naive},\n    {'method': 'SMA', 'RMSE': rmse_sma, 'MAE': mae_sma}\n])",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2022-01-01\\', periods=100, freq=\\'D\\')\\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 100)) + 100, index=dates, name=\\'price\\')\\nf_naive = ts.shift(1).dropna()\\na_naive = ts.iloc[1:]\\nf_sma = ts.rolling(5).mean().shift(1).dropna()\\na_sma = ts[f_sma.index]\\nrmse_naive = np.sqrt(np.mean((a_naive - f_naive) ** 2))\\nmae_naive = np.mean(np.abs(a_naive - f_naive))\\nrmse_sma = np.sqrt(np.mean((a_sma - f_sma) ** 2))\\nmae_sma = np.mean(np.abs(a_sma - f_sma))\\nmetrics_df = pd.DataFrame([{\"method\": \"naive\", \"RMSE\": rmse_naive, \"MAE\": mae_naive}, {\"method\": \"SMA\", \"RMSE\": rmse_sma, \"MAE\": mae_sma}])', _ns)\ntry:\n    result = np.isclose(metrics_df['RMSE'].iloc[0], _ns['metrics_df']['RMSE'].iloc[0]) and np.isclose(metrics_df['MAE'].iloc[1], _ns['metrics_df']['MAE'].iloc[1])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "MAE = np.mean(np.abs(errors))，即误差绝对值的均值",
+          "RMSE = np.sqrt(np.mean(errors**2))"
+        ],
+        "en": [
+          "MAE = np.mean(np.abs(errors)), the mean of absolute errors",
+          "RMSE = np.sqrt(np.mean(errors**2))"
+        ]
+      },
+      "explanation": {
+        "zh": "RMSE 和 MAE 是最常用的预测评估指标。RMSE 对大误差更敏感（因为平方操作），MAE 对所有误差一视同仁。比较多种方法时，通常两个指标都看：如果某方法 RMSE 和 MAE 都最低，则明显最优；如果 RMSE 最低但 MAE 不是，说明该方法在极端情况下表现更好但整体一般。",
+        "en": "RMSE and MAE are the most common forecast evaluation metrics. RMSE is more sensitive to large errors (due to squaring), while MAE treats all errors equally. When comparing methods, check both: if a method has the lowest RMSE and MAE, it is clearly best; if RMSE is lowest but MAE is not, the method handles extremes better but is mediocre overall."
+      }
+    },
+    {
+      "id": "s6-tsf-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "预测区间：点预测 +/- 置信带",
+        "en": "Prediction Interval: Point Forecast +/- Confidence Band"
+      },
+      "description": {
+        "zh": "基于 EWM 预测计算预测区间：先计算残差的标准差 resid_std，然后构建 95% 预测区间 (z=1.96)，将上界和下界分别赋给 upper 和 lower。",
+        "en": "Compute prediction intervals based on EWM forecast: calculate the standard deviation of residuals (resid_std), then build a 95% prediction interval (z=1.96). Assign upper and lower bounds to upper and lower."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2022-01-01', periods=100, freq='D')\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 100)) + 100, index=dates, name='price')\nforecast_ewm = ts.ewm(span=10).mean().shift(1)\nvalid = forecast_ewm.dropna().index\nz = 1.96",
+      "starterCode": "# Compute residuals on valid portion\nresiduals = ts[valid] - forecast_ewm[valid]\n\n# Standard deviation of residuals\nresid_std = residuals.___\n\n# Build 95% prediction interval\nupper = forecast_ewm[valid] + ___ * resid_std\nlower = forecast_ewm[valid] - ___ * resid_std",
+      "solutionCode": "residuals = ts[valid] - forecast_ewm[valid]\nresid_std = residuals.std()\nupper = forecast_ewm[valid] + z * resid_std\nlower = forecast_ewm[valid] - z * resid_std",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2022-01-01\\', periods=100, freq=\\'D\\')\\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 100)) + 100, index=dates, name=\\'price\\')\\nforecast_ewm = ts.ewm(span=10).mean().shift(1)\\nvalid = forecast_ewm.dropna().index\\nz = 1.96\\nresiduals = ts[valid] - forecast_ewm[valid]\\nresid_std = residuals.std()\\nupper = forecast_ewm[valid] + z * resid_std\\nlower = forecast_ewm[valid] - z * resid_std', _ns)\ntry:\n    result = np.allclose(upper.values, _ns['upper'].values) and np.allclose(lower.values, _ns['lower'].values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "残差 = 实际值 - 预测值",
+          "95% 预测区间: 点预测 +/- 1.96 * 残差标准差"
+        ],
+        "en": [
+          "Residuals = actual - predicted",
+          "95% prediction interval: point forecast +/- 1.96 * residual std"
+        ]
+      },
+      "explanation": {
+        "zh": "预测区间量化了预测的不确定性。假设残差近似正态分布，95% 预测区间 = 点预测 +/- 1.96 * std(residuals)。这意味着未来观测值有约 95% 的概率落在此区间内。resid_std 反映了模型的预测精度：越小说明模型越准确，区间越窄。",
+        "en": "Prediction intervals quantify forecast uncertainty. Assuming residuals are approximately normally distributed, the 95% interval = point forecast +/- 1.96 * std(residuals). This means future observations have about a 95% chance of falling within this interval. resid_std reflects model accuracy: smaller means more accurate and narrower intervals."
+      }
+    },
+    {
+      "id": "s6-tsf-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 滚动预测中使用了未来数据",
+        "en": "[Debug] Using Future Data in Rolling Forecast"
+      },
+      "description": {
+        "zh": "以下代码试图做滚动预测，但有一个bug：rolling mean 没有 shift，导致预测使用了当前步的数据（未来数据泄露）。请修复代码，确保只使用历史数据。",
+        "en": "The following code attempts a rolling forecast but has a bug: the rolling mean is not shifted, causing the forecast to use current-step data (future data leakage). Fix the code to ensure only historical data is used."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2022-01-01', periods=100, freq='D')\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 100)) + 100, index=dates, name='price')",
+      "starterCode": "# BUG: This forecast uses current-step data (no shift)\n# forecast_buggy = ts.rolling(5).mean()\n\n# FIX: Add shift to avoid future data leakage\nforecast_fixed = ts.rolling(5).mean().___\n\nvalid = forecast_fixed.dropna().index\nrmse = np.sqrt(np.mean((ts[valid] - forecast_fixed[valid]) ** 2))",
+      "solutionCode": "forecast_fixed = ts.rolling(5).mean().shift(1)\nvalid = forecast_fixed.dropna().index\nrmse = np.sqrt(np.mean((ts[valid] - forecast_fixed[valid]) ** 2))",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2022-01-01\\', periods=100, freq=\\'D\\')\\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 100)) + 100, index=dates, name=\\'price\\')\\nforecast_fixed = ts.rolling(5).mean().shift(1)\\nvalid = forecast_fixed.dropna().index\\nrmse = np.sqrt(np.mean((ts[valid] - forecast_fixed[valid]) ** 2))', _ns)\ntry:\n    result = np.isclose(rmse, _ns['rmse'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "shift(1) 将预测值向未来移动一步，确保每个预测只基于历史数据",
+          "没有 shift 时，rolling(5).mean() 在时间 t 的值包含了 t 本身的数据"
+        ],
+        "en": [
+          "shift(1) moves predictions forward by one step, ensuring each prediction uses only historical data",
+          "Without shift, rolling(5).mean() at time t includes data from time t itself"
+        ]
+      },
+      "explanation": {
+        "zh": "未来数据泄露(data leakage)是时间序列预测中最常见的错误之一。rolling(5).mean() 在时间 t 计算的是 [t-4, t-3, t-2, t-1, t] 的均值，包含了当前步 t 的数据。正确做法是 shift(1)，使时间 t 的预测值基于 [t-5, t-4, t-3, t-2, t-1]。不 shift 会导致 RMSE 虚低，给人模型很好的假象。",
+        "en": "Future data leakage is one of the most common mistakes in time series forecasting. rolling(5).mean() at time t computes the mean of [t-4, t-3, t-2, t-1, t], including current step t. The fix is shift(1), so the prediction at time t is based on [t-5, t-4, t-3, t-2, t-1]. Without shift, RMSE is artificially low, creating a false impression of model quality."
+      }
+    },
+    {
+      "id": "s6-tsf-012",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 三种预测方法全面比较",
+        "en": "[Challenge] Comprehensive Comparison of Three Forecast Methods"
+      },
+      "description": {
+        "zh": "对时间序列分别使用 Naive、SMA(window=5) 和 EWM(span=10) 三种方法预测。计算每种方法的 RMSE 和 MAE，构建比较 DataFrame (comparison)，并找出 RMSE 最低的最佳方法 best_method。",
+        "en": "Forecast a time series using three methods: Naive, SMA (window=5), and EWM (span=10). Compute RMSE and MAE for each, build a comparison DataFrame (comparison), and identify the best method (best_method) with the lowest RMSE."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2022-01-01', periods=200, freq='D')\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 200)) + 100, index=dates, name='price')",
+      "starterCode": "# Method 1: Naive forecast\nf_naive = ts.shift(1)\n\n# Method 2: SMA forecast\nf_sma = ts.rolling(5).mean().shift(1)\n\n# Method 3: EWM forecast\nf_ewm = ts.ewm(span=10).mean().shift(1)\n\n# Common valid index (where all forecasts are available)\nvalid = f_sma.dropna().index  # SMA has the most NaNs\n\n# Compute metrics for each method\nresults = []\nfor name, f in [('Naive', f_naive), ('SMA', f_sma), ('EWM', f_ewm)]:\n    errors = ts[valid] - f[valid]\n    rmse = np.sqrt(np.___(errors ** 2))\n    mae = np.mean(np.___(errors))\n    results.append({'method': name, 'RMSE': rmse, 'MAE': mae})\n\ncomparison = pd.DataFrame(results)\nbest_method = comparison.loc[comparison['RMSE'].___(), 'method']",
+      "solutionCode": "f_naive = ts.shift(1)\nf_sma = ts.rolling(5).mean().shift(1)\nf_ewm = ts.ewm(span=10).mean().shift(1)\n\nvalid = f_sma.dropna().index\n\nresults = []\nfor name, f in [('Naive', f_naive), ('SMA', f_sma), ('EWM', f_ewm)]:\n    errors = ts[valid] - f[valid]\n    rmse = np.sqrt(np.mean(errors ** 2))\n    mae = np.mean(np.abs(errors))\n    results.append({'method': name, 'RMSE': rmse, 'MAE': mae})\n\ncomparison = pd.DataFrame(results)\nbest_method = comparison.loc[comparison['RMSE'].idxmin(), 'method']",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2022-01-01\\', periods=200, freq=\\'D\\')\\nts = pd.Series(np.cumsum(np.random.normal(0.05, 1, 200)) + 100, index=dates, name=\\'price\\')\\nf_naive = ts.shift(1)\\nf_sma = ts.rolling(5).mean().shift(1)\\nf_ewm = ts.ewm(span=10).mean().shift(1)\\nvalid = f_sma.dropna().index\\nresults = []\\nfor name, f in [(\\'Naive\\', f_naive), (\\'SMA\\', f_sma), (\\'EWM\\', f_ewm)]:\\n    errors = ts[valid] - f[valid]\\n    rmse = np.sqrt(np.mean(errors ** 2))\\n    mae = np.mean(np.abs(errors))\\n    results.append({\"method\": name, \"RMSE\": rmse, \"MAE\": mae})\\ncomparison = pd.DataFrame(results)\\nbest_method = comparison.loc[comparison[\"RMSE\"].idxmin(), \"method\"]', _ns)\ntry:\n    result = comparison['RMSE'].equals(_ns['comparison']['RMSE']) and best_method == _ns['best_method']\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "np.mean(errors**2) 计算 MSE，np.abs(errors) 取绝对值用于 MAE",
+          "idxmin() 返回最小值所在的行索引",
+          "确保三种方法在相同的有效区间上比较"
+        ],
+        "en": [
+          "np.mean(errors**2) computes MSE, np.abs(errors) takes absolute values for MAE",
+          "idxmin() returns the row index of the minimum value",
+          "Ensure all three methods are compared on the same valid index range"
+        ]
+      },
+      "explanation": {
+        "zh": "本综合练习将三种常见的时间序列预测方法放在一起比较。Naive 最简单但在随机游走数据上往往是强基线；SMA 通过平均平滑噪声但滞后明显；EWM 给近期数据更高权重，兼顾平滑和响应速度。在实际应用中，应在相同的验证集上公平比较各方法，idxmin() 帮助快速找到最佳方法。不同数据特征下最佳方法可能不同。",
+        "en": "This challenge compares three common time series forecasting methods. Naive is simplest but often a strong baseline for random walk data; SMA smooths noise by averaging but lags noticeably; EWM gives higher weight to recent data, balancing smoothing and responsiveness. In practice, methods should be fairly compared on the same validation set. idxmin() quickly identifies the best method. The optimal method may differ depending on data characteristics."
+      }
+    }
+  ]
+}

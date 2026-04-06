@@ -1,1 +1,414 @@
-{"module":"risk-metrics","stageId":"stage6","lessonId":"risk-metrics","tags":[],"exercises":[]}
+{
+  "module": "risk-metrics",
+  "stageId": "stage6",
+  "lessonId": "risk-metrics",
+  "tags": [
+    "risk",
+    "sharpe",
+    "drawdown",
+    "var",
+    "volatility"
+  ],
+  "exercises": [
+    {
+      "id": "s6-risk-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "年化波动率",
+        "en": "Annualized Volatility"
+      },
+      "description": {
+        "zh": "给定一组日收益率 daily_returns，计算年化波动率。年化波动率 = 日收益率标准差 * sqrt(252)，将结果赋给 annual_vol。",
+        "en": "Given daily returns, compute the annualized volatility. Annualized volatility = daily returns std * sqrt(252). Assign the result to annual_vol."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\ndaily_returns = prices.pct_change().dropna()",
+      "starterCode": "# Compute annualized volatility\nannual_vol = daily_returns.___() * np.sqrt(___)",
+      "solutionCode": "annual_vol = daily_returns.std() * np.sqrt(252)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\\ndaily_returns = prices.pct_change().dropna()\\nannual_vol = daily_returns.std() * np.sqrt(252)', _ns)\ntry:\n    result = np.isclose(annual_vol, _ns['annual_vol'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "std() 计算日收益率的标准差",
+          "一年约有 252 个交易日，年化因子为 sqrt(252)"
+        ],
+        "en": [
+          "std() computes the standard deviation of daily returns",
+          "There are approximately 252 trading days per year; the annualization factor is sqrt(252)"
+        ]
+      },
+      "explanation": {
+        "zh": "年化波动率是衡量资产风险的核心指标。日收益率标准差反映每日波动，乘以 sqrt(252) 将其转换为年化数值（假设日收益率独立同分布）。典型股票的年化波动率在 15%-30% 之间。",
+        "en": "Annualized volatility is a core risk measure. Daily return std reflects daily fluctuation; multiplying by sqrt(252) converts it to an annualized figure (assuming i.i.d. daily returns). Typical stock annualized volatility ranges from 15% to 30%."
+      }
+    },
+    {
+      "id": "s6-risk-002",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "Sharpe 比率的含义",
+        "en": "Meaning of Sharpe Ratio"
+      },
+      "description": {
+        "zh": "关于 Sharpe 比率，以下哪个说法是正确的？",
+        "en": "Which of the following statements about the Sharpe ratio is correct?"
+      },
+      "options": {
+        "zh": [
+          "Sharpe 比率越高，说明风险调整后的收益越好",
+          "Sharpe 比率越高，说明绝对收益越高",
+          "Sharpe 比率为负数是不可能的",
+          "Sharpe 比率只考虑下行风险"
+        ],
+        "en": [
+          "A higher Sharpe ratio means better risk-adjusted return",
+          "A higher Sharpe ratio means higher absolute return",
+          "A negative Sharpe ratio is impossible",
+          "The Sharpe ratio only considers downside risk"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "Sharpe 比率 = (收益 - 无风险利率) / 波动率，衡量的是每单位风险获得的超额收益"
+        ],
+        "en": [
+          "Sharpe ratio = (return - risk-free rate) / volatility; it measures excess return per unit of risk"
+        ]
+      },
+      "explanation": {
+        "zh": "Sharpe 比率 = (年化收益 - 无风险利率) / 年化波动率，衡量每承担一单位总风险所获得的超额收益。高 Sharpe 不一定意味着高绝对收益（可能低风险低收益但比率高）。Sharpe 可以为负（收益低于无风险利率）。它考虑的是总风险（上行+下行），而非仅下行风险。",
+        "en": "Sharpe ratio = (annualized return - risk-free rate) / annualized volatility; it measures excess return per unit of total risk. A high Sharpe does not necessarily mean high absolute return. Sharpe can be negative (return below risk-free rate). It considers total risk (upside + downside), not just downside risk."
+      }
+    },
+    {
+      "id": "s6-risk-003",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "计算 Sharpe 比率",
+        "en": "Compute Sharpe Ratio"
+      },
+      "description": {
+        "zh": "给定日收益率和年化无风险利率 risk_free = 0.03，计算年化收益率 annual_return、年化波动率 annual_vol 和 Sharpe 比率 sharpe。",
+        "en": "Given daily returns and annualized risk-free rate risk_free = 0.03, compute the annualized return (annual_return), annualized volatility (annual_vol), and Sharpe ratio (sharpe)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\ndaily_returns = prices.pct_change().dropna()\nrisk_free = 0.03",
+      "starterCode": "# Annualized return (geometric)\nannual_return = (1 + daily_returns.mean()) ** ___ - 1\n\n# Annualized volatility\nannual_vol = daily_returns.std() * np.sqrt(___)\n\n# Sharpe ratio\nsharpe = (___ - ___) / ___",
+      "solutionCode": "annual_return = (1 + daily_returns.mean()) ** 252 - 1\nannual_vol = daily_returns.std() * np.sqrt(252)\nsharpe = (annual_return - risk_free) / annual_vol",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\\ndaily_returns = prices.pct_change().dropna()\\nrisk_free = 0.03\\nannual_return = (1 + daily_returns.mean()) ** 252 - 1\\nannual_vol = daily_returns.std() * np.sqrt(252)\\nsharpe = (annual_return - risk_free) / annual_vol', _ns)\ntry:\n    result = np.isclose(sharpe, _ns['sharpe']) and np.isclose(annual_return, _ns['annual_return']) and np.isclose(annual_vol, _ns['annual_vol'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "年化收益率: (1 + 日均收益率) ^ 252 - 1",
+          "Sharpe = (annual_return - risk_free) / annual_vol"
+        ],
+        "en": [
+          "Annualized return: (1 + daily mean return) ^ 252 - 1",
+          "Sharpe = (annual_return - risk_free) / annual_vol"
+        ]
+      },
+      "explanation": {
+        "zh": "Sharpe 比率是最常用的风险调整收益指标。年化收益用复利公式 (1+r_daily)^252-1 计算，年化波动率用 daily_std * sqrt(252)。Sharpe > 1 通常被认为不错，> 2 非常好，> 3 极为出色。",
+        "en": "The Sharpe ratio is the most widely used risk-adjusted return metric. Annualized return uses compounding: (1+r_daily)^252-1. Annualized volatility uses daily_std * sqrt(252). Sharpe > 1 is generally considered good, > 2 very good, > 3 excellent."
+      }
+    },
+    {
+      "id": "s6-risk-004",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "Sortino 比率：只关注下行风险",
+        "en": "Sortino Ratio: Focus on Downside Risk"
+      },
+      "description": {
+        "zh": "计算 Sortino 比率：用下行偏差 (downside deviation) 代替总波动率。下行偏差仅基于负收益率计算。将年化下行偏差赋给 downside_dev，Sortino 比率赋给 sortino。",
+        "en": "Compute the Sortino ratio using downside deviation instead of total volatility. Downside deviation is computed from negative returns only. Assign the annualized downside deviation to downside_dev and the Sortino ratio to sortino."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\ndaily_returns = prices.pct_change().dropna()\nrisk_free = 0.03\nannual_return = (1 + daily_returns.mean()) ** 252 - 1",
+      "starterCode": "# Filter negative returns only\nneg_returns = daily_returns[daily_returns < ___]\n\n# Annualized downside deviation\ndownside_dev = neg_returns.std() * np.sqrt(___)\n\n# Sortino ratio\nsortino = (annual_return - ___) / ___",
+      "solutionCode": "neg_returns = daily_returns[daily_returns < 0]\ndownside_dev = neg_returns.std() * np.sqrt(252)\nsortino = (annual_return - risk_free) / downside_dev",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\\ndaily_returns = prices.pct_change().dropna()\\nrisk_free = 0.03\\nannual_return = (1 + daily_returns.mean()) ** 252 - 1\\nneg_returns = daily_returns[daily_returns < 0]\\ndownside_dev = neg_returns.std() * np.sqrt(252)\\nsortino = (annual_return - risk_free) / downside_dev', _ns)\ntry:\n    result = np.isclose(downside_dev, _ns['downside_dev']) and np.isclose(sortino, _ns['sortino'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "布尔索引 daily_returns[daily_returns < 0] 筛选负收益",
+          "下行偏差 = 负收益标准差 * sqrt(252)"
+        ],
+        "en": [
+          "Boolean indexing daily_returns[daily_returns < 0] filters negative returns",
+          "Downside deviation = std of negative returns * sqrt(252)"
+        ]
+      },
+      "explanation": {
+        "zh": "Sortino 比率改进了 Sharpe 比率，只惩罚下行波动而非全部波动。投资者通常只关心亏损风险，上行波动是受欢迎的。因此 Sortino 比率更符合投资者的实际风险感知。当收益分布不对称时，Sortino 和 Sharpe 的差异更明显。",
+        "en": "The Sortino ratio improves upon the Sharpe ratio by penalizing only downside volatility. Investors typically care about loss risk; upside volatility is welcome. Sortino better reflects actual risk perception. The difference between Sortino and Sharpe is more pronounced when return distributions are asymmetric."
+      }
+    },
+    {
+      "id": "s6-risk-005",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "最大回撤公式",
+        "en": "Maximum Drawdown Formula"
+      },
+      "description": {
+        "zh": "最大回撤衡量从峰值到谷值的最大跌幅。补全代码中的关键部分来计算回撤序列。",
+        "en": "Maximum drawdown measures the largest peak-to-trough decline. Fill in the key part of the code to compute the drawdown series."
+      },
+      "codeTemplate": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\ncummax = prices.cummax()\ndrawdown = (___1___ - prices) / ___1___",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "cummax",
+          "alternatives": ["prices.cummax()"]
+        }
+      ],
+      "hints": {
+        "zh": [
+          "回撤 = (历史最高点 - 当前价格) / 历史最高点"
+        ],
+        "en": [
+          "Drawdown = (cumulative max - current price) / cumulative max"
+        ]
+      },
+      "explanation": {
+        "zh": "回撤 = (cummax - price) / cummax，其中 cummax 是到当前时刻的累计最高价。这个公式计算的是从最近一次高点下跌的百分比。最大回撤 = drawdown.max()，是整个区间内最大的峰谷跌幅。",
+        "en": "Drawdown = (cummax - price) / cummax, where cummax is the running maximum price up to that point. This formula computes the percentage decline from the most recent peak. Max drawdown = drawdown.max(), the largest peak-to-trough decline over the entire period."
+      }
+    },
+    {
+      "id": "s6-risk-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "最大回撤计算与持续时间",
+        "en": "Maximum Drawdown Calculation and Duration"
+      },
+      "description": {
+        "zh": "计算价格序列的最大回撤 (max_dd) 和回撤持续时间 (dd_duration，即从峰值到最大回撤点的天数)。",
+        "en": "Compute the maximum drawdown (max_dd) of a price series and the drawdown duration (dd_duration, i.e., the number of days from the peak to the max drawdown trough)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))",
+      "starterCode": "# Compute cumulative maximum\ncummax = prices.___\n\n# Compute drawdown series\ndrawdown = (cummax - prices) / cummax\n\n# Maximum drawdown\nmax_dd = drawdown.___\n\n# Drawdown duration: days from peak to trough\npeak_idx = prices[:drawdown.___].idxmax()\ntrough_idx = drawdown.___\ndd_duration = trough_idx - peak_idx",
+      "solutionCode": "cummax = prices.cummax()\ndrawdown = (cummax - prices) / cummax\nmax_dd = drawdown.max()\npeak_idx = prices[:drawdown.idxmax()].idxmax()\ntrough_idx = drawdown.idxmax()\ndd_duration = trough_idx - peak_idx",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\\ncummax = prices.cummax()\\ndrawdown = (cummax - prices) / cummax\\nmax_dd = drawdown.max()\\npeak_idx = prices[:drawdown.idxmax()].idxmax()\\ntrough_idx = drawdown.idxmax()\\ndd_duration = trough_idx - peak_idx', _ns)\ntry:\n    result = np.isclose(max_dd, _ns['max_dd']) and dd_duration == _ns['dd_duration']\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "cummax() 计算累积最大值",
+          "idxmax() 返回最大值的索引位置",
+          "峰值是最大回撤点之前的价格最高点"
+        ],
+        "en": [
+          "cummax() computes the running maximum",
+          "idxmax() returns the index of the maximum value",
+          "The peak is the highest price before the max drawdown trough"
+        ]
+      },
+      "explanation": {
+        "zh": "最大回撤是衡量策略最大亏损的关键指标。回撤持续时间也很重要：长时间的回撤可能导致投资者失去信心。计算时先找到最大回撤的谷底位置，再在该位置之前找到价格的峰值，两者之差即为持续天数。",
+        "en": "Maximum drawdown is a key metric measuring the worst loss of a strategy. Drawdown duration is also important: prolonged drawdowns can shake investor confidence. To compute duration, first find the trough of the max drawdown, then find the price peak before that point. The difference gives the duration in days."
+      }
+    },
+    {
+      "id": "s6-risk-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "历史 VaR (95%)",
+        "en": "Historical VaR at 95%"
+      },
+      "description": {
+        "zh": "使用历史模拟法计算 95% 置信水平下的 VaR (Value at Risk)。即取日收益率的第 5 百分位数，将结果赋给 var_95。",
+        "en": "Compute the 95% Value at Risk (VaR) using the historical simulation method. Take the 5th percentile of daily returns. Assign the result to var_95."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\ndaily_returns = prices.pct_change().dropna()",
+      "starterCode": "# Historical VaR at 95% confidence\nvar_95 = daily_returns.quantile(___)\n\nprint(f'95% VaR: {var_95:.4f}')\nprint(f'Interpretation: with 95% confidence, daily loss will not exceed {-var_95:.2%}')",
+      "solutionCode": "var_95 = daily_returns.quantile(0.05)\nprint(f'95% VaR: {var_95:.4f}')\nprint(f'Interpretation: with 95% confidence, daily loss will not exceed {-var_95:.2%}')",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\\ndaily_returns = prices.pct_change().dropna()\\nvar_95 = daily_returns.quantile(0.05)', _ns)\ntry:\n    result = np.isclose(var_95, _ns['var_95'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "95% VaR 对应收益率分布的第 5 百分位 (左尾)",
+          "quantile(0.05) 计算第 5 百分位数"
+        ],
+        "en": [
+          "95% VaR corresponds to the 5th percentile (left tail) of the return distribution",
+          "quantile(0.05) computes the 5th percentile"
+        ]
+      },
+      "explanation": {
+        "zh": "历史 VaR 直接从历史收益率分布中取分位数，不做任何分布假设。95% VaR 表示在 95% 的交易日中，损失不会超过该值。这是最简单直观的 VaR 计算方法，但依赖于历史数据的代表性。",
+        "en": "Historical VaR takes quantiles directly from the historical return distribution without any distributional assumptions. 95% VaR means that on 95% of trading days, the loss will not exceed this value. This is the simplest VaR method but depends on the representativeness of historical data."
+      }
+    },
+    {
+      "id": "s6-risk-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "参数法 VaR (假设正态分布)",
+        "en": "Parametric VaR (Assuming Normal Distribution)"
+      },
+      "description": {
+        "zh": "假设收益率服从正态分布，使用参数法计算 95% VaR：VaR = mean - 1.645 * std。将结果赋给 param_var。",
+        "en": "Assuming returns follow a normal distribution, compute the 95% parametric VaR: VaR = mean - 1.645 * std. Assign the result to param_var."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\ndaily_returns = prices.pct_change().dropna()",
+      "starterCode": "# Compute mean and std of daily returns\nmu = daily_returns.___\nsigma = daily_returns.___\n\n# Parametric VaR at 95% (z = 1.645 for one-tailed 95%)\nparam_var = ___ - 1.645 * ___\n\nprint(f'Parametric VaR (95%): {param_var:.4f}')",
+      "solutionCode": "mu = daily_returns.mean()\nsigma = daily_returns.std()\nparam_var = mu - 1.645 * sigma\nprint(f'Parametric VaR (95%): {param_var:.4f}')",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\\ndaily_returns = prices.pct_change().dropna()\\nmu = daily_returns.mean()\\nsigma = daily_returns.std()\\nparam_var = mu - 1.645 * sigma', _ns)\ntry:\n    result = np.isclose(param_var, _ns['param_var'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "正态分布单尾 95% 分位点 z = 1.645",
+          "参数法 VaR = mu - z * sigma"
+        ],
+        "en": [
+          "The one-tailed 95% z-score for a normal distribution is 1.645",
+          "Parametric VaR = mu - z * sigma"
+        ]
+      },
+      "explanation": {
+        "zh": "参数法 VaR 假设收益率服从正态分布，用均值和标准差直接计算。优点是计算简单，缺点是实际收益率通常存在厚尾（fat tails），正态假设会低估极端风险。1.645 是标准正态分布的单尾 95% 分位点。",
+        "en": "Parametric VaR assumes returns follow a normal distribution and computes VaR directly from mean and std. The advantage is simplicity; the drawback is that real returns typically have fat tails, so the normal assumption underestimates extreme risk. 1.645 is the one-tailed 95% quantile of the standard normal distribution."
+      }
+    },
+    {
+      "id": "s6-risk-009",
+      "type": "true-false",
+      "difficulty": 4,
+      "title": {
+        "zh": "CVaR (Expected Shortfall) 与 VaR 的关系",
+        "en": "CVaR (Expected Shortfall) vs VaR"
+      },
+      "description": {
+        "zh": "CVaR (条件风险价值，也叫 Expected Shortfall) 总是比同一置信水平下的 VaR 更差（即损失更大）。",
+        "en": "CVaR (Conditional Value at Risk, also called Expected Shortfall) is always worse (i.e., larger loss) than VaR at the same confidence level."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": [
+          "CVaR 是超过 VaR 阈值后的平均损失"
+        ],
+        "en": [
+          "CVaR is the average loss beyond the VaR threshold"
+        ]
+      },
+      "explanation": {
+        "zh": "CVaR 计算的是超过 VaR 阈值后所有损失的平均值，因此它必然 >= VaR（绝对值意义上更大的损失）。CVaR 是一个更保守的风险度量，也被称为「尾部风险」指标。与 VaR 不同，CVaR 满足次可加性，是一个一致性风险度量。",
+        "en": "CVaR computes the average of all losses beyond the VaR threshold, so it is necessarily >= VaR (in absolute loss terms). CVaR is a more conservative risk measure, also known as a 'tail risk' metric. Unlike VaR, CVaR satisfies sub-additivity and is a coherent risk measure."
+      }
+    },
+    {
+      "id": "s6-risk-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "CVaR (Expected Shortfall) 计算",
+        "en": "CVaR (Expected Shortfall) Calculation"
+      },
+      "description": {
+        "zh": "计算 95% 置信水平的 CVaR：先求 VaR 阈值，然后计算低于该阈值的收益率均值。将结果赋给 cvar_95。",
+        "en": "Compute the 95% CVaR: first find the VaR threshold, then compute the mean of returns below that threshold. Assign the result to cvar_95."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\ndaily_returns = prices.pct_change().dropna()",
+      "starterCode": "# Step 1: Compute VaR threshold at 95%\nvar_95 = daily_returns.quantile(___)\n\n# Step 2: CVaR = mean of returns below VaR\ncvar_95 = daily_returns[daily_returns <= ___].___\n\nprint(f'VaR (95%): {var_95:.4f}')\nprint(f'CVaR (95%): {cvar_95:.4f}')",
+      "solutionCode": "var_95 = daily_returns.quantile(0.05)\ncvar_95 = daily_returns[daily_returns <= var_95].mean()\nprint(f'VaR (95%): {var_95:.4f}')\nprint(f'CVaR (95%): {cvar_95:.4f}')",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\\ndaily_returns = prices.pct_change().dropna()\\nvar_95 = daily_returns.quantile(0.05)\\ncvar_95 = daily_returns[daily_returns <= var_95].mean()', _ns)\ntry:\n    result = np.isclose(cvar_95, _ns['cvar_95'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "VaR 阈值 = quantile(0.05)",
+          "CVaR = 低于 VaR 的所有收益率的平均值"
+        ],
+        "en": [
+          "VaR threshold = quantile(0.05)",
+          "CVaR = mean of all returns below VaR"
+        ]
+      },
+      "explanation": {
+        "zh": "CVaR (Expected Shortfall) 回答了「当最坏情况发生时，平均会亏多少」的问题。它比 VaR 更能捕捉尾部风险。巴塞尔协议 III 已要求银行使用 CVaR 替代 VaR 进行市场风险计量，因为 CVaR 满足一致性风险度量的所有公理。",
+        "en": "CVaR (Expected Shortfall) answers 'when the worst case happens, how much do we lose on average?' It captures tail risk better than VaR. Basel III requires banks to use CVaR instead of VaR for market risk measurement because CVaR satisfies all axioms of a coherent risk measure."
+      }
+    },
+    {
+      "id": "s6-risk-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 重复年化导致波动率虚高",
+        "en": "[Debug] Double Annualization Inflates Volatility"
+      },
+      "description": {
+        "zh": "以下代码先将日收益率乘以 252 转为「年化收益率」序列，然后又对其使用 * np.sqrt(252) 进行年化，导致波动率被重复年化。请修复代码，使其正确计算年化波动率。",
+        "en": "The following code first multiplies daily returns by 252 to create an 'annualized returns' series, then applies * np.sqrt(252) again, causing double annualization. Fix the code to correctly compute annualized volatility."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\ndaily_returns = prices.pct_change().dropna()",
+      "starterCode": "# BUG: double annualization - first annualizes returns, then annualizes vol again\n# annualized_returns = daily_returns * 252\n# wrong_vol = annualized_returns.std() * np.sqrt(252)\n\n# FIX: annualize volatility directly from daily returns\nannual_vol = daily_returns.___() * np.___(___)  ",
+      "solutionCode": "annual_vol = daily_returns.std() * np.sqrt(252)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.Series(np.cumprod(1 + np.random.normal(0.0005, 0.02, 252)))\\ndaily_returns = prices.pct_change().dropna()\\nannual_vol = daily_returns.std() * np.sqrt(252)', _ns)\ntry:\n    result = np.isclose(annual_vol, _ns['annual_vol'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "年化波动率应直接从日收益率计算: daily_std * sqrt(252)",
+          "不要先将收益率乘以 252 再求标准差"
+        ],
+        "en": [
+          "Annualized volatility should be computed directly from daily returns: daily_std * sqrt(252)",
+          "Do not multiply returns by 252 before computing std"
+        ]
+      },
+      "explanation": {
+        "zh": "这是初学者常犯的错误：先将日收益率 * 252 得到「年化收益率」，再对这个序列求标准差并乘以 sqrt(252)，相当于波动率被放大了 252 * sqrt(252) 倍。正确做法是直接对日收益率求标准差，然后乘以 sqrt(252) 一次完成年化。",
+        "en": "This is a common beginner mistake: multiplying daily returns by 252 to get 'annualized returns', then computing std and multiplying by sqrt(252) again, effectively scaling volatility by 252 * sqrt(252). The correct approach is to compute std on daily returns and multiply by sqrt(252) once."
+      }
+    },
+    {
+      "id": "s6-risk-012",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 三只股票风险报告",
+        "en": "[Challenge] Three-Stock Risk Report"
+      },
+      "description": {
+        "zh": "对 3 只股票计算完整的风险指标（年化波动率、Sharpe 比率、最大回撤、95% VaR、95% CVaR），生成风险摘要 DataFrame (risk_report)，并按 Sharpe 比率降序排列。",
+        "en": "Compute a full set of risk metrics (annualized volatility, Sharpe ratio, max drawdown, 95% VaR, 95% CVaR) for 3 stocks. Create a risk summary DataFrame (risk_report) sorted by Sharpe ratio in descending order."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nprices = pd.DataFrame({\n    'Stock_A': np.cumprod(1 + np.random.normal(0.001, 0.015, 252)),\n    'Stock_B': np.cumprod(1 + np.random.normal(0.0005, 0.025, 252)),\n    'Stock_C': np.cumprod(1 + np.random.normal(0.0008, 0.02, 252))\n})\nreturns = prices.pct_change().dropna()\nrisk_free = 0.03",
+      "starterCode": "records = []\nfor stock in returns.columns:\n    r = returns[stock]\n    p = prices[stock]\n    \n    # Annualized volatility\n    ann_vol = r.___() * np.sqrt(252)\n    \n    # Annualized return\n    ann_ret = (1 + r.mean()) ** 252 - 1\n    \n    # Sharpe ratio\n    sharpe = (ann_ret - ___) / ann_vol\n    \n    # Max drawdown\n    cummax = p.cummax()\n    drawdown = (cummax - p) / cummax\n    max_dd = drawdown.___\n    \n    # VaR and CVaR\n    var_95 = r.quantile(___)\n    cvar_95 = r[r <= ___].mean()\n    \n    records.append({\n        'stock': stock,\n        'annual_vol': ann_vol,\n        'sharpe': sharpe,\n        'max_drawdown': max_dd,\n        'var_95': var_95,\n        'cvar_95': cvar_95\n    })\n\nrisk_report = pd.DataFrame(records).set_index('stock').sort_values('sharpe', ascending=___)",
+      "solutionCode": "records = []\nfor stock in returns.columns:\n    r = returns[stock]\n    p = prices[stock]\n    ann_vol = r.std() * np.sqrt(252)\n    ann_ret = (1 + r.mean()) ** 252 - 1\n    sharpe = (ann_ret - risk_free) / ann_vol\n    cummax = p.cummax()\n    drawdown = (cummax - p) / cummax\n    max_dd = drawdown.max()\n    var_95 = r.quantile(0.05)\n    cvar_95 = r[r <= var_95].mean()\n    records.append({\n        'stock': stock,\n        'annual_vol': ann_vol,\n        'sharpe': sharpe,\n        'max_drawdown': max_dd,\n        'var_95': var_95,\n        'cvar_95': cvar_95\n    })\n\nrisk_report = pd.DataFrame(records).set_index('stock').sort_values('sharpe', ascending=False)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec(\"import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\nprices = pd.DataFrame({\\n    'Stock_A': np.cumprod(1 + np.random.normal(0.001, 0.015, 252)),\\n    'Stock_B': np.cumprod(1 + np.random.normal(0.0005, 0.025, 252)),\\n    'Stock_C': np.cumprod(1 + np.random.normal(0.0008, 0.02, 252))\\n})\\nreturns = prices.pct_change().dropna()\\nrisk_free = 0.03\\nrecords = []\\nfor stock in returns.columns:\\n    r = returns[stock]\\n    p = prices[stock]\\n    ann_vol = r.std() * np.sqrt(252)\\n    ann_ret = (1 + r.mean()) ** 252 - 1\\n    sharpe = (ann_ret - risk_free) / ann_vol\\n    cummax = p.cummax()\\n    drawdown = (cummax - p) / cummax\\n    max_dd = drawdown.max()\\n    var_95 = r.quantile(0.05)\\n    cvar_95 = r[r <= var_95].mean()\\n    records.append({'stock': stock, 'annual_vol': ann_vol, 'sharpe': sharpe, 'max_drawdown': max_dd, 'var_95': var_95, 'cvar_95': cvar_95})\\nrisk_report = pd.DataFrame(records).set_index('stock').sort_values('sharpe', ascending=False)\", _ns)\ntry:\n    result = risk_report.equals(_ns['risk_report'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "对每只股票分别计算所有风险指标",
+          "VaR: quantile(0.05)，CVaR: 低于 VaR 阈值的均值",
+          "sort_values('sharpe', ascending=False) 按 Sharpe 降序排列"
+        ],
+        "en": [
+          "Compute all risk metrics for each stock separately",
+          "VaR: quantile(0.05), CVaR: mean of returns below VaR threshold",
+          "sort_values('sharpe', ascending=False) sorts by Sharpe descending"
+        ]
+      },
+      "explanation": {
+        "zh": "本综合练习整合了所有风险指标：波动率衡量总体风险，Sharpe 比率衡量风险调整收益，最大回撤衡量最坏历史损失，VaR 和 CVaR 衡量尾部风险。通过对比多只股票的风险报告，投资者可以全面了解各资产的风险特征，做出更好的投资决策。",
+        "en": "This challenge integrates all risk metrics: volatility measures total risk, Sharpe ratio measures risk-adjusted return, max drawdown measures worst historical loss, VaR and CVaR measure tail risk. By comparing risk reports across stocks, investors can comprehensively understand each asset's risk profile for better investment decisions."
+      }
+    }
+  ]
+}

@@ -1,1 +1,413 @@
-{"module":"fin-timeseries","stageId":"stage6","lessonId":"fin-timeseries","tags":[],"exercises":[]}
+{
+  "module": "fin-timeseries",
+  "stageId": "stage6",
+  "lessonId": "fin-timeseries",
+  "tags": [
+    "finance",
+    "timeseries",
+    "returns",
+    "ohlcv"
+  ],
+  "exercises": [
+    {
+      "id": "s6-fin-ts-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "创建 OHLCV DataFrame",
+        "en": "Create an OHLCV DataFrame"
+      },
+      "description": {
+        "zh": "从模拟的股票数据中创建一个包含 Open, High, Low, Close, Volume 五列的 OHLCV DataFrame，使用日期作为索引。将结果赋给 ohlcv。",
+        "en": "Create an OHLCV DataFrame with columns Open, High, Low, Close, Volume from simulated stock data, using dates as the index. Assign the result to ohlcv."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=252, freq='B')\nclose = 100 + np.cumsum(np.random.randn(252) * 0.5)\nhigh = close + np.abs(np.random.randn(252) * 0.3)\nlow = close - np.abs(np.random.randn(252) * 0.3)\nopen_ = close + np.random.randn(252) * 0.2\nvolume = np.random.randint(100000, 1000000, 252)",
+      "starterCode": "# Create OHLCV DataFrame with dates as index\nohlcv = pd.DataFrame({\n    'Open': ___,\n    'High': ___,\n    'Low': ___,\n    'Close': ___,\n    'Volume': ___\n}, index=___)",
+      "solutionCode": "ohlcv = pd.DataFrame({\n    'Open': open_,\n    'High': high,\n    'Low': low,\n    'Close': close,\n    'Volume': volume\n}, index=dates)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=252, freq=\\'B\\')\\nclose = 100 + np.cumsum(np.random.randn(252) * 0.5)\\nhigh = close + np.abs(np.random.randn(252) * 0.3)\\nlow = close - np.abs(np.random.randn(252) * 0.3)\\nopen_ = close + np.random.randn(252) * 0.2\\nvolume = np.random.randint(100000, 1000000, 252)', _ns)\nexec('ohlcv = pd.DataFrame({\"Open\": open_, \"High\": high, \"Low\": low, \"Close\": close, \"Volume\": volume}, index=dates)', _ns)\ntry:\n    result = ohlcv.shape == _ns['ohlcv'].shape and list(ohlcv.columns) == list(_ns['ohlcv'].columns) and ohlcv.index.equals(_ns['ohlcv'].index) and np.allclose(ohlcv.values, _ns['ohlcv'].values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "OHLCV 分别代表 Open(开盘), High(最高), Low(最低), Close(收盘), Volume(成交量)",
+          "用 pd.DataFrame({...}, index=dates) 创建带日期索引的 DataFrame"
+        ],
+        "en": [
+          "OHLCV stands for Open, High, Low, Close, Volume",
+          "Use pd.DataFrame({...}, index=dates) to create a DataFrame with date index"
+        ]
+      },
+      "explanation": {
+        "zh": "OHLCV 是金融时序数据的标准格式。Open 是开盘价，High 和 Low 是当日最高/最低价，Close 是收盘价，Volume 是成交量。使用日期作为索引便于后续的时间序列分析。",
+        "en": "OHLCV is the standard format for financial time series data. Open is the opening price, High/Low are the daily high/low prices, Close is the closing price, and Volume is the trading volume. Using dates as the index facilitates subsequent time series analysis."
+      }
+    },
+    {
+      "id": "s6-fin-ts-002",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "简单收益率 vs 对数收益率",
+        "en": "Simple Return vs Log Return"
+      },
+      "description": {
+        "zh": "以下哪种收益率可以在时间维度上直接相加来计算多期累积收益？",
+        "en": "Which type of return can be directly summed across time periods to compute cumulative multi-period returns?"
+      },
+      "options": {
+        "zh": [
+          "对数收益率 (log return)",
+          "简单收益率 (simple return)",
+          "两者都可以直接相加",
+          "两者都不能直接相加"
+        ],
+        "en": [
+          "Log return",
+          "Simple return",
+          "Both can be directly summed",
+          "Neither can be directly summed"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "对数收益率 = ln(P_t / P_{t-1})，多期对数收益率之和等于总对数收益率"
+        ],
+        "en": [
+          "Log return = ln(P_t / P_{t-1}), the sum of multi-period log returns equals the total log return"
+        ]
+      },
+      "explanation": {
+        "zh": "对数收益率具有时间可加性：ln(P_T/P_0) = ln(P_1/P_0) + ln(P_2/P_1) + ... + ln(P_T/P_{T-1})。简单收益率则不能直接相加，只能通过连乘 (1+r_1)(1+r_2)...(1+r_T)-1 来计算累积收益。这是对数收益率在量化金融中被广泛使用的核心原因之一。",
+        "en": "Log returns are time-additive: ln(P_T/P_0) = ln(P_1/P_0) + ln(P_2/P_1) + ... + ln(P_T/P_{T-1}). Simple returns cannot be directly summed; cumulative return must be computed via (1+r_1)(1+r_2)...(1+r_T)-1. This time-additivity is a key reason log returns are widely used in quantitative finance."
+      }
+    },
+    {
+      "id": "s6-fin-ts-003",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "使用 pct_change 计算日收益率",
+        "en": "Daily Returns with pct_change()"
+      },
+      "description": {
+        "zh": "使用 pct_change() 方法计算收盘价的日简单收益率，将结果赋给 daily_returns。",
+        "en": "Use the pct_change() method to compute daily simple returns from the closing prices. Assign the result to daily_returns."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=252, freq='B')\nclose = pd.Series(100 + np.cumsum(np.random.randn(252) * 0.5), index=dates, name='Close')",
+      "starterCode": "# Compute daily simple returns using pct_change\ndaily_returns = close.___()",
+      "solutionCode": "daily_returns = close.pct_change()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=252, freq=\\'B\\')\\nclose = pd.Series(100 + np.cumsum(np.random.randn(252) * 0.5), index=dates, name=\\'Close\\')\\ndaily_returns = close.pct_change()', _ns)\ntry:\n    result = daily_returns.equals(_ns['daily_returns'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "pct_change() 计算相邻两期的百分比变化: (P_t - P_{t-1}) / P_{t-1}",
+          "第一个值会是 NaN，因为没有前一期数据"
+        ],
+        "en": [
+          "pct_change() computes the percentage change between consecutive periods: (P_t - P_{t-1}) / P_{t-1}",
+          "The first value will be NaN since there is no prior period"
+        ]
+      },
+      "explanation": {
+        "zh": "pct_change() 是 pandas 中计算简单收益率的最便捷方法。它计算 (P_t - P_{t-1}) / P_{t-1}，即每日价格相对于前一日的百分比变化。第一个值为 NaN，因为第一天没有前一天的参考价。",
+        "en": "pct_change() is the most convenient method in pandas for computing simple returns. It calculates (P_t - P_{t-1}) / P_{t-1}, the percentage change relative to the previous day. The first value is NaN since there is no prior reference price."
+      }
+    },
+    {
+      "id": "s6-fin-ts-004",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "计算对数收益率",
+        "en": "Compute Log Returns"
+      },
+      "description": {
+        "zh": "使用 np.log() 和 shift() 计算收盘价的日对数收益率: log_return = ln(P_t / P_{t-1})。将结果赋给 log_returns。",
+        "en": "Compute daily log returns from closing prices using np.log() and shift(): log_return = ln(P_t / P_{t-1}). Assign the result to log_returns."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=252, freq='B')\nclose = pd.Series(100 + np.cumsum(np.random.randn(252) * 0.5), index=dates, name='Close')",
+      "starterCode": "# Compute daily log returns: ln(P_t / P_{t-1})\nlog_returns = np.log(close / close.___(___))",
+      "solutionCode": "log_returns = np.log(close / close.shift(1))",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=252, freq=\\'B\\')\\nclose = pd.Series(100 + np.cumsum(np.random.randn(252) * 0.5), index=dates, name=\\'Close\\')\\nlog_returns = np.log(close / close.shift(1))', _ns)\ntry:\n    result = log_returns.dropna().equals(_ns['log_returns'].dropna())\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "shift(1) 将数据向下移动一行，即获取前一天的价格",
+          "np.log(P_t / P_{t-1}) 等价于 np.log(P_t) - np.log(P_{t-1})"
+        ],
+        "en": [
+          "shift(1) shifts data down by one row, giving the previous day price",
+          "np.log(P_t / P_{t-1}) is equivalent to np.log(P_t) - np.log(P_{t-1})"
+        ]
+      },
+      "explanation": {
+        "zh": "对数收益率 r = ln(P_t / P_{t-1})。使用 shift(1) 获取前一期价格后做除法，再取自然对数。对数收益率的优点包括：时间可加性、对称性（涨跌幅度对称）、以及在小变化下近似等于简单收益率。",
+        "en": "Log return r = ln(P_t / P_{t-1}). Use shift(1) to get the previous period price, divide, then take the natural log. Advantages of log returns include: time additivity, symmetry (gains and losses are symmetric), and approximate equality with simple returns for small changes."
+      }
+    },
+    {
+      "id": "s6-fin-ts-005",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "累积收益率计算",
+        "en": "Cumulative Return Calculation"
+      },
+      "description": {
+        "zh": "使用简单日收益率计算累积收益率序列。",
+        "en": "Compute the cumulative return series from daily simple returns."
+      },
+      "codeTemplate": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndaily_returns = pd.Series(np.random.randn(252) * 0.01)\ncumulative = (1 + daily_returns).___1___()",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "cumprod",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "累积收益是多期 (1 + r_t) 的连乘积",
+          "pandas 中对 Series 做逐元素累积乘积的方法名以 cum 开头"
+        ],
+        "en": [
+          "Cumulative return is the running product of (1 + r_t) across periods",
+          "The pandas method for element-wise cumulative product starts with 'cum'"
+        ]
+      },
+      "explanation": {
+        "zh": "累积收益率 = (1+r_1)(1+r_2)...(1+r_T)。cumprod() 计算累积乘积，将每日的 (1 + r_t) 逐步相乘。最终值减去 1 即为总收益率。例如 cumprod 最终值为 1.15 意味着总收益率 15%。",
+        "en": "Cumulative return = (1+r_1)(1+r_2)...(1+r_T). cumprod() computes the cumulative product, progressively multiplying each (1 + r_t). The final value minus 1 gives the total return. For example, a cumprod final value of 1.15 means a 15% total return."
+      }
+    },
+    {
+      "id": "s6-fin-ts-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "重采样日线到周线/月线 OHLC",
+        "en": "Resample Daily Prices to Weekly/Monthly OHLC"
+      },
+      "description": {
+        "zh": "将日频收盘价重采样为周频和月频 OHLC 数据。使用 resample 的 ohlc() 方法。将周频结果赋给 weekly_ohlc，月频结果赋给 monthly_ohlc。",
+        "en": "Resample daily closing prices to weekly and monthly OHLC data using the ohlc() method of resample. Assign weekly result to weekly_ohlc and monthly result to monthly_ohlc."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=252, freq='B')\nclose = pd.Series(100 + np.cumsum(np.random.randn(252) * 0.5), index=dates, name='Close')",
+      "starterCode": "# Resample to weekly OHLC\nweekly_ohlc = close.resample(___).ohlc()\n\n# Resample to monthly OHLC\nmonthly_ohlc = close.resample(___).ohlc()",
+      "solutionCode": "weekly_ohlc = close.resample('W').ohlc()\nmonthly_ohlc = close.resample('ME').ohlc()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=252, freq=\\'B\\')\\nclose = pd.Series(100 + np.cumsum(np.random.randn(252) * 0.5), index=dates, name=\\'Close\\')\\nweekly_ohlc = close.resample(\\'W\\').ohlc()\\nmonthly_ohlc = close.resample(\\'ME\\').ohlc()', _ns)\ntry:\n    result = weekly_ohlc.equals(_ns['weekly_ohlc']) and monthly_ohlc.equals(_ns['monthly_ohlc'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "resample('W') 按周重采样，resample('ME') 按月末重采样",
+          "ohlc() 自动计算每个周期内的开盘/最高/最低/收盘"
+        ],
+        "en": [
+          "resample('W') for weekly, resample('ME') for month-end resampling",
+          "ohlc() automatically computes open/high/low/close for each period"
+        ]
+      },
+      "explanation": {
+        "zh": "resample() 是 pandas 中进行频率转换的核心方法。ohlc() 聚合器自动计算每个重采样周期内的第一个值(Open)、最大值(High)、最小值(Low)和最后一个值(Close)。这是金融数据中频率下采样的标准做法。",
+        "en": "resample() is the core method for frequency conversion in pandas. The ohlc() aggregator automatically computes the first value (Open), max (High), min (Low), and last value (Close) within each resampled period. This is the standard approach for downsampling financial data."
+      }
+    },
+    {
+      "id": "s6-fin-ts-007",
+      "type": "true-false",
+      "difficulty": 3,
+      "title": {
+        "zh": "对数收益率与简单收益率的近似关系",
+        "en": "Log Returns Approximate Simple Returns for Small Changes"
+      },
+      "description": {
+        "zh": "当价格变动较小时，对数收益率近似等于简单收益率。例如当简单收益率为 1% 时，对数收益率约为 0.995%，两者非常接近。",
+        "en": "When price changes are small, log returns are approximately equal to simple returns. For example, when the simple return is 1%, the log return is about 0.995%, which is very close."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": [
+          "泰勒展开: ln(1+r) 约等于 r，当 r 接近 0 时"
+        ],
+        "en": [
+          "Taylor expansion: ln(1+r) is approximately r when r is close to 0"
+        ]
+      },
+      "explanation": {
+        "zh": "根据泰勒展开，ln(1+r) = r - r^2/2 + r^3/3 - ...。当 r 很小时（如日收益率通常在 +-2% 以内），高阶项可以忽略，因此 ln(1+r) 约等于 r。这意味着日频数据下简单收益率和对数收益率几乎相同，但在月度或年度大幅变动时差异会变大。",
+        "en": "By Taylor expansion, ln(1+r) = r - r^2/2 + r^3/3 - .... When r is small (e.g., daily returns are typically within +-2%), higher-order terms are negligible, so ln(1+r) is approximately r. This means daily simple and log returns are nearly identical, but differences grow for larger monthly or annual changes."
+      }
+    },
+    {
+      "id": "s6-fin-ts-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "年化收益率计算",
+        "en": "Annualized Return Calculation"
+      },
+      "description": {
+        "zh": "根据总收益率和交易天数计算年化收益率。公式: annualized = (1 + total_return)**(252/days) - 1。将结果赋给 annualized_return。",
+        "en": "Compute the annualized return from total return and trading days. Formula: annualized = (1 + total_return)**(252/days) - 1. Assign the result to annualized_return."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=504, freq='B')\nclose = pd.Series(100 + np.cumsum(np.random.randn(504) * 0.5), index=dates, name='Close')",
+      "starterCode": "# Compute total return\ntotal_return = (close.iloc[-1] - close.iloc[0]) / close.iloc[0]\n\n# Number of trading days\ndays = len(close)\n\n# Annualized return\nannualized_return = (1 + ___) ** (___ / ___) - 1",
+      "solutionCode": "total_return = (close.iloc[-1] - close.iloc[0]) / close.iloc[0]\ndays = len(close)\nannualized_return = (1 + total_return) ** (252 / days) - 1",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=504, freq=\\'B\\')\\nclose = pd.Series(100 + np.cumsum(np.random.randn(504) * 0.5), index=dates, name=\\'Close\\')\\ntotal_return = (close.iloc[-1] - close.iloc[0]) / close.iloc[0]\\ndays = len(close)\\nannualized_return = (1 + total_return) ** (252 / days) - 1', _ns)\ntry:\n    result = np.isclose(annualized_return, _ns['annualized_return'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "252 是美股一年的交易日天数",
+          "年化公式将任意期间收益率折算为等效年度收益率"
+        ],
+        "en": [
+          "252 is the number of trading days per year for US stocks",
+          "The annualization formula converts any-period return to an equivalent annual return"
+        ]
+      },
+      "explanation": {
+        "zh": "年化收益率将不同时间跨度的收益率标准化为年度指标，方便比较。公式 (1 + R)^(252/N) - 1 假设收益率以复利方式增长。252 是一年的交易日数（美股标准）。例如两年总收益 20%，年化约为 (1.2)^(252/504) - 1 ≈ 9.54%。",
+        "en": "Annualized return standardizes returns of different time spans to a yearly metric for comparison. The formula (1 + R)^(252/N) - 1 assumes compound growth. 252 is the standard number of US trading days per year. For example, a 20% total return over 2 years annualizes to roughly (1.2)^(252/504) - 1 = 9.54%."
+      }
+    },
+    {
+      "id": "s6-fin-ts-009",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "标准化价格图 (基准100)",
+        "en": "Normalized Price Chart (Base 100)"
+      },
+      "description": {
+        "zh": "将多只股票的价格标准化为基准100（以第一天价格为基准），便于比较不同价位股票的表现。将结果赋给 normalized。",
+        "en": "Normalize multiple stock prices to base 100 (using first day price as base) to compare performance across stocks with different price levels. Assign the result to normalized."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=252, freq='B')\nstocks = pd.DataFrame({\n    'AAPL': 150 + np.cumsum(np.random.randn(252) * 1.0),\n    'GOOGL': 2800 + np.cumsum(np.random.randn(252) * 15.0),\n    'TSLA': 200 + np.cumsum(np.random.randn(252) * 3.0)\n}, index=dates)",
+      "starterCode": "# Normalize all stock prices to base 100\nnormalized = stocks / stocks.___ * 100",
+      "solutionCode": "normalized = stocks / stocks.iloc[0] * 100",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=252, freq=\\'B\\')\\nstocks = pd.DataFrame({\"AAPL\": 150 + np.cumsum(np.random.randn(252) * 1.0), \"GOOGL\": 2800 + np.cumsum(np.random.randn(252) * 15.0), \"TSLA\": 200 + np.cumsum(np.random.randn(252) * 3.0)}, index=dates)\\nnormalized = stocks / stocks.iloc[0] * 100', _ns)\ntry:\n    result = np.allclose(normalized.values, _ns['normalized'].values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "iloc[0] 获取第一行数据（所有股票第一天的价格）",
+          "DataFrame 除以第一行会自动对每列广播"
+        ],
+        "en": [
+          "iloc[0] gets the first row (all stock prices on day 1)",
+          "Dividing a DataFrame by the first row broadcasts automatically across columns"
+        ]
+      },
+      "explanation": {
+        "zh": "标准化价格图将所有股票的起始价格设为100，使不同价位的股票可以在同一图上比较相对表现。公式：normalized = price / price_day0 * 100。如果标准化价格从100变为115，说明该股票上涨了15%，与绝对价格无关。",
+        "en": "A normalized price chart sets all stock starting prices to 100, enabling comparison of relative performance across stocks with different price levels. Formula: normalized = price / price_day0 * 100. If the normalized price goes from 100 to 115, the stock gained 15%, regardless of its absolute price."
+      }
+    },
+    {
+      "id": "s6-fin-ts-010",
+      "type": "output-matching",
+      "difficulty": 4,
+      "title": {
+        "zh": "计算总收益率",
+        "en": "Compute Total Return"
+      },
+      "description": {
+        "zh": "给定价格序列 [100, 105, 103, 108]，以下代码输出什么？",
+        "en": "Given the price series [100, 105, 103, 108], what does the following code output?"
+      },
+      "code": "import pandas as pd\nprices = pd.Series([100, 105, 103, 108])\ntotal_return = (prices.iloc[-1] - prices.iloc[0]) / prices.iloc[0]\nprint(f'{total_return:.0%}')",
+      "options": {
+        "zh": [
+          "8%",
+          "5%",
+          "3%",
+          "10%"
+        ],
+        "en": [
+          "8%",
+          "5%",
+          "3%",
+          "10%"
+        ]
+      },
+      "correctIndex": 0,
+      "explanation": {
+        "zh": "总收益率 = (P_end - P_start) / P_start = (108 - 100) / 100 = 0.08 = 8%。注意中间的价格波动不影响总收益率的计算，我们只关心起始价格和终止价格。f'{0.08:.0%}' 格式化输出为 '8%'。",
+        "en": "Total return = (P_end - P_start) / P_start = (108 - 100) / 100 = 0.08 = 8%. Note that intermediate price fluctuations do not affect the total return calculation -- only the start and end prices matter. f'{0.08:.0%}' formats the output as '8%'."
+      }
+    },
+    {
+      "id": "s6-fin-ts-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] pct_change 在乱序日期上的错误结果",
+        "en": "[Debug] pct_change on Unsorted Dates Gives Wrong Results"
+      },
+      "description": {
+        "zh": "以下代码对带日期索引的价格数据计算收益率，但日期未排序导致 pct_change 结果错误。请修复代码，先按日期排序再计算收益率。将修复后的收益率赋给 returns。",
+        "en": "The following code computes returns on price data with a datetime index, but the unsorted dates cause pct_change to produce wrong results. Fix the code by sorting the index first. Assign the corrected returns to returns."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=100, freq='B')\nprices = pd.Series(100 + np.cumsum(np.random.randn(100) * 0.5), index=dates)\nprices = prices.sample(frac=1)",
+      "starterCode": "# BUG: dates are shuffled, pct_change computes wrong day-over-day returns\n# returns = prices.pct_change()\n\n# FIX: sort by datetime index first, then compute returns\nreturns = prices.___().pct_change()",
+      "solutionCode": "returns = prices.sort_index().pct_change()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2023-01-01\\', periods=100, freq=\\'B\\')\\nprices = pd.Series(100 + np.cumsum(np.random.randn(100) * 0.5), index=dates)\\nprices = prices.sample(frac=1)\\nreturns = prices.sort_index().pct_change()', _ns)\ntry:\n    result = returns.equals(_ns['returns'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "pct_change() 按位置顺序计算相邻元素的变化率",
+          "如果日期乱序，相邻元素可能不是相邻的交易日"
+        ],
+        "en": [
+          "pct_change() computes change between adjacent elements by position",
+          "If dates are unordered, adjacent elements may not be consecutive trading days"
+        ]
+      },
+      "explanation": {
+        "zh": "pct_change() 按照 Series 的位置顺序计算，不会检查索引的时间顺序。如果日期索引未排序，相邻两行可能相隔数周甚至数月，导致计算出的「日收益率」实际上是跨越多天的收益率。sort_index() 确保数据按时间顺序排列后再计算。",
+        "en": "pct_change() computes by positional order and does not check index chronology. If the datetime index is unsorted, adjacent rows might be weeks or months apart, causing the computed 'daily returns' to actually span multiple days. sort_index() ensures data is in chronological order before computation."
+      }
+    },
+    {
+      "id": "s6-fin-ts-012",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 多股票收益分析：日/月收益、年化、波动率",
+        "en": "[Challenge] Multi-stock Return Analysis: Daily/Monthly Returns, Annualized, Volatility"
+      },
+      "description": {
+        "zh": "对 3 只股票的 2 年日线数据，计算日收益率 (daily_ret)、月收益率 (monthly_ret)、每只股票的年化收益率 (annual_ret) 和年化波动率 (annual_vol)，并创建一个比较摘要表 (comparison)。",
+        "en": "For 3 stocks with 2 years of daily data, compute daily returns (daily_ret), monthly returns (monthly_ret), annualized return (annual_ret) and annualized volatility (annual_vol) for each stock, and create a comparison summary table (comparison)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2022-01-01', periods=504, freq='B')\nstocks = pd.DataFrame({\n    'STOCK_A': 100 + np.cumsum(np.random.randn(504) * 0.8),\n    'STOCK_B': 100 + np.cumsum(np.random.randn(504) * 1.2),\n    'STOCK_C': 100 + np.cumsum(np.random.randn(504) * 0.5)\n}, index=dates)",
+      "starterCode": "# Step 1: Daily returns\ndaily_ret = stocks.___\n\n# Step 2: Monthly returns (resample to month-end, take last, then pct_change)\nmonthly_ret = stocks.resample('ME').last().___\n\n# Step 3: Annualized return per stock\ntotal_ret = (stocks.iloc[-1] - stocks.iloc[0]) / stocks.iloc[0]\ndays = len(stocks)\nannual_ret = (1 + total_ret) ** (252 / days) - 1\n\n# Step 4: Annualized volatility (daily std * sqrt(252))\nannual_vol = daily_ret.___ * np.sqrt(252)\n\n# Step 5: Comparison summary\ncomparison = pd.DataFrame({\n    'annualized_return': annual_ret,\n    'annualized_volatility': annual_vol\n})",
+      "solutionCode": "daily_ret = stocks.pct_change()\nmonthly_ret = stocks.resample('ME').last().pct_change()\ntotal_ret = (stocks.iloc[-1] - stocks.iloc[0]) / stocks.iloc[0]\ndays = len(stocks)\nannual_ret = (1 + total_ret) ** (252 / days) - 1\nannual_vol = daily_ret.std() * np.sqrt(252)\ncomparison = pd.DataFrame({\n    'annualized_return': annual_ret,\n    'annualized_volatility': annual_vol\n})",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndates = pd.date_range(\\'2022-01-01\\', periods=504, freq=\\'B\\')\\nstocks = pd.DataFrame({\"STOCK_A\": 100 + np.cumsum(np.random.randn(504) * 0.8), \"STOCK_B\": 100 + np.cumsum(np.random.randn(504) * 1.2), \"STOCK_C\": 100 + np.cumsum(np.random.randn(504) * 0.5)}, index=dates)\\ndaily_ret = stocks.pct_change()\\nmonthly_ret = stocks.resample(\\'ME\\').last().pct_change()\\ntotal_ret = (stocks.iloc[-1] - stocks.iloc[0]) / stocks.iloc[0]\\ndays = len(stocks)\\nannual_ret = (1 + total_ret) ** (252 / days) - 1\\nannual_vol = daily_ret.std() * np.sqrt(252)\\ncomparison = pd.DataFrame({\"annualized_return\": annual_ret, \"annualized_volatility\": annual_vol})', _ns)\ntry:\n    result = np.allclose(comparison.values, _ns['comparison'].values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "pct_change() 直接在 DataFrame 上调用可同时计算所有列",
+          "年化波动率 = 日收益率标准差 * sqrt(252)",
+          "resample('ME').last() 取月末最后一个价格"
+        ],
+        "en": [
+          "pct_change() on a DataFrame computes all columns simultaneously",
+          "Annualized volatility = daily return std * sqrt(252)",
+          "resample('ME').last() takes the last price of each month"
+        ]
+      },
+      "explanation": {
+        "zh": "本综合练习涵盖了金融时序分析的核心流程：(1) pct_change 计算日/月收益率；(2) 年化收益率通过复利公式将总收益标准化到年度；(3) 年化波动率 = 日波动率 * sqrt(252)，基于波动率按时间平方根缩放的假设。比较表可以直观地看出不同股票的风险收益特征。",
+        "en": "This challenge covers the core workflow of financial time series analysis: (1) pct_change for daily/monthly returns; (2) annualized return via compound formula standardizing total return to annual; (3) annualized volatility = daily vol * sqrt(252), based on the assumption that volatility scales with the square root of time. The comparison table provides an intuitive view of each stock's risk-return profile."
+      }
+    }
+  ]
+}
