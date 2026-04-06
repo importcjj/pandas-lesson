@@ -8,7 +8,7 @@ import curriculum from "@/data/curriculum.json";
 import { Locale, UserProgress } from "@/types";
 import { getAllProgress } from "@/lib/storage/db";
 
-const stageIcons = ["📗", "📘", "📙", "📕"];
+const stageIcons = ["📗", "📘", "📙", "📕", "📊", "💹"];
 
 export default function Sidebar({ mobile = false }: { mobile?: boolean }) {
   const { locale } = useTranslation();

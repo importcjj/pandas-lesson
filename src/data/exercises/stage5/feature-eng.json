@@ -1,0 +1,445 @@
+{
+  "module": "feature-eng",
+  "stageId": "stage5",
+  "lessonId": "feature-eng",
+  "tags": [
+    "feature-engineering",
+    "encoding",
+    "scaling",
+    "binning",
+    "preprocessing"
+  ],
+  "exercises": [
+    {
+      "id": "s5-feat-eng-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "One-Hot 编码",
+        "en": "One-Hot Encoding with get_dummies"
+      },
+      "description": {
+        "zh": "使用 pd.get_dummies 对 'color' 列进行 One-Hot 编码，将结果存入 result。",
+        "en": "Use pd.get_dummies to one-hot encode the 'color' column. Store the result in result."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'color': ['red', 'blue', 'green', 'red', 'blue'], 'size': ['S', 'M', 'L', 'M', 'S'], 'price': [10, 20, 30, 15, 25]})",
+      "starterCode": "# One-hot encode the color column\nresult = ___",
+      "solutionCode": "result = pd.get_dummies(df, columns=['color'])",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    expected = pd.get_dummies(df, columns=['color'])\n    result = result.equals(expected)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "pd.get_dummies(df, columns=['列名']) 对指定列进行 One-Hot 编码",
+          "结果会为每个类别创建一个新的布尔列"
+        ],
+        "en": [
+          "pd.get_dummies(df, columns=['col']) one-hot encodes the specified column",
+          "The result creates a new boolean column for each category"
+        ]
+      },
+      "explanation": {
+        "zh": "pd.get_dummies 将分类变量转换为哑变量（0/1 编码）。每个类别值变为一个新列，存在该类别时值为 1（或 True），否则为 0（或 False）。",
+        "en": "pd.get_dummies converts categorical variables into dummy variables (0/1 encoding). Each category value becomes a new column, with 1 (or True) when present and 0 (or False) otherwise."
+      }
+    },
+    {
+      "id": "s5-feat-eng-002",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "drop_first 避免多重共线性",
+        "en": "drop_first to Avoid Multicollinearity"
+      },
+      "description": {
+        "zh": "使用 pd.get_dummies 对 size 列进行编码，并删除第一个类别列以避免多重共线性。",
+        "en": "Use pd.get_dummies to encode the size column and drop the first category column to avoid multicollinearity."
+      },
+      "codeTemplate": "result = pd.get_dummies(df, columns=['size'], ___1___=True)",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "drop_first",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "当使用线性回归时，k 个类别只需要 k-1 个哑变量"
+        ],
+        "en": [
+          "For linear regression, k categories only need k-1 dummy variables"
+        ]
+      },
+      "explanation": {
+        "zh": "drop_first=True 会删除每个分类变量的第一个类别列，因为它可以由其余列推断。这避免了线性模型中的多重共线性问题（dummy variable trap）。",
+        "en": "drop_first=True drops the first category column for each categorical variable, as it can be inferred from the remaining columns. This avoids the dummy variable trap (multicollinearity) in linear models."
+      }
+    },
+    {
+      "id": "s5-feat-eng-003",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "序数编码 (Ordinal Encoding)",
+        "en": "Ordinal Encoding with map()"
+      },
+      "description": {
+        "zh": "使用 map() 方法将 'education' 列的学历等级映射为数值：'high_school' → 1, 'bachelor' → 2, 'master' → 3, 'phd' → 4。将结果存入 df['edu_encoded']。",
+        "en": "Use map() to convert the 'education' column to numeric ordinal values: 'high_school' -> 1, 'bachelor' -> 2, 'master' -> 3, 'phd' -> 4. Store in df['edu_encoded']."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'education': ['bachelor', 'master', 'high_school', 'phd', 'bachelor']})",
+      "starterCode": "# Create ordinal mapping and encode\nedu_map = ___\ndf['edu_encoded'] = ___",
+      "solutionCode": "edu_map = {'high_school': 1, 'bachelor': 2, 'master': 3, 'phd': 4}\ndf['edu_encoded'] = df['education'].map(edu_map)",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    m = {'high_school': 1, 'bachelor': 2, 'master': 3, 'phd': 4}\n    expected = pd.Series([2, 3, 1, 4, 2], name='edu_encoded')\n    result = df['edu_encoded'].equals(expected)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "创建一个字典将类别映射到数值",
+          "使用 Series.map(字典) 进行映射"
+        ],
+        "en": [
+          "Create a dictionary mapping categories to numbers",
+          "Use Series.map(dict) to apply the mapping"
+        ]
+      },
+      "explanation": {
+        "zh": "对于有自然顺序的分类变量（如学历），可以用 map() 将其转换为有序数值。这保留了类别间的顺序关系，适用于树模型和需要顺序信息的场景。",
+        "en": "For categorical variables with a natural order (like education level), map() converts them to ordered numeric values. This preserves ordinal relationships, suitable for tree models and scenarios requiring order information."
+      }
+    },
+    {
+      "id": "s5-feat-eng-004",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "Z-score 标准化",
+        "en": "Z-score Standardization"
+      },
+      "description": {
+        "zh": "对 df 的 'height' 和 'weight' 列进行 Z-score 标准化（均值为 0，标准差为 1）。将标准化后的 DataFrame 存入 df_scaled，并验证均值约为 0、标准差约为 1。",
+        "en": "Apply Z-score standardization to the 'height' and 'weight' columns (mean=0, std=1). Store the standardized DataFrame in df_scaled, and verify the mean is approximately 0 and std approximately 1."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'height': np.random.normal(170, 10, 100), 'weight': np.random.normal(65, 12, 100)})",
+      "starterCode": "# Z-score standardization\ncols = ['height', 'weight']\ndf_scaled = ___\n\n# Verify: mean ≈ 0, std ≈ 1\nprint('Mean:\\n', df_scaled[cols].mean())\nprint('Std:\\n', df_scaled[cols].std())",
+      "solutionCode": "cols = ['height', 'weight']\ndf_scaled = df.copy()\ndf_scaled[cols] = (df[cols] - df[cols].mean()) / df[cols].std()\n\nprint('Mean:\\n', df_scaled[cols].mean())\nprint('Std:\\n', df_scaled[cols].std())",
+      "validationType": "custom-check",
+      "checkCode": "import numpy as np\ntry:\n    c = ['height', 'weight']\n    result = all(abs(df_scaled[c].mean()) < 1e-10) and all(abs(df_scaled[c].std() - 1) < 0.02)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "Z-score = (x - mean) / std",
+          "使用 df[cols].mean() 和 df[cols].std() 计算均值和标准差",
+          "记得用 df.copy() 避免修改原始数据"
+        ],
+        "en": [
+          "Z-score = (x - mean) / std",
+          "Use df[cols].mean() and df[cols].std() to compute mean and std",
+          "Use df.copy() to avoid modifying the original data"
+        ]
+      },
+      "explanation": {
+        "zh": "Z-score 标准化将数据转换为均值 0、标准差 1 的分布。公式为 (x - μ) / σ。这对于许多机器学习算法（如 SVM、KNN、线性回归）是必要的预处理步骤。",
+        "en": "Z-score standardization transforms data to have mean 0 and std 1 using (x - mean) / std. This is a necessary preprocessing step for many ML algorithms (SVM, KNN, linear regression, etc.)."
+      }
+    },
+    {
+      "id": "s5-feat-eng-005",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "Min-Max 归一化到 [0, 1]",
+        "en": "Min-Max Scaling to [0, 1]"
+      },
+      "description": {
+        "zh": "对 'score' 列进行 Min-Max 归一化，将值缩放到 [0, 1] 范围。将结果存入 df['score_scaled']。",
+        "en": "Apply Min-Max scaling to the 'score' column to scale values to [0, 1]. Store the result in df['score_scaled']."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], 'score': [85, 92, 78, 95, 60]})",
+      "starterCode": "# Min-Max scaling to [0, 1]\ndf['score_scaled'] = ___",
+      "solutionCode": "df['score_scaled'] = (df['score'] - df['score'].min()) / (df['score'].max() - df['score'].min())",
+      "validationType": "custom-check",
+      "checkCode": "import numpy as np\ntry:\n    s = pd.Series([85, 92, 78, 95, 60])\n    expected = (s - s.min()) / (s.max() - s.min())\n    result = np.allclose(df['score_scaled'].values, expected.values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "Min-Max 公式: (x - min) / (max - min)",
+          "使用 .min() 和 .max() 方法"
+        ],
+        "en": [
+          "Min-Max formula: (x - min) / (max - min)",
+          "Use .min() and .max() methods"
+        ]
+      },
+      "explanation": {
+        "zh": "Min-Max 归一化将数据线性缩放到 [0, 1] 区间。最小值变为 0，最大值变为 1。适合对数值范围有要求的算法（如神经网络），但对异常值敏感。",
+        "en": "Min-Max scaling linearly scales data to [0, 1]. The minimum becomes 0 and maximum becomes 1. Suitable for algorithms requiring bounded ranges (e.g., neural networks) but sensitive to outliers."
+      }
+    },
+    {
+      "id": "s5-feat-eng-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "pd.cut 分箱 + 哑变量",
+        "en": "pd.cut Binning + Dummy Variables"
+      },
+      "description": {
+        "zh": "使用 pd.cut 将 'age' 列分为三个区间（'young', 'middle', 'senior'），然后转换为哑变量。将分箱列存入 df['age_group']，哑变量 DataFrame 存入 age_dummies。",
+        "en": "Use pd.cut to bin the 'age' column into three groups ('young', 'middle', 'senior'), then convert to dummy variables. Store the binned column in df['age_group'] and the dummies DataFrame in age_dummies."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve', 'Frank'], 'age': [25, 35, 55, 42, 18, 67]})",
+      "starterCode": "# Bin age into groups\ndf['age_group'] = pd.cut(df['age'], bins=[0, 30, 50, 100], labels=___)\n\n# Convert to dummy variables\nage_dummies = ___",
+      "solutionCode": "df['age_group'] = pd.cut(df['age'], bins=[0, 30, 50, 100], labels=['young', 'middle', 'senior'])\nage_dummies = pd.get_dummies(df['age_group'])",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    exp_groups = pd.cut(pd.Series([25, 35, 55, 42, 18, 67]), bins=[0, 30, 50, 100], labels=['young', 'middle', 'senior'])\n    exp_dummies = pd.get_dummies(exp_groups)\n    result = list(df['age_group']) == list(exp_groups) and age_dummies.shape == exp_dummies.shape\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "pd.cut 的 labels 参数指定每个区间的标签",
+          "pd.get_dummies 可以直接作用于 Series"
+        ],
+        "en": [
+          "pd.cut's labels parameter specifies the label for each bin",
+          "pd.get_dummies can be applied directly to a Series"
+        ]
+      },
+      "explanation": {
+        "zh": "pd.cut 将连续变量离散化为区间（分箱）。分箱后再转为哑变量是常用的特征工程技巧，可以捕获非线性关系。例如年龄与收入可能不是线性的，但年龄段与收入可能有更清晰的模式。",
+        "en": "pd.cut discretizes continuous variables into bins. Converting bins to dummy variables is a common feature engineering technique that captures non-linear relationships. For example, age vs income may not be linear, but age groups may show clearer patterns."
+      }
+    },
+    {
+      "id": "s5-feat-eng-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "对数变换处理偏态分布",
+        "en": "Log Transform for Skewed Distributions"
+      },
+      "description": {
+        "zh": "使用 np.log1p 对右偏的 'income' 列进行对数变换。比较变换前后的偏度（skew），将原始偏度存入 skew_before，变换后偏度存入 skew_after。",
+        "en": "Apply np.log1p to the right-skewed 'income' column. Compare skewness before and after. Store original skewness in skew_before and transformed skewness in skew_after."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'income': np.random.exponential(50000, 500)})",
+      "starterCode": "# Compute skewness before transform\nskew_before = ___\n\n# Apply log1p transform\ndf['income_log'] = ___\n\n# Compute skewness after transform\nskew_after = ___",
+      "solutionCode": "skew_before = df['income'].skew()\ndf['income_log'] = np.log1p(df['income'])\nskew_after = df['income_log'].skew()",
+      "validationType": "custom-check",
+      "checkCode": "import numpy as np\ntry:\n    exp_before = pd.DataFrame({'income': np.random.RandomState(42).exponential(50000, 500)})['income'].skew()\n    result = abs(skew_before - exp_before) < 0.01 and abs(skew_after) < abs(skew_before)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "Series.skew() 计算偏度",
+          "np.log1p(x) = log(1+x)，避免 log(0) 的问题",
+          "右偏数据经对数变换后偏度应该减小"
+        ],
+        "en": [
+          "Series.skew() computes skewness",
+          "np.log1p(x) = log(1+x), avoiding log(0) issues",
+          "Right-skewed data should have reduced skewness after log transform"
+        ]
+      },
+      "explanation": {
+        "zh": "许多机器学习模型假设数据近似正态分布。np.log1p 对右偏数据进行对数变换，使分布更对称。log1p 比 log 更安全，因为它处理了 x=0 的情况。",
+        "en": "Many ML models assume approximately normal distributions. np.log1p applies a log transform to right-skewed data, making the distribution more symmetric. log1p is safer than log as it handles x=0."
+      }
+    },
+    {
+      "id": "s5-feat-eng-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "交互特征工程",
+        "en": "Interaction Feature Engineering"
+      },
+      "description": {
+        "zh": "基于房屋数据创建两个交互特征：1) price_per_sqft = price / sqft（每平方英尺价格）；2) total_rooms = bedrooms + bathrooms（总房间数）。",
+        "en": "Create two interaction features from housing data: 1) price_per_sqft = price / sqft; 2) total_rooms = bedrooms + bathrooms."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'price': [300000, 450000, 200000, 550000, 350000], 'sqft': [1500, 2000, 1000, 2500, 1800], 'bedrooms': [3, 4, 2, 5, 3], 'bathrooms': [2, 3, 1, 3, 2]})",
+      "starterCode": "# Create interaction features\ndf['price_per_sqft'] = ___\ndf['total_rooms'] = ___",
+      "solutionCode": "df['price_per_sqft'] = df['price'] / df['sqft']\ndf['total_rooms'] = df['bedrooms'] + df['bathrooms']",
+      "validationType": "custom-check",
+      "checkCode": "import numpy as np\ntry:\n    exp_pps = pd.Series([200.0, 225.0, 200.0, 220.0, 194.444444], name='price_per_sqft')\n    exp_tr = pd.Series([5, 7, 3, 8, 5], name='total_rooms')\n    result = np.allclose(df['price_per_sqft'].values, [300000/1500, 450000/2000, 200000/1000, 550000/2500, 350000/1800]) and list(df['total_rooms']) == [5, 7, 3, 8, 5]\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "直接对 DataFrame 列进行算术运算即可",
+          "price_per_sqft 是除法，total_rooms 是加法"
+        ],
+        "en": [
+          "Simply perform arithmetic operations on DataFrame columns",
+          "price_per_sqft is division, total_rooms is addition"
+        ]
+      },
+      "explanation": {
+        "zh": "交互特征通过组合现有特征创造新信息。每平方英尺价格比原始价格更能反映房屋的性价比，总房间数提供了房屋规模的综合度量。好的特征工程往往比模型选择更重要。",
+        "en": "Interaction features create new information by combining existing features. Price per sqft better reflects value than raw price, and total rooms provides an overall size measure. Good feature engineering is often more important than model selection."
+      }
+    },
+    {
+      "id": "s5-feat-eng-009",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "StandardScaler vs MinMaxScaler 对异常值的鲁棒性",
+        "en": "StandardScaler vs MinMaxScaler Robustness to Outliers"
+      },
+      "description": {
+        "zh": "关于 StandardScaler（Z-score 标准化）和 MinMaxScaler（Min-Max 归一化）对异常值的鲁棒性，以下哪种说法正确？",
+        "en": "Regarding the robustness of StandardScaler (Z-score) and MinMaxScaler (Min-Max) to outliers, which statement is correct?"
+      },
+      "options": {
+        "zh": [
+          "MinMaxScaler 对异常值更敏感，因为极端值直接改变 min 和 max，大幅压缩正常数据的范围",
+          "StandardScaler 对异常值更敏感，因为均值和标准差不受极端值影响",
+          "两者对异常值的鲁棒性完全相同",
+          "MinMaxScaler 对异常值完全免疫"
+        ],
+        "en": [
+          "MinMaxScaler is more sensitive to outliers because extreme values directly change min/max, compressing normal data range significantly",
+          "StandardScaler is more sensitive because mean and std are not affected by extreme values",
+          "Both have identical robustness to outliers",
+          "MinMaxScaler is completely immune to outliers"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "想想一个极端异常值对 min/max 的影响 vs 对 mean/std 的影响"
+        ],
+        "en": [
+          "Consider how one extreme outlier affects min/max vs mean/std"
+        ]
+      },
+      "explanation": {
+        "zh": "MinMaxScaler 使用 min 和 max 进行缩放，一个极端异常值就能大幅改变范围。StandardScaler 使用均值和标准差，对单个异常值相对鲁棒。如果数据有严重异常值，还可以考虑 RobustScaler（使用中位数和四分位距）。",
+        "en": "MinMaxScaler uses min and max for scaling, so one extreme outlier can drastically change the range. StandardScaler uses mean and std, which are relatively more robust to individual outliers. For data with severe outliers, consider RobustScaler (using median and IQR)."
+      }
+    },
+    {
+      "id": "s5-feat-eng-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "日期时间特征提取",
+        "en": "Datetime Feature Extraction"
+      },
+      "description": {
+        "zh": "从 'datetime' 列提取以下时间特征：year, month, dayofweek, hour, 以及 is_weekend（周六日为 True）。",
+        "en": "Extract the following features from the 'datetime' column: year, month, dayofweek, hour, and is_weekend (True for Saturday/Sunday)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndates = pd.date_range('2023-01-01', periods=10, freq='36h')\ndf = pd.DataFrame({'datetime': dates, 'sales': np.random.randint(100, 500, 10)})",
+      "starterCode": "# Extract datetime features\ndf['year'] = ___\ndf['month'] = ___\ndf['dayofweek'] = ___\ndf['hour'] = ___\ndf['is_weekend'] = ___",
+      "solutionCode": "df['year'] = df['datetime'].dt.year\ndf['month'] = df['datetime'].dt.month\ndf['dayofweek'] = df['datetime'].dt.dayofweek\ndf['hour'] = df['datetime'].dt.hour\ndf['is_weekend'] = df['datetime'].dt.dayofweek >= 5",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    d = pd.date_range('2023-01-01', periods=10, freq='36h')\n    result = (list(df['year']) == list(d.year) and list(df['month']) == list(d.month) and list(df['dayofweek']) == list(d.dayofweek) and list(df['hour']) == list(d.hour) and list(df['is_weekend']) == list(d.dayofweek >= 5))\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "使用 .dt 访问器提取日期时间属性",
+          "dayofweek 中 0=周一，6=周日",
+          "is_weekend 可以用 dayofweek >= 5 判断"
+        ],
+        "en": [
+          "Use the .dt accessor to extract datetime properties",
+          "In dayofweek, 0=Monday and 6=Sunday",
+          "is_weekend can be determined by dayofweek >= 5"
+        ]
+      },
+      "explanation": {
+        "zh": "日期时间特征提取是时间序列和日期相关分析的基础特征工程。.dt 访问器提供了丰富的属性（year, month, day, hour, dayofweek 等）。is_weekend 这样的派生特征对销售预测等任务非常有用。",
+        "en": "Datetime feature extraction is fundamental for time series and date-related analysis. The .dt accessor provides rich attributes (year, month, day, hour, dayofweek, etc.). Derived features like is_weekend are very useful for tasks like sales forecasting."
+      }
+    },
+    {
+      "id": "s5-feat-eng-011",
+      "type": "true-false",
+      "difficulty": 4,
+      "title": {
+        "zh": "决策树是否需要特征缩放",
+        "en": "Do Decision Trees Require Feature Scaling"
+      },
+      "description": {
+        "zh": "决策树和随机森林等树模型在训练前必须对特征进行标准化或归一化。",
+        "en": "Decision trees and random forests require feature standardization or normalization before training."
+      },
+      "correctAnswer": false,
+      "hints": {
+        "zh": [
+          "树模型是如何做分裂决策的？它比较的是绝对值还是相对排序？"
+        ],
+        "en": [
+          "How do tree models make split decisions? Do they compare absolute values or relative ordering?"
+        ]
+      },
+      "explanation": {
+        "zh": "决策树基于特征阈值进行分裂，不受特征尺度的影响。无论特征是 [0,1] 还是 [0,10000]，树都会找到最优分裂点。因此树模型（决策树、随机森林、GBDT 等）不需要特征缩放。但 SVM、KNN、线性回归等基于距离或梯度的模型需要。",
+        "en": "Decision trees split on feature thresholds and are not affected by feature scale. Whether a feature ranges [0,1] or [0,10000], the tree finds the optimal split point. Thus tree models (decision tree, random forest, GBDT) do not require scaling. However, distance/gradient-based models (SVM, KNN, linear regression) do."
+      }
+    },
+    {
+      "id": "s5-feat-eng-012",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 数据泄露：在划分训练/测试集之前拟合缩放器",
+        "en": "[Debug] Data Leakage: Fitting Scaler Before Train/Test Split"
+      },
+      "description": {
+        "zh": "以下代码存在数据泄露问题：在划分训练/测试集之前对整个数据集进行了标准化。请修复代码，确保只用训练集的统计量（mean/std）来缩放训练集和测试集。将修复后的训练集存入 X_train_scaled，测试集存入 X_test_scaled。",
+        "en": "The code below has a data leakage issue: standardization is applied to the entire dataset before splitting. Fix it so that only training set statistics (mean/std) are used to scale both train and test sets. Store results in X_train_scaled and X_test_scaled."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nX = pd.DataFrame({'feat1': np.random.normal(100, 15, 100), 'feat2': np.random.normal(50, 10, 100)})\ny = np.random.choice([0, 1], 100)",
+      "starterCode": "# Bug: data leakage - scaling before split\n# X_scaled = (X - X.mean()) / X.std()\n# X_train_scaled = X_scaled[:80]\n# X_test_scaled = X_scaled[80:]\n\n# Fix: split first, then scale using training statistics only\nX_train = X[:80]\nX_test = X[80:]\n\ntrain_mean = ___\ntrain_std = ___\n\nX_train_scaled = ___\nX_test_scaled = ___",
+      "solutionCode": "X_train = X[:80]\nX_test = X[80:]\n\ntrain_mean = X_train.mean()\ntrain_std = X_train.std()\n\nX_train_scaled = (X_train - train_mean) / train_std\nX_test_scaled = (X_test - train_mean) / train_std",
+      "validationType": "custom-check",
+      "checkCode": "import numpy as np\ntry:\n    xt = X[:80]\n    xte = X[80:]\n    m = xt.mean()\n    s = xt.std()\n    exp_train = (xt - m) / s\n    exp_test = (xte - m) / s\n    result = np.allclose(X_train_scaled.values, exp_train.values) and np.allclose(X_test_scaled.values, exp_test.values)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "先划分数据，再用训练集计算 mean 和 std",
+          "测试集也要用训练集的 mean/std 来缩放，而不是自己的",
+          "这样可以模拟真实场景中模型不知道测试数据分布的情况"
+        ],
+        "en": [
+          "Split the data first, then compute mean and std from the training set",
+          "The test set must also be scaled using training set mean/std, not its own",
+          "This simulates real-world scenarios where the model has no knowledge of test data distribution"
+        ]
+      },
+      "explanation": {
+        "zh": "数据泄露是指训练过程中无意使用了测试数据的信息。如果在划分前缩放，mean/std 包含了测试数据的信息。正确做法是先划分，只用训练集拟合缩放器，再将其应用于训练集和测试集。",
+        "en": "Data leakage occurs when test data information is inadvertently used during training. Scaling before splitting means the mean/std contain test data information. The correct approach is to split first, fit the scaler on training data only, then transform both sets."
+      }
+    },
+    {
+      "id": "s5-feat-eng-013",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 乘客数据特征工程：缺失值+编码+标准化+交互特征",
+        "en": "[Challenge] Passenger Data: fillna + encoding + scaling + interaction features"
+      },
+      "description": {
+        "zh": "完成类 Titanic 数据集的特征工程管线：1) 用中位数填充 'age' 缺失值，用众数填充 'embarked' 缺失值；2) 对 'sex' 和 'embarked' 进行 One-Hot 编码（drop_first=True）；3) 对 'age' 和 'fare' 进行 Z-score 标准化；4) 创建交互特征 'fare_per_age' = fare / age。将最终 DataFrame 存入 df_final。",
+        "en": "Complete a feature engineering pipeline for Titanic-like data: 1) Fill 'age' NaN with median, 'embarked' NaN with mode; 2) One-hot encode 'sex' and 'embarked' (drop_first=True); 3) Z-score standardize 'age' and 'fare'; 4) Create interaction feature 'fare_per_age' = fare / age. Store final DataFrame in df_final."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nn = 100\ndf = pd.DataFrame({'survived': np.random.choice([0, 1], n), 'pclass': np.random.choice([1, 2, 3], n), 'sex': np.random.choice(['male', 'female'], n), 'age': np.where(np.random.random(n) > 0.2, np.random.normal(30, 12, n), np.nan), 'fare': np.random.exponential(30, n), 'embarked': np.where(np.random.random(n) > 0.05, np.random.choice(['S', 'C', 'Q'], n), np.nan)})",
+      "starterCode": "df_final = df.copy()\n\n# Step 1: Fill missing values\ndf_final['age'] = df_final['age'].fillna(___)\ndf_final['embarked'] = df_final['embarked'].fillna(___)\n\n# Step 2: One-hot encode sex and embarked\ndf_final = pd.get_dummies(df_final, columns=___, drop_first=___)\n\n# Step 3: Z-score standardize age and fare\nfor col in ['age', 'fare']:\n    df_final[col] = ___\n\n# Step 4: Create interaction feature\ndf_final['fare_per_age'] = ___",
+      "solutionCode": "df_final = df.copy()\n\ndf_final['age'] = df_final['age'].fillna(df_final['age'].median())\ndf_final['embarked'] = df_final['embarked'].fillna(df_final['embarked'].mode()[0])\n\ndf_final = pd.get_dummies(df_final, columns=['sex', 'embarked'], drop_first=True)\n\nfor col in ['age', 'fare']:\n    df_final[col] = (df_final[col] - df_final[col].mean()) / df_final[col].std()\n\ndf_final['fare_per_age'] = df_final['fare'] / df_final['age']",
+      "validationType": "custom-check",
+      "checkCode": "import numpy as np\ntry:\n    checks = []\n    checks.append(df_final['age'].isna().sum() == 0)\n    checks.append('embarked' not in df_final.columns)\n    checks.append('sex' not in df_final.columns)\n    checks.append(abs(df_final['age'].mean()) < 0.1)\n    checks.append(abs(df_final['fare'].mean()) < 0.1)\n    checks.append('fare_per_age' in df_final.columns)\n    result = all(checks)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "中位数用 .median()，众数用 .mode()[0]",
+          "pd.get_dummies 的 columns 参数接受列名列表",
+          "Z-score: (x - mean) / std",
+          "创建交互特征时注意 age 已经被标准化了"
+        ],
+        "en": [
+          "Use .median() for median and .mode()[0] for mode",
+          "pd.get_dummies columns parameter accepts a list of column names",
+          "Z-score: (x - mean) / std",
+          "Note that age is already standardized when creating the interaction feature"
+        ]
+      },
+      "explanation": {
+        "zh": "这个综合练习展示了完整的特征工程管线：缺失值处理 → 分类编码 → 数值标准化 → 交互特征。实际项目中，特征工程通常占据数据科学工作 60-80% 的时间，好的特征比好的模型更重要。",
+        "en": "This comprehensive exercise demonstrates a complete feature engineering pipeline: missing value handling -> categorical encoding -> numerical standardization -> interaction features. In practice, feature engineering typically takes 60-80% of data science work, and good features matter more than good models."
+      }
+    }
+  ]
+}

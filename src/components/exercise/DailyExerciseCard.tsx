@@ -41,6 +41,8 @@ const stageLabels: Record<string, { zh: string; en: string }> = {
   stage2: { zh: "数据清洗", en: "Data Cleaning" },
   stage3: { zh: "分析与聚合", en: "Analysis" },
   stage4: { zh: "高级技巧", en: "Advanced" },
+  stage5: { zh: "统计与ML", en: "Stats & ML" },
+  stage6: { zh: "量化金融", en: "Quant Finance" },
 };
 
 interface Props {
@@ -80,7 +82,9 @@ export default function DailyExerciseCard({ exercise, index, dateStr, onComplete
   const stageId = exercise.id.startsWith("s1-") ? "stage1"
     : exercise.id.startsWith("s2-") ? "stage2"
     : exercise.id.startsWith("s3-") ? "stage3"
-    : "stage4";
+    : exercise.id.startsWith("s4-") ? "stage4"
+    : exercise.id.startsWith("s5-") ? "stage5"
+    : "stage6";
 
   const handleResult = useCallback(
     (correct: boolean, userAnswer?: unknown) => {

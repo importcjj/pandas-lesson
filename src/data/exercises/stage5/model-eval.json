@@ -1,0 +1,425 @@
+{
+  "module": "model-eval",
+  "stageId": "stage5",
+  "lessonId": "model-eval",
+  "tags": [
+    "cross-validation",
+    "grid-search",
+    "overfitting",
+    "learning-curve",
+    "tuning"
+  ],
+  "exercises": [
+    {
+      "id": "s5-eval-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "cross_val_score 交叉验证",
+        "en": "Cross-Validation with cross_val_score"
+      },
+      "description": {
+        "zh": "使用 cross_val_score 对 KNN 分类器进行 5 折交叉验证，并打印平均准确率。",
+        "en": "Use cross_val_score to perform 5-fold cross-validation on a KNN classifier and print the mean accuracy."
+      },
+      "setupCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.model_selection import cross_val_score\nfrom sklearn.datasets import make_classification\nnp.random.seed(42)\nX, y = make_classification(n_samples=200, n_features=10, n_informative=5, random_state=42)",
+      "starterCode": "# Create KNN classifier\nknn = KNeighborsClassifier(n_neighbors=5)\n\n# Perform 5-fold cross-validation\nscores = cross_val_score(___, ___, ___, cv=___)\n\nprint(f'Fold scores: {scores.round(4)}')\nprint(f'Mean accuracy: {scores.mean():.4f} (+/- {scores.std():.4f})')",
+      "solutionCode": "knn = KNeighborsClassifier(n_neighbors=5)\nscores = cross_val_score(knn, X, y, cv=5)\nprint(f'Fold scores: {scores.round(4)}')\nprint(f'Mean accuracy: {scores.mean():.4f} (+/- {scores.std():.4f})')",
+      "validationType": "value-match",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\ntry:\n    from sklearn.neighbors import KNeighborsClassifier\n    from sklearn.model_selection import cross_val_score\n    exp = cross_val_score(KNeighborsClassifier(n_neighbors=5), X, y, cv=5)\n    result = np.allclose(scores, exp, atol=1e-6)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "cross_val_score(模型, X, y, cv=折数)",
+          "返回每折的准确率数组"
+        ],
+        "en": [
+          "cross_val_score(model, X, y, cv=n_folds)",
+          "Returns an array of accuracy scores for each fold"
+        ]
+      },
+      "explanation": {
+        "zh": "cross_val_score 自动将数据分成 cv 份，依次用其中一份做验证集、其余做训练集，返回每折的评分。比单次 train/test split 更可靠，因为每个样本都被用作了一次验证集。",
+        "en": "cross_val_score automatically splits data into cv folds, using each fold once as validation and the rest for training. It returns scores for each fold. More reliable than a single train/test split because every sample is used for validation exactly once."
+      }
+    },
+    {
+      "id": "s5-eval-002",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "为什么使用交叉验证",
+        "en": "Why Use Cross-Validation"
+      },
+      "description": {
+        "zh": "相比单次 train/test split，交叉验证的主要优势是什么？",
+        "en": "What is the main advantage of cross-validation over a single train/test split?"
+      },
+      "options": {
+        "zh": [
+          "评估结果更可靠，减少了因数据划分随机性带来的偏差",
+          "训练速度更快",
+          "不需要测试集",
+          "能避免所有过拟合问题"
+        ],
+        "en": [
+          "More reliable evaluation, reducing bias from random data splitting",
+          "Faster training",
+          "No test set needed",
+          "Prevents all overfitting issues"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "单次划分可能因为运气好或运气差得到误导性的结果"
+        ],
+        "en": [
+          "A single split might give misleading results due to luck"
+        ]
+      },
+      "explanation": {
+        "zh": "单次 train/test split 的评估结果受数据划分的随机性影响很大。交叉验证通过多次不同的划分取平均，大幅减少了评估的方差，提供更稳定可靠的性能估计。但它不能完全防止过拟合，也不能替代最终的独立测试集评估。",
+        "en": "A single train/test split can be heavily influenced by randomness in how the data is divided. Cross-validation averages over multiple different splits, greatly reducing evaluation variance and providing a more stable performance estimate. However, it cannot fully prevent overfitting or replace a final held-out test set evaluation."
+      }
+    },
+    {
+      "id": "s5-eval-003",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "导入 GridSearchCV",
+        "en": "Import GridSearchCV"
+      },
+      "description": {
+        "zh": "补全导入语句，从 sklearn.model_selection 中导入网格搜索类。",
+        "en": "Complete the import statement to import the grid search class from sklearn.model_selection."
+      },
+      "codeTemplate": "from sklearn.model_selection import ___1___",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "GridSearchCV",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "网格搜索 + 交叉验证的类名是什么？"
+        ],
+        "en": [
+          "What is the class name for grid search + cross-validation?"
+        ]
+      },
+      "explanation": {
+        "zh": "GridSearchCV 是 sklearn 中用于超参数网格搜索的类，它对参数网格中的每个组合进行交叉验证，自动选出最优参数。",
+        "en": "GridSearchCV is the sklearn class for hyperparameter grid search. It performs cross-validation for each parameter combination in the grid and automatically selects the best parameters."
+      }
+    },
+    {
+      "id": "s5-eval-004",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "GridSearchCV: 搜索 KNN 最佳 n_neighbors",
+        "en": "GridSearchCV: Search Best n_neighbors for KNN"
+      },
+      "description": {
+        "zh": "使用 GridSearchCV 在 [3, 5, 7, 9] 中搜索 KNN 分类器的最优 n_neighbors，并输出最佳参数和最佳分数。",
+        "en": "Use GridSearchCV to search the optimal n_neighbors for KNN from [3, 5, 7, 9]. Print the best parameters and best score."
+      },
+      "setupCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.model_selection import GridSearchCV\nfrom sklearn.datasets import make_classification\nnp.random.seed(42)\nX, y = make_classification(n_samples=200, n_features=10, n_informative=5, random_state=42)",
+      "starterCode": "# Define parameter grid\nparam_grid = {___: ___}\n\n# Create GridSearchCV\ngrid_search = GridSearchCV(\n    estimator=___,\n    param_grid=___,\n    cv=5,\n    scoring='accuracy'\n)\n\n# Fit and print results\ngrid_search.fit(X, y)\nprint(f'Best params: {grid_search.best_params_}')\nprint(f'Best score: {grid_search.best_score_:.4f}')",
+      "solutionCode": "param_grid = {'n_neighbors': [3, 5, 7, 9]}\ngrid_search = GridSearchCV(\n    estimator=KNeighborsClassifier(),\n    param_grid=param_grid,\n    cv=5,\n    scoring='accuracy'\n)\ngrid_search.fit(X, y)\nprint(f'Best params: {grid_search.best_params_}')\nprint(f'Best score: {grid_search.best_score_:.4f}')",
+      "validationType": "value-match",
+      "expectedOutput": "",
+      "checkCode": "try:\n    result = 'n_neighbors' in grid_search.best_params_ and grid_search.best_params_['n_neighbors'] in [3, 5, 7, 9] and grid_search.best_score_ > 0\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "param_grid 是字典: {'参数名': [候选值列表]}",
+          "estimator 传入 KNeighborsClassifier()",
+          "best_params_ 和 best_score_ 属性包含结果"
+        ],
+        "en": [
+          "param_grid is a dict: {'param_name': [candidate_values]}",
+          "Pass KNeighborsClassifier() as estimator",
+          "best_params_ and best_score_ attributes contain results"
+        ]
+      },
+      "explanation": {
+        "zh": "GridSearchCV 穷举参数网格中所有组合，对每个组合进行交叉验证，选出平均分数最高的参数组合。best_params_ 是最优参数，best_score_ 是对应的交叉验证平均分数。",
+        "en": "GridSearchCV exhaustively searches all parameter combinations in the grid, cross-validates each one, and selects the combination with the highest mean score. best_params_ gives the optimal parameters, best_score_ gives the corresponding mean CV score."
+      }
+    },
+    {
+      "id": "s5-eval-005",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "Pipeline + GridSearchCV: 搜索 scaler 和模型参数",
+        "en": "GridSearchCV with Pipeline: Scaler + Model Params"
+      },
+      "description": {
+        "zh": "构建包含 StandardScaler 和 KNN 的 Pipeline，使用 GridSearchCV 同时搜索 n_neighbors 参数。注意 Pipeline 中参数名的格式。",
+        "en": "Build a Pipeline with StandardScaler and KNN. Use GridSearchCV to search n_neighbors. Pay attention to the Pipeline parameter naming format."
+      },
+      "setupCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.pipeline import Pipeline\nfrom sklearn.model_selection import GridSearchCV\nfrom sklearn.datasets import make_classification\nnp.random.seed(42)\nX, y = make_classification(n_samples=200, n_features=10, n_informative=5, random_state=42)",
+      "starterCode": "# Build Pipeline\npipe = Pipeline([\n    ('scaler', StandardScaler()),\n    ('knn', KNeighborsClassifier())\n])\n\n# Parameter grid with Pipeline naming: stepname__param\nparam_grid = {___: [3, 5, 7, 9]}\n\n# GridSearch on Pipeline\ngrid_search = GridSearchCV(pipe, param_grid, cv=5, scoring='accuracy')\ngrid_search.fit(X, y)\nprint(f'Best params: {grid_search.best_params_}')\nprint(f'Best score: {grid_search.best_score_:.4f}')",
+      "solutionCode": "pipe = Pipeline([\n    ('scaler', StandardScaler()),\n    ('knn', KNeighborsClassifier())\n])\nparam_grid = {'knn__n_neighbors': [3, 5, 7, 9]}\ngrid_search = GridSearchCV(pipe, param_grid, cv=5, scoring='accuracy')\ngrid_search.fit(X, y)\nprint(f'Best params: {grid_search.best_params_}')\nprint(f'Best score: {grid_search.best_score_:.4f}')",
+      "validationType": "value-match",
+      "expectedOutput": "",
+      "checkCode": "try:\n    result = 'knn__n_neighbors' in grid_search.best_params_ and grid_search.best_score_ > 0\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "Pipeline 中的参数名格式: 步骤名__参数名",
+          "knn 步骤的 n_neighbors 参数写作 'knn__n_neighbors'"
+        ],
+        "en": [
+          "Pipeline parameter naming format: stepname__paramname",
+          "The n_neighbors of the knn step is 'knn__n_neighbors'"
+        ]
+      },
+      "explanation": {
+        "zh": "在 Pipeline 中使用 GridSearchCV 时，参数名必须使用 '步骤名__参数名' 的格式（双下划线）。这样 GridSearchCV 知道将参数传递给 Pipeline 中的哪个步骤。Pipeline 确保了缩放和模型训练在每折交叉验证中都正确执行，避免数据泄露。",
+        "en": "When using GridSearchCV with a Pipeline, parameter names must follow the 'stepname__paramname' format (double underscore). This tells GridSearchCV which step to pass the parameter to. The Pipeline ensures scaling and model training are performed correctly within each CV fold, preventing data leakage."
+      }
+    },
+    {
+      "id": "s5-eval-006",
+      "type": "true-false",
+      "difficulty": 4,
+      "title": {
+        "zh": "高训练分数 + 低测试分数 = 过拟合",
+        "en": "High Train Score + Low Test Score = Overfitting"
+      },
+      "description": {
+        "zh": "如果一个模型在训练集上准确率为 99%，但在测试集上只有 60%，这说明模型发生了过拟合。",
+        "en": "If a model achieves 99% accuracy on the training set but only 60% on the test set, this indicates overfitting."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": [
+          "训练集和测试集表现之间的巨大差距说明了什么？"
+        ],
+        "en": [
+          "What does a large gap between training and test performance indicate?"
+        ]
+      },
+      "explanation": {
+        "zh": "过拟合是指模型过度学习了训练数据中的噪声和细节，导致在新数据上表现差。典型症状就是训练分数很高但测试分数低。解决方法包括: 增加训练数据、使用更简单的模型、添加正则化、使用 dropout 等。",
+        "en": "Overfitting occurs when a model learns the noise and details in training data too well, leading to poor performance on new data. The classic symptom is high training scores but low test scores. Solutions include: more training data, simpler models, regularization, dropout, etc."
+      }
+    },
+    {
+      "id": "s5-eval-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "学习曲线: 绘制训练/验证分数 vs 训练集大小",
+        "en": "Learning Curve: Plot Train/Val Scores vs Training Set Size"
+      },
+      "description": {
+        "zh": "使用 learning_curve 函数绘制模型的学习曲线，观察训练集大小对模型性能的影响。",
+        "en": "Use the learning_curve function to plot the model's learning curve, observing how training set size affects performance."
+      },
+      "setupCode": "import numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.model_selection import learning_curve\nfrom sklearn.datasets import make_classification\nnp.random.seed(42)\nX, y = make_classification(n_samples=300, n_features=10, n_informative=5, random_state=42)",
+      "starterCode": "# Compute learning curve\ntrain_sizes, train_scores, val_scores = learning_curve(\n    ___, X, y,\n    train_sizes=np.linspace(0.1, 1.0, 10),\n    cv=5, scoring='accuracy'\n)\n\n# Calculate mean and std\ntrain_mean = train_scores.mean(axis=___)\ntrain_std = train_scores.std(axis=___)\nval_mean = val_scores.mean(axis=___)\nval_std = val_scores.std(axis=___)\n\n# Plot\nplt.figure(figsize=(8, 5))\nplt.plot(train_sizes, train_mean, label='Training score')\nplt.fill_between(train_sizes, train_mean - train_std, train_mean + train_std, alpha=0.1)\nplt.plot(train_sizes, val_mean, label='Validation score')\nplt.fill_between(train_sizes, val_mean - val_std, val_mean + val_std, alpha=0.1)\nplt.xlabel('Training Set Size')\nplt.ylabel('Accuracy')\nplt.title('Learning Curve')\nplt.legend()\nplt.show()",
+      "solutionCode": "train_sizes, train_scores, val_scores = learning_curve(\n    KNeighborsClassifier(n_neighbors=5), X, y,\n    train_sizes=np.linspace(0.1, 1.0, 10),\n    cv=5, scoring='accuracy'\n)\ntrain_mean = train_scores.mean(axis=1)\ntrain_std = train_scores.std(axis=1)\nval_mean = val_scores.mean(axis=1)\nval_std = val_scores.std(axis=1)\nplt.figure(figsize=(8, 5))\nplt.plot(train_sizes, train_mean, label='Training score')\nplt.fill_between(train_sizes, train_mean - train_std, train_mean + train_std, alpha=0.1)\nplt.plot(train_sizes, val_mean, label='Validation score')\nplt.fill_between(train_sizes, val_mean - val_std, val_mean + val_std, alpha=0.1)\nplt.xlabel('Training Set Size')\nplt.ylabel('Accuracy')\nplt.title('Learning Curve')\nplt.legend()\nplt.show()",
+      "validationType": "value-match",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\ntry:\n    result = len(train_sizes) == 10 and train_mean.shape == (10,) and val_mean.shape == (10,)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "第一个参数传入模型实例，如 KNeighborsClassifier(n_neighbors=5)",
+          "axis=1 对每个训练集大小计算跨折的均值"
+        ],
+        "en": [
+          "Pass a model instance as the first argument, e.g., KNeighborsClassifier(n_neighbors=5)",
+          "axis=1 computes the mean across folds for each training set size"
+        ]
+      },
+      "explanation": {
+        "zh": "学习曲线展示了训练集大小对模型性能的影响。如果训练分数和验证分数都收敛到高值，说明模型表现良好。如果两者之间有大间距（训练高、验证低），说明过拟合，需要更多数据或更简单的模型。如果两者都收敛到低值，说明欠拟合，需要更复杂的模型。",
+        "en": "Learning curves show how training set size affects performance. If both scores converge to high values, the model performs well. A large gap (high train, low validation) indicates overfitting — more data or a simpler model is needed. Both converging to low values indicates underfitting — a more complex model is needed."
+      }
+    },
+    {
+      "id": "s5-eval-008",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "如何解决过拟合",
+        "en": "How to Fix Overfitting"
+      },
+      "description": {
+        "zh": "以下哪些方法可以有效缓解模型的过拟合问题？",
+        "en": "Which of the following methods can effectively mitigate model overfitting?"
+      },
+      "options": {
+        "zh": [
+          "增加训练数据、使用更简单的模型、添加正则化",
+          "增加模型复杂度、减少训练数据",
+          "只使用训练集评估、不做交叉验证",
+          "增大学习率、增加训练轮数"
+        ],
+        "en": [
+          "More training data, simpler model, add regularization",
+          "Increase model complexity, reduce training data",
+          "Evaluate only on training set, skip cross-validation",
+          "Increase learning rate, more training epochs"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "过拟合意味着模型过于复杂或训练数据太少"
+        ],
+        "en": [
+          "Overfitting means the model is too complex or there is too little training data"
+        ]
+      },
+      "explanation": {
+        "zh": "缓解过拟合的三大策略: (1) 增加训练数据，让模型接触更多样本；(2) 使用更简单的模型（如减少特征、降低多项式次数）；(3) 添加正则化（如 L1/L2 惩罚）。增加模型复杂度会加剧过拟合，减少训练数据也会加剧过拟合。",
+        "en": "Three key strategies to mitigate overfitting: (1) more training data for greater sample diversity; (2) simpler models (fewer features, lower polynomial degree); (3) regularization (L1/L2 penalties). Increasing model complexity worsens overfitting, and reducing training data also worsens it."
+      }
+    },
+    {
+      "id": "s5-eval-009",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "分层 K 折: 处理不平衡数据",
+        "en": "Stratified K-Fold for Imbalanced Data"
+      },
+      "description": {
+        "zh": "使用 StratifiedKFold 对不平衡数据集进行分层交叉验证，确保每折中类别比例与原始数据一致。",
+        "en": "Use StratifiedKFold for stratified cross-validation on an imbalanced dataset, ensuring each fold preserves the class distribution."
+      },
+      "setupCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.model_selection import StratifiedKFold, cross_val_score\nfrom sklearn.datasets import make_classification\nnp.random.seed(42)\nX, y = make_classification(n_samples=200, n_features=10, n_informative=5, weights=[0.9, 0.1], random_state=42)",
+      "starterCode": "# Check class imbalance\nprint(f'Class distribution: {np.bincount(y)}')\n\n# Create StratifiedKFold\nskf = StratifiedKFold(n_splits=___, shuffle=True, random_state=42)\n\n# Cross-validate with stratified folds\nscores = cross_val_score(\n    KNeighborsClassifier(n_neighbors=5),\n    X, y, cv=___\n)\nprint(f'Stratified CV scores: {scores.round(4)}')\nprint(f'Mean accuracy: {scores.mean():.4f}')",
+      "solutionCode": "print(f'Class distribution: {np.bincount(y)}')\nskf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)\nscores = cross_val_score(\n    KNeighborsClassifier(n_neighbors=5),\n    X, y, cv=skf\n)\nprint(f'Stratified CV scores: {scores.round(4)}')\nprint(f'Mean accuracy: {scores.mean():.4f}')",
+      "validationType": "value-match",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\ntry:\n    from sklearn.model_selection import StratifiedKFold, cross_val_score\n    from sklearn.neighbors import KNeighborsClassifier\n    exp_skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)\n    exp = cross_val_score(KNeighborsClassifier(n_neighbors=5), X, y, cv=exp_skf)\n    result = np.allclose(scores, exp, atol=1e-6)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "StratifiedKFold(n_splits=5, shuffle=True, random_state=42)",
+          "将 skf 对象传给 cross_val_score 的 cv 参数"
+        ],
+        "en": [
+          "StratifiedKFold(n_splits=5, shuffle=True, random_state=42)",
+          "Pass the skf object to the cv parameter of cross_val_score"
+        ]
+      },
+      "explanation": {
+        "zh": "StratifiedKFold 确保每折中各类别的比例与原始数据集相同。对于不平衡数据集，这比普通 KFold 更可靠，因为普通 KFold 可能导致某些折中缺少少数类样本。cross_val_score 的 cv 参数可以接受整数（使用默认 KFold/StratifiedKFold）或自定义的交叉验证对象。",
+        "en": "StratifiedKFold ensures each fold has the same class proportions as the original dataset. For imbalanced data, this is more reliable than regular KFold, which might result in folds with very few or no minority class samples. The cv parameter of cross_val_score accepts either an integer (using default KFold/StratifiedKFold) or a custom CV object."
+      }
+    },
+    {
+      "id": "s5-eval-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "比较多个模型的交叉验证结果",
+        "en": "Compare Multiple Models with cross_val_score"
+      },
+      "description": {
+        "zh": "使用 cross_val_score 比较 KNN、决策树和逻辑回归三个模型，将结果整理成 DataFrame 表格。",
+        "en": "Compare KNN, Decision Tree, and Logistic Regression using cross_val_score. Organize results into a DataFrame table."
+      },
+      "setupCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import cross_val_score\nfrom sklearn.datasets import make_classification\nnp.random.seed(42)\nX, y = make_classification(n_samples=200, n_features=10, n_informative=5, random_state=42)",
+      "starterCode": "# Define models\nmodels = {\n    'KNN': KNeighborsClassifier(n_neighbors=5),\n    'Decision Tree': DecisionTreeClassifier(random_state=42),\n    'Logistic Regression': LogisticRegression(random_state=42, max_iter=1000)\n}\n\n# Compare models\nresults = []\nfor name, model in models.items():\n    scores = cross_val_score(___, ___, ___, cv=5)\n    results.append({\n        'Model': name,\n        'Mean Accuracy': ___,\n        'Std': ___\n    })\n\nresults_df = pd.DataFrame(___).sort_values('Mean Accuracy', ascending=False)\nprint(results_df.to_string(index=False))",
+      "solutionCode": "models = {\n    'KNN': KNeighborsClassifier(n_neighbors=5),\n    'Decision Tree': DecisionTreeClassifier(random_state=42),\n    'Logistic Regression': LogisticRegression(random_state=42, max_iter=1000)\n}\nresults = []\nfor name, model in models.items():\n    scores = cross_val_score(model, X, y, cv=5)\n    results.append({\n        'Model': name,\n        'Mean Accuracy': scores.mean(),\n        'Std': scores.std()\n    })\nresults_df = pd.DataFrame(results).sort_values('Mean Accuracy', ascending=False)\nprint(results_df.to_string(index=False))",
+      "validationType": "value-match",
+      "expectedOutput": "",
+      "checkCode": "try:\n    result = isinstance(results_df, pd.DataFrame) and len(results_df) == 3 and 'Mean Accuracy' in results_df.columns\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "cross_val_score(model, X, y, cv=5) 对每个模型进行交叉验证",
+          "scores.mean() 和 scores.std() 获取均值和标准差",
+          "pd.DataFrame(results) 将字典列表转为 DataFrame"
+        ],
+        "en": [
+          "cross_val_score(model, X, y, cv=5) cross-validates each model",
+          "scores.mean() and scores.std() for mean and standard deviation",
+          "pd.DataFrame(results) converts list of dicts to DataFrame"
+        ]
+      },
+      "explanation": {
+        "zh": "通过循环对多个模型进行交叉验证，可以公平地比较它们的性能。将结果整理成 DataFrame 方便排序和展示。注意标准差也很重要，它反映了模型性能的稳定性。低均值高标准差的模型可能不如高均值低标准差的可靠。",
+        "en": "Looping through multiple models with cross-validation provides a fair comparison. Organizing results in a DataFrame makes sorting and display easy. Note that standard deviation matters too — it reflects performance stability. A model with low mean but high std may be less reliable than one with high mean and low std."
+      }
+    },
+    {
+      "id": "s5-eval-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] GridSearch 在测试集上搜索导致数据泄露",
+        "en": "[Debug] GridSearch on Test Set — Data Leakage"
+      },
+      "description": {
+        "zh": "以下代码在整个数据集（含测试集）上进行 GridSearch，导致数据泄露。请修复：先划分数据，仅在训练集上进行 GridSearch，最后在测试集上评估。",
+        "en": "The code below runs GridSearch on the entire dataset (including test data), causing data leakage. Fix it: split the data first, run GridSearch only on the training set, then evaluate on the test set."
+      },
+      "setupCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.model_selection import GridSearchCV, train_test_split\nfrom sklearn.datasets import make_classification\nnp.random.seed(42)\nX, y = make_classification(n_samples=200, n_features=10, n_informative=5, random_state=42)",
+      "starterCode": "# BUG: GridSearch on ALL data including test set\n# grid = GridSearchCV(KNeighborsClassifier(), {'n_neighbors': [3, 5, 7]}, cv=5)\n# grid.fit(X, y)  # Data leakage! Test data seen during tuning\n\n# FIX: Split first, then GridSearch on train only\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\ngrid = GridSearchCV(\n    KNeighborsClassifier(),\n    {'n_neighbors': [3, 5, 7]},\n    cv=5\n)\ngrid.fit(___, ___)\n\nprint(f'Best params: {grid.best_params_}')\nprint(f'CV score (train): {grid.best_score_:.4f}')\nprint(f'Test score: {grid.score(___, ___):.4f}')",
+      "solutionCode": "X_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\ngrid = GridSearchCV(\n    KNeighborsClassifier(),\n    {'n_neighbors': [3, 5, 7]},\n    cv=5\n)\ngrid.fit(X_train, y_train)\nprint(f'Best params: {grid.best_params_}')\nprint(f'CV score (train): {grid.best_score_:.4f}')\nprint(f'Test score: {grid.score(X_test, y_test):.4f}')",
+      "validationType": "value-match",
+      "expectedOutput": "",
+      "checkCode": "try:\n    result = hasattr(grid, 'best_params_') and grid.best_params_['n_neighbors'] in [3, 5, 7]\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "grid.fit() 只能传入训练集",
+          "grid.score() 传入测试集来评估最终性能",
+          "测试集在调参结束前不能被模型接触"
+        ],
+        "en": [
+          "grid.fit() should only receive the training set",
+          "grid.score() with test set evaluates final performance",
+          "Test set must not be touched by the model until tuning is complete"
+        ]
+      },
+      "explanation": {
+        "zh": "数据泄露是指模型在训练/调参过程中接触到了测试数据，导致评估结果过于乐观。正确做法是: (1) 先划分训练集和测试集；(2) 仅在训练集上进行 GridSearch（GridSearch 内部的交叉验证也只使用训练集）；(3) 最后用测试集对最优模型进行最终评估。这样得到的测试分数才是对泛化能力的真实估计。",
+        "en": "Data leakage occurs when the model sees test data during training/tuning, leading to overly optimistic evaluation. The correct approach: (1) split into train and test first; (2) run GridSearch only on the training set (internal CV also uses only training data); (3) evaluate the best model on the test set last. Only then does the test score truly estimate generalization ability."
+      }
+    },
+    {
+      "id": "s5-eval-012",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 完整调参: Pipeline + GridSearch + 最终评估",
+        "en": "[Comprehensive] Full Tuning: Pipeline + GridSearch + Final Evaluation"
+      },
+      "description": {
+        "zh": "完成完整的模型调优流程: 构建 Pipeline（StandardScaler + KNN），使用 GridSearchCV 搜索最优参数，在测试集上评估最终性能。",
+        "en": "Complete the full model tuning workflow: build a Pipeline (StandardScaler + KNN), use GridSearchCV to find optimal parameters, and evaluate final performance on the test set."
+      },
+      "setupCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.pipeline import Pipeline\nfrom sklearn.model_selection import GridSearchCV, train_test_split\nfrom sklearn.metrics import classification_report\nfrom sklearn.datasets import make_classification\nnp.random.seed(42)\nX, y = make_classification(n_samples=300, n_features=15, n_informative=8, n_classes=3, random_state=42)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "starterCode": "# 1. Build Pipeline\npipe = Pipeline([\n    (___),\n    (___)\n])\n\n# 2. Define parameter grid\nparam_grid = {\n    'knn__n_neighbors': [3, 5, 7, 9, 11],\n    'knn__weights': ['uniform', 'distance'],\n    'knn__metric': ['euclidean', 'manhattan']\n}\n\n# 3. GridSearchCV on training data only\ngrid = GridSearchCV(___, ___, cv=5, scoring='accuracy', n_jobs=-1)\ngrid.fit(___, ___)\n\nprint(f'Best params: {grid.best_params_}')\nprint(f'Best CV score: {grid.best_score_:.4f}')\n\n# 4. Evaluate on test set\ny_pred = grid.predict(___)\nprint(f'\\nTest accuracy: {grid.score(X_test, y_test):.4f}')\nprint(f'\\nClassification Report:\\n{classification_report(y_test, y_pred)}')",
+      "solutionCode": "pipe = Pipeline([\n    ('scaler', StandardScaler()),\n    ('knn', KNeighborsClassifier())\n])\nparam_grid = {\n    'knn__n_neighbors': [3, 5, 7, 9, 11],\n    'knn__weights': ['uniform', 'distance'],\n    'knn__metric': ['euclidean', 'manhattan']\n}\ngrid = GridSearchCV(pipe, param_grid, cv=5, scoring='accuracy', n_jobs=-1)\ngrid.fit(X_train, y_train)\nprint(f'Best params: {grid.best_params_}')\nprint(f'Best CV score: {grid.best_score_:.4f}')\ny_pred = grid.predict(X_test)\nprint(f'\\nTest accuracy: {grid.score(X_test, y_test):.4f}')\nprint(f'\\nClassification Report:\\n{classification_report(y_test, y_pred)}')",
+      "validationType": "value-match",
+      "expectedOutput": "",
+      "checkCode": "try:\n    result = (\n        hasattr(grid, 'best_params_') and\n        'knn__n_neighbors' in grid.best_params_ and\n        'knn__weights' in grid.best_params_ and\n        grid.score(X_test, y_test) > 0\n    )\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "Pipeline 步骤: ('scaler', StandardScaler()), ('knn', KNeighborsClassifier())",
+          "GridSearchCV 第一个参数是 pipe，第二个是 param_grid",
+          "grid.fit 和 grid.predict 分别用训练集和测试集"
+        ],
+        "en": [
+          "Pipeline steps: ('scaler', StandardScaler()), ('knn', KNeighborsClassifier())",
+          "GridSearchCV first arg is pipe, second is param_grid",
+          "grid.fit uses training set, grid.predict uses test set"
+        ]
+      },
+      "explanation": {
+        "zh": "这是完整的模型调优流程: (1) Pipeline 封装预处理和模型，确保每个 CV 折都正确缩放；(2) GridSearchCV 穷举搜索 n_neighbors、weights 和 metric 的所有组合（共 5*2*2=20 种），每种都做 5 折交叉验证；(3) 最终在独立测试集上评估，得到无偏的性能估计；(4) classification_report 提供每个类别的精确率、召回率和 F1 分数。n_jobs=-1 使用所有 CPU 核心并行加速搜索。",
+        "en": "This is the complete model tuning workflow: (1) Pipeline encapsulates preprocessing and model, ensuring correct scaling in each CV fold; (2) GridSearchCV exhaustively searches all combinations of n_neighbors, weights, and metric (5*2*2=20 total), with 5-fold CV for each; (3) final evaluation on an independent test set gives an unbiased performance estimate; (4) classification_report provides precision, recall, and F1 for each class. n_jobs=-1 uses all CPU cores for parallel speedup."
+      }
+    }
+  ]
+}

@@ -1,0 +1,416 @@
+{
+  "module": "correlation-regression",
+  "stageId": "stage5",
+  "lessonId": "correlation-regression",
+  "tags": [
+    "correlation",
+    "regression",
+    "pearson",
+    "spearman",
+    "linear-regression"
+  ],
+  "exercises": [
+    {
+      "id": "s5-corr-reg-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "Pearson 相关系数",
+        "en": "Pearson Correlation Coefficient"
+      },
+      "description": {
+        "zh": "计算 height 和 weight 两列之间的 Pearson 相关系数。",
+        "en": "Compute the Pearson correlation coefficient between the height and weight columns."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nheight = np.random.normal(170, 10, 50)\nweight = height * 0.5 + np.random.normal(0, 5, 50)\ndf = pd.DataFrame({'height': height, 'weight': weight})",
+      "starterCode": "# Compute Pearson correlation between height and weight\nresult = ___",
+      "solutionCode": "result = df['height'].corr(df['weight'])",
+      "validationType": "custom-check",
+      "checkCode": "import numpy as np\ntry:\n    expected = df['height'].corr(df['weight'])\n    result = abs(result - expected) < 1e-10\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "使用 Series 的 .corr() 方法计算相关系数",
+          "df['height'].corr(df['weight']) 返回 Pearson 系数"
+        ],
+        "en": [
+          "Use the .corr() method on a Series to compute correlation",
+          "df['height'].corr(df['weight']) returns the Pearson coefficient"
+        ]
+      },
+      "explanation": {
+        "zh": "Series.corr() 默认计算 Pearson 相关系数，衡量两个变量之间的线性相关程度，范围为 [-1, 1]。",
+        "en": "Series.corr() computes the Pearson correlation coefficient by default, measuring the linear relationship between two variables, ranging from -1 to 1."
+      }
+    },
+    {
+      "id": "s5-corr-reg-002",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "负相关系数的含义",
+        "en": "Interpreting a Negative Correlation"
+      },
+      "description": {
+        "zh": "两个变量的 Pearson 相关系数 r = -0.85，以下哪种解释最准确？",
+        "en": "The Pearson correlation coefficient between two variables is r = -0.85. Which interpretation is most accurate?"
+      },
+      "options": {
+        "zh": [
+          "两个变量之间存在强负线性关系：一个增大时另一个倾向于减小",
+          "两个变量之间没有显著关系",
+          "两个变量之间存在因果关系",
+          "相关系数为负说明数据有误"
+        ],
+        "en": [
+          "There is a strong negative linear relationship: as one increases, the other tends to decrease",
+          "There is no significant relationship between the variables",
+          "There is a causal relationship between the variables",
+          "A negative coefficient indicates data errors"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "r 的绝对值越接近 1 表示线性关系越强，正负号表示方向"
+        ],
+        "en": [
+          "The closer |r| is to 1, the stronger the linear relationship; the sign indicates direction"
+        ]
+      },
+      "explanation": {
+        "zh": "r = -0.85 绝对值较大（接近 1），说明线性关系很强；负号表示负相关，即一个变量增大时另一个倾向减小。相关系数不能说明因果关系。",
+        "en": "r = -0.85 has a large absolute value (close to 1), indicating a strong linear relationship. The negative sign means the variables move in opposite directions. Correlation does not imply causation."
+      }
+    },
+    {
+      "id": "s5-corr-reg-003",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "Spearman 秩相关 vs Pearson",
+        "en": "Spearman Rank Correlation vs Pearson"
+      },
+      "description": {
+        "zh": "数据 x 和 y 之间是单调递增但非线性的关系（y = x^2）。分别计算 Pearson 和 Spearman 相关系数，存入 pearson_r 和 spearman_r。",
+        "en": "The data x and y have a monotonic but non-linear relationship (y = x^2). Compute both Pearson and Spearman correlation coefficients, storing them in pearson_r and spearman_r."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\nx = np.linspace(1, 10, 50)\ny = x ** 2\ndf = pd.DataFrame({'x': x, 'y': y})",
+      "starterCode": "# Compute Pearson correlation\npearson_r = ___\n# Compute Spearman correlation\nspearman_r = ___",
+      "solutionCode": "pearson_r = df['x'].corr(df['y'])\nspearman_r = df['x'].corr(df['y'], method='spearman')",
+      "validationType": "custom-check",
+      "checkCode": "import numpy as np\ntry:\n    exp_p = df['x'].corr(df['y'])\n    exp_s = df['x'].corr(df['y'], method='spearman')\n    result = abs(pearson_r - exp_p) < 1e-10 and abs(spearman_r - exp_s) < 1e-10\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "corr() 默认使用 Pearson 方法",
+          "传入 method='spearman' 可以计算 Spearman 秩相关"
+        ],
+        "en": [
+          "corr() uses Pearson by default",
+          "Pass method='spearman' to compute Spearman rank correlation"
+        ]
+      },
+      "explanation": {
+        "zh": "Pearson 衡量线性相关，Spearman 衡量单调相关。对于 y=x^2 这样的单调非线性关系，Spearman 相关系数为 1.0（完美单调），而 Pearson 系数 < 1。",
+        "en": "Pearson measures linear correlation; Spearman measures monotonic correlation. For y=x^2 (monotonic but non-linear), Spearman equals 1.0 (perfect monotonic) while Pearson < 1."
+      }
+    },
+    {
+      "id": "s5-corr-reg-004",
+      "type": "true-false",
+      "difficulty": 3,
+      "title": {
+        "zh": "相关不等于因果",
+        "en": "Correlation Does Not Imply Causation"
+      },
+      "description": {
+        "zh": "两个变量的 Pearson 相关系数很高（如 r=0.95），这说明其中一个变量的变化直接导致了另一个变量的变化。",
+        "en": "A high Pearson correlation coefficient (e.g., r=0.95) between two variables means that changes in one variable directly cause changes in the other."
+      },
+      "correctAnswer": false,
+      "hints": {
+        "zh": [
+          "高相关可能是由第三个混淆变量引起的"
+        ],
+        "en": [
+          "A high correlation could be caused by a third confounding variable"
+        ]
+      },
+      "explanation": {
+        "zh": "相关性只衡量统计上的关联程度，不能证明因果关系。高相关可能由混淆变量、巧合或反向因果引起。确认因果关系需要实验设计或因果推断方法。",
+        "en": "Correlation only measures statistical association, not causation. High correlation could be due to confounding variables, coincidence, or reverse causality. Establishing causation requires experimental design or causal inference methods."
+      }
+    },
+    {
+      "id": "s5-corr-reg-005",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "相关矩阵热力图",
+        "en": "Correlation Matrix Heatmap"
+      },
+      "description": {
+        "zh": "计算 DataFrame 所有数值列的相关矩阵，并使用 matplotlib 的 imshow 绘制热力图。将相关矩阵存入 corr_matrix。",
+        "en": "Compute the correlation matrix of all numeric columns and plot a heatmap using matplotlib imshow. Store the correlation matrix in corr_matrix."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nnp.random.seed(42)\ndf = pd.DataFrame({'math': np.random.normal(75, 10, 100), 'physics': np.random.normal(70, 12, 100), 'english': np.random.normal(80, 8, 100)})\ndf['physics'] = df['physics'] + 0.6 * (df['math'] - 75)",
+      "starterCode": "# Compute correlation matrix\ncorr_matrix = ___\n\n# Plot heatmap with imshow\nfig, ax = plt.subplots()\nim = ax.imshow(___, cmap='coolwarm', vmin=-1, vmax=1)\nax.set_xticks(range(len(___)))\nax.set_xticklabels(___)\nax.set_yticks(range(len(___)))\nax.set_yticklabels(___)\nplt.colorbar(im)\nplt.title('Correlation Matrix')\nplt.tight_layout()",
+      "solutionCode": "corr_matrix = df.corr()\n\nfig, ax = plt.subplots()\nim = ax.imshow(corr_matrix, cmap='coolwarm', vmin=-1, vmax=1)\nax.set_xticks(range(len(corr_matrix.columns)))\nax.set_xticklabels(corr_matrix.columns)\nax.set_yticks(range(len(corr_matrix.columns)))\nax.set_yticklabels(corr_matrix.columns)\nplt.colorbar(im)\nplt.title('Correlation Matrix')\nplt.tight_layout()",
+      "validationType": "custom-check",
+      "checkCode": "import pandas as pd\ntry:\n    expected = df.corr()\n    result = corr_matrix.equals(expected)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "df.corr() 返回所有数值列的相关矩阵",
+          "imshow 可以直接接受 DataFrame 作为输入",
+          "corr_matrix.columns 获取列名用于设置标签"
+        ],
+        "en": [
+          "df.corr() returns the correlation matrix of all numeric columns",
+          "imshow can accept a DataFrame directly as input",
+          "corr_matrix.columns provides column names for tick labels"
+        ]
+      },
+      "explanation": {
+        "zh": "df.corr() 计算所有数值列之间的 Pearson 相关系数矩阵。matplotlib 的 imshow 可以将矩阵可视化为热力图，coolwarm 色彩映射直观地展示正负相关性。",
+        "en": "df.corr() computes the Pearson correlation matrix for all numeric columns. matplotlib's imshow visualizes the matrix as a heatmap, and the coolwarm colormap intuitively shows positive and negative correlations."
+      }
+    },
+    {
+      "id": "s5-corr-reg-006",
+      "type": "fill-blank",
+      "difficulty": 4,
+      "title": {
+        "zh": "scipy.stats.linregress 函数",
+        "en": "scipy.stats.linregress Function"
+      },
+      "description": {
+        "zh": "使用 scipy.stats 中的线性回归函数来拟合 x 和 y 的线性关系。",
+        "en": "Use the linear regression function from scipy.stats to fit a linear relationship between x and y."
+      },
+      "codeTemplate": "from scipy import stats\nslope, intercept, r_value, p_value, std_err = stats.___1___(x, y)",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "linregress",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "scipy.stats 中用于简单线性回归的函数名与 'linear regression' 的缩写有关"
+        ],
+        "en": [
+          "The function name in scipy.stats for simple linear regression is an abbreviation of 'linear regression'"
+        ]
+      },
+      "explanation": {
+        "zh": "scipy.stats.linregress(x, y) 执行简单线性回归，返回斜率、截距、相关系数 r、p 值和标准误差。",
+        "en": "scipy.stats.linregress(x, y) performs simple linear regression and returns slope, intercept, r-value, p-value, and standard error."
+      }
+    },
+    {
+      "id": "s5-corr-reg-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "简单线性回归与 R^2",
+        "en": "Simple Linear Regression and R-squared"
+      },
+      "description": {
+        "zh": "使用 scipy.stats.linregress 对 x 和 y 进行线性回归。计算预测值 y_pred 和决定系数 R^2。",
+        "en": "Perform linear regression on x and y using scipy.stats.linregress. Compute predicted values y_pred and the coefficient of determination R-squared."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nnp.random.seed(42)\nx = np.linspace(0, 10, 50)\ny = 2.5 * x + 3 + np.random.normal(0, 2, 50)",
+      "starterCode": "# Perform linear regression\nslope, intercept, r_value, p_value, std_err = ___\n\n# Compute predictions\ny_pred = ___\n\n# Compute R-squared\nr_squared = ___",
+      "solutionCode": "slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)\ny_pred = slope * x + intercept\nr_squared = r_value ** 2",
+      "validationType": "custom-check",
+      "checkCode": "import numpy as np\ntry:\n    exp = stats.linregress(x, y)\n    exp_pred = exp.slope * x + exp.intercept\n    exp_r2 = exp.rvalue ** 2\n    result = np.allclose(y_pred, exp_pred) and abs(r_squared - exp_r2) < 1e-10\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "stats.linregress(x, y) 返回回归参数",
+          "预测值 = slope * x + intercept",
+          "R^2 = r_value 的平方"
+        ],
+        "en": [
+          "stats.linregress(x, y) returns regression parameters",
+          "Predictions = slope * x + intercept",
+          "R-squared = r_value squared"
+        ]
+      },
+      "explanation": {
+        "zh": "linregress 返回的 r_value 是相关系数 r，R^2 = r^2 表示模型解释了多少比例的因变量方差。y_pred = slope * x + intercept 是回归线上的预测值。",
+        "en": "linregress returns r_value (correlation coefficient r). R-squared = r^2 indicates the proportion of variance in y explained by the model. y_pred = slope * x + intercept gives predicted values on the regression line."
+      }
+    },
+    {
+      "id": "s5-corr-reg-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "回归可视化：散点图+回归线+R^2 标注",
+        "en": "Regression Visualization: Scatter + Line + R-squared Annotation"
+      },
+      "description": {
+        "zh": "绘制散点图和回归线，并在图上标注 R^2 值。将回归结果存入 slope, intercept, r_squared。",
+        "en": "Plot a scatter plot with the regression line and annotate the R-squared value. Store regression results in slope, intercept, r_squared."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nnp.random.seed(42)\nx = np.linspace(0, 10, 50)\ny = 2.5 * x + 3 + np.random.normal(0, 2, 50)",
+      "starterCode": "# Linear regression\nslope, intercept, r_value, p_value, std_err = ___\nr_squared = ___\n\n# Plot scatter and regression line\nplt.figure(figsize=(8, 5))\nplt.scatter(___, ___, alpha=0.6, label='Data')\nplt.plot(___, ___, color='red', label='Regression line')\nplt.annotate(f'R² = {___:.4f}', xy=(0.05, 0.95), xycoords='axes fraction', fontsize=12)\nplt.xlabel('x')\nplt.ylabel('y')\nplt.legend()\nplt.title('Linear Regression')\nplt.tight_layout()",
+      "solutionCode": "slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)\nr_squared = r_value ** 2\n\nplt.figure(figsize=(8, 5))\nplt.scatter(x, y, alpha=0.6, label='Data')\nplt.plot(x, slope * x + intercept, color='red', label='Regression line')\nplt.annotate(f'R² = {r_squared:.4f}', xy=(0.05, 0.95), xycoords='axes fraction', fontsize=12)\nplt.xlabel('x')\nplt.ylabel('y')\nplt.legend()\nplt.title('Linear Regression')\nplt.tight_layout()",
+      "validationType": "custom-check",
+      "checkCode": "import numpy as np\ntry:\n    exp = stats.linregress(x, y)\n    result = abs(slope - exp.slope) < 1e-10 and abs(intercept - exp.intercept) < 1e-10 and abs(r_squared - exp.rvalue**2) < 1e-10\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "plt.scatter(x, y) 绘制散点图",
+          "plt.plot(x, slope*x+intercept) 绘制回归线",
+          "plt.annotate 可以在图上添加文本标注"
+        ],
+        "en": [
+          "plt.scatter(x, y) creates a scatter plot",
+          "plt.plot(x, slope*x+intercept) draws the regression line",
+          "plt.annotate adds text annotation to the plot"
+        ]
+      },
+      "explanation": {
+        "zh": "将散点图与回归线叠加显示是最常见的回归可视化方法。标注 R^2 可以让读者直观了解模型拟合程度。",
+        "en": "Overlaying a scatter plot with the regression line is the most common regression visualization. Annotating R-squared helps readers quickly assess the model fit."
+      }
+    },
+    {
+      "id": "s5-corr-reg-009",
+      "type": "output-matching",
+      "difficulty": 4,
+      "title": {
+        "zh": "R^2 = 0.64 的含义",
+        "en": "Interpreting R-squared = 0.64"
+      },
+      "description": {
+        "zh": "线性回归模型的 R^2 = 0.64，以下哪种解释最准确？",
+        "en": "A linear regression model has R-squared = 0.64. Which interpretation is most accurate?"
+      },
+      "code": "from scipy import stats\nimport numpy as np\nnp.random.seed(42)\nx = np.arange(20, dtype=float)\ny = 1.5 * x + np.random.normal(0, 4, 20)\nresult = stats.linregress(x, y)\nprint(f'R² = {result.rvalue**2:.2f}')\nprint('The model explains ___% of the variance in y')",
+      "options": {
+        "zh": [
+          "模型解释了因变量 64% 的方差，剩余 36% 未被解释",
+          "模型有 64% 的概率做出正确预测",
+          "因变量 64% 的数据点落在回归线上",
+          "自变量与因变量有 64% 的线性关系"
+        ],
+        "en": [
+          "The model explains 64% of the variance in y, with 36% unexplained",
+          "The model has a 64% probability of making correct predictions",
+          "64% of data points fall exactly on the regression line",
+          "There is a 64% linear relationship between x and y"
+        ]
+      },
+      "correctIndex": 0,
+      "explanation": {
+        "zh": "R^2（决定系数）表示自变量解释因变量方差的比例。R^2 = 0.64 意味着模型捕获了 y 变异的 64%，其余 36% 是模型无法解释的随机变异或其他因素。",
+        "en": "R-squared (coefficient of determination) represents the proportion of variance in y explained by x. R^2 = 0.64 means the model captures 64% of the variability in y, with 36% due to random variation or other factors."
+      }
+    },
+    {
+      "id": "s5-corr-reg-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "残差分析",
+        "en": "Residual Analysis"
+      },
+      "description": {
+        "zh": "进行线性回归后，计算残差（residuals = y - y_pred），并绘制残差散点图（x 轴为预测值，y 轴为残差）。将残差存入 residuals。",
+        "en": "After performing linear regression, compute residuals (residuals = y - y_pred) and plot a residual scatter plot (x-axis: predicted values, y-axis: residuals). Store residuals in residuals."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nnp.random.seed(42)\nx = np.linspace(0, 10, 50)\ny = 2.5 * x + 3 + np.random.normal(0, 2, 50)",
+      "starterCode": "# Regression\nslope, intercept, r_value, p_value, std_err = stats.linregress(x, y)\ny_pred = slope * x + intercept\n\n# Compute residuals\nresiduals = ___\n\n# Plot residuals\nplt.figure(figsize=(8, 5))\nplt.scatter(___, ___, alpha=0.6)\nplt.axhline(y=0, color='red', linestyle='--')\nplt.xlabel('Predicted values')\nplt.ylabel('Residuals')\nplt.title('Residual Plot')\nplt.tight_layout()",
+      "solutionCode": "slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)\ny_pred = slope * x + intercept\n\nresiduals = y - y_pred\n\nplt.figure(figsize=(8, 5))\nplt.scatter(y_pred, residuals, alpha=0.6)\nplt.axhline(y=0, color='red', linestyle='--')\nplt.xlabel('Predicted values')\nplt.ylabel('Residuals')\nplt.title('Residual Plot')\nplt.tight_layout()",
+      "validationType": "custom-check",
+      "checkCode": "import numpy as np\ntry:\n    exp = stats.linregress(x, y)\n    exp_pred = exp.slope * x + exp.intercept\n    exp_resid = y - exp_pred\n    result = np.allclose(residuals, exp_resid)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "残差 = 实际值 - 预测值",
+          "残差图的 x 轴通常用预测值，y 轴用残差",
+          "axhline(y=0) 画一条参考线"
+        ],
+        "en": [
+          "Residuals = actual values - predicted values",
+          "Residual plots typically use predicted values on x-axis and residuals on y-axis",
+          "axhline(y=0) draws a reference line"
+        ]
+      },
+      "explanation": {
+        "zh": "残差分析是评估回归模型的重要手段。理想情况下，残差应随机分布在 0 附近，无明显模式。如果残差呈现漏斗形或曲线形，说明模型假设可能不成立。",
+        "en": "Residual analysis is crucial for evaluating regression models. Ideally, residuals should be randomly scattered around 0 with no patterns. Funnel or curved patterns suggest model assumptions may be violated."
+      }
+    },
+    {
+      "id": "s5-corr-reg-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 异常值扭曲回归结果",
+        "en": "[Debug] Outlier Distorts Regression"
+      },
+      "description": {
+        "zh": "以下回归结果被异常值严重影响。请使用 z-score 方法（|z| > 3 为异常值）删除异常值后重新回归，将清洗后的结果存入 slope_clean, intercept_clean, r_squared_clean。",
+        "en": "The regression below is severely affected by outliers. Remove outliers using the z-score method (|z| > 3) and refit the regression. Store cleaned results in slope_clean, intercept_clean, r_squared_clean."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nnp.random.seed(42)\nx = np.concatenate([np.linspace(0, 10, 48), [5, 5]])\ny = np.concatenate([2 * x[:48] + 3 + np.random.normal(0, 1, 48), [100, -50]])",
+      "starterCode": "# Bug: outliers distort the regression\nslope, intercept, r_value, _, _ = stats.linregress(x, y)\nprint(f'Before: slope={slope:.2f}, R²={r_value**2:.4f}')\n\n# Fix: remove outliers using z-score on y\nz_scores = ___\nmask = ___\nx_clean = x[mask]\ny_clean = y[mask]\n\nslope_clean, intercept_clean, r_value_clean, _, _ = stats.linregress(x_clean, y_clean)\nr_squared_clean = ___",
+      "solutionCode": "slope, intercept, r_value, _, _ = stats.linregress(x, y)\nprint(f'Before: slope={slope:.2f}, R²={r_value**2:.4f}')\n\nz_scores = np.abs((y - y.mean()) / y.std())\nmask = z_scores <= 3\nx_clean = x[mask]\ny_clean = y[mask]\n\nslope_clean, intercept_clean, r_value_clean, _, _ = stats.linregress(x_clean, y_clean)\nr_squared_clean = r_value_clean ** 2",
+      "validationType": "custom-check",
+      "checkCode": "import numpy as np\ntry:\n    z = np.abs((y - y.mean()) / y.std())\n    m = z <= 3\n    exp = stats.linregress(x[m], y[m])\n    result = abs(slope_clean - exp.slope) < 1e-6 and abs(intercept_clean - exp.intercept) < 1e-6 and abs(r_squared_clean - exp.rvalue**2) < 1e-6\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "z-score = (值 - 均值) / 标准差",
+          "用 np.abs() 取绝对值，|z| > 3 通常被视为异常值",
+          "用布尔掩码过滤异常值后重新回归"
+        ],
+        "en": [
+          "z-score = (value - mean) / std",
+          "Use np.abs() for absolute value; |z| > 3 is typically considered an outlier",
+          "Use a boolean mask to filter outliers, then refit"
+        ]
+      },
+      "explanation": {
+        "zh": "异常值会严重影响最小二乘回归（因为误差被平方放大）。通过 z-score 识别并移除异常值后，回归结果更加稳健，R^2 通常会显著提高。",
+        "en": "Outliers severely affect least-squares regression (since errors are squared). Removing outliers identified by z-scores makes the regression more robust, typically improving R-squared significantly."
+      }
+    },
+    {
+      "id": "s5-corr-reg-012",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 房价分析：相关矩阵+回归+评估+可视化",
+        "en": "[Challenge] House Price: Correlation + Regression + Evaluation + Visualization"
+      },
+      "description": {
+        "zh": "完成房价数据分析：1) 生成模拟数据；2) 计算相关矩阵找到与 price 最相关的特征；3) 用该特征进行线性回归；4) 计算 R^2；5) 绘制回归图。将相关矩阵存入 corr_matrix，最佳特征名存入 best_feature，回归 R^2 存入 r_squared。",
+        "en": "Complete a house price analysis: 1) Generate simulated data; 2) Compute correlation matrix to find the feature most correlated with price; 3) Perform linear regression with that feature; 4) Compute R-squared; 5) Plot the regression. Store the correlation matrix in corr_matrix, best feature name in best_feature, and R-squared in r_squared."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nnp.random.seed(42)\nn = 200\nsqft = np.random.normal(1500, 400, n)\nbedrooms = np.random.choice([2, 3, 4, 5], n)\nage = np.random.uniform(1, 50, n)\nprice = 50 * sqft + 10000 * bedrooms - 1000 * age + np.random.normal(0, 15000, n)\ndf = pd.DataFrame({'sqft': sqft, 'bedrooms': bedrooms, 'age': age, 'price': price})",
+      "starterCode": "# Step 1: Correlation matrix\ncorr_matrix = ___\n\n# Step 2: Find feature most correlated with price (exclude price itself)\nprice_corr = corr_matrix['price'].drop('price').abs()\nbest_feature = ___\n\n# Step 3: Linear regression with best feature\nslope, intercept, r_value, p_value, std_err = ___\ny_pred = ___\nr_squared = ___\n\n# Step 4: Plot\nplt.figure(figsize=(8, 5))\nplt.scatter(df[best_feature], df['price'], alpha=0.4, label='Data')\nplt.plot(sorted(df[best_feature]), [slope * xi + intercept for xi in sorted(df[best_feature])], color='red', label=f'Regression (R²={r_squared:.3f})')\nplt.xlabel(best_feature)\nplt.ylabel('Price')\nplt.legend()\nplt.title(f'House Price vs {best_feature}')\nplt.tight_layout()",
+      "solutionCode": "corr_matrix = df.corr()\n\nprice_corr = corr_matrix['price'].drop('price').abs()\nbest_feature = price_corr.idxmax()\n\nslope, intercept, r_value, p_value, std_err = stats.linregress(df[best_feature], df['price'])\ny_pred = slope * df[best_feature] + intercept\nr_squared = r_value ** 2\n\nplt.figure(figsize=(8, 5))\nplt.scatter(df[best_feature], df['price'], alpha=0.4, label='Data')\nplt.plot(sorted(df[best_feature]), [slope * xi + intercept for xi in sorted(df[best_feature])], color='red', label=f'Regression (R²={r_squared:.3f})')\nplt.xlabel(best_feature)\nplt.ylabel('Price')\nplt.legend()\nplt.title(f'House Price vs {best_feature}')\nplt.tight_layout()",
+      "validationType": "custom-check",
+      "checkCode": "import numpy as np\ntry:\n    exp_corr = df.corr()\n    exp_best = exp_corr['price'].drop('price').abs().idxmax()\n    exp_reg = stats.linregress(df[exp_best], df['price'])\n    exp_r2 = exp_reg.rvalue ** 2\n    result = corr_matrix.equals(exp_corr) and best_feature == exp_best and abs(r_squared - exp_r2) < 1e-6\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "df.corr() 计算所有列间的相关矩阵",
+          "用 .abs().idxmax() 找到绝对值最大的相关系数对应的特征",
+          "stats.linregress(df[best_feature], df['price']) 拟合回归",
+          "R^2 = r_value ** 2"
+        ],
+        "en": [
+          "df.corr() computes the correlation matrix for all columns",
+          "Use .abs().idxmax() to find the feature with the highest absolute correlation",
+          "stats.linregress(df[best_feature], df['price']) fits the regression",
+          "R-squared = r_value ** 2"
+        ]
+      },
+      "explanation": {
+        "zh": "这个综合练习展示了完整的数据分析流程：探索性分析（相关矩阵）→ 特征选择（最高相关性）→ 建模（线性回归）→ 评估（R^2）→ 可视化（散点图+回归线）。",
+        "en": "This comprehensive exercise demonstrates a complete data analysis workflow: exploratory analysis (correlation matrix) -> feature selection (highest correlation) -> modeling (linear regression) -> evaluation (R-squared) -> visualization (scatter + regression line)."
+      }
+    }
+  ]
+}

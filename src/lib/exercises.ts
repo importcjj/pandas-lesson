@@ -46,6 +46,26 @@ import s4Cleaning from "@/data/exercises/stage4/project-cleaning.json";
 import s4Eda from "@/data/exercises/stage4/project-eda.json";
 import s4Best from "@/data/exercises/stage4/best-practices.json";
 
+// Stage 5
+import s5DescStats from "@/data/exercises/stage5/desc-stats.json";
+import s5HypTest from "@/data/exercises/stage5/hypothesis-test.json";
+import s5CorrReg from "@/data/exercises/stage5/correlation-regression.json";
+import s5FeatEng from "@/data/exercises/stage5/feature-eng.json";
+import s5SklearnIntro from "@/data/exercises/stage5/sklearn-intro.json";
+import s5Classification from "@/data/exercises/stage5/classification.json";
+import s5RegressionModels from "@/data/exercises/stage5/regression-models.json";
+import s5ModelEval from "@/data/exercises/stage5/model-eval.json";
+
+// Stage 6
+import s6FinTs from "@/data/exercises/stage6/fin-timeseries.json";
+import s6TechInd from "@/data/exercises/stage6/tech-indicators.json";
+import s6RiskMetrics from "@/data/exercises/stage6/risk-metrics.json";
+import s6FactorAnalysis from "@/data/exercises/stage6/factor-analysis.json";
+import s6Backtesting from "@/data/exercises/stage6/backtesting.json";
+import s6Portfolio from "@/data/exercises/stage6/portfolio.json";
+import s6TsForecast from "@/data/exercises/stage6/ts-forecast.json";
+import s6QuantProject from "@/data/exercises/stage6/quant-project.json";
+
 const asModule = (m: unknown) => m as unknown as ExerciseModule;
 
 const allModules: ExerciseModule[] = [
@@ -61,6 +81,12 @@ const allModules: ExerciseModule[] = [
   // Stage 4
   asModule(s4Perf), asModule(s4LargeDs), asModule(s4AdvGroupby), asModule(s4Reshape),
   asModule(s4Text), asModule(s4Cleaning), asModule(s4Eda), asModule(s4Best),
+  // Stage 5
+  asModule(s5DescStats), asModule(s5HypTest), asModule(s5CorrReg), asModule(s5FeatEng),
+  asModule(s5SklearnIntro), asModule(s5Classification), asModule(s5RegressionModels), asModule(s5ModelEval),
+  // Stage 6
+  asModule(s6FinTs), asModule(s6TechInd), asModule(s6RiskMetrics), asModule(s6FactorAnalysis),
+  asModule(s6Backtesting), asModule(s6Portfolio), asModule(s6TsForecast), asModule(s6QuantProject),
 ];
 
 export function getAllExerciseModules(): ExerciseModule[] {

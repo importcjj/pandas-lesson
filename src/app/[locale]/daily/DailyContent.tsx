@@ -13,6 +13,8 @@ const stageColors: Record<string, string> = {
   stage2: "bg-blue-500",
   stage3: "bg-yellow-500",
   stage4: "bg-red-500",
+  stage5: "bg-violet-500",
+  stage6: "bg-cyan-500",
 };
 
 const stageLabels: Record<string, { zh: string; en: string }> = {
@@ -20,6 +22,8 @@ const stageLabels: Record<string, { zh: string; en: string }> = {
   stage2: { zh: "数据清洗", en: "Cleaning" },
   stage3: { zh: "分析与聚合", en: "Analysis" },
   stage4: { zh: "高级技巧", en: "Advanced" },
+  stage5: { zh: "统计与ML", en: "Stats & ML" },
+  stage6: { zh: "量化金融", en: "Quant Finance" },
 };
 
 export default function DailyContent() {

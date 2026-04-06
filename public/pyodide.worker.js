@@ -15,7 +15,7 @@ async function initPyodide() {
   });
 
   self.postMessage({ type: "status", message: "Loading pandas..." });
-  await pyodide.loadPackage(["pandas", "scipy", "matplotlib"]);
+  await pyodide.loadPackage(["pandas", "scipy", "matplotlib", "scikit-learn"]);
 
   // Set up matplotlib to use non-interactive Agg backend
   pyodide.runPython(`

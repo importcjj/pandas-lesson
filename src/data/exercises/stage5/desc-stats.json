@@ -1,0 +1,421 @@
+{
+  "module": "desc-stats",
+  "stageId": "stage5",
+  "lessonId": "desc-stats",
+  "tags": [
+    "statistics",
+    "distribution",
+    "scipy",
+    "normal",
+    "skewness"
+  ],
+  "exercises": [
+    {
+      "id": "s5-desc-stats-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "综合描述性统计",
+        "en": "Comprehensive Descriptive Statistics"
+      },
+      "description": {
+        "zh": "对销售数据 DataFrame 调用 describe()，然后分别计算各数值列的偏度 (skew) 和峰度 (kurtosis)，将结果分别赋给 desc、skewness 和 kurt。",
+        "en": "Call describe() on the sales DataFrame, then compute skewness and kurtosis for all numeric columns. Assign results to desc, skewness, and kurt respectively."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'revenue': np.random.normal(1000, 200, 100), 'units': np.random.randint(1, 50, 100), 'discount': np.random.uniform(0, 0.3, 100)})",
+      "starterCode": "# Step 1: Get descriptive statistics\ndesc = df.___\n\n# Step 2: Compute skewness\nskewness = df.___\n\n# Step 3: Compute kurtosis\nkurt = df.___",
+      "solutionCode": "desc = df.describe()\nskewness = df.skew()\nkurt = df.kurtosis()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndf = pd.DataFrame({'revenue': np.random.normal(1000, 200, 100), 'units': np.random.randint(1, 50, 100), 'discount': np.random.uniform(0, 0.3, 100)})', _ns)\nexec('desc = df.describe()\\nskewness = df.skew()\\nkurt = df.kurtosis()', _ns)\ntry:\n    result = _ns['desc'].equals(desc) and _ns['skewness'].equals(skewness) and _ns['kurt'].equals(kurt)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "describe() 返回计数、均值、标准差、最小值、四分位数和最大值",
+          "skew() 和 kurtosis() 可直接在 DataFrame 上调用"
+        ],
+        "en": [
+          "describe() returns count, mean, std, min, quartiles, and max",
+          "skew() and kurtosis() can be called directly on a DataFrame"
+        ]
+      },
+      "explanation": {
+        "zh": "describe() 提供集中趋势和离散程度的概览；skew() 衡量分布的不对称性（正值右偏、负值左偏）；kurtosis() 衡量尾部厚度（正值厚尾、负值薄尾）。",
+        "en": "describe() provides an overview of central tendency and dispersion; skew() measures distribution asymmetry (positive = right-skewed); kurtosis() measures tail heaviness (positive = heavy tails)."
+      }
+    },
+    {
+      "id": "s5-desc-stats-002",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "均值 vs 中位数：抗异常值能力",
+        "en": "Mean vs Median: Robustness to Outliers"
+      },
+      "description": {
+        "zh": "对于右偏数据（存在极端大值），以下哪种集中趋势指标对异常值更具鲁棒性？",
+        "en": "For right-skewed data (with extreme large values), which measure of central tendency is more robust to outliers?"
+      },
+      "options": {
+        "zh": [
+          "中位数 (median)",
+          "算术平均值 (mean)",
+          "众数 (mode)",
+          "加权平均值 (weighted mean)"
+        ],
+        "en": [
+          "Median",
+          "Arithmetic mean",
+          "Mode",
+          "Weighted mean"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "想想如果最大值变成原来的 10 倍，哪个指标变化最小"
+        ],
+        "en": [
+          "Think about which measure changes least if the max value becomes 10x larger"
+        ]
+      },
+      "explanation": {
+        "zh": "中位数只取决于数据的排序位置，不受极端值影响。均值会被极端大值拉高，因此在右偏分布中均值 > 中位数。中位数是更稳健的集中趋势度量。",
+        "en": "The median depends only on the rank position of data, unaffected by extreme values. The mean is pulled up by extreme large values, so for right-skewed data, mean > median. The median is a more robust measure of central tendency."
+      }
+    },
+    {
+      "id": "s5-desc-stats-003",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "生成正态分布数据并计算统计量",
+        "en": "Generate Normal Data and Compute Statistics"
+      },
+      "description": {
+        "zh": "使用 scipy.stats.norm.rvs 生成 1000 个均值为 100、标准差为 15 的正态随机数，然后计算样本均值 (sample_mean) 和样本标准差 (sample_std)。",
+        "en": "Use scipy.stats.norm.rvs to generate 1000 normal random numbers with mean=100 and std=15, then compute the sample mean (sample_mean) and sample standard deviation (sample_std)."
+      },
+      "setupCode": "import numpy as np\nfrom scipy import stats\nnp.random.seed(42)",
+      "starterCode": "# Generate 1000 normal random numbers (loc=mean, scale=std)\ndata = stats.norm.rvs(loc=___, scale=___, size=___, random_state=42)\n\n# Compute sample mean and std\nsample_mean = data.___\nsample_std = data.___",
+      "solutionCode": "data = stats.norm.rvs(loc=100, scale=15, size=1000, random_state=42)\nsample_mean = data.mean()\nsample_std = data.std()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom scipy import stats\n_ns = {}\nexec('import numpy as np\\nfrom scipy import stats\\nnp.random.seed(42)\\ndata = stats.norm.rvs(loc=100, scale=15, size=1000, random_state=42)\\nsample_mean = data.mean()\\nsample_std = data.std()', _ns)\ntry:\n    result = np.isclose(sample_mean, _ns['sample_mean']) and np.isclose(sample_std, _ns['sample_std'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "scipy.stats.norm.rvs(loc=均值, scale=标准差, size=样本量)",
+          "numpy 数组的 .mean() 和 .std() 方法计算均值和标准差"
+        ],
+        "en": [
+          "scipy.stats.norm.rvs(loc=mean, scale=std, size=sample_size)",
+          "Use .mean() and .std() methods on the numpy array"
+        ]
+      },
+      "explanation": {
+        "zh": "scipy.stats.norm.rvs() 从正态分布中生成随机样本。loc 是均值，scale 是标准差，size 是样本量。大样本的样本均值会接近总体均值，这是大数定律的体现。",
+        "en": "scipy.stats.norm.rvs() generates random samples from a normal distribution. loc is the mean, scale is the std, size is the sample count. The sample mean of a large sample approaches the population mean, illustrating the law of large numbers."
+      }
+    },
+    {
+      "id": "s5-desc-stats-004",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "分布拟合：估计正态分布参数",
+        "en": "Distribution Fitting: Estimate Normal Parameters"
+      },
+      "description": {
+        "zh": "使用 scipy.stats.norm 的方法从数据中估计正态分布的参数（均值和标准差）。",
+        "en": "Use a method of scipy.stats.norm to estimate normal distribution parameters (mean and std) from data."
+      },
+      "codeTemplate": "from scipy import stats\nimport numpy as np\nnp.random.seed(42)\ndata = np.random.normal(50, 10, 500)\nmu, sigma = stats.norm.___1___(data)",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "fit",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "scipy.stats 的连续分布对象都有一个方法可以从数据中估计参数"
+        ],
+        "en": [
+          "Continuous distribution objects in scipy.stats have a method to estimate parameters from data"
+        ]
+      },
+      "explanation": {
+        "zh": "stats.norm.fit(data) 使用最大似然估计 (MLE) 从数据中拟合正态分布参数，返回 (mu, sigma)。这是统计建模中参数估计的基本方法。",
+        "en": "stats.norm.fit(data) uses Maximum Likelihood Estimation (MLE) to fit normal distribution parameters from data, returning (mu, sigma). This is a fundamental method for parameter estimation in statistical modeling."
+      }
+    },
+    {
+      "id": "s5-desc-stats-005",
+      "type": "output-matching",
+      "difficulty": 3,
+      "title": {
+        "zh": "正态分布概率：68-95-99.7 法则",
+        "en": "Normal Distribution Probability: 68-95-99.7 Rule"
+      },
+      "description": {
+        "zh": "以下代码计算标准正态分布在 [-1, 1] 区间内的概率，输出什么？",
+        "en": "The following code computes the probability within [-1, 1] for a standard normal distribution. What does it output?"
+      },
+      "code": "from scipy.stats import norm\nresult = norm.cdf(1) - norm.cdf(-1)\nprint(round(result, 4))",
+      "options": {
+        "zh": [
+          "0.6827",
+          "0.9545",
+          "0.5000",
+          "0.3413"
+        ],
+        "en": [
+          "0.6827",
+          "0.9545",
+          "0.5000",
+          "0.3413"
+        ]
+      },
+      "correctIndex": 0,
+      "explanation": {
+        "zh": "标准正态分布在均值 ±1 个标准差范围内包含约 68.27% 的数据。norm.cdf(1) ≈ 0.8413，norm.cdf(-1) ≈ 0.1587，差值为 0.6827。这就是著名的 68-95-99.7 法则中的 68%。",
+        "en": "A standard normal distribution contains about 68.27% of data within ±1 standard deviation of the mean. norm.cdf(1) ≈ 0.8413, norm.cdf(-1) ≈ 0.1587, the difference is 0.6827. This is the 68% in the famous 68-95-99.7 rule."
+      }
+    },
+    {
+      "id": "s5-desc-stats-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "分位数与 IQR 异常值检测",
+        "en": "Quantiles and IQR Outlier Detection"
+      },
+      "description": {
+        "zh": "计算数据的 Q1（25% 分位数）和 Q3（75% 分位数），利用 IQR = Q3 - Q1 找出异常值（小于 Q1 - 1.5*IQR 或大于 Q3 + 1.5*IQR 的点），将异常值赋给 outliers。",
+        "en": "Compute Q1 (25th percentile) and Q3 (75th percentile), use IQR = Q3 - Q1 to detect outliers (values below Q1 - 1.5*IQR or above Q3 + 1.5*IQR). Assign outliers to the variable outliers."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndata = pd.Series(np.concatenate([np.random.normal(50, 10, 95), [150, 200, -30, 160, 180]]))",
+      "starterCode": "# Compute Q1 and Q3\nQ1 = data.quantile(___)\nQ3 = data.quantile(___)\n\n# Compute IQR\nIQR = Q3 - Q1\n\n# Detect outliers using boolean indexing\noutliers = data[(data < ___) | (data > ___)]",
+      "solutionCode": "Q1 = data.quantile(0.25)\nQ3 = data.quantile(0.75)\nIQR = Q3 - Q1\noutliers = data[(data < Q1 - 1.5 * IQR) | (data > Q3 + 1.5 * IQR)]",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndata = pd.Series(np.concatenate([np.random.normal(50, 10, 95), [150, 200, -30, 160, 180]]))\\nQ1 = data.quantile(0.25)\\nQ3 = data.quantile(0.75)\\nIQR = Q3 - Q1\\noutliers = data[(data < Q1 - 1.5 * IQR) | (data > Q3 + 1.5 * IQR)]', _ns)\ntry:\n    result = _ns['outliers'].equals(outliers)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "quantile(0.25) 计算第 25 百分位数",
+          "异常值下界: Q1 - 1.5 * IQR，上界: Q3 + 1.5 * IQR"
+        ],
+        "en": [
+          "quantile(0.25) computes the 25th percentile",
+          "Lower bound: Q1 - 1.5 * IQR, upper bound: Q3 + 1.5 * IQR"
+        ]
+      },
+      "explanation": {
+        "zh": "IQR（四分位距）异常值检测是最经典的方法之一。IQR = Q3 - Q1 反映数据中间 50% 的范围。超出 [Q1 - 1.5*IQR, Q3 + 1.5*IQR] 的点被视为异常值。这种方法不依赖正态分布假设。",
+        "en": "IQR outlier detection is one of the most classic methods. IQR = Q3 - Q1 reflects the range of the middle 50% of data. Points outside [Q1 - 1.5*IQR, Q3 + 1.5*IQR] are considered outliers. This method does not assume a normal distribution."
+      }
+    },
+    {
+      "id": "s5-desc-stats-007",
+      "type": "true-false",
+      "difficulty": 3,
+      "title": {
+        "zh": "中心极限定理",
+        "en": "Central Limit Theorem"
+      },
+      "description": {
+        "zh": "中心极限定理指出：无论总体分布是什么形状，当样本量足够大时，样本均值的分布近似服从正态分布。",
+        "en": "The Central Limit Theorem states that regardless of the population distribution shape, the distribution of sample means approximates a normal distribution when the sample size is sufficiently large."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": [
+          "中心极限定理是统计推断的基础之一"
+        ],
+        "en": [
+          "The Central Limit Theorem is one of the foundations of statistical inference"
+        ]
+      },
+      "explanation": {
+        "zh": "中心极限定理 (CLT) 是统计学最重要的定理之一。它说明当样本量 n 足够大时（通常 n ≥ 30），无论总体分布如何，样本均值的抽样分布都近似正态分布，均值为 μ，标准差为 σ/√n。这是 t 检验等推断方法的理论基础。",
+        "en": "The Central Limit Theorem (CLT) is one of the most important theorems in statistics. It states that when the sample size n is large enough (typically n ≥ 30), the sampling distribution of sample means is approximately normal with mean μ and standard deviation σ/√n, regardless of the population distribution. This is the theoretical basis for inference methods like the t-test."
+      }
+    },
+    {
+      "id": "s5-desc-stats-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "Shapiro-Wilk 正态性检验",
+        "en": "Shapiro-Wilk Normality Test"
+      },
+      "description": {
+        "zh": "对 DataFrame 中的 'normal_col'（正态分布）和 'exp_col'（指数分布）分别进行 Shapiro-Wilk 正态性检验。将各自的 p 值赋给 p_normal 和 p_exp。",
+        "en": "Perform the Shapiro-Wilk normality test on 'normal_col' (normally distributed) and 'exp_col' (exponentially distributed) in the DataFrame. Assign p-values to p_normal and p_exp respectively."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nnp.random.seed(42)\ndf = pd.DataFrame({'normal_col': np.random.normal(0, 1, 200), 'exp_col': np.random.exponential(2, 200)})",
+      "starterCode": "# Shapiro-Wilk test on the normal column\nstat_normal, p_normal = stats.___(df['normal_col'])\n\n# Shapiro-Wilk test on the exponential column\nstat_exp, p_exp = stats.___(df['exp_col'])\n\nprint(f'Normal column p-value: {p_normal:.4f}')\nprint(f'Exponential column p-value: {p_exp:.4f}')",
+      "solutionCode": "stat_normal, p_normal = stats.shapiro(df['normal_col'])\nstat_exp, p_exp = stats.shapiro(df['exp_col'])\nprint(f'Normal column p-value: {p_normal:.4f}')\nprint(f'Exponential column p-value: {p_exp:.4f}')",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nfrom scipy import stats\\nnp.random.seed(42)\\ndf = pd.DataFrame({'normal_col': np.random.normal(0, 1, 200), 'exp_col': np.random.exponential(2, 200)})\\nstat_normal, p_normal = stats.shapiro(df['normal_col'])\\nstat_exp, p_exp = stats.shapiro(df['exp_col'])', _ns)\ntry:\n    result = np.isclose(p_normal, _ns['p_normal']) and np.isclose(p_exp, _ns['p_exp'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "scipy.stats.shapiro() 执行 Shapiro-Wilk 正态性检验",
+          "返回 (统计量, p值)，p值大则不能拒绝正态假设"
+        ],
+        "en": [
+          "scipy.stats.shapiro() performs the Shapiro-Wilk normality test",
+          "Returns (statistic, p-value); large p-value means cannot reject normality"
+        ]
+      },
+      "explanation": {
+        "zh": "Shapiro-Wilk 检验的零假设是数据服从正态分布。正态数据的 p 值通常较大（不能拒绝 H0），而指数分布数据的 p 值通常非常小（拒绝 H0）。这是检验数据是否正态的常用方法。",
+        "en": "The Shapiro-Wilk test has H0: data is normally distributed. Normal data typically yields a large p-value (cannot reject H0), while exponential data yields a very small p-value (reject H0). This is a commonly used method to test normality."
+      }
+    },
+    {
+      "id": "s5-desc-stats-009",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "p 值的正确解读",
+        "en": "Correct Interpretation of p-value"
+      },
+      "description": {
+        "zh": "在正态性检验中，得到 p = 0.03，显著性水平 α = 0.05。以下哪个说法是正确的？",
+        "en": "In a normality test, you get p = 0.03 with significance level α = 0.05. Which statement is correct?"
+      },
+      "options": {
+        "zh": [
+          "在 α = 0.05 水平下拒绝零假设，有足够证据认为数据不服从正态分布",
+          "数据一定不是正态分布",
+          "数据有 3% 的概率是正态分布",
+          "在 α = 0.01 水平下也应拒绝零假设"
+        ],
+        "en": [
+          "Reject H0 at α = 0.05; sufficient evidence that data is not normally distributed",
+          "The data is definitely not normally distributed",
+          "There is a 3% probability that the data is normally distributed",
+          "H0 should also be rejected at α = 0.01"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "p 值是在零假设为真时观察到当前结果或更极端结果的概率",
+          "p < α 时拒绝零假设"
+        ],
+        "en": [
+          "p-value is the probability of observing the current or more extreme result given H0 is true",
+          "Reject H0 when p < α"
+        ]
+      },
+      "explanation": {
+        "zh": "p = 0.03 < α = 0.05，所以在 5% 显著性水平下拒绝 H0。但 p 值不是「数据是正态的概率」。p = 0.03 > 0.01，所以在 1% 水平下不能拒绝 H0。拒绝 H0 也不意味着数据「一定」不正态，只是有足够统计证据。",
+        "en": "p = 0.03 < α = 0.05, so reject H0 at the 5% significance level. But p-value is NOT the probability that data is normal. Since p = 0.03 > 0.01, we cannot reject H0 at the 1% level. Rejecting H0 does not mean data is definitely not normal — just that there is sufficient statistical evidence."
+      }
+    },
+    {
+      "id": "s5-desc-stats-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "KDE 核密度估计",
+        "en": "KDE Kernel Density Estimation"
+      },
+      "description": {
+        "zh": "使用 scipy.stats.gaussian_kde 对数据进行核密度估计，然后在 x_grid 上评估密度值，将结果赋给 density。",
+        "en": "Use scipy.stats.gaussian_kde to perform kernel density estimation on the data, then evaluate density values on x_grid. Assign the result to density."
+      },
+      "setupCode": "import numpy as np\nfrom scipy import stats\nnp.random.seed(42)\ndata = np.concatenate([np.random.normal(-2, 1, 300), np.random.normal(3, 0.5, 200)])\nx_grid = np.linspace(-6, 6, 200)",
+      "starterCode": "# Create KDE object\nkde = stats.___(data)\n\n# Evaluate density on the grid\ndensity = ___(x_grid)",
+      "solutionCode": "kde = stats.gaussian_kde(data)\ndensity = kde(x_grid)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom scipy import stats\n_ns = {}\nexec('import numpy as np\\nfrom scipy import stats\\nnp.random.seed(42)\\ndata = np.concatenate([np.random.normal(-2, 1, 300), np.random.normal(3, 0.5, 200)])\\nx_grid = np.linspace(-6, 6, 200)\\nkde = stats.gaussian_kde(data)\\ndensity = kde(x_grid)', _ns)\ntry:\n    result = np.allclose(density, _ns['density'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "scipy.stats.gaussian_kde(data) 创建一个 KDE 对象",
+          "KDE 对象可以像函数一样调用来评估密度"
+        ],
+        "en": [
+          "scipy.stats.gaussian_kde(data) creates a KDE object",
+          "The KDE object can be called like a function to evaluate density"
+        ]
+      },
+      "explanation": {
+        "zh": "核密度估计 (KDE) 是一种非参数方法，用于估计数据的概率密度函数。gaussian_kde 使用高斯核函数自动选择带宽。对于多峰分布（如本题的双峰混合分布），KDE 比直方图更能揭示数据的真实分布形态。",
+        "en": "Kernel Density Estimation (KDE) is a non-parametric method for estimating probability density functions. gaussian_kde uses Gaussian kernels with automatic bandwidth selection. For multimodal distributions (like the bimodal mixture here), KDE reveals the true distribution shape better than histograms."
+      }
+    },
+    {
+      "id": "s5-desc-stats-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] skew() 在含非数值列的 DataFrame 上报错",
+        "en": "[Debug] skew() Fails on DataFrame with Non-numeric Columns"
+      },
+      "description": {
+        "zh": "以下代码试图计算 DataFrame 的偏度，但因为包含非数值列而出错。请修复代码，使其只对数值列计算偏度。",
+        "en": "The following code tries to compute skewness of a DataFrame but fails due to non-numeric columns. Fix the code so it computes skewness only for numeric columns."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nnp.random.seed(42)\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'] * 20, 'score': np.random.normal(75, 10, 100), 'grade': ['A', 'B', 'C', 'B', 'A'] * 20, 'hours': np.random.uniform(1, 8, 100)})",
+      "starterCode": "# BUG: This line raises an error because of non-numeric columns\n# skewness = df.skew()\n\n# FIX: Select only numeric columns first\nskewness = df.___.___()",
+      "solutionCode": "skewness = df.select_dtypes(include='number').skew()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nnp.random.seed(42)\\ndf = pd.DataFrame({'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'] * 20, 'score': np.random.normal(75, 10, 100), 'grade': ['A', 'B', 'C', 'B', 'A'] * 20, 'hours': np.random.uniform(1, 8, 100)})\\nskewness = df.select_dtypes(include='number').skew()', _ns)\ntry:\n    result = _ns['skewness'].equals(skewness)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "select_dtypes(include='number') 可以筛选出所有数值列",
+          "先筛选数值列，再调用 skew()"
+        ],
+        "en": [
+          "select_dtypes(include='number') selects all numeric columns",
+          "Filter numeric columns first, then call skew()"
+        ]
+      },
+      "explanation": {
+        "zh": "当 DataFrame 包含字符串等非数值列时，直接调用 skew() 可能会报错或产生意外结果。使用 select_dtypes(include='number') 先筛选数值列是常见的防御性编程模式。类似的方法还有 df.describe() 默认只处理数值列。",
+        "en": "When a DataFrame contains non-numeric columns like strings, calling skew() directly may raise errors or produce unexpected results. Using select_dtypes(include='number') to filter numeric columns first is a common defensive programming pattern. Similarly, df.describe() processes only numeric columns by default."
+      }
+    },
+    {
+      "id": "s5-desc-stats-012",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 多分布统计摘要表",
+        "en": "[Challenge] Multi-distribution Statistical Summary Table"
+      },
+      "description": {
+        "zh": "生成 3 种分布（正态、指数、均匀）各 500 个样本，计算每种分布的均值、标准差、偏度、峰度、Shapiro-Wilk p 值，最后将结果编译成一个摘要 DataFrame (summary)，索引为分布名称。",
+        "en": "Generate 500 samples from 3 distributions (normal, exponential, uniform), compute mean, std, skewness, kurtosis, and Shapiro-Wilk p-value for each. Compile results into a summary DataFrame (summary) with distribution names as the index."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nnp.random.seed(42)",
+      "starterCode": "# Generate 3 distributions\nnormal_data = np.random.normal(0, 1, 500)\nexp_data = np.random.exponential(2, 500)\nuniform_data = np.random.uniform(-3, 3, 500)\n\n# Compute statistics for each\ndistributions = {'normal': normal_data, 'exponential': exp_data, 'uniform': uniform_data}\nresults = []\nfor name, data in distributions.items():\n    s = pd.Series(data)\n    _, p_shapiro = stats.shapiro(data)\n    results.append({\n        'distribution': name,\n        'mean': s.___,\n        'std': s.___,\n        'skewness': s.___,\n        'kurtosis': s.___,\n        'shapiro_p': p_shapiro\n    })\n\nsummary = pd.DataFrame(results).set_index('distribution')",
+      "solutionCode": "normal_data = np.random.normal(0, 1, 500)\nexp_data = np.random.exponential(2, 500)\nuniform_data = np.random.uniform(-3, 3, 500)\n\ndistributions = {'normal': normal_data, 'exponential': exp_data, 'uniform': uniform_data}\nresults = []\nfor name, data in distributions.items():\n    s = pd.Series(data)\n    _, p_shapiro = stats.shapiro(data)\n    results.append({\n        'distribution': name,\n        'mean': s.mean(),\n        'std': s.std(),\n        'skewness': s.skew(),\n        'kurtosis': s.kurtosis(),\n        'shapiro_p': p_shapiro\n    })\n\nsummary = pd.DataFrame(results).set_index('distribution')",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nfrom scipy import stats\\nnp.random.seed(42)\\nnormal_data = np.random.normal(0, 1, 500)\\nexp_data = np.random.exponential(2, 500)\\nuniform_data = np.random.uniform(-3, 3, 500)\\ndistributions = {'normal': normal_data, 'exponential': exp_data, 'uniform': uniform_data}\\nresults = []\\nfor name, data in distributions.items():\\n    s = pd.Series(data)\\n    _, p_shapiro = stats.shapiro(data)\\n    results.append({'distribution': name, 'mean': s.mean(), 'std': s.std(), 'skewness': s.skew(), 'kurtosis': s.kurtosis(), 'shapiro_p': p_shapiro})\\nsummary = pd.DataFrame(results).set_index('distribution')', _ns)\ntry:\n    result = summary.equals(_ns['summary'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "Series 的 mean(), std(), skew(), kurtosis() 计算各统计量",
+          "stats.shapiro() 返回 (统计量, p值)",
+          "pd.DataFrame(列表).set_index() 构建摘要表"
+        ],
+        "en": [
+          "Series methods mean(), std(), skew(), kurtosis() compute each statistic",
+          "stats.shapiro() returns (statistic, p_value)",
+          "pd.DataFrame(list).set_index() builds the summary table"
+        ]
+      },
+      "explanation": {
+        "zh": "本综合练习展示了完整的描述性统计分析流程：生成不同分布的数据、计算集中趋势和离散程度指标、评估分布形态（偏度和峰度）、以及进行正态性检验。正态分布的偏度接近 0，指数分布正偏，均匀分布偏度接近 0 但峰度为负（比正态分布更'扁平'）。",
+        "en": "This challenge demonstrates a complete descriptive statistics workflow: generating data from different distributions, computing central tendency and dispersion measures, evaluating distribution shape (skewness and kurtosis), and performing normality tests. Normal distribution has skewness near 0, exponential is positively skewed, and uniform has skewness near 0 but negative kurtosis (flatter than normal)."
+      }
+    }
+  ]
+}

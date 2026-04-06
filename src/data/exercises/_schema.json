@@ -11,7 +11,7 @@
     },
     "stageId": {
       "type": "string",
-      "enum": ["stage1", "stage2", "stage3", "stage4"],
+      "enum": ["stage1", "stage2", "stage3", "stage4", "stage5", "stage6"],
       "description": "Which stage this module belongs to"
     },
     "lessonId": {
@@ -52,7 +52,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "pattern": "^s[1-4]-[a-z0-9-]+-[0-9]{3}$",
+          "pattern": "^s[1-6]-[a-z0-9-]+-[0-9]{3}$",
           "description": "Globally unique ID. Format: s{stage}-{topic}-{3-digit-number}, e.g. s1-series-001"
         },
         "type": {

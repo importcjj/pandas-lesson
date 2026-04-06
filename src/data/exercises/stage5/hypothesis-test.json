@@ -1,0 +1,463 @@
+{
+  "module": "hypothesis-test",
+  "stageId": "stage5",
+  "lessonId": "hypothesis-test",
+  "tags": [
+    "hypothesis-testing",
+    "t-test",
+    "chi-square",
+    "anova",
+    "p-value"
+  ],
+  "exercises": [
+    {
+      "id": "s5-hyp-test-001",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "零假设与备择假设",
+        "en": "Null Hypothesis and Alternative Hypothesis"
+      },
+      "description": {
+        "zh": "在假设检验中，以下关于零假设 (H0) 和备择假设 (H1) 的描述哪个是正确的？",
+        "en": "In hypothesis testing, which of the following correctly describes the null hypothesis (H0) and alternative hypothesis (H1)?"
+      },
+      "options": {
+        "zh": [
+          "H0 表示「无效应/无差异」的默认假设，H1 是我们希望找到证据支持的研究假设",
+          "H0 是我们希望证明为真的假设，H1 是默认假设",
+          "H0 和 H1 都必须是关于样本统计量的陈述",
+          "如果 p 值大，则 H1 一定为真"
+        ],
+        "en": [
+          "H0 is the default assumption of 'no effect/no difference'; H1 is the research hypothesis we seek evidence for",
+          "H0 is the hypothesis we want to prove true; H1 is the default",
+          "Both H0 and H1 must be statements about sample statistics",
+          "If the p-value is large, H1 must be true"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "假设检验的逻辑是尝试'推翻'零假设"
+        ],
+        "en": [
+          "The logic of hypothesis testing is to try to 'disprove' the null hypothesis"
+        ]
+      },
+      "explanation": {
+        "zh": "H0（零假设）代表'没有差异'或'没有效应'的默认状态。H1（备择假设）是我们的研究假设。检验的目的是判断数据是否提供了足够证据来拒绝 H0。我们永远不能'证明' H0 为真，只能'未能拒绝' H0。",
+        "en": "H0 (null hypothesis) represents the default state of 'no difference' or 'no effect'. H1 (alternative hypothesis) is our research hypothesis. The purpose of the test is to determine if data provides sufficient evidence to reject H0. We never 'prove' H0 true — we can only 'fail to reject' H0."
+      }
+    },
+    {
+      "id": "s5-hyp-test-002",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "单样本 t 检验",
+        "en": "One-sample t-test"
+      },
+      "description": {
+        "zh": "一组学生的考试成绩存储在 scores 中，使用单样本 t 检验判断平均分是否显著不等于 75。将 t 统计量和 p 值分别赋给 t_stat 和 pvalue。",
+        "en": "Student exam scores are in the variable scores. Use a one-sample t-test to determine if the mean is significantly different from 75. Assign the t-statistic and p-value to t_stat and pvalue."
+      },
+      "setupCode": "import numpy as np\nfrom scipy import stats\nnp.random.seed(42)\nscores = np.random.normal(78, 12, 50)",
+      "starterCode": "# One-sample t-test: is the mean significantly different from 75?\nt_stat, pvalue = stats.___(scores, ___)",
+      "solutionCode": "t_stat, pvalue = stats.ttest_1samp(scores, 75)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom scipy import stats\n_ns = {}\nexec('import numpy as np\\nfrom scipy import stats\\nnp.random.seed(42)\\nscores = np.random.normal(78, 12, 50)\\nt_stat, pvalue = stats.ttest_1samp(scores, 75)', _ns)\ntry:\n    result = np.isclose(t_stat, _ns['t_stat']) and np.isclose(pvalue, _ns['pvalue'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "scipy.stats.ttest_1samp(样本, 假设均值) 进行单样本 t 检验",
+          "第二个参数是零假设下的总体均值"
+        ],
+        "en": [
+          "scipy.stats.ttest_1samp(sample, hypothesized_mean) performs one-sample t-test",
+          "The second argument is the population mean under H0"
+        ]
+      },
+      "explanation": {
+        "zh": "ttest_1samp 检验样本均值是否与某个给定值有显著差异。它返回 t 统计量和 p 值。如果 p < α（如 0.05），则拒绝'总体均值等于 75'的零假设。t 值的绝对值越大，差异越显著。",
+        "en": "ttest_1samp tests whether the sample mean significantly differs from a given value. It returns the t-statistic and p-value. If p < α (e.g., 0.05), reject the null hypothesis that the population mean equals 75. The larger the absolute t-value, the more significant the difference."
+      }
+    },
+    {
+      "id": "s5-hyp-test-003",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "独立双样本 t 检验函数名",
+        "en": "Independent Two-sample t-test Function Name"
+      },
+      "description": {
+        "zh": "使用 scipy.stats 中的函数对两组独立样本进行 t 检验。",
+        "en": "Use a function from scipy.stats to perform a t-test on two independent samples."
+      },
+      "codeTemplate": "from scipy import stats\nimport numpy as np\nnp.random.seed(42)\ngroup_a = np.random.normal(80, 10, 40)\ngroup_b = np.random.normal(75, 12, 40)\nstat, pvalue = stats.___1___(group_a, group_b)",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "ttest_ind",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "ind 是 independent（独立）的缩写"
+        ],
+        "en": [
+          "ind stands for 'independent'"
+        ]
+      },
+      "explanation": {
+        "zh": "stats.ttest_ind() 用于比较两个独立样本的均值是否有显著差异。'ind' 表示 independent（独立），与 ttest_rel（配对检验）相对应。默认假设两组方差相等（equal_var=True）。",
+        "en": "stats.ttest_ind() compares the means of two independent samples for significant differences. 'ind' stands for independent, contrasting with ttest_rel (paired test). By default, it assumes equal variances (equal_var=True)."
+      }
+    },
+    {
+      "id": "s5-hyp-test-004",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "独立双样本 t 检验与结果解读",
+        "en": "Independent Two-sample t-test with Interpretation"
+      },
+      "description": {
+        "zh": "对实验组 (treatment) 和对照组 (control) 进行独立双样本 t 检验，将 p 值赋给 pvalue，并根据 α = 0.05 判断是否显著（赋给 significant，布尔值）。",
+        "en": "Perform an independent two-sample t-test on treatment and control groups. Assign the p-value to pvalue and determine significance at α = 0.05 (assign boolean to significant)."
+      },
+      "setupCode": "import numpy as np\nfrom scipy import stats\nnp.random.seed(42)\ntreatment = np.random.normal(85, 8, 60)\ncontrol = np.random.normal(80, 10, 60)",
+      "starterCode": "# Perform independent two-sample t-test\nt_stat, pvalue = stats.___(___, ___)\n\n# Is the difference significant at alpha = 0.05?\nsignificant = pvalue < ___\n\nprint(f'p-value: {pvalue:.4f}, significant: {significant}')",
+      "solutionCode": "t_stat, pvalue = stats.ttest_ind(treatment, control)\nsignificant = pvalue < 0.05\nprint(f'p-value: {pvalue:.4f}, significant: {significant}')",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom scipy import stats\n_ns = {}\nexec('import numpy as np\\nfrom scipy import stats\\nnp.random.seed(42)\\ntreatment = np.random.normal(85, 8, 60)\\ncontrol = np.random.normal(80, 10, 60)\\nt_stat, pvalue = stats.ttest_ind(treatment, control)\\nsignificant = pvalue < 0.05', _ns)\ntry:\n    result = np.isclose(pvalue, _ns['pvalue']) and significant == _ns['significant']\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "stats.ttest_ind(样本1, 样本2) 比较两个独立样本",
+          "显著性判断: pvalue < alpha"
+        ],
+        "en": [
+          "stats.ttest_ind(sample1, sample2) compares two independent samples",
+          "Significance check: pvalue < alpha"
+        ]
+      },
+      "explanation": {
+        "zh": "独立双样本 t 检验用于比较两个独立组的均值差异。p 值小于显著性水平 α = 0.05 表示两组均值有统计学显著差异。布尔表达式 pvalue < 0.05 是判断显著性的标准方法。",
+        "en": "The independent two-sample t-test compares mean differences between two independent groups. A p-value less than α = 0.05 indicates statistically significant mean differences. The boolean expression pvalue < 0.05 is the standard way to assess significance."
+      }
+    },
+    {
+      "id": "s5-hyp-test-005",
+      "type": "true-false",
+      "difficulty": 3,
+      "title": {
+        "zh": "p 值与假设判断",
+        "en": "p-value and Hypothesis Decision"
+      },
+      "description": {
+        "zh": "在假设检验中，如果 p = 0.04 且显著性水平 α = 0.05，则应该拒绝零假设。",
+        "en": "In hypothesis testing, if p = 0.04 and significance level α = 0.05, we should reject the null hypothesis."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": [
+          "比较 p 值和 α 的大小关系"
+        ],
+        "en": [
+          "Compare the p-value with α"
+        ]
+      },
+      "explanation": {
+        "zh": "当 p = 0.04 < α = 0.05 时，我们拒绝零假设。这意味着在零假设为真的情况下，观察到如此极端结果的概率只有 4%，低于我们设定的 5% 门槛，因此有足够证据拒绝 H0。",
+        "en": "When p = 0.04 < α = 0.05, we reject the null hypothesis. This means the probability of observing such an extreme result under H0 is only 4%, below our 5% threshold, providing sufficient evidence to reject H0."
+      }
+    },
+    {
+      "id": "s5-hyp-test-006",
+      "type": "output-matching",
+      "difficulty": 4,
+      "title": {
+        "zh": "配对 t 检验结果预测",
+        "en": "Paired t-test Result Prediction"
+      },
+      "description": {
+        "zh": "以下代码对'治疗前'和'治疗后'的配对数据进行 t 检验。输出什么？",
+        "en": "The following code performs a paired t-test on 'before' and 'after' treatment data. What does it output?"
+      },
+      "code": "from scipy import stats\nbefore = [72, 68, 75, 80, 65]\nafter  = [78, 72, 80, 85, 70]\nt_stat, pvalue = stats.ttest_rel(before, after)\nprint('Reject H0' if pvalue < 0.05 else 'Fail to reject H0')",
+      "options": {
+        "zh": [
+          "Reject H0",
+          "Fail to reject H0",
+          "Error: unequal sample sizes",
+          "p = 0.05"
+        ],
+        "en": [
+          "Reject H0",
+          "Fail to reject H0",
+          "Error: unequal sample sizes",
+          "p = 0.05"
+        ]
+      },
+      "correctIndex": 0,
+      "explanation": {
+        "zh": "每个受试者治疗后得分都增加了约 5 分，差异非常一致。配对 t 检验利用了这种配对结构，消除了个体差异的干扰，使得即使样本很小（n=5），也能检测到显著的系统性变化。ttest_rel 的 p 值约为 0.0005，远小于 0.05。",
+        "en": "Each subject's score increased by about 5 points consistently. The paired t-test exploits this paired structure, removing individual variation, detecting significant systematic change even with a small sample (n=5). The ttest_rel p-value is about 0.0005, far below 0.05."
+      }
+    },
+    {
+      "id": "s5-hyp-test-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "卡方检验：列联表独立性",
+        "en": "Chi-square Test: Contingency Table Independence"
+      },
+      "description": {
+        "zh": "使用 pd.crosstab 创建性别与购买偏好的列联表 (contingency)，然后使用 chi2_contingency 进行卡方独立性检验，将卡方统计量和 p 值赋给 chi2 和 p。",
+        "en": "Create a contingency table (contingency) of gender and purchase preference using pd.crosstab, then perform a chi-square test of independence using chi2_contingency. Assign chi-square statistic and p-value to chi2 and p."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nnp.random.seed(42)\nn = 200\ndf = pd.DataFrame({'gender': np.random.choice(['Male', 'Female'], n), 'preference': np.random.choice(['Product A', 'Product B', 'Product C'], n, p=[0.3, 0.5, 0.2])})",
+      "starterCode": "# Step 1: Create contingency table\ncontingency = pd.___(df['gender'], df['preference'])\n\n# Step 2: Chi-square test\nchi2, p, dof, expected = stats.___(___)  \n\nprint(f'Chi2: {chi2:.4f}, p-value: {p:.4f}')",
+      "solutionCode": "contingency = pd.crosstab(df['gender'], df['preference'])\nchi2, p, dof, expected = stats.chi2_contingency(contingency)\nprint(f'Chi2: {chi2:.4f}, p-value: {p:.4f}')",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nfrom scipy import stats\\nnp.random.seed(42)\\nn = 200\\ndf = pd.DataFrame({'gender': np.random.choice(['Male', 'Female'], n), 'preference': np.random.choice(['Product A', 'Product B', 'Product C'], n, p=[0.3, 0.5, 0.2])})\\ncontingency = pd.crosstab(df['gender'], df['preference'])\\nchi2, p, dof, expected = stats.chi2_contingency(contingency)', _ns)\ntry:\n    result = np.isclose(chi2, _ns['chi2']) and np.isclose(p, _ns['p'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "pd.crosstab() 创建列联表（交叉频率表）",
+          "chi2_contingency 返回 (卡方值, p值, 自由度, 期望频率)"
+        ],
+        "en": [
+          "pd.crosstab() creates a contingency table (cross-tabulation)",
+          "chi2_contingency returns (chi2, p-value, dof, expected frequencies)"
+        ]
+      },
+      "explanation": {
+        "zh": "卡方独立性检验用于判断两个分类变量是否独立。pd.crosstab 构建列联表，chi2_contingency 计算卡方统计量。如果 p < 0.05，则认为两个变量不独立（存在关联）。本例中随机生成的数据通常不会显示显著关联。",
+        "en": "The chi-square test of independence determines whether two categorical variables are independent. pd.crosstab builds the contingency table, chi2_contingency computes the chi-square statistic. If p < 0.05, the variables are not independent (associated). Randomly generated data typically shows no significant association."
+      }
+    },
+    {
+      "id": "s5-hyp-test-008",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "三组以上均值比较的选择",
+        "en": "Choosing a Test for Comparing 3+ Group Means"
+      },
+      "description": {
+        "zh": "如果要同时比较 3 个或更多组的均值是否有显著差异，应该使用哪种统计检验？",
+        "en": "When comparing means of 3 or more groups simultaneously for significant differences, which statistical test should you use?"
+      },
+      "options": {
+        "zh": [
+          "单因素方差分析 (One-way ANOVA)",
+          "独立双样本 t 检验",
+          "配对 t 检验",
+          "卡方检验"
+        ],
+        "en": [
+          "One-way ANOVA",
+          "Independent two-sample t-test",
+          "Paired t-test",
+          "Chi-square test"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "多次 t 检验会增加 Type I 错误率",
+          "ANOVA 可以同时比较多组"
+        ],
+        "en": [
+          "Multiple t-tests inflate the Type I error rate",
+          "ANOVA can compare multiple groups simultaneously"
+        ]
+      },
+      "explanation": {
+        "zh": "当比较 3 组以上时，应使用 ANOVA 而不是多次 t 检验。多次 t 检验会导致多重比较问题，增加假阳性率。例如比较 3 组需要 3 次 t 检验，总体犯错率会超过 α = 0.05。ANOVA 通过一次 F 检验解决这个问题。",
+        "en": "When comparing 3+ groups, use ANOVA instead of multiple t-tests. Multiple t-tests cause the multiple comparisons problem, inflating the false positive rate. Comparing 3 groups requires 3 t-tests, pushing the overall error rate above α = 0.05. ANOVA solves this with a single F-test."
+      }
+    },
+    {
+      "id": "s5-hyp-test-009",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "单因素方差分析 (One-way ANOVA)",
+        "en": "One-way ANOVA"
+      },
+      "description": {
+        "zh": "三种教学方法的学生成绩分别存储在 method_a、method_b、method_c 中。使用单因素方差分析比较三组均值是否有显著差异，将 F 统计量和 p 值赋给 f_stat 和 pvalue。",
+        "en": "Student scores from three teaching methods are in method_a, method_b, method_c. Use one-way ANOVA to test if the three group means differ significantly. Assign the F-statistic and p-value to f_stat and pvalue."
+      },
+      "setupCode": "import numpy as np\nfrom scipy import stats\nnp.random.seed(42)\nmethod_a = np.random.normal(78, 8, 30)\nmethod_b = np.random.normal(85, 7, 30)\nmethod_c = np.random.normal(80, 9, 30)",
+      "starterCode": "# One-way ANOVA across 3 teaching methods\nf_stat, pvalue = stats.___(method_a, method_b, method_c)\n\nprint(f'F-statistic: {f_stat:.4f}, p-value: {pvalue:.4f}')",
+      "solutionCode": "f_stat, pvalue = stats.f_oneway(method_a, method_b, method_c)\nprint(f'F-statistic: {f_stat:.4f}, p-value: {pvalue:.4f}')",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom scipy import stats\n_ns = {}\nexec('import numpy as np\\nfrom scipy import stats\\nnp.random.seed(42)\\nmethod_a = np.random.normal(78, 8, 30)\\nmethod_b = np.random.normal(85, 7, 30)\\nmethod_c = np.random.normal(80, 9, 30)\\nf_stat, pvalue = stats.f_oneway(method_a, method_b, method_c)', _ns)\ntry:\n    result = np.isclose(f_stat, _ns['f_stat']) and np.isclose(pvalue, _ns['pvalue'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "scipy.stats.f_oneway() 进行单因素方差分析",
+          "直接传入多个组的数据即可"
+        ],
+        "en": [
+          "scipy.stats.f_oneway() performs one-way ANOVA",
+          "Pass multiple group arrays directly as arguments"
+        ]
+      },
+      "explanation": {
+        "zh": "f_oneway 计算组间变异与组内变异的比率（F 统计量）。F 值越大，组间差异越显著。如果 p 值显著，说明至少有一组的均值与其他组不同，但不能告诉你具体哪两组不同（需要事后检验如 Tukey HSD）。",
+        "en": "f_oneway computes the ratio of between-group variance to within-group variance (F-statistic). A larger F means more significant between-group differences. A significant p-value means at least one group mean differs, but doesn't tell which pairs differ (post-hoc tests like Tukey HSD are needed)."
+      }
+    },
+    {
+      "id": "s5-hyp-test-010",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "Mann-Whitney U 检验（非参数检验）",
+        "en": "Mann-Whitney U Test (Non-parametric)"
+      },
+      "description": {
+        "zh": "当数据不满足正态性假设时，使用 Mann-Whitney U 检验代替 t 检验。对 group_x 和 group_y 进行检验，将统计量和 p 值赋给 u_stat 和 pvalue。",
+        "en": "When data does not meet the normality assumption, use the Mann-Whitney U test instead of the t-test. Test group_x and group_y, assigning the statistic and p-value to u_stat and pvalue."
+      },
+      "setupCode": "import numpy as np\nfrom scipy import stats\nnp.random.seed(42)\ngroup_x = np.random.exponential(5, 40)\ngroup_y = np.random.exponential(8, 40)",
+      "starterCode": "# Mann-Whitney U test for non-normal data\nu_stat, pvalue = stats.___(group_x, group_y)\n\nprint(f'U-statistic: {u_stat:.4f}, p-value: {pvalue:.4f}')",
+      "solutionCode": "u_stat, pvalue = stats.mannwhitneyu(group_x, group_y)\nprint(f'U-statistic: {u_stat:.4f}, p-value: {pvalue:.4f}')",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom scipy import stats\n_ns = {}\nexec('import numpy as np\\nfrom scipy import stats\\nnp.random.seed(42)\\ngroup_x = np.random.exponential(5, 40)\\ngroup_y = np.random.exponential(8, 40)\\nu_stat, pvalue = stats.mannwhitneyu(group_x, group_y)', _ns)\ntry:\n    result = np.isclose(u_stat, _ns['u_stat']) and np.isclose(pvalue, _ns['pvalue'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "mannwhitneyu 是 Mann-Whitney U 检验的 scipy 函数名",
+          "它基于秩（排名）而非原始数值，不要求正态性"
+        ],
+        "en": [
+          "mannwhitneyu is the scipy function name for the Mann-Whitney U test",
+          "It is based on ranks, not raw values, and does not require normality"
+        ]
+      },
+      "explanation": {
+        "zh": "Mann-Whitney U 检验是独立双样本 t 检验的非参数替代方案。它比较两组的秩分布，不要求数据正态分布。适用于偏态数据（如指数分布）或有序分类数据。当数据满足正态性时，t 检验的统计功效更高。",
+        "en": "The Mann-Whitney U test is a non-parametric alternative to the independent two-sample t-test. It compares rank distributions without requiring normality. Suitable for skewed data (like exponential) or ordinal data. When normality holds, the t-test has higher statistical power."
+      }
+    },
+    {
+      "id": "s5-hyp-test-011",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "第一类错误与第二类错误",
+        "en": "Type I Error vs Type II Error"
+      },
+      "description": {
+        "zh": "以下关于假设检验中两种错误的描述，哪个是正确的？",
+        "en": "Which of the following correctly describes the two types of errors in hypothesis testing?"
+      },
+      "options": {
+        "zh": [
+          "第一类错误：H0 为真但被拒绝（假阳性）；第二类错误：H0 为假但未被拒绝（假阴性）",
+          "第一类错误：H0 为假但未被拒绝；第二类错误：H0 为真但被拒绝",
+          "第一类错误由样本量决定；第二类错误由 p 值决定",
+          "两种错误不可能同时降低"
+        ],
+        "en": [
+          "Type I: H0 is true but rejected (false positive); Type II: H0 is false but not rejected (false negative)",
+          "Type I: H0 is false but not rejected; Type II: H0 is true but rejected",
+          "Type I error is determined by sample size; Type II error is determined by p-value",
+          "Both errors cannot be reduced simultaneously"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "α 是第一类错误的概率上限",
+          "第一类错误也叫'假阳性'"
+        ],
+        "en": [
+          "α is the upper bound of Type I error probability",
+          "Type I error is also called 'false positive'"
+        ]
+      },
+      "explanation": {
+        "zh": "第一类错误（α 错误）：零假设为真时错误地拒绝它，即'假阳性'。概率上限由显著性水平 α 控制。第二类错误（β 错误）：零假设为假时未能拒绝它，即'假阴性'。增大样本量可以同时降低两种错误的概率。",
+        "en": "Type I error (α error): incorrectly rejecting H0 when it's true — a 'false positive'. Its probability is bounded by significance level α. Type II error (β error): failing to reject H0 when it's false — a 'false negative'. Increasing sample size can reduce both error probabilities simultaneously."
+      }
+    },
+    {
+      "id": "s5-hyp-test-012",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 方差不齐时的 t 检验",
+        "en": "[Debug] t-test with Unequal Variances"
+      },
+      "description": {
+        "zh": "以下代码对两组方差差异很大的数据进行 t 检验，但使用了默认的 equal_var=True 参数，结果不可靠。请修复代码，使用 Welch's t 检验（设置 equal_var=False）。",
+        "en": "The following code performs a t-test on two groups with very different variances, but uses the default equal_var=True, making results unreliable. Fix it by using Welch's t-test (set equal_var=False)."
+      },
+      "setupCode": "import numpy as np\nfrom scipy import stats\nnp.random.seed(42)\ngroup_small_var = np.random.normal(100, 5, 50)\ngroup_large_var = np.random.normal(105, 25, 50)",
+      "starterCode": "# BUG: Uses default equal_var=True but variances are very different\n# t_stat, pvalue = stats.ttest_ind(group_small_var, group_large_var)\n\n# FIX: Use Welch's t-test for unequal variances\nt_stat, pvalue = stats.ttest_ind(group_small_var, group_large_var, ___)\n\nprint(f't-stat: {t_stat:.4f}, p-value: {pvalue:.4f}')",
+      "solutionCode": "t_stat, pvalue = stats.ttest_ind(group_small_var, group_large_var, equal_var=False)\nprint(f't-stat: {t_stat:.4f}, p-value: {pvalue:.4f}')",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom scipy import stats\n_ns = {}\nexec('import numpy as np\\nfrom scipy import stats\\nnp.random.seed(42)\\ngroup_small_var = np.random.normal(100, 5, 50)\\ngroup_large_var = np.random.normal(105, 25, 50)\\nt_stat, pvalue = stats.ttest_ind(group_small_var, group_large_var, equal_var=False)', _ns)\ntry:\n    result = np.isclose(t_stat, _ns['t_stat']) and np.isclose(pvalue, _ns['pvalue'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "当两组方差差异很大时，标准 t 检验的假设被违反",
+          "Welch's t 检验不假设方差相等，更稳健"
+        ],
+        "en": [
+          "When group variances differ greatly, the standard t-test assumption is violated",
+          "Welch's t-test does not assume equal variances and is more robust"
+        ]
+      },
+      "explanation": {
+        "zh": "标准 t 检验（equal_var=True）假设两组方差相等。当方差差异很大时（如本例中 5 vs 25），这个假设被严重违反，导致 p 值不可靠。Welch's t 检验（equal_var=False）使用修正的自由度，不需要等方差假设，是更安全的默认选择。",
+        "en": "The standard t-test (equal_var=True) assumes equal variances. When variances differ greatly (5 vs 25 here), this assumption is severely violated, making p-values unreliable. Welch's t-test (equal_var=False) uses adjusted degrees of freedom without the equal variance assumption and is a safer default choice."
+      }
+    },
+    {
+      "id": "s5-hyp-test-013",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] A/B 测试完整分析",
+        "en": "[Challenge] Complete A/B Test Analysis"
+      },
+      "description": {
+        "zh": "模拟一个 A/B 测试：生成两组用户的点击数据，计算各组转化率 (rate_a, rate_b)，使用卡方检验判断差异是否显著 (chi2, ab_pvalue)，并计算效应量 Cohen's h (effect_size)。",
+        "en": "Simulate an A/B test: generate click data for two groups, compute conversion rates (rate_a, rate_b), use a chi-square test for significance (chi2, ab_pvalue), and compute Cohen's h effect size (effect_size)."
+      },
+      "setupCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\nnp.random.seed(42)",
+      "starterCode": "# Generate A/B test data\nn_a, n_b = 1000, 1000\nclicks_a = np.random.binomial(1, 0.12, n_a)  # Group A: 12% conversion\nclicks_b = np.random.binomial(1, 0.15, n_b)  # Group B: 15% conversion\n\n# Compute conversion rates\nrate_a = clicks_a.___()\nrate_b = clicks_b.___()\n\n# Create contingency table and run chi-square test\ncontingency = np.array([[clicks_a.sum(), n_a - clicks_a.sum()],\n                        [clicks_b.sum(), n_b - clicks_b.sum()]])\nchi2, ab_pvalue, dof, expected = stats.___(contingency)\n\n# Compute Cohen's h effect size\n# h = 2 * arcsin(sqrt(p1)) - 2 * arcsin(sqrt(p2))\neffect_size = abs(2 * np.arcsin(np.sqrt(rate_a)) - 2 * np.arcsin(np.sqrt(rate_b)))\n\nprint(f'Rate A: {rate_a:.4f}, Rate B: {rate_b:.4f}')\nprint(f'Chi2: {chi2:.4f}, p-value: {ab_pvalue:.4f}')\nprint(f'Cohen's h: {effect_size:.4f}')",
+      "solutionCode": "n_a, n_b = 1000, 1000\nclicks_a = np.random.binomial(1, 0.12, n_a)\nclicks_b = np.random.binomial(1, 0.15, n_b)\n\nrate_a = clicks_a.mean()\nrate_b = clicks_b.mean()\n\ncontingency = np.array([[clicks_a.sum(), n_a - clicks_a.sum()],\n                        [clicks_b.sum(), n_b - clicks_b.sum()]])\nchi2, ab_pvalue, dof, expected = stats.chi2_contingency(contingency)\n\neffect_size = abs(2 * np.arcsin(np.sqrt(rate_a)) - 2 * np.arcsin(np.sqrt(rate_b)))\n\nprint(f'Rate A: {rate_a:.4f}, Rate B: {rate_b:.4f}')\nprint(f'Chi2: {chi2:.4f}, p-value: {ab_pvalue:.4f}')\nprint(f'Cohen's h: {effect_size:.4f}')",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\n_ns = {}\nexec('import pandas as pd\\nimport numpy as np\\nfrom scipy import stats\\nnp.random.seed(42)\\nn_a, n_b = 1000, 1000\\nclicks_a = np.random.binomial(1, 0.12, n_a)\\nclicks_b = np.random.binomial(1, 0.15, n_b)\\nrate_a = clicks_a.mean()\\nrate_b = clicks_b.mean()\\ncontingency = np.array([[clicks_a.sum(), n_a - clicks_a.sum()], [clicks_b.sum(), n_b - clicks_b.sum()]])\\nchi2, ab_pvalue, dof, expected = stats.chi2_contingency(contingency)\\neffect_size = abs(2 * np.arcsin(np.sqrt(rate_a)) - 2 * np.arcsin(np.sqrt(rate_b)))', _ns)\ntry:\n    result = np.isclose(rate_a, _ns['rate_a']) and np.isclose(rate_b, _ns['rate_b']) and np.isclose(chi2, _ns['chi2']) and np.isclose(ab_pvalue, _ns['ab_pvalue']) and np.isclose(effect_size, _ns['effect_size'])\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "转化率 = 点击次数的均值 (0/1 数组的 mean 就是比例)",
+          "chi2_contingency 对列联表进行卡方检验",
+          "Cohen's h 用 arcsin 变换衡量两个比例的差异大小"
+        ],
+        "en": [
+          "Conversion rate = mean of clicks (mean of 0/1 array is the proportion)",
+          "chi2_contingency performs chi-square test on contingency table",
+          "Cohen's h uses arcsin transformation to measure the difference between two proportions"
+        ]
+      },
+      "explanation": {
+        "zh": "完整的 A/B 测试分析包括：1) 计算各组转化率；2) 使用卡方检验判断差异的统计显著性；3) 计算效应量衡量实际差异大小。Cohen's h < 0.2 为小效应，0.2-0.8 为中等效应，> 0.8 为大效应。仅看 p 值可能误导——大样本下微小差异也可显著。",
+        "en": "A complete A/B test includes: 1) computing conversion rates per group; 2) chi-square test for statistical significance; 3) effect size to measure practical significance. Cohen's h < 0.2 is small, 0.2-0.8 medium, > 0.8 large. Looking only at p-values can be misleading — tiny differences can be significant with large samples."
+      }
+    }
+  ]
+}

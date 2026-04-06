@@ -1,0 +1,430 @@
+{
+  "module": "sklearn-intro",
+  "stageId": "stage5",
+  "lessonId": "sklearn-intro",
+  "tags": [
+    "sklearn",
+    "train-test-split",
+    "pipeline",
+    "fit",
+    "predict"
+  ],
+  "exercises": [
+    {
+      "id": "s5-sklearn-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "train_test_split 基本用法",
+        "en": "Basic train_test_split"
+      },
+      "description": {
+        "zh": "使用 train_test_split 将特征矩阵 X 和标签 y 拆分为训练集和测试集，设置 test_size=0.2，random_state=42。",
+        "en": "Use train_test_split to split feature matrix X and labels y into training and test sets with test_size=0.2 and random_state=42."
+      },
+      "setupCode": "import numpy as np\nfrom sklearn.model_selection import train_test_split\nnp.random.seed(42)\nX = np.random.rand(100, 3)\ny = (X[:, 0] + X[:, 1] > 1).astype(int)",
+      "starterCode": "# Split X, y into train/test sets\nX_train, X_test, y_train, y_test = ___",
+      "solutionCode": "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom sklearn.model_selection import train_test_split\ntry:\n    np.random.seed(42)\n    _X = np.random.rand(100, 3)\n    _y = (_X[:, 0] + _X[:, 1] > 1).astype(int)\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    result = (np.array_equal(X_train, _X_train) and np.array_equal(X_test, _X_test) and np.array_equal(y_train, _y_train) and np.array_equal(y_test, _y_test))\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "train_test_split 返回四个数组：X_train, X_test, y_train, y_test",
+          "使用 test_size=0.2 表示 20% 作为测试集"
+        ],
+        "en": [
+          "train_test_split returns four arrays: X_train, X_test, y_train, y_test",
+          "Use test_size=0.2 to allocate 20% as the test set"
+        ]
+      },
+      "explanation": {
+        "zh": "train_test_split(X, y, test_size=0.2, random_state=42) 将数据随机拆分为 80% 训练集和 20% 测试集。random_state 确保每次拆分结果一致，便于复现。",
+        "en": "train_test_split(X, y, test_size=0.2, random_state=42) randomly splits data into 80% training and 20% test. random_state ensures reproducibility."
+      }
+    },
+    {
+      "id": "s5-sklearn-002",
+      "type": "multiple-choice",
+      "difficulty": 3,
+      "title": {
+        "zh": "为什么要拆分训练集和测试集",
+        "en": "Why Split into Train and Test Sets"
+      },
+      "description": {
+        "zh": "为什么在机器学习中需要将数据拆分为训练集和测试集？",
+        "en": "Why do we need to split data into training and test sets in machine learning?"
+      },
+      "options": {
+        "zh": [
+          "评估模型在未见数据上的泛化能力",
+          "加快模型训练速度",
+          "减少数据中的噪声",
+          "增加训练样本数量"
+        ],
+        "en": [
+          "Evaluate the model's generalization ability on unseen data",
+          "Speed up model training",
+          "Reduce noise in the data",
+          "Increase the number of training samples"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "想一想：如果用全部数据训练并在同样的数据上测试，结果可靠吗？"
+        ],
+        "en": [
+          "Think: if you train on all data and test on the same data, are the results reliable?"
+        ]
+      },
+      "explanation": {
+        "zh": "拆分数据是为了评估模型的泛化能力。在训练集上训练模型，在测试集上评估，可以检测模型是否过拟合。如果在训练数据上评估，会高估模型性能。",
+        "en": "Splitting data evaluates generalization. Training on the training set and evaluating on the test set detects overfitting. Evaluating on training data overestimates model performance."
+      }
+    },
+    {
+      "id": "s5-sklearn-003",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "fit 与 predict 基本流程",
+        "en": "Basic fit and predict Workflow"
+      },
+      "description": {
+        "zh": "填写 sklearn 模型的训练和预测方法名称。",
+        "en": "Fill in the method names for training and predicting with an sklearn model."
+      },
+      "codeTemplate": "model.___1___(X_train, y_train)\npred = model.___2___(X_test)",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "fit",
+          "alternatives": []
+        },
+        {
+          "placeholder": "___2___",
+          "answer": "predict",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "训练模型的方法是 fit，传入训练数据和标签",
+          "用训练好的模型进行预测的方法是 predict"
+        ],
+        "en": [
+          "The method to train a model is fit, passing training data and labels",
+          "The method to make predictions with a trained model is predict"
+        ]
+      },
+      "explanation": {
+        "zh": "sklearn 的统一 API：model.fit(X_train, y_train) 训练模型，model.predict(X_test) 对新数据预测。所有 sklearn 模型都遵循这个接口。",
+        "en": "sklearn's unified API: model.fit(X_train, y_train) trains the model, model.predict(X_test) predicts on new data. All sklearn models follow this interface."
+      }
+    },
+    {
+      "id": "s5-sklearn-004",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "KNeighborsClassifier 第一个模型",
+        "en": "First Model: KNeighborsClassifier"
+      },
+      "description": {
+        "zh": "使用 KNeighborsClassifier(n_neighbors=5) 在合成数据上训练模型，并计算测试集上的准确率（accuracy_score）。将准确率存入 acc。",
+        "en": "Train a KNeighborsClassifier(n_neighbors=5) on synthetic data and compute accuracy on the test set using accuracy_score. Store the accuracy in acc."
+      },
+      "setupCode": "import numpy as np\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score\nnp.random.seed(42)\nX = np.random.rand(200, 2)\ny = (X[:, 0] + X[:, 1] > 1).astype(int)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "starterCode": "# Create KNN model, fit, predict, and compute accuracy\nmodel = ___\n___\npred = ___\nacc = ___",
+      "solutionCode": "model = KNeighborsClassifier(n_neighbors=5)\nmodel.fit(X_train, y_train)\npred = model.predict(X_test)\nacc = accuracy_score(y_test, pred)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score\ntry:\n    np.random.seed(42)\n    _X = np.random.rand(200, 2)\n    _y = (_X[:, 0] + _X[:, 1] > 1).astype(int)\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    _model = KNeighborsClassifier(n_neighbors=5)\n    _model.fit(_X_train, _y_train)\n    _pred = _model.predict(_X_test)\n    _acc = accuracy_score(_y_test, _pred)\n    result = (isinstance(acc, float) and abs(acc - _acc) < 1e-10)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "先创建 KNeighborsClassifier(n_neighbors=5)",
+          "调用 model.fit(X_train, y_train) 训练",
+          "用 accuracy_score(y_test, pred) 计算准确率"
+        ],
+        "en": [
+          "Create KNeighborsClassifier(n_neighbors=5) first",
+          "Call model.fit(X_train, y_train) to train",
+          "Use accuracy_score(y_test, pred) to compute accuracy"
+        ]
+      },
+      "explanation": {
+        "zh": "KNN 分类器通过找到最近的 k 个邻居来预测类别。fit 存储训练数据，predict 在预测时计算距离。accuracy_score 计算预测正确的比例。",
+        "en": "KNN classifier predicts by finding k nearest neighbors. fit stores training data, predict computes distances at prediction time. accuracy_score computes the proportion of correct predictions."
+      }
+    },
+    {
+      "id": "s5-sklearn-005",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "StandardScaler 标准化",
+        "en": "StandardScaler Normalization"
+      },
+      "description": {
+        "zh": "使用 StandardScaler 对训练集进行 fit_transform，对测试集仅进行 transform。将结果分别存入 X_train_scaled 和 X_test_scaled。",
+        "en": "Use StandardScaler to fit_transform the training set and only transform the test set. Store results in X_train_scaled and X_test_scaled."
+      },
+      "setupCode": "import numpy as np\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.model_selection import train_test_split\nnp.random.seed(42)\nX = np.random.rand(100, 3) * [10, 100, 1000]\ny = np.random.randint(0, 2, 100)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "starterCode": "# Fit scaler on train, transform both train and test\nscaler = StandardScaler()\nX_train_scaled = ___\nX_test_scaled = ___",
+      "solutionCode": "scaler = StandardScaler()\nX_train_scaled = scaler.fit_transform(X_train)\nX_test_scaled = scaler.transform(X_test)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.model_selection import train_test_split\ntry:\n    np.random.seed(42)\n    _X = np.random.rand(100, 3) * [10, 100, 1000]\n    _y = np.random.randint(0, 2, 100)\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    _scaler = StandardScaler()\n    _X_train_scaled = _scaler.fit_transform(_X_train)\n    _X_test_scaled = _scaler.transform(_X_test)\n    result = (np.allclose(X_train_scaled, _X_train_scaled) and np.allclose(X_test_scaled, _X_test_scaled))\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "对训练集使用 fit_transform，一步完成拟合和转换",
+          "对测试集只用 transform，使用训练集的统计量"
+        ],
+        "en": [
+          "Use fit_transform on training set to fit and transform in one step",
+          "Use only transform on test set, using statistics from training set"
+        ]
+      },
+      "explanation": {
+        "zh": "StandardScaler 将数据标准化为均值0、标准差1。必须在训练集上 fit（计算均值和标准差），然后用同样的参数 transform 测试集，避免数据泄露。",
+        "en": "StandardScaler normalizes data to mean=0 and std=1. You must fit on the training set (computing mean and std), then transform the test set with the same parameters to avoid data leakage."
+      }
+    },
+    {
+      "id": "s5-sklearn-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "Pipeline 组合预处理与模型",
+        "en": "Pipeline: Combine Preprocessing and Model"
+      },
+      "description": {
+        "zh": "创建一个 Pipeline，包含 StandardScaler（命名为 'scaler'）和 KNeighborsClassifier（命名为 'knn'）。用该 Pipeline 对训练集进行 fit，对测试集进行 predict，将预测结果存入 pred。",
+        "en": "Create a Pipeline with StandardScaler (named 'scaler') and KNeighborsClassifier (named 'knn'). Fit the pipeline on training data and predict on test data. Store predictions in pred."
+      },
+      "setupCode": "import numpy as np\nfrom sklearn.pipeline import Pipeline\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.model_selection import train_test_split\nnp.random.seed(42)\nX = np.random.rand(200, 3)\ny = (X[:, 0] + X[:, 1] > 1).astype(int)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "starterCode": "# Create Pipeline with scaler and KNN\npipe = Pipeline(___)\npipe.fit(X_train, y_train)\npred = pipe.predict(X_test)",
+      "solutionCode": "pipe = Pipeline([('scaler', StandardScaler()), ('knn', KNeighborsClassifier())])\npipe.fit(X_train, y_train)\npred = pipe.predict(X_test)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom sklearn.pipeline import Pipeline\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.model_selection import train_test_split\ntry:\n    np.random.seed(42)\n    _X = np.random.rand(200, 3)\n    _y = (_X[:, 0] + _X[:, 1] > 1).astype(int)\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    _pipe = Pipeline([('scaler', StandardScaler()), ('knn', KNeighborsClassifier())])\n    _pipe.fit(_X_train, _y_train)\n    _pred = _pipe.predict(_X_test)\n    result = (np.array_equal(pred, _pred))\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "Pipeline 接受一个 (名称, 估计器) 元组的列表",
+          "Pipeline([('scaler', StandardScaler()), ('knn', KNeighborsClassifier())])"
+        ],
+        "en": [
+          "Pipeline accepts a list of (name, estimator) tuples",
+          "Pipeline([('scaler', StandardScaler()), ('knn', KNeighborsClassifier())])"
+        ]
+      },
+      "explanation": {
+        "zh": "Pipeline 将多个步骤串联起来。调用 fit 时，依次对每个中间步骤执行 fit_transform，最后一步执行 fit。调用 predict 时，依次 transform，最后 predict。这确保了预处理和建模的一致性。",
+        "en": "Pipeline chains multiple steps. When fit is called, each intermediate step runs fit_transform, and the last step runs fit. When predict is called, each step runs transform, then the last step predicts. This ensures consistency between preprocessing and modeling."
+      }
+    },
+    {
+      "id": "s5-sklearn-007",
+      "type": "true-false",
+      "difficulty": 4,
+      "title": {
+        "zh": "Scaler 必须仅在训练集上拟合",
+        "en": "Scaler Must Be Fit on Training Set Only"
+      },
+      "description": {
+        "zh": "使用 StandardScaler 时，必须仅在训练集上 fit，而不能在整个数据集（包括测试集）上 fit。",
+        "en": "When using StandardScaler, you must fit only on the training set, not on the entire dataset (including the test set)."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": [
+          "思考：如果在整个数据集上 fit scaler，测试集的信息会泄露到训练过程中吗？"
+        ],
+        "en": [
+          "Think: if you fit the scaler on the entire dataset, does test set information leak into the training process?"
+        ]
+      },
+      "explanation": {
+        "zh": "如果在整个数据集上 fit scaler，测试集的均值和标准差会影响训练数据的转换，造成数据泄露（data leakage）。这会使模型评估结果过于乐观。Pipeline 可以自动避免此问题。",
+        "en": "If you fit the scaler on the entire dataset, test set statistics influence training data transformation, causing data leakage. This leads to overly optimistic evaluation results. Pipeline automatically avoids this issue."
+      }
+    },
+    {
+      "id": "s5-sklearn-008",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "模型比较：KNN vs LogisticRegression",
+        "en": "Model Comparison: KNN vs LogisticRegression"
+      },
+      "description": {
+        "zh": "分别使用 KNeighborsClassifier 和 LogisticRegression 训练模型，计算各自在测试集上的准确率。将结果存入字典 scores = {'knn': ..., 'lr': ...}。",
+        "en": "Train both KNeighborsClassifier and LogisticRegression, compute their accuracy on the test set. Store results in a dict scores = {'knn': ..., 'lr': ...}."
+      },
+      "setupCode": "import numpy as np\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score\nnp.random.seed(42)\nX = np.random.rand(200, 3)\ny = (X[:, 0] * 2 + X[:, 1] - X[:, 2] > 1).astype(int)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "starterCode": "# Train KNN and LogisticRegression, compare accuracy\nknn = KNeighborsClassifier()\nknn.fit(X_train, y_train)\nacc_knn = ___\n\nlr = LogisticRegression()\nlr.fit(X_train, y_train)\nacc_lr = ___\n\nscores = {'knn': acc_knn, 'lr': acc_lr}",
+      "solutionCode": "knn = KNeighborsClassifier()\nknn.fit(X_train, y_train)\nacc_knn = accuracy_score(y_test, knn.predict(X_test))\n\nlr = LogisticRegression()\nlr.fit(X_train, y_train)\nacc_lr = accuracy_score(y_test, lr.predict(X_test))\n\nscores = {'knn': acc_knn, 'lr': acc_lr}",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score\ntry:\n    np.random.seed(42)\n    _X = np.random.rand(200, 3)\n    _y = (_X[:, 0] * 2 + _X[:, 1] - _X[:, 2] > 1).astype(int)\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    _knn = KNeighborsClassifier()\n    _knn.fit(_X_train, _y_train)\n    _lr = LogisticRegression()\n    _lr.fit(_X_train, _y_train)\n    _acc_knn = accuracy_score(_y_test, _knn.predict(_X_test))\n    _acc_lr = accuracy_score(_y_test, _lr.predict(_X_test))\n    result = (isinstance(scores, dict) and abs(scores.get('knn', -1) - _acc_knn) < 1e-10 and abs(scores.get('lr', -1) - _acc_lr) < 1e-10)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "两个模型的训练流程相同：fit → predict → accuracy_score",
+          "accuracy_score(y_test, model.predict(X_test))"
+        ],
+        "en": [
+          "Both models follow the same workflow: fit → predict → accuracy_score",
+          "accuracy_score(y_test, model.predict(X_test))"
+        ]
+      },
+      "explanation": {
+        "zh": "sklearn 的统一 API 使得模型比较非常简单。所有模型都遵循 fit/predict 接口，可以直接替换模型类型来比较性能。LogisticRegression 在线性可分数据上通常优于 KNN。",
+        "en": "sklearn's unified API makes model comparison straightforward. All models follow the fit/predict interface, so you can directly swap model types to compare performance. LogisticRegression often outperforms KNN on linearly separable data."
+      }
+    },
+    {
+      "id": "s5-sklearn-009",
+      "type": "output-matching",
+      "difficulty": 4,
+      "title": {
+        "zh": "Pipeline named_steps 访问",
+        "en": "Pipeline named_steps Access"
+      },
+      "description": {
+        "zh": "以下代码输出什么？",
+        "en": "What does the following code output?"
+      },
+      "code": "from sklearn.pipeline import Pipeline\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\npipe = Pipeline([('scaler', StandardScaler()), ('knn', KNeighborsClassifier(n_neighbors=3))])\nprint(type(pipe.named_steps['knn']).__name__)",
+      "options": {
+        "zh": [
+          "KNeighborsClassifier",
+          "Pipeline",
+          "StandardScaler",
+          "KeyError"
+        ],
+        "en": [
+          "KNeighborsClassifier",
+          "Pipeline",
+          "StandardScaler",
+          "KeyError"
+        ]
+      },
+      "correctIndex": 0,
+      "explanation": {
+        "zh": "pipe.named_steps 是一个类似字典的对象，可以通过步骤名称访问对应的估计器。pipe.named_steps['knn'] 返回 KNeighborsClassifier 实例，type(...).__name__ 输出类名。",
+        "en": "pipe.named_steps is a dict-like object that allows accessing estimators by step name. pipe.named_steps['knn'] returns the KNeighborsClassifier instance, and type(...).__name__ outputs the class name."
+      }
+    },
+    {
+      "id": "s5-sklearn-010",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "model.score() 返回什么",
+        "en": "What Does model.score() Return"
+      },
+      "description": {
+        "zh": "对于分类器，model.score(X_test, y_test) 默认返回什么指标？",
+        "en": "For a classifier, what metric does model.score(X_test, y_test) return by default?"
+      },
+      "options": {
+        "zh": [
+          "准确率（accuracy）",
+          "F1 分数",
+          "AUC 值",
+          "精确率（precision）"
+        ],
+        "en": [
+          "Accuracy",
+          "F1 score",
+          "AUC value",
+          "Precision"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "score 方法是 sklearn 分类器的通用评估方法"
+        ],
+        "en": [
+          "The score method is the default evaluation method for sklearn classifiers"
+        ]
+      },
+      "explanation": {
+        "zh": "sklearn 分类器的 score() 方法默认返回准确率（accuracy），即正确预测的比例。对于回归器，默认返回 R^2 分数。可以通过 sklearn.metrics 获取更多指标。",
+        "en": "sklearn classifier's score() method returns accuracy (proportion of correct predictions) by default. For regressors, it returns R^2 score. Use sklearn.metrics for additional metrics."
+      }
+    },
+    {
+      "id": "s5-sklearn-011",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 未拟合就预测 → NotFittedError",
+        "en": "[Debug] Predict Without Fit → NotFittedError"
+      },
+      "description": {
+        "zh": "以下代码在未拟合的 scaler 上调用 transform，导致 NotFittedError。请修复代码，在 transform 前先 fit scaler。",
+        "en": "The following code calls transform on an unfitted scaler, causing NotFittedError. Fix the code by fitting the scaler before transforming."
+      },
+      "setupCode": "import numpy as np\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.model_selection import train_test_split\nnp.random.seed(42)\nX = np.random.rand(100, 3)\ny = (X[:, 0] + X[:, 1] > 1).astype(int)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "starterCode": "# Bug: scaler is not fitted before transform\nscaler = StandardScaler()\nX_train_scaled = scaler.transform(X_train)\nX_test_scaled = scaler.transform(X_test)\nmodel = KNeighborsClassifier()\nmodel.fit(X_train_scaled, y_train)\nacc = model.score(X_test_scaled, y_test)",
+      "solutionCode": "scaler = StandardScaler()\nX_train_scaled = scaler.fit_transform(X_train)\nX_test_scaled = scaler.transform(X_test)\nmodel = KNeighborsClassifier()\nmodel.fit(X_train_scaled, y_train)\nacc = model.score(X_test_scaled, y_test)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.model_selection import train_test_split\ntry:\n    np.random.seed(42)\n    _X = np.random.rand(100, 3)\n    _y = (_X[:, 0] + _X[:, 1] > 1).astype(int)\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    _scaler = StandardScaler()\n    _X_train_scaled = _scaler.fit_transform(_X_train)\n    _X_test_scaled = _scaler.transform(_X_test)\n    _model = KNeighborsClassifier()\n    _model.fit(_X_train_scaled, _y_train)\n    _acc = _model.score(_X_test_scaled, _y_test)\n    result = (isinstance(acc, float) and abs(acc - _acc) < 1e-10)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "StandardScaler 必须先 fit 或 fit_transform 后才能 transform",
+          "将训练集的 transform 改为 fit_transform"
+        ],
+        "en": [
+          "StandardScaler must be fit or fit_transform before transform can be called",
+          "Change transform to fit_transform for the training set"
+        ]
+      },
+      "explanation": {
+        "zh": "sklearn 的 transformer 必须先 fit（学习参数）才能 transform（应用变换）。对训练集使用 fit_transform（同时学习和应用），对测试集使用 transform（仅应用已学习的参数）。这是最常见的 sklearn 新手错误之一。",
+        "en": "sklearn transformers must be fit (learn parameters) before transform (apply transformation). Use fit_transform on training set (learn and apply), and transform on test set (apply learned parameters). This is one of the most common sklearn beginner mistakes."
+      }
+    },
+    {
+      "id": "s5-sklearn-012",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 端到端：数据生成 → Pipeline → 评估",
+        "en": "[Challenge] End-to-End: Data Generation → Pipeline → Evaluation"
+      },
+      "description": {
+        "zh": "完成完整的机器学习流程：1) 使用 make_classification 生成数据；2) train_test_split 拆分；3) 创建 Pipeline（StandardScaler + KNeighborsClassifier）；4) fit 并 predict；5) 计算准确率存入 acc。",
+        "en": "Complete the full ML workflow: 1) Generate data with make_classification; 2) Split with train_test_split; 3) Create Pipeline (StandardScaler + KNeighborsClassifier); 4) fit and predict; 5) Compute accuracy and store in acc."
+      },
+      "setupCode": "import numpy as np\nfrom sklearn.datasets import make_classification\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline import Pipeline\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.metrics import accuracy_score\nnp.random.seed(42)",
+      "starterCode": "# 1. Generate synthetic data\nX, y = make_classification(n_samples=300, n_features=5, random_state=42)\n\n# 2. Split data\nX_train, X_test, y_train, y_test = ___\n\n# 3. Create Pipeline\npipe = ___\n\n# 4. Fit and predict\n___\npred = ___\n\n# 5. Compute accuracy\nacc = ___",
+      "solutionCode": "X, y = make_classification(n_samples=300, n_features=5, random_state=42)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\npipe = Pipeline([('scaler', StandardScaler()), ('knn', KNeighborsClassifier())])\npipe.fit(X_train, y_train)\npred = pipe.predict(X_test)\nacc = accuracy_score(y_test, pred)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom sklearn.datasets import make_classification\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline import Pipeline\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.metrics import accuracy_score\ntry:\n    _X, _y = make_classification(n_samples=300, n_features=5, random_state=42)\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    _pipe = Pipeline([('scaler', StandardScaler()), ('knn', KNeighborsClassifier())])\n    _pipe.fit(_X_train, _y_train)\n    _pred = _pipe.predict(_X_test)\n    _acc = accuracy_score(_y_test, _pred)\n    result = (isinstance(acc, float) and abs(acc - _acc) < 1e-10)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "make_classification 已在 starterCode 中给出",
+          "train_test_split(X, y, test_size=0.2, random_state=42)",
+          "Pipeline([('scaler', StandardScaler()), ('knn', KNeighborsClassifier())])",
+          "pipe.fit → pipe.predict → accuracy_score"
+        ],
+        "en": [
+          "make_classification is already provided in the starter code",
+          "train_test_split(X, y, test_size=0.2, random_state=42)",
+          "Pipeline([('scaler', StandardScaler()), ('knn', KNeighborsClassifier())])",
+          "pipe.fit → pipe.predict → accuracy_score"
+        ]
+      },
+      "explanation": {
+        "zh": "这是一个完整的机器学习流程：数据生成 → 拆分 → Pipeline（预处理+模型）→ 训练 → 预测 → 评估。Pipeline 封装了预处理和模型，确保了流程的一致性和可复现性。这是 sklearn 最推荐的工作模式。",
+        "en": "This is a complete ML workflow: data generation → split → Pipeline (preprocessing + model) → train → predict → evaluate. Pipeline encapsulates preprocessing and model, ensuring consistency and reproducibility. This is sklearn's recommended workflow."
+      }
+    }
+  ]
+}

@@ -1,0 +1,460 @@
+{
+  "module": "classification",
+  "stageId": "stage5",
+  "lessonId": "classification",
+  "tags": [
+    "classification",
+    "logistic-regression",
+    "decision-tree",
+    "metrics",
+    "roc-auc"
+  ],
+  "exercises": [
+    {
+      "id": "s5-clf-001",
+      "type": "coding",
+      "difficulty": 3,
+      "title": {
+        "zh": "LogisticRegression 基本分类",
+        "en": "Basic LogisticRegression Classification"
+      },
+      "description": {
+        "zh": "使用 LogisticRegression 在二分类数据上训练模型，对测试集进行预测，将预测结果存入 pred。",
+        "en": "Train a LogisticRegression on binary classification data, predict on the test set, and store predictions in pred."
+      },
+      "setupCode": "import numpy as np\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nnp.random.seed(42)\nX = np.random.rand(200, 3)\ny = (X[:, 0] * 2 + X[:, 1] > 1.5).astype(int)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "starterCode": "# Fit LogisticRegression and predict\nmodel = LogisticRegression()\n___\npred = ___",
+      "solutionCode": "model = LogisticRegression()\nmodel.fit(X_train, y_train)\npred = model.predict(X_test)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\ntry:\n    np.random.seed(42)\n    _X = np.random.rand(200, 3)\n    _y = (_X[:, 0] * 2 + _X[:, 1] > 1.5).astype(int)\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    _model = LogisticRegression()\n    _model.fit(_X_train, _y_train)\n    _pred = _model.predict(_X_test)\n    result = np.array_equal(pred, _pred)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "使用 model.fit(X_train, y_train) 训练",
+          "使用 model.predict(X_test) 预测"
+        ],
+        "en": [
+          "Use model.fit(X_train, y_train) to train",
+          "Use model.predict(X_test) to predict"
+        ]
+      },
+      "explanation": {
+        "zh": "LogisticRegression 是最基础的分类算法之一。尽管名字中有 Regression，它实际上是分类器。通过 sigmoid 函数将线性输出映射到 [0, 1] 概率，再按阈值分类。",
+        "en": "LogisticRegression is one of the most fundamental classification algorithms. Despite its name, it is a classifier. It maps linear outputs to [0, 1] probabilities via the sigmoid function, then classifies by threshold."
+      }
+    },
+    {
+      "id": "s5-clf-002",
+      "type": "fill-blank",
+      "difficulty": 3,
+      "title": {
+        "zh": "导入 accuracy_score",
+        "en": "Import accuracy_score"
+      },
+      "description": {
+        "zh": "填写正确的导入语句来导入 accuracy_score 函数。",
+        "en": "Fill in the correct import statement to import the accuracy_score function."
+      },
+      "codeTemplate": "from sklearn.metrics import ___1___",
+      "blanks": [
+        {
+          "placeholder": "___1___",
+          "answer": "accuracy_score",
+          "alternatives": []
+        }
+      ],
+      "hints": {
+        "zh": [
+          "accuracy_score 位于 sklearn.metrics 模块中"
+        ],
+        "en": [
+          "accuracy_score is located in the sklearn.metrics module"
+        ]
+      },
+      "explanation": {
+        "zh": "sklearn.metrics 模块包含各种评估指标：accuracy_score、precision_score、recall_score、f1_score、confusion_matrix 等。accuracy_score 计算预测正确的样本比例。",
+        "en": "The sklearn.metrics module contains various evaluation metrics: accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, etc. accuracy_score computes the proportion of correctly predicted samples."
+      }
+    },
+    {
+      "id": "s5-clf-003",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "混淆矩阵与 TP/FP/TN/FN",
+        "en": "Confusion Matrix and TP/FP/TN/FN"
+      },
+      "description": {
+        "zh": "计算混淆矩阵，并从中提取 TN、FP、FN、TP 四个值。将混淆矩阵存入 cm，四个值分别存入 tn, fp, fn, tp。",
+        "en": "Compute the confusion matrix and extract TN, FP, FN, TP from it. Store the matrix in cm and the four values in tn, fp, fn, tp."
+      },
+      "setupCode": "import numpy as np\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import confusion_matrix\nnp.random.seed(42)\nX = np.random.rand(200, 3)\ny = (X[:, 0] * 2 + X[:, 1] > 1.5).astype(int)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\nmodel = LogisticRegression()\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)",
+      "starterCode": "# Compute confusion matrix and extract TN, FP, FN, TP\ncm = ___\ntn, fp, fn, tp = ___",
+      "solutionCode": "cm = confusion_matrix(y_test, y_pred)\ntn, fp, fn, tp = cm.ravel()",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import confusion_matrix\ntry:\n    np.random.seed(42)\n    _X = np.random.rand(200, 3)\n    _y = (_X[:, 0] * 2 + _X[:, 1] > 1.5).astype(int)\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    _model = LogisticRegression()\n    _model.fit(_X_train, _y_train)\n    _y_pred = _model.predict(_X_test)\n    _cm = confusion_matrix(_y_test, _y_pred)\n    _tn, _fp, _fn, _tp = _cm.ravel()\n    result = (np.array_equal(cm, _cm) and tn == _tn and fp == _fp and fn == _fn and tp == _tp)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "confusion_matrix(y_test, y_pred) 返回 2x2 矩阵",
+          "使用 cm.ravel() 将矩阵展平为 TN, FP, FN, TP"
+        ],
+        "en": [
+          "confusion_matrix(y_test, y_pred) returns a 2x2 matrix",
+          "Use cm.ravel() to flatten the matrix into TN, FP, FN, TP"
+        ]
+      },
+      "explanation": {
+        "zh": "混淆矩阵展示了模型预测与真实标签的对比。ravel() 按行展平：[[TN, FP], [FN, TP]]。TN=真负例，FP=假正例，FN=假负例，TP=真正例。这四个值是计算 precision、recall 等指标的基础。",
+        "en": "The confusion matrix shows model predictions vs true labels. ravel() flattens row-wise: [[TN, FP], [FN, TP]]. TN=true negative, FP=false positive, FN=false negative, TP=true positive. These four values are the basis for computing precision, recall, etc."
+      }
+    },
+    {
+      "id": "s5-clf-004",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "Precision、Recall、F1：classification_report",
+        "en": "Precision, Recall, F1: classification_report"
+      },
+      "description": {
+        "zh": "使用 classification_report 生成分类报告，并使用 precision_score、recall_score、f1_score 分别计算精确率、召回率和 F1 分数。将它们存入 prec, rec, f1。",
+        "en": "Generate a classification report using classification_report, and compute precision, recall, and F1 using their respective functions. Store them in prec, rec, f1."
+      },
+      "setupCode": "import numpy as np\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import classification_report, precision_score, recall_score, f1_score\nnp.random.seed(42)\nX = np.random.rand(200, 3)\ny = (X[:, 0] * 2 + X[:, 1] > 1.5).astype(int)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\nmodel = LogisticRegression()\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)",
+      "starterCode": "# Print classification report\nprint(classification_report(y_test, y_pred))\n\n# Compute individual metrics\nprec = ___\nrec = ___\nf1 = ___",
+      "solutionCode": "print(classification_report(y_test, y_pred))\nprec = precision_score(y_test, y_pred)\nrec = recall_score(y_test, y_pred)\nf1 = f1_score(y_test, y_pred)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import precision_score, recall_score, f1_score\ntry:\n    np.random.seed(42)\n    _X = np.random.rand(200, 3)\n    _y = (_X[:, 0] * 2 + _X[:, 1] > 1.5).astype(int)\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    _model = LogisticRegression()\n    _model.fit(_X_train, _y_train)\n    _y_pred = _model.predict(_X_test)\n    _prec = precision_score(_y_test, _y_pred)\n    _rec = recall_score(_y_test, _y_pred)\n    _f1 = f1_score(_y_test, _y_pred)\n    result = (abs(prec - _prec) < 1e-10 and abs(rec - _rec) < 1e-10 and abs(f1 - _f1) < 1e-10)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "precision_score(y_test, y_pred) 计算精确率",
+          "recall_score(y_test, y_pred) 计算召回率",
+          "f1_score(y_test, y_pred) 计算 F1 分数"
+        ],
+        "en": [
+          "precision_score(y_test, y_pred) computes precision",
+          "recall_score(y_test, y_pred) computes recall",
+          "f1_score(y_test, y_pred) computes F1 score"
+        ]
+      },
+      "explanation": {
+        "zh": "Precision = TP/(TP+FP) 衡量正预测中真正为正的比例；Recall = TP/(TP+FN) 衡量所有正样本中被正确识别的比例；F1 = 2*Precision*Recall/(Precision+Recall) 是两者的调和平均。classification_report 一次性展示所有指标。",
+        "en": "Precision = TP/(TP+FP) measures the proportion of positive predictions that are correct. Recall = TP/(TP+FN) measures the proportion of actual positives correctly identified. F1 = 2*Precision*Recall/(Precision+Recall) is their harmonic mean. classification_report shows all metrics at once."
+      }
+    },
+    {
+      "id": "s5-clf-005",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "何时优先考虑 Recall 而非 Precision",
+        "en": "When to Prioritize Recall over Precision"
+      },
+      "description": {
+        "zh": "在以下哪个场景中，应该优先提高 Recall（召回率）而非 Precision（精确率）？",
+        "en": "In which of the following scenarios should you prioritize Recall over Precision?"
+      },
+      "options": {
+        "zh": [
+          "医疗诊断：不希望漏诊任何患病患者",
+          "垃圾邮件过滤：不希望误将正常邮件标记为垃圾邮件",
+          "推荐系统：不希望推荐用户不感兴趣的内容",
+          "搜索引擎：不希望搜索结果包含不相关内容"
+        ],
+        "en": [
+          "Medical diagnosis: don't want to miss any sick patients",
+          "Spam filtering: don't want to mark normal emails as spam",
+          "Recommendation system: don't want to recommend irrelevant content",
+          "Search engine: don't want search results to include irrelevant content"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "Recall 高意味着尽可能不遗漏正例（减少假负例）",
+          "想想哪个场景中「漏掉」比「误报」代价更大"
+        ],
+        "en": [
+          "High recall means minimizing missed positives (reducing false negatives)",
+          "Think about which scenario has a higher cost for 'missing' vs 'false alarm'"
+        ]
+      },
+      "explanation": {
+        "zh": "医疗诊断中，漏诊（假负例）可能危及生命，因此应优先提高 Recall。垃圾邮件过滤中，误标正常邮件（假正例）更严重，应优先 Precision。选择指标取决于假正例和假负例的相对代价。",
+        "en": "In medical diagnosis, missing a disease (false negative) can be life-threatening, so Recall should be prioritized. In spam filtering, marking normal email as spam (false positive) is more costly, so Precision matters more. The choice depends on the relative cost of false positives vs false negatives."
+      }
+    },
+    {
+      "id": "s5-clf-006",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "DecisionTreeClassifier 与特征重要性",
+        "en": "DecisionTreeClassifier and Feature Importances"
+      },
+      "description": {
+        "zh": "使用 DecisionTreeClassifier(random_state=42) 训练模型，进行预测，并获取特征重要性。将预测存入 pred，特征重要性存入 importances。",
+        "en": "Train a DecisionTreeClassifier(random_state=42), predict, and get feature importances. Store predictions in pred and importances in importances."
+      },
+      "setupCode": "import numpy as np\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score\nnp.random.seed(42)\nX = np.random.rand(200, 4)\ny = (X[:, 0] * 3 + X[:, 1] * 2 - X[:, 2] > 2).astype(int)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "starterCode": "# Train DecisionTree, predict, get feature importances\ndt = DecisionTreeClassifier(random_state=42)\n___\npred = ___\nimportances = ___",
+      "solutionCode": "dt = DecisionTreeClassifier(random_state=42)\ndt.fit(X_train, y_train)\npred = dt.predict(X_test)\nimportances = dt.feature_importances_",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.model_selection import train_test_split\ntry:\n    np.random.seed(42)\n    _X = np.random.rand(200, 4)\n    _y = (_X[:, 0] * 3 + _X[:, 1] * 2 - _X[:, 2] > 2).astype(int)\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    _dt = DecisionTreeClassifier(random_state=42)\n    _dt.fit(_X_train, _y_train)\n    _pred = _dt.predict(_X_test)\n    _importances = _dt.feature_importances_\n    result = (np.array_equal(pred, _pred) and np.allclose(importances, _importances))\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "先 dt.fit(X_train, y_train) 训练",
+          "特征重要性通过 dt.feature_importances_ 属性获取（注意下划线结尾）"
+        ],
+        "en": [
+          "First train with dt.fit(X_train, y_train)",
+          "Feature importances are accessed via dt.feature_importances_ (note the trailing underscore)"
+        ]
+      },
+      "explanation": {
+        "zh": "DecisionTreeClassifier 通过递归划分特征空间来分类。feature_importances_ 属性（训练后才有，因此带下划线）显示每个特征对分类的贡献度，总和为 1。重要性高的特征对模型决策影响更大。",
+        "en": "DecisionTreeClassifier classifies by recursively partitioning the feature space. feature_importances_ (available after fitting, hence the trailing underscore) shows each feature's contribution to classification, summing to 1. Higher importance means greater influence on decisions."
+      }
+    },
+    {
+      "id": "s5-clf-007",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "ROC-AUC：roc_auc_score 与 predict_proba",
+        "en": "ROC-AUC: roc_auc_score with predict_proba"
+      },
+      "description": {
+        "zh": "使用 LogisticRegression 的 predict_proba 获取正类概率，然后计算 ROC-AUC 分数。将概率存入 y_proba，AUC 存入 auc。",
+        "en": "Use LogisticRegression's predict_proba to get positive class probabilities, then compute the ROC-AUC score. Store probabilities in y_proba and AUC in auc."
+      },
+      "setupCode": "import numpy as np\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import roc_auc_score\nnp.random.seed(42)\nX = np.random.rand(200, 3)\ny = (X[:, 0] * 2 + X[:, 1] > 1.5).astype(int)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\nmodel = LogisticRegression()\nmodel.fit(X_train, y_train)",
+      "starterCode": "# Get positive class probability and compute AUC\ny_proba = ___\nauc = ___",
+      "solutionCode": "y_proba = model.predict_proba(X_test)[:, 1]\nauc = roc_auc_score(y_test, y_proba)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import roc_auc_score\ntry:\n    np.random.seed(42)\n    _X = np.random.rand(200, 3)\n    _y = (_X[:, 0] * 2 + _X[:, 1] > 1.5).astype(int)\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    _model = LogisticRegression()\n    _model.fit(_X_train, _y_train)\n    _y_proba = _model.predict_proba(_X_test)[:, 1]\n    _auc = roc_auc_score(_y_test, _y_proba)\n    result = (np.allclose(y_proba, _y_proba) and abs(auc - _auc) < 1e-10)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "predict_proba 返回 (n_samples, 2) 数组，第二列是正类概率",
+          "roc_auc_score(y_test, y_proba) 需要概率值而非离散预测"
+        ],
+        "en": [
+          "predict_proba returns an (n_samples, 2) array; column 1 is the positive class probability",
+          "roc_auc_score(y_test, y_proba) needs probability values, not discrete predictions"
+        ]
+      },
+      "explanation": {
+        "zh": "predict_proba 返回每个类别的概率，[:, 1] 取正类概率。ROC-AUC 衡量模型区分正负类的能力，值域 [0, 1]，1 表示完美分类，0.5 表示随机猜测。AUC 不受分类阈值影响，是比 accuracy 更稳健的指标。",
+        "en": "predict_proba returns probabilities for each class; [:, 1] gets the positive class probability. ROC-AUC measures the model's ability to distinguish classes, ranging [0, 1]. 1 means perfect, 0.5 means random. AUC is threshold-independent and more robust than accuracy."
+      }
+    },
+    {
+      "id": "s5-clf-008",
+      "type": "true-false",
+      "difficulty": 4,
+      "title": {
+        "zh": "AUC=0.5 等于随机猜测",
+        "en": "AUC=0.5 Equals Random Guessing"
+      },
+      "description": {
+        "zh": "ROC-AUC 值为 0.5 意味着模型的分类能力等同于随机猜测。",
+        "en": "An ROC-AUC value of 0.5 means the model's classification ability is equivalent to random guessing."
+      },
+      "correctAnswer": true,
+      "hints": {
+        "zh": [
+          "ROC 曲线的对角线代表什么？"
+        ],
+        "en": [
+          "What does the diagonal line on the ROC curve represent?"
+        ]
+      },
+      "explanation": {
+        "zh": "AUC=0.5 对应 ROC 曲线的对角线，表示模型无法区分正负类，性能等同于随机猜测。AUC<0.5 甚至不如随机（此时可以反转预测）。AUC=1 表示完美分类。",
+        "en": "AUC=0.5 corresponds to the diagonal on the ROC curve, indicating the model cannot distinguish between classes, performing no better than random guessing. AUC<0.5 is worse than random (flip predictions). AUC=1 means perfect classification."
+      }
+    },
+    {
+      "id": "s5-clf-009",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "LR vs DT 指标对比表",
+        "en": "Compare LR vs DT Metrics"
+      },
+      "description": {
+        "zh": "分别用 LogisticRegression 和 DecisionTreeClassifier 训练，计算各自的 accuracy、precision、recall、f1。用 pandas DataFrame 存入 comparison，列为 ['accuracy', 'precision', 'recall', 'f1']，索引为 ['LR', 'DT']。",
+        "en": "Train both LogisticRegression and DecisionTreeClassifier, compute accuracy, precision, recall, f1 for each. Store in a pandas DataFrame comparison with columns ['accuracy', 'precision', 'recall', 'f1'] and index ['LR', 'DT']."
+      },
+      "setupCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score\nnp.random.seed(42)\nX = np.random.rand(300, 4)\ny = (X[:, 0] * 2 + X[:, 1] - X[:, 2] > 1).astype(int)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "starterCode": "# Train LR and DT, compute metrics, build comparison DataFrame\nlr = LogisticRegression()\nlr.fit(X_train, y_train)\nlr_pred = lr.predict(X_test)\n\ndt = DecisionTreeClassifier(random_state=42)\ndt.fit(X_train, y_train)\ndt_pred = dt.predict(X_test)\n\ncomparison = pd.DataFrame({\n    'accuracy': [___, ___],\n    'precision': [___, ___],\n    'recall': [___, ___],\n    'f1': [___, ___]\n}, index=['LR', 'DT'])",
+      "solutionCode": "lr = LogisticRegression()\nlr.fit(X_train, y_train)\nlr_pred = lr.predict(X_test)\n\ndt = DecisionTreeClassifier(random_state=42)\ndt.fit(X_train, y_train)\ndt_pred = dt.predict(X_test)\n\ncomparison = pd.DataFrame({\n    'accuracy': [accuracy_score(y_test, lr_pred), accuracy_score(y_test, dt_pred)],\n    'precision': [precision_score(y_test, lr_pred), precision_score(y_test, dt_pred)],\n    'recall': [recall_score(y_test, lr_pred), recall_score(y_test, dt_pred)],\n    'f1': [f1_score(y_test, lr_pred), f1_score(y_test, dt_pred)]\n}, index=['LR', 'DT'])",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score\ntry:\n    np.random.seed(42)\n    _X = np.random.rand(300, 4)\n    _y = (_X[:, 0] * 2 + _X[:, 1] - _X[:, 2] > 1).astype(int)\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    _lr = LogisticRegression()\n    _lr.fit(_X_train, _y_train)\n    _lr_pred = _lr.predict(_X_test)\n    _dt = DecisionTreeClassifier(random_state=42)\n    _dt.fit(_X_train, _y_train)\n    _dt_pred = _dt.predict(_X_test)\n    _comp = pd.DataFrame({\n        'accuracy': [accuracy_score(_y_test, _lr_pred), accuracy_score(_y_test, _dt_pred)],\n        'precision': [precision_score(_y_test, _lr_pred), precision_score(_y_test, _dt_pred)],\n        'recall': [recall_score(_y_test, _lr_pred), recall_score(_y_test, _dt_pred)],\n        'f1': [f1_score(_y_test, _lr_pred), f1_score(_y_test, _dt_pred)]\n    }, index=['LR', 'DT'])\n    result = comparison.equals(_comp)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "每个指标函数都是 xxx_score(y_test, y_pred)",
+          "LR 和 DT 的指标分别计算后放入 DataFrame"
+        ],
+        "en": [
+          "Each metric function follows xxx_score(y_test, y_pred)",
+          "Compute metrics for LR and DT separately, then put into DataFrame"
+        ]
+      },
+      "explanation": {
+        "zh": "将多个模型的指标汇总成 DataFrame 是常见的模型比较方式。LogisticRegression 适合线性可分数据，DecisionTreeClassifier 能捕捉非线性关系但容易过拟合。对比多个指标比只看 accuracy 更全面。",
+        "en": "Summarizing metrics in a DataFrame is a common model comparison approach. LogisticRegression suits linearly separable data; DecisionTreeClassifier captures non-linear patterns but is prone to overfitting. Comparing multiple metrics is more comprehensive than accuracy alone."
+      }
+    },
+    {
+      "id": "s5-clf-010",
+      "type": "output-matching",
+      "difficulty": 4,
+      "title": {
+        "zh": "解读 classification_report 输出",
+        "en": "Interpret classification_report Output"
+      },
+      "description": {
+        "zh": "以下 classification_report 输出中，类别 1 的 recall 是多少？\n\n```\n              precision    recall  f1-score   support\n           0       0.90      0.95      0.92        20\n           1       0.93      0.87      0.90        15\n    accuracy                           0.91        35\n```",
+        "en": "In the following classification_report output, what is the recall for class 1?\n\n```\n              precision    recall  f1-score   support\n           0       0.90      0.95      0.92        20\n           1       0.93      0.87      0.90        15\n    accuracy                           0.91        35\n```"
+      },
+      "code": "# Given the classification report above, what is the recall for class 1?",
+      "options": {
+        "zh": [
+          "0.87",
+          "0.93",
+          "0.90",
+          "0.95"
+        ],
+        "en": [
+          "0.87",
+          "0.93",
+          "0.90",
+          "0.95"
+        ]
+      },
+      "correctIndex": 0,
+      "explanation": {
+        "zh": "classification_report 中每行对应一个类别。类别 1 的 recall 列显示 0.87，表示在 15 个真实为类别 1 的样本中，87% 被正确识别。support 表示该类别的真实样本数量。",
+        "en": "Each row in classification_report corresponds to a class. Class 1's recall column shows 0.87, meaning 87% of the 15 actual class 1 samples were correctly identified. Support indicates the number of true samples for that class."
+      }
+    },
+    {
+      "id": "s5-clf-011",
+      "type": "multiple-choice",
+      "difficulty": 4,
+      "title": {
+        "zh": "如何处理类别不平衡",
+        "en": "How to Handle Imbalanced Classes"
+      },
+      "description": {
+        "zh": "当训练数据中正负类比例严重不平衡（如 1:9）时，以下哪种方法最直接有效？",
+        "en": "When the training data has severely imbalanced classes (e.g., 1:9), which of the following methods is most directly effective?"
+      },
+      "options": {
+        "zh": [
+          "在模型中设置 class_weight='balanced'",
+          "增加更多特征",
+          "使用更大的 test_size",
+          "将所有标签改为平均值"
+        ],
+        "en": [
+          "Set class_weight='balanced' in the model",
+          "Add more features",
+          "Use a larger test_size",
+          "Change all labels to the mean value"
+        ]
+      },
+      "correctIndex": 0,
+      "hints": {
+        "zh": [
+          "class_weight 参数可以调整不同类别样本的权重"
+        ],
+        "en": [
+          "The class_weight parameter adjusts the weights of different class samples"
+        ]
+      },
+      "explanation": {
+        "zh": "class_weight='balanced' 自动根据类别频率调整权重，使少数类获得更高权重。这让模型更关注少数类，减少偏向多数类的问题。LogisticRegression 和 DecisionTreeClassifier 都支持此参数。其他方法还包括过采样（SMOTE）和欠采样。",
+        "en": "class_weight='balanced' automatically adjusts weights based on class frequency, giving minority classes higher weights. This makes the model pay more attention to minority classes. Both LogisticRegression and DecisionTreeClassifier support this parameter. Other methods include oversampling (SMOTE) and undersampling."
+      }
+    },
+    {
+      "id": "s5-clf-012",
+      "type": "coding",
+      "difficulty": 4,
+      "title": {
+        "zh": "[调试] 不平衡数据集上使用 accuracy 的误导性",
+        "en": "[Debug] Misleading Accuracy on Imbalanced Dataset"
+      },
+      "description": {
+        "zh": "以下代码在严重不平衡的数据上只用 accuracy 评估模型，得到 90% 的准确率看似很好。请修复代码：1) 打印 classification_report 查看完整指标；2) 使用 class_weight='balanced' 重新训练模型并存入 model_balanced；3) 计算新模型的 F1 分数存入 f1_balanced。",
+        "en": "The code below evaluates a model on severely imbalanced data using only accuracy, getting 90% which looks great. Fix it: 1) Print classification_report for full metrics; 2) Retrain with class_weight='balanced' and store in model_balanced; 3) Compute F1 of the new model and store in f1_balanced."
+      },
+      "setupCode": "import numpy as np\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score, f1_score, classification_report\nnp.random.seed(42)\nX = np.random.rand(1000, 3)\ny = np.zeros(1000, dtype=int)\ny[:100] = 1\nidx = np.random.permutation(1000)\nX, y = X[idx], y[idx]\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "starterCode": "# Bug: only using accuracy on imbalanced data\nmodel = LogisticRegression()\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f'Accuracy: {accuracy_score(y_test, y_pred):.2f}')  # looks good!\n\n# Fix: 1) Print classification_report\nprint(___)\n\n# Fix: 2) Retrain with class_weight='balanced'\nmodel_balanced = ___\n___\n\n# Fix: 3) Compute F1 of balanced model\ny_pred_balanced = model_balanced.predict(X_test)\nf1_balanced = ___",
+      "solutionCode": "model = LogisticRegression()\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(f'Accuracy: {accuracy_score(y_test, y_pred):.2f}')\n\nprint(classification_report(y_test, y_pred))\n\nmodel_balanced = LogisticRegression(class_weight='balanced')\nmodel_balanced.fit(X_train, y_train)\n\ny_pred_balanced = model_balanced.predict(X_test)\nf1_balanced = f1_score(y_test, y_pred_balanced)",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import f1_score\ntry:\n    np.random.seed(42)\n    _X = np.random.rand(1000, 3)\n    _y = np.zeros(1000, dtype=int)\n    _y[:100] = 1\n    _idx = np.random.permutation(1000)\n    _X, _y = _X[_idx], _y[_idx]\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    _model_balanced = LogisticRegression(class_weight='balanced')\n    _model_balanced.fit(_X_train, _y_train)\n    _y_pred_balanced = _model_balanced.predict(_X_test)\n    _f1_balanced = f1_score(_y_test, _y_pred_balanced)\n    result = (isinstance(f1_balanced, float) and abs(f1_balanced - _f1_balanced) < 1e-10 and hasattr(model_balanced, 'classes_'))\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "classification_report(y_test, y_pred) 显示每个类别的 precision、recall、f1",
+          "LogisticRegression(class_weight='balanced') 自动平衡类别权重",
+          "不平衡数据上 F1 比 accuracy 更有意义"
+        ],
+        "en": [
+          "classification_report(y_test, y_pred) shows precision, recall, f1 per class",
+          "LogisticRegression(class_weight='balanced') automatically balances class weights",
+          "F1 is more meaningful than accuracy on imbalanced data"
+        ]
+      },
+      "explanation": {
+        "zh": "在 90%/10% 不平衡数据上，一个全部预测为多数类的模型也能达到 90% accuracy。这就是「accuracy paradox」。classification_report 会揭示少数类的 recall 接近 0。使用 class_weight='balanced' 和 F1 分数能更好地评估和改善模型。",
+        "en": "On 90%/10% imbalanced data, a model predicting all majority class achieves 90% accuracy. This is the 'accuracy paradox'. classification_report reveals near-zero recall for the minority class. Using class_weight='balanced' and F1 score better evaluates and improves the model."
+      }
+    },
+    {
+      "id": "s5-clf-013",
+      "type": "coding",
+      "difficulty": 5,
+      "title": {
+        "zh": "[综合] 客户流失预测：特征工程 → 双模型 → 报告对比",
+        "en": "[Challenge] Churn Prediction: Feature Eng → Two Models → Compare Reports"
+      },
+      "description": {
+        "zh": "完成客户流失预测流程：1) 基于给定数据创建特征 'tenure_ratio'（tenure/total_charges * 100）；2) 选择特征列 ['tenure', 'monthly_charges', 'total_charges', 'tenure_ratio']；3) 用 LogisticRegression(class_weight='balanced', random_state=42) 和 DecisionTreeClassifier(class_weight='balanced', random_state=42) 分别训练；4) 打印两个模型的 classification_report；5) 选择 F1 更高的模型名称存入 best_model（'LR' 或 'DT'）。",
+        "en": "Complete a churn prediction workflow: 1) Create feature 'tenure_ratio' (tenure/total_charges*100); 2) Select feature columns ['tenure', 'monthly_charges', 'total_charges', 'tenure_ratio']; 3) Train LogisticRegression(class_weight='balanced', random_state=42) and DecisionTreeClassifier(class_weight='balanced', random_state=42); 4) Print classification_report for both; 5) Store the name of the model with higher F1 in best_model ('LR' or 'DT')."
+      },
+      "setupCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import classification_report, f1_score\nnp.random.seed(42)\nn = 500\ndf = pd.DataFrame({\n    'tenure': np.random.randint(1, 72, n),\n    'monthly_charges': np.random.uniform(20, 100, n).round(2),\n    'total_charges': np.random.uniform(100, 7000, n).round(2)\n})\ndf['churn'] = ((df['monthly_charges'] > 60) & (df['tenure'] < 24)).astype(int)\nidx = np.random.permutation(n)\ndf = df.iloc[idx].reset_index(drop=True)",
+      "starterCode": "# 1. Feature engineering\ndf['tenure_ratio'] = ___\n\n# 2. Select features and target\nfeature_cols = ['tenure', 'monthly_charges', 'total_charges', 'tenure_ratio']\nX = df[feature_cols].values\ny = df['churn'].values\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n\n# 3. Train LR and DT\nlr = ___\nlr.fit(X_train, y_train)\nlr_pred = lr.predict(X_test)\n\ndt = ___\ndt.fit(X_train, y_train)\ndt_pred = dt.predict(X_test)\n\n# 4. Print reports\nprint('=== Logistic Regression ===')\nprint(classification_report(y_test, lr_pred))\nprint('=== Decision Tree ===')\nprint(classification_report(y_test, dt_pred))\n\n# 5. Pick best model by F1\nf1_lr = f1_score(y_test, lr_pred)\nf1_dt = f1_score(y_test, dt_pred)\nbest_model = ___",
+      "solutionCode": "df['tenure_ratio'] = df['tenure'] / df['total_charges'] * 100\n\nfeature_cols = ['tenure', 'monthly_charges', 'total_charges', 'tenure_ratio']\nX = df[feature_cols].values\ny = df['churn'].values\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n\nlr = LogisticRegression(class_weight='balanced', random_state=42)\nlr.fit(X_train, y_train)\nlr_pred = lr.predict(X_test)\n\ndt = DecisionTreeClassifier(class_weight='balanced', random_state=42)\ndt.fit(X_train, y_train)\ndt_pred = dt.predict(X_test)\n\nprint('=== Logistic Regression ===')\nprint(classification_report(y_test, lr_pred))\nprint('=== Decision Tree ===')\nprint(classification_report(y_test, dt_pred))\n\nf1_lr = f1_score(y_test, lr_pred)\nf1_dt = f1_score(y_test, dt_pred)\nbest_model = 'LR' if f1_lr >= f1_dt else 'DT'",
+      "validationType": "custom-check",
+      "expectedOutput": "",
+      "checkCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import f1_score\ntry:\n    np.random.seed(42)\n    _n = 500\n    _df = pd.DataFrame({\n        'tenure': np.random.randint(1, 72, _n),\n        'monthly_charges': np.random.uniform(20, 100, _n).round(2),\n        'total_charges': np.random.uniform(100, 7000, _n).round(2)\n    })\n    _df['churn'] = ((_df['monthly_charges'] > 60) & (_df['tenure'] < 24)).astype(int)\n    _idx = np.random.permutation(_n)\n    _df = _df.iloc[_idx].reset_index(drop=True)\n    _df['tenure_ratio'] = _df['tenure'] / _df['total_charges'] * 100\n    _X = _df[['tenure', 'monthly_charges', 'total_charges', 'tenure_ratio']].values\n    _y = _df['churn'].values\n    _X_train, _X_test, _y_train, _y_test = train_test_split(_X, _y, test_size=0.2, random_state=42)\n    _lr = LogisticRegression(class_weight='balanced', random_state=42)\n    _lr.fit(_X_train, _y_train)\n    _dt = DecisionTreeClassifier(class_weight='balanced', random_state=42)\n    _dt.fit(_X_train, _y_train)\n    _f1_lr = f1_score(_y_test, _lr.predict(_X_test))\n    _f1_dt = f1_score(_y_test, _dt.predict(_X_test))\n    _best = 'LR' if _f1_lr >= _f1_dt else 'DT'\n    result = (best_model == _best and abs(f1_lr - _f1_lr) < 1e-10 and abs(f1_dt - _f1_dt) < 1e-10)\nexcept:\n    result = False",
+      "hints": {
+        "zh": [
+          "tenure_ratio = df['tenure'] / df['total_charges'] * 100",
+          "LogisticRegression(class_weight='balanced', random_state=42)",
+          "DecisionTreeClassifier(class_weight='balanced', random_state=42)",
+          "best_model = 'LR' if f1_lr >= f1_dt else 'DT'"
+        ],
+        "en": [
+          "tenure_ratio = df['tenure'] / df['total_charges'] * 100",
+          "LogisticRegression(class_weight='balanced', random_state=42)",
+          "DecisionTreeClassifier(class_weight='balanced', random_state=42)",
+          "best_model = 'LR' if f1_lr >= f1_dt else 'DT'"
+        ]
+      },
+      "explanation": {
+        "zh": "这是一个典型的分类项目流程：特征工程（创建 tenure_ratio 增加信息量）→ 训练多个模型 → 用 classification_report 全面评估 → 用 F1 分数选择最佳模型。class_weight='balanced' 应对流失数据中常见的类别不平衡。实际项目中还需要交叉验证和超参调优。",
+        "en": "This is a typical classification project workflow: feature engineering (creating tenure_ratio for more information) → train multiple models → comprehensive evaluation with classification_report → select best model by F1. class_weight='balanced' handles the class imbalance common in churn data. Real projects also need cross-validation and hyperparameter tuning."
+      }
+    }
+  ]
+}

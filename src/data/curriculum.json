@@ -428,6 +428,156 @@
           "estimatedMinutes": 25
         }
       ]
+    },
+    {
+      "id": "stage5",
+      "title": { "zh": "统计建模与机器学习", "en": "Statistical Modeling & ML" },
+      "description": {
+        "zh": "统计推断、特征工程、scikit-learn 建模与评估",
+        "en": "Statistical inference, feature engineering, sklearn modeling and evaluation"
+      },
+      "requiredCompletionRate": 0.8,
+      "lessons": [
+        {
+          "id": "desc-stats",
+          "order": 1,
+          "title": { "zh": "描述统计与分布", "en": "Descriptive Statistics & Distributions" },
+          "description": { "zh": "使用 scipy.stats 探索数据分布，理解偏度、峰度和分布拟合", "en": "Explore distributions with scipy.stats, skewness, kurtosis, distribution fitting" },
+          "exerciseModules": ["stage5/desc-stats"],
+          "estimatedMinutes": 30
+        },
+        {
+          "id": "hypothesis-test",
+          "order": 2,
+          "title": { "zh": "假设检验", "en": "Hypothesis Testing" },
+          "description": { "zh": "掌握 t 检验、卡方检验和 ANOVA，用 scipy.stats 进行统计推断", "en": "Master t-test, chi-square, ANOVA for statistical inference" },
+          "exerciseModules": ["stage5/hypothesis-test"],
+          "estimatedMinutes": 35
+        },
+        {
+          "id": "correlation-regression",
+          "order": 3,
+          "title": { "zh": "相关性与回归基础", "en": "Correlation & Regression Basics" },
+          "description": { "zh": "计算相关系数、构建简单线性回归模型，理解回归诊断", "en": "Correlation coefficients, simple linear regression, regression diagnostics" },
+          "exerciseModules": ["stage5/correlation-regression"],
+          "estimatedMinutes": 35
+        },
+        {
+          "id": "feature-eng",
+          "order": 4,
+          "title": { "zh": "特征工程", "en": "Feature Engineering" },
+          "description": { "zh": "掌握独热编码、标准化、分箱、特征创建等 ML 预处理技术", "en": "One-hot encoding, standardization, binning, feature creation for ML" },
+          "exerciseModules": ["stage5/feature-eng"],
+          "estimatedMinutes": 35
+        },
+        {
+          "id": "sklearn-intro",
+          "order": 5,
+          "title": { "zh": "scikit-learn 入门", "en": "Getting Started with scikit-learn" },
+          "description": { "zh": "学习 sklearn 核心 API：数据拆分、Pipeline、fit/predict/score", "en": "Learn sklearn core API: data splitting, Pipeline, fit/predict/score" },
+          "exerciseModules": ["stage5/sklearn-intro"],
+          "estimatedMinutes": 35
+        },
+        {
+          "id": "classification",
+          "order": 6,
+          "title": { "zh": "分类模型", "en": "Classification Models" },
+          "description": { "zh": "LogisticRegression、DecisionTree 与分类评估指标", "en": "LogisticRegression, DecisionTree, and classification metrics" },
+          "exerciseModules": ["stage5/classification"],
+          "estimatedMinutes": 35
+        },
+        {
+          "id": "regression-models",
+          "order": 7,
+          "title": { "zh": "回归模型", "en": "Regression Models" },
+          "description": { "zh": "LinearRegression、Ridge/Lasso 与特征重要性分析", "en": "LinearRegression, Ridge/Lasso, and feature importance" },
+          "exerciseModules": ["stage5/regression-models"],
+          "estimatedMinutes": 35
+        },
+        {
+          "id": "model-eval",
+          "order": 8,
+          "title": { "zh": "模型评估与调优", "en": "Model Evaluation & Tuning" },
+          "description": { "zh": "交叉验证、GridSearchCV、学习曲线与过拟合诊断", "en": "Cross-validation, GridSearchCV, learning curves, overfitting" },
+          "exerciseModules": ["stage5/model-eval"],
+          "estimatedMinutes": 35
+        }
+      ]
+    },
+    {
+      "id": "stage6",
+      "title": { "zh": "量化金融与实战", "en": "Quantitative Finance & Practice" },
+      "description": {
+        "zh": "金融数据分析、技术指标、风险度量、因子分析、回测与投资组合",
+        "en": "Financial data analysis, technical indicators, risk metrics, factor analysis, backtesting"
+      },
+      "requiredCompletionRate": 0.8,
+      "lessons": [
+        {
+          "id": "fin-timeseries",
+          "order": 1,
+          "title": { "zh": "金融时间序列基础", "en": "Financial Time Series Basics" },
+          "description": { "zh": "OHLCV 数据结构、收益率计算、对数收益率", "en": "OHLCV data, returns calculation, log returns" },
+          "exerciseModules": ["stage6/fin-timeseries"],
+          "estimatedMinutes": 30
+        },
+        {
+          "id": "tech-indicators",
+          "order": 2,
+          "title": { "zh": "技术指标", "en": "Technical Indicators" },
+          "description": { "zh": "手写 MA、EMA、RSI、Bollinger Bands、MACD", "en": "Implement MA, EMA, RSI, Bollinger Bands, MACD with pandas" },
+          "exerciseModules": ["stage6/tech-indicators"],
+          "estimatedMinutes": 35
+        },
+        {
+          "id": "risk-metrics",
+          "order": 3,
+          "title": { "zh": "风险度量", "en": "Risk Metrics" },
+          "description": { "zh": "波动率、Sharpe/Sortino、最大回撤、VaR/CVaR", "en": "Volatility, Sharpe/Sortino, max drawdown, VaR/CVaR" },
+          "exerciseModules": ["stage6/risk-metrics"],
+          "estimatedMinutes": 35
+        },
+        {
+          "id": "factor-analysis",
+          "order": 4,
+          "title": { "zh": "因子分析", "en": "Factor Analysis" },
+          "description": { "zh": "因子构建、IC 信息系数、分层回测", "en": "Factor construction, information coefficient, stratified backtest" },
+          "exerciseModules": ["stage6/factor-analysis"],
+          "estimatedMinutes": 35
+        },
+        {
+          "id": "backtesting",
+          "order": 5,
+          "title": { "zh": "回测框架", "en": "Backtesting Framework" },
+          "description": { "zh": "用 pandas 搭建简易回测引擎", "en": "Build a simple backtesting engine with pandas" },
+          "exerciseModules": ["stage6/backtesting"],
+          "estimatedMinutes": 35
+        },
+        {
+          "id": "portfolio",
+          "order": 6,
+          "title": { "zh": "投资组合优化", "en": "Portfolio Optimization" },
+          "description": { "zh": "等权、风险平价、有效前沿、蒙特卡洛模拟", "en": "Equal weight, risk parity, efficient frontier, Monte Carlo" },
+          "exerciseModules": ["stage6/portfolio"],
+          "estimatedMinutes": 35
+        },
+        {
+          "id": "ts-forecast",
+          "order": 7,
+          "title": { "zh": "时间序列预测", "en": "Time Series Forecasting" },
+          "description": { "zh": "朴素预测、移动平均、指数平滑、滚动预测评估", "en": "Naive, SMA, EWM forecasting with walk-forward evaluation" },
+          "exerciseModules": ["stage6/ts-forecast"],
+          "estimatedMinutes": 30
+        },
+        {
+          "id": "quant-project",
+          "order": 8,
+          "title": { "zh": "综合实战项目", "en": "Comprehensive Quant Project" },
+          "description": { "zh": "完整量化研究流程：数据→因子→策略→回测→报告", "en": "Full quant research: data→factors→strategy→backtest→report" },
+          "exerciseModules": ["stage6/quant-project"],
+          "estimatedMinutes": 45
+        }
+      ]
     }
   ]
 }
